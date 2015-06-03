@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -15,8 +15,81 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="D6I-D1-1bB">
+                                <rect key="frame" x="140" y="368" width="320" height="162"/>
+                                <date key="date" timeIntervalSinceReferenceDate="406400407.525846">
+                                    <!--2013-11-17 17:00:07 +0000-->
+                                </date>
+                            </datePicker>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="V7b-2f-cOj">
+                                <rect key="frame" x="160" y="28" width="280" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="280" id="1WB-9f-pH4"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="First"/>
+                                    <segment title="Second"/>
+                                    <segment title="Third"/>
+                                    <segment title="Fourth"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8tD-w4-YNP">
+                                <rect key="frame" x="193" y="89" width="215" height="58"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="215" id="6zG-iB-b0A"/>
+                                    <constraint firstAttribute="height" constant="58" id="Xqw-cs-6Ga"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Without GCD">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="noGCDButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ifm-Cr-hFg"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fx9-Fy-DSE">
+                                <rect key="frame" x="160" y="290" width="280" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="hba-kf-byp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I7V-ED-g3R">
+                                <rect key="frame" x="193" y="190" width="215" height="58"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="CAp-aU-lQV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="With GCD">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="gcdButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="DSg-cs-csj"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Fx9-Fy-DSE" firstAttribute="centerX" secondItem="D6I-D1-1bB" secondAttribute="centerX" id="7Kz-oX-v5u"/>
+                            <constraint firstItem="I7V-ED-g3R" firstAttribute="top" secondItem="8tD-w4-YNP" secondAttribute="bottom" constant="43" id="9AD-nl-gFm"/>
+                            <constraint firstItem="8tD-w4-YNP" firstAttribute="centerX" secondItem="V7b-2f-cOj" secondAttribute="centerX" id="Atg-YM-wAD"/>
+                            <constraint firstItem="I7V-ED-g3R" firstAttribute="leading" secondItem="8tD-w4-YNP" secondAttribute="leading" id="EWJ-27-uU9"/>
+                            <constraint firstItem="8tD-w4-YNP" firstAttribute="trailing" secondItem="I7V-ED-g3R" secondAttribute="trailing" id="OXX-tx-1EZ"/>
+                            <constraint firstItem="V7b-2f-cOj" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="8" symbolic="YES" id="T7U-Od-GCE"/>
+                            <constraint firstItem="Fx9-Fy-DSE" firstAttribute="top" secondItem="I7V-ED-g3R" secondAttribute="bottom" constant="42" id="XAW-7l-Gqg"/>
+                            <constraint firstItem="V7b-2f-cOj" firstAttribute="leading" secondItem="Fx9-Fy-DSE" secondAttribute="leading" id="fs0-eS-Mbg"/>
+                            <constraint firstItem="D6I-D1-1bB" firstAttribute="top" secondItem="Fx9-Fy-DSE" secondAttribute="bottom" constant="41" id="sKt-pa-wyt"/>
+                            <constraint firstItem="I7V-ED-g3R" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="wcV-Sd-XoH"/>
+                            <constraint firstItem="8tD-w4-YNP" firstAttribute="top" secondItem="V7b-2f-cOj" secondAttribute="bottom" constant="33" id="ybF-ms-hqG"/>
+                            <constraint firstItem="V7b-2f-cOj" firstAttribute="trailing" secondItem="Fx9-Fy-DSE" secondAttribute="trailing" id="ysE-Fp-P6R"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="resultLabel" destination="Fx9-Fy-DSE" id="nAL-9d-GGp"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>

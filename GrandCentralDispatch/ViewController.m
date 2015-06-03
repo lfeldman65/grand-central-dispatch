@@ -8,20 +8,58 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+@interface ViewController () {
+    
+    dispatch_queue_t myQueue;
+}
+
+@property (weak, nonatomic) IBOutlet UILabel *resultLabel;
+
+- (IBAction)noGCDButtonPressed:(id)sender;
+
+- (IBAction)gcdButtonPressed:(id)sender;
 
 @end
 
+
 @implementation ViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
 }
 
-- (void)didReceiveMemoryWarning {
+
+- (IBAction)noGCDButtonPressed:(id)sender {
+    
+    [self longRunningOperation1];
+
+}
+
+-(void) longRunningOperation1 {
+    [NSThread sleepForTimeInterval:5];
+    [self.resultLabel setText:[NSString stringWithFormat:@"Results: %d", arc4random()]];
+}
+
+
+- (IBAction)gcdButtonPressed:(id)sender {
+    
+    if (!myQueue) {
+        myQueue = dispatch_queue_create("com.example.gcd", NULL);
+    }
+    dispatch_async(myQueue, ^{[self longRunningOperation];});
+}
+
+-(void) longRunningOperation {
+    [NSThread sleepForTimeInterval:5];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{ [self.resultLabel setText:[NSString stringWithFormat:@"Results: %d", arc4random()]]; });
+}
+
+
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
+}
 @end
