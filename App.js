@@ -6,7 +6,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
-} from '@react-navigation/drawer';  // test
+} from '@react-navigation/drawer';  
 
 // Sections
 
