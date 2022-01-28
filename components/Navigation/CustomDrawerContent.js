@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 
 // Hamburger Menu
-import hamburgerIcon from '../../assets/logoWide.png';
+import rmLogo from '../../assets/logoWide.png';
 import dashIcon from '../../assets/menuDashboard.png';
 import goalsIcon from '../../assets/menuGoals.png';
 import pacIcon from '../../assets/menuPAC.png';
@@ -23,7 +23,7 @@ function CustomDrawerContent(props) {
       {/* <DrawerItemList {...props} /> */}
       <View style={{ display: 'flex', color: 'white' }}>
         <View style={styles.menuImageContainer}>
-          <Image source={hamburgerIcon} style={styles.menuImage} />
+          <Image source={rmLogo} style={styles.menuImage} />
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}>
           <View style={styles.menuItem}>
@@ -31,42 +31,60 @@ function CustomDrawerContent(props) {
             <Text style={{ color: 'white' }}>Dashboard</Text>
           </View>
         </TouchableOpacity>
-        <View style={styles.menuItem}>
-          <Image source={goalsIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>Goals</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Image source={pacIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>Priority Action Center</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Image source={relIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>Relationships</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Image source={transIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>Transactions</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Image source={popIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>Pop-By</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Image source={todoIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>To Do</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Image source={calendarIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>Calendar</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Image source={podcastIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>Podcasts</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <Image source={settingsIcon} style={styles.menuIcon} />
-          <Text style={{ color: 'white' }}>Settings</Text>
-        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Goals')}>
+          <View style={styles.menuItem}>
+            <Image source={goalsIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>Goals</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+          <View style={styles.menuItem}>
+            <Image source={pacIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>Priority Action Center</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Relationships')}>
+          <View style={styles.menuItem}>
+            <Image source={relIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>Relationships</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Transactions')}>
+          <View style={styles.menuItem}>
+            <Image source={transIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>Transactions</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Pop-Bys')}>
+          <View style={styles.menuItem}>
+            <Image source={popIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>Pop-By</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('To-Do')}>
+          <View style={styles.menuItem}>
+            <Image source={todoIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>To Do</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+          <View style={styles.menuItem}>
+            <Image source={calendarIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>Calendar</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Podcasts')}>
+          <View style={styles.menuItem}>
+            <Image source={podcastIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>Podcasts</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+          <View style={styles.menuItem}>
+            <Image source={settingsIcon} style={styles.menuIcon} />
+            <Text style={{ color: 'white' }}>Settings</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </DrawerContentScrollView>
   );
@@ -97,7 +115,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   menuImage: {
-    height: 50,
+    height: 30,
     width: 200,
   },
 });
