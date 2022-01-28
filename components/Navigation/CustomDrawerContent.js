@@ -28,61 +28,61 @@ function CustomDrawerContent(props) {
         <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}>
           <View style={styles.menuItem}>
             <Image source={dashIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Dashboard</Text>
+            <Text style={styles.menuItemText}>Dashboard</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Goals')}>
           <View style={styles.menuItem}>
             <Image source={goalsIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Goals</Text>
+            <Text style={styles.menuItemText}>Goals</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
           <View style={styles.menuItem}>
             <Image source={pacIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Priority Action Center</Text>
+            <Text style={styles.menuItemText}>Priority Action Center</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Relationships')}>
           <View style={styles.menuItem}>
             <Image source={relIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Relationships</Text>
+            <Text style={styles.menuItemText}>Relationships</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Transactions')}>
           <View style={styles.menuItem}>
             <Image source={transIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Transactions</Text>
+            <Text style={styles.menuItemText}>Transactions</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Pop-Bys')}>
           <View style={styles.menuItem}>
             <Image source={popIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Pop-By</Text>
+            <Text style={styles.menuItemText}>Pop-By</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('To-Do')}>
           <View style={styles.menuItem}>
             <Image source={todoIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>To Do</Text>
+            <Text style={styles.menuItemText}>To Do</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
           <View style={styles.menuItem}>
             <Image source={calendarIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Calendar</Text>
+            <Text style={styles.menuItemText}>Calendar</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Podcasts')}>
           <View style={styles.menuItem}>
             <Image source={podcastIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Podcasts</Text>
+            <Text style={styles.menuItemText}>Podcasts</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
           <View style={styles.menuItem}>
             <Image source={settingsIcon} style={styles.menuIcon} />
-            <Text style={{ color: 'white' }}>Settings</Text>
+            <Text style={styles.menuItemText}>Settings</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -101,12 +101,18 @@ const styles = StyleSheet.create({
   menuItem: {
     display: 'flex',
     flexDirection: 'row',
-    padding: 15,
+    padding: 16,
+  },
+  menuItemText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   menuIcon: {
     width: 24,
-    height: 24,
     marginRight: 20,
+    height: 24,
+    resizeMode: 'contain',
   },
   menuImageContainer: {
     alignItems: 'flex-start',
