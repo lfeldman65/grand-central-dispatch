@@ -1,23 +1,104 @@
-import { Text, View } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
-import { StatusBar } from 'expo-status-bar';
+import MenuIcon from '../../components/menuIcon'; 
 import { useNavigation } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useEffect } from 'react'; 
 
-export default function DashboardScreen() {
+import callImage from '../../assets/quickCalls.png';
+import noteImage from '../../assets/quickNotes.png'; 
+import popImage from '../../assets/quickPop.png';
+import pacImage from '../../assets/quickPAC.png';
+import relImage from '../../assets/quickRel.png';
+import goalsImage from '../../assets/quickGoals.png';
+import transImage from '../../assets/quickTrans.png';
+import todoImage from '../../assets/quickToDo.png';
+import calendarImage from '../../assets/quickCalendar.png'; 
+
+function CallsPressed() {
+  console.log('Calls Pressed');
+}
+
+function NotesPressed() {
+  console.log('Notes Pressed');
+}
+
+function PopPressed() {
+  console.log('Pop Pressed');
+}
+
+function PACPressed() {
+  console.log('PAC Pressed');
+}
+
+function RelPressed() {
+  console.log('Rel Pressed');
+}
+
+function GoalsPressed() {
+  console.log('Goals Pressed');
+}
+
+function TransPressed() {
+  console.log('Transactions Pressed');
+}
+
+function ToDoPressed() {
+  console.log('ToDo Pressed');
+}
+
+function CalendarPressed() {
+  console.log('Calendar Pressed');
+}
+
+export default function App() {
   const navigation = useNavigation();
 
-  useEffect(() => {
+useEffect(() => {
     navigation.setOptions({
-      headerLeft: () => <MenuIcon />,
+      headerLeft: () => (<MenuIcon/>)
     });
   });
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <StatusBar style="dark" translucent={false} backgroundColor="white" barStyle="light-content" />
-      <Text>Dashboard Screen</Text>
+  
+  return (  
+    <>
+    <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity onPress={CallsPressed}>
+            <Image source={callImage} style={styles.logo} />
+          </TouchableOpacity>
+          <Text style={styles.names}>Calls</Text>
+        </View>
     </View>
-  );
+    
+   
+    </>  
+    );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 48,
+    height: 48,
+    marginBottom: 20,
+    marginTop: 40,
+    marginLeft: 30,
+    marginRight: 30
+  },
+  names: {
+    width: 60,
+    height: 48,
+    marginTop: -5,
+    marginLeft: 30,
+    marginRight: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+
