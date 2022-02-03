@@ -14,7 +14,7 @@ import transImage from '../../assets/quickTrans.png';
 import todoImage from '../../assets/quickToDo.png';
 import calendarImage from '../../assets/quickCalendar.png'; 
 
-function CallsPressed() {
+function CallsPressed() {  // test
   console.log('Calls Pressed');
 }
 
