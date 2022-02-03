@@ -3,7 +3,7 @@ import MenuIcon from '../../components/menuIcon';
 
 import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useEffect } from 'react';  // test
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
