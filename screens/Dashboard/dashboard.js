@@ -61,6 +61,8 @@ useEffect(() => {
   
   return (  
     <>
+    <View style={styles.container}>
+
    <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
         <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
           <TouchableOpacity onPress={CallsPressed}>
@@ -125,6 +127,7 @@ useEffect(() => {
            <Text style={styles.names}>Calendar</Text>
       </View>
     </View>
+    </View>
     </>  
     );
 }
@@ -132,9 +135,7 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'black',
   },
   logo: {
     width: 48,
@@ -152,6 +153,7 @@ const styles = StyleSheet.create({
     marginRight: 30,
     alignItems: 'center',
     justifyContent: 'center',
+    color: 'white'
   },
 });
 
