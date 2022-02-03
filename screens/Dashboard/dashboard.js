@@ -28,6 +28,7 @@ function PopPressed() {
 
 function PACPressed() {
   console.log('PAC Pressed');
+  
 }
 
 function RelPressed() {
@@ -91,7 +92,7 @@ useEffect(() => {
         <TouchableOpacity onPress={PACPressed}>
           <Image source={pacImage} style={styles.logo} />
         </TouchableOpacity>
-        <Text style={styles.names}>PAC</Text>
+        <Text style={styles.names}>Priority Action Center</Text>
       </View>
       <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
         <TouchableOpacity onPress={RelPressed}>
