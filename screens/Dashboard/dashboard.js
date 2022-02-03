@@ -61,16 +61,70 @@ useEffect(() => {
   
   return (  
     <>
-    <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
+   <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
         <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
           <TouchableOpacity onPress={CallsPressed}>
             <Image source={callImage} style={styles.logo} />
           </TouchableOpacity>
           <Text style={styles.names}>Calls</Text>
         </View>
+
+        <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity onPress={NotesPressed}>
+            <Image source={noteImage} style={styles.logo} />
+          </TouchableOpacity>
+          <Text style={styles.names}>Notes</Text>
+        </View>
+
+        <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity onPress={PopPressed}>
+            <Image source={popImage} style={styles.logo} />
+          </TouchableOpacity>
+          <Text style={styles.names}>Pop-Bys</Text>
+        </View>
     </View>
     
-   
+    <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
+      <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={PACPressed}>
+          <Image source={pacImage} style={styles.logo} />
+        </TouchableOpacity>
+        <Text style={styles.names}>PAC</Text>
+      </View>
+      <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={RelPressed}>
+          <Image source={relImage} style={styles.logo} />
+        </TouchableOpacity>
+        <Text style={styles.names}>Relationships</Text>
+      </View>
+      <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={GoalsPressed}>
+          <Image source={goalsImage} style={styles.logo} />
+        </TouchableOpacity>
+        <Text style={styles.names}>Goals</Text>
+      </View>
+    </View>
+
+    <View style={{ flexDirection: 'row', alignContent: 'center', justifyContent: 'center' }}>
+      <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={TransPressed}>
+          <Image source={transImage} style={styles.logo} />
+        </TouchableOpacity>
+        <Text style={styles.names}>Transactions</Text>
+      </View>
+      <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={ToDoPressed}>
+          <Image source={todoImage} style={styles.logo} />
+        </TouchableOpacity>
+        <Text style={styles.names}>To-Do's</Text>
+      </View>
+      <View style={{ flexDirection: 'column', alignContent: 'center', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={CalendarPressed}>
+          <Image source={calendarImage} style={styles.logo} />
+        </TouchableOpacity>
+           <Text style={styles.names}>Calendar</Text>
+      </View>
+    </View>
     </>  
     );
 }
