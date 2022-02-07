@@ -14,7 +14,7 @@ export default function MenuIcon() {
 
   return (
     <TouchableOpacity onPress={openDrawer}>
-      <Menu size={24} style={{ marginRight: 10, marginTop: 3 }} stroke="black" backgroundColor="red" />
+      <Menu size={24} style={{ marginRight: 10, marginTop: 3 }} stroke="white" backgroundColor="red" />
     </TouchableOpacity>
   );
 }
