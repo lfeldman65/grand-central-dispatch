@@ -24,12 +24,20 @@ const Drawer = createDrawerNavigator();
 export const HomeStackNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Dashboard" component={DashboardScreen} />
+      <Stack.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Dashboard', headerTintColor: 'white', headerStyle: {
+            backgroundColor: '#1A6295',
+          }, }} />
+
+
+
+
+
+
       <Stack.Screen name="Goals" component={GoalsScreen} />
       <Stack.Screen name="PAC" component={PACScreen} options={{ title: 'Priority Action Center' }} />
       <Stack.Screen name="Relationships" component={RelationshipsScreen} />
       <Stack.Screen name="Transactions" component={TransactionsScreen} />
-      <Stack.Screen name="Pop-Bys" component={PopBysScreen} options={{ title: 'Pop Bys' }} />
+      <Stack.Screen name="Pop-Bys" component={PopBysScreen} options={{ title: 'Pop-By' }} />
       <Stack.Screen name="To-Do" component={ToDoScreen} options={{ title: 'To Do' }} />
       <Stack.Screen name="Calendar" component={CalendarScreen} />
       <Stack.Screen name="Podcasts" component={PodcastScreen} />
