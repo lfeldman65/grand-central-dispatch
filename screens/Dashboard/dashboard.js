@@ -16,9 +16,9 @@ import todoImage from '../../assets/quickToDo.png';
 import calendarImage from '../../assets/quickCalendar.png'; 
 
 const analytics = new Analytics('UA-65596113-1');
-analytics.hit(new PageHit('Home'))
+/*analytics.hit(new PageHit('Home'))
   .then(() => console.log("success"))
-  .catch(e => console.log(e.message));
+  .catch(e => console.log(e.message)); */
 
 function CallsPressed() {  
   console.log('Calls Pressed');
@@ -29,35 +29,58 @@ function CallsPressed() {
 
 function NotesPressed() {
   console.log('Notes Pressed');
+  analytics.event(new Event('Dashboard', 'Notes Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 function PopPressed() {
   console.log('Pop Pressed');
+  analytics.event(new Event('Dashboard', 'Pop-Bys Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 function PACPressed() {
   console.log('PAC Pressed');
-  
+  analytics.event(new Event('Dashboard', 'PAC Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 function RelPressed() {
   console.log('Rel Pressed');
+  analytics.event(new Event('Dashboard', 'Relationships Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 function GoalsPressed() {
   console.log('Goals Pressed');
+  analytics.event(new Event('Dashboard', 'Goals Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 function TransPressed() {
   console.log('Transactions Pressed');
+  analytics.event(new Event('Dashboard', 'Transactions Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 function ToDoPressed() {
   console.log('ToDo Pressed');
+  analytics.event(new Event('Dashboard', 'To-Dos Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 function CalendarPressed() {
   console.log('Calendar Pressed');
+  analytics.event(new Event('Dashboard', 'Calendar Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 export default function App() {

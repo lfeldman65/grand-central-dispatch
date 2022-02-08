@@ -4,12 +4,17 @@ import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions,
 import logo from '../assets/iconLogo.png';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { StatusBar } from 'expo-status-bar';
+import { Analytics, PageHit, Event} from 'expo-analytics';
 
+const analytics = new Analytics('UA-65596113-1');
 
 let deviceWidth = Dimensions.get('window').width; 
 
 function ForgotPasswordPressed() {
   console.log('Forgot Press');
+  analytics.event(new Event('Login', 'Forgot Password Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
   Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
 }
 
@@ -20,6 +25,9 @@ export default function LoginScreen({navigation})
 
   HandleLoginPress = () => {  // https://aboutreact.com/react-native-login-and-signup/
 
+    analytics.event(new Event('Login', 'Login Button', 'Pressed', 0))
+    .then(() => console.log("button success"))
+    .catch(e => console.log(e.message));
     
     if(userName == '' || password == ''){
       alert('Please enter a Username and Password');
@@ -97,7 +105,9 @@ export default function LoginScreen({navigation})
             unfillColor='#004F89'
             iconStyle={{ borderColor: "white" }}
             text='Remember Me'
-            onPress={(isChecked) => {console.log("Remember Me Pressed")}}/>
+            onPress={(isChecked) => { analytics.event(new Event('Login', 'Remember Me', 'Pressed', 0))
+            .then(() => console.log("button success"))
+            .catch(e => console.log(e.message));}}/>
 
           <TouchableOpacity onPress={ForgotPasswordPressed}>
             <Text style={styles.forgotText}>Forgot Password</Text>
