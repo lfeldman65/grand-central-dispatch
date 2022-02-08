@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/menuIcon'; 
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react'; 
+import { Analytics, PageHit, Event} from 'expo-analytics';
 
 import callImage from '../../assets/quickCalls.png';
 import noteImage from '../../assets/quickNotes.png'; 
@@ -14,8 +15,16 @@ import transImage from '../../assets/quickTrans.png';
 import todoImage from '../../assets/quickToDo.png';
 import calendarImage from '../../assets/quickCalendar.png'; 
 
-function CallsPressed() {  // test
+const analytics = new Analytics('UA-65596113-1');
+analytics.hit(new PageHit('Home'))
+  .then(() => console.log("success"))
+  .catch(e => console.log(e.message));
+
+function CallsPressed() {  
   console.log('Calls Pressed');
+  analytics.event(new Event('Dashboard', 'Calls Button', 'Pressed', 0))
+  .then(() => console.log("button success"))
+  .catch(e => console.log(e.message));
 }
 
 function NotesPressed() {
