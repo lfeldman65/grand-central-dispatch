@@ -24,45 +24,135 @@ const Drawer = createDrawerNavigator();
 export const HomeStackNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Dashboard" component={DashboardScreen} options={{ title: 'Dashboard', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{
+          title: 'Dashboard',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} />
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-      <Stack.Screen name="Goals" component={GoalsScreen} options={{ title: 'Goals', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="Goals"
+        component={GoalsScreen}
+        options={{
+          title: 'Goals',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} /> 
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-      <Stack.Screen name="PAC" component={PACScreen} options={{ title: 'Priority Action Center', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="PAC"
+        component={PACScreen}
+        options={{
+          title: 'Priority Action Center',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} />      
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-      <Stack.Screen name="Relationships" component={RelationshipsScreen} options={{ title: 'Relationships', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="Relationships"
+        component={RelationshipsScreen}
+        options={{
+          title: 'Relationships',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} />      
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-      <Stack.Screen name="Transactions" component={TransactionsScreen} options={{ title: 'Transactions', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="Transactions"
+        component={TransactionsScreen}
+        options={{
+          title: 'Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} />    
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-      <Stack.Screen name="Pop-Bys" component={PopBysScreen} options={{ title: 'Pop-By', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="Pop-Bys"
+        component={PopBysScreen}
+        options={{
+          title: 'Pop-By',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} /> 
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-       <Stack.Screen name="To-Do" component={ToDoScreen} options={{ title: 'To Do', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="To-Do"
+        component={ToDoScreen}
+        options={{
+          title: 'To Do',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} />    
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-        <Stack.Screen name="Calendar" component={CalendarScreen} options={{ title: 'Calendar', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="Calendar"
+        component={CalendarScreen}
+        options={{
+          title: 'Calendar',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} />    
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-        <Stack.Screen name="Podcasts" component={PodcastScreen} options={{ title: 'Podcasts', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="Podcasts"
+        component={PodcastScreen}
+        options={{
+          title: 'Podcasts',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} />    
+          },
+          headerBackVisible: false,
+        }}
+      />
 
-        <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings', headerTintColor: 'white', headerStyle: {
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          title: 'Settings',
+          headerTintColor: 'white',
+          headerStyle: {
             backgroundColor: '#1A6295',
-          }, }} />    
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
