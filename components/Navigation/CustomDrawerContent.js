@@ -72,7 +72,7 @@ function CustomDrawerContent(props) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.relationships}>
-          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Relationships')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Manage Relationships</Text>
