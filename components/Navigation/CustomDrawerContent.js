@@ -1,6 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Animated } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
+import Collapsible from 'react-native-collapsible';
 
 // Hamburger Menu
 import rmLogo from '../../assets/logoWide.png';
@@ -17,6 +18,19 @@ import settingsIcon from '../../assets/menuSettings.png';
 
 function CustomDrawerContent(props) {
   const { navigation } = props;
+  const [expanded, setExpanded] = useState({
+    relationships: false,
+    transactions: false,
+  });
+
+  const handleMenuExpand = (type) => {
+    if (type === 'relationships') {
+      setExpanded({ ...expanded, relationships: !expanded.relationships });
+    }
+    if (type === 'transactions') {
+      setExpanded({ ...expanded, transactions: !expanded.transactions });
+    }
+  };
 
   return (
     <DrawerContentScrollView {...props}>
@@ -43,18 +57,68 @@ function CustomDrawerContent(props) {
             <Text style={styles.menuItemText}>Priority Action Center</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Relationships')}>
+        <TouchableWithoutFeedback onPress={() => handleMenuExpand('relationships')}>
           <View style={styles.menuItem}>
             <Image source={relIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Relationships</Text>
+            <Image
+              source={transIcon}
+              style={[
+                styles.menuIcon,
+                styles.chevron,
+                expanded.relationships && { transform: [{ rotateX: '-180deg' }] },
+              ]}
+            />
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Transactions')}>
+        </TouchableWithoutFeedback>
+        <Collapsible collapsed={!expanded.relationships}>
+          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+            <View style={[styles.menuItem, expanded && styles.visible]}>
+              <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
+              <Text style={styles.menuItemText}>Manage Relationships</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+            <View style={[styles.menuItem, expanded && styles.visible]}>
+              <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
+              <Text style={styles.menuItemText}>Recent Contact Activity</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+            <View style={[styles.menuItem, expanded && styles.visible]}>
+              <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
+              <Text style={styles.menuItemText}>Video History</Text>
+            </View>
+          </TouchableOpacity>
+        </Collapsible>
+        <TouchableWithoutFeedback onPress={() => handleMenuExpand('transactions')}>
           <View style={styles.menuItem}>
             <Image source={transIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Transactions</Text>
+            <Image
+              source={transIcon}
+              style={[
+                styles.menuIcon,
+                styles.chevron,
+                expanded.transactions && { transform: [{ rotateX: '-180deg' }] },
+              ]}
+            />
           </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
+        <Collapsible collapsed={!expanded.transactions}>
+          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+            <View style={[styles.menuItem, expanded && styles.visible]}>
+              <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
+              <Text style={styles.menuItemText}>Real Estate Transactions</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+            <View style={[styles.menuItem, expanded && styles.visible]}>
+              <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
+              <Text style={styles.menuItemText}>Other Transactions</Text>
+            </View>
+          </TouchableOpacity>
+        </Collapsible>
         <TouchableOpacity onPress={() => navigation.navigate('Pop-Bys')}>
           <View style={styles.menuItem}>
             <Image source={popIcon} style={styles.menuIcon} />
@@ -123,5 +187,13 @@ const styles = StyleSheet.create({
   menuImage: {
     height: 30,
     width: 200,
+  },
+  hidden: {
+    opacity: 0,
+  },
+  chevron: {
+    position: 'absolute',
+    top: '65%',
+    right: 0,
   },
 });
