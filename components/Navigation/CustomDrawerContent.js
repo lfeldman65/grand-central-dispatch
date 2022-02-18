@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedba
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
 
-// Hamburger Menu
+// Hamburger Menu test
 import rmLogo from '../../assets/logoWide.png';
 import dashIcon from '../../assets/menuDashboard.png';
 import goalsIcon from '../../assets/menuGoals.png';
@@ -78,7 +78,7 @@ function CustomDrawerContent(props) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.relationships}>
-          <TouchableOpacity onPress={() => navigation.navigate('managerelationships')}>
+          <TouchableOpacity onPress={() => navigation.navigate('manageRelationships')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Manage Relationships</Text>
@@ -90,7 +90,7 @@ function CustomDrawerContent(props) {
               <Text style={styles.menuItemText}>Recent Contact Activity</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+          <TouchableOpacity onPress={() => navigation.navigate('videoHistory')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Video History</Text>
@@ -112,15 +112,21 @@ function CustomDrawerContent(props) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.transactions}>
-          <TouchableOpacity onPress={() => navigation.navigate('Transactions')}>
+          <TouchableOpacity onPress={() => navigation.navigate('realEstateTransactions')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
-              <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
+              <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Real Estate Transactions</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+          <TouchableOpacity onPress={() => navigation.navigate('lenderTransactions')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
-              <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
+              <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
+              <Text style={styles.menuItemText}>Lender Transactions</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('otherTransactions')}>
+            <View style={[styles.menuItem, expanded && styles.visible]}>
+              <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Other Transactions</Text>
             </View>
           </TouchableOpacity>

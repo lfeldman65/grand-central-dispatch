@@ -2,7 +2,7 @@ import { StyleSheet, Image } from 'react-native';
 import { createNativeStackNavigator, createStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 
-// Sections
+// Sections test
 
 import LoginScreen from '../../screens/login.js';
 import DashboardScreen from '../../screens/Dashboard/dashboard.js';
@@ -16,8 +16,13 @@ import CalendarScreen from '../../screens/Calendar/calendar.js';
 import PodcastScreen from '../../screens/Podcasts/podcasts.js';
 import SettingsScreen from '../../screens/Settings/appsettings.js';
 
-import ManageRelationshipsScreen from '../../screens/Relationships/managerelationships.js';
+import ManageRelationshipsScreen from '../../screens/Relationships/manageRelationships.js';
 import RecentContactActivityScreen from '../../screens/Relationships/recentcontactactivity.js';
+import VideoHistoryScreen from '../../screens/Relationships/videoHistory';
+
+import RealEstateTransactionsScreen from '../../screens/Transactions/realEstateTransactions';
+import LenderTransactionsScreen from '../../screens/Transactions/lenderTransactions';
+import OtherTransactionsScreen from '../../screens/Transactions/otherTransactions';
 
 
 // Components
@@ -81,7 +86,7 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="managerelationships"
+        name="manageRelationships"
         component={ManageRelationshipsScreen}
         options={{
           title: 'Manage Relationships',
@@ -91,7 +96,7 @@ export const HomeStackNavigator = () => {
           },
           headerBackVisible: false,
         }}
-      />  
+      />
 
       <Stack.Screen
         name="recentcontactactivity"
@@ -104,13 +109,65 @@ export const HomeStackNavigator = () => {
           },
           headerBackVisible: false,
         }}
-      />  
+      />
+
+      <Stack.Screen
+        name="videoHistory"
+        component={VideoHistoryScreen}
+        options={{
+          title: 'Video History',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
 
       <Stack.Screen
         name="Transactions"
         component={TransactionsScreen}
         options={{
           title: 'Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="realEstateTransactions"
+        component={RealEstateTransactionsScreen}
+        options={{
+          title: 'Real Estate Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="lenderTransactions"
+        component={LenderTransactionsScreen}
+        options={{
+          title: 'Lender Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="otherTransactions"
+        component={OtherTransactionsScreen}
+        options={{
+          title: 'Other Transactions',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
