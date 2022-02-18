@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking, S
 import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-//import dayTrophy from '../../assets/weeklyTrophy.png';
 
 export default function PopByScreen() {
 

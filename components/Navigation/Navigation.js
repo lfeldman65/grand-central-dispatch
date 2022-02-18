@@ -16,6 +16,10 @@ import CalendarScreen from '../../screens/Calendar/calendar.js';
 import PodcastScreen from '../../screens/Podcasts/podcasts.js';
 import SettingsScreen from '../../screens/Settings/appsettings.js';
 
+import ManageRelationshipsScreen from '../../screens/Relationships/managerelationships.js';
+import RecentContactActivityScreen from '../../screens/Relationships/recentcontactactivity.js';
+
+
 // Components
 import CustomDrawerContent from './CustomDrawerContent.js';
 const Stack = createNativeStackNavigator();
@@ -25,7 +29,7 @@ export const HomeStackNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Dashboard"
+        name="Dashboard" // must match exactly name in CustomDrawerContent
         component={DashboardScreen}
         options={{
           title: 'Dashboard',
@@ -75,6 +79,32 @@ export const HomeStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="managerelationships"
+        component={ManageRelationshipsScreen}
+        options={{
+          title: 'Manage Relationships',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />  
+
+      <Stack.Screen
+        name="recentcontactactivity"
+        component={RecentContactActivityScreen}
+        options={{
+          title: 'Recent Contact Activity',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />  
 
       <Stack.Screen
         name="Transactions"

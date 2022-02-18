@@ -16,6 +16,9 @@ import calendarIcon from '../../assets/menuCalendar.png';
 import podcastIcon from '../../assets/menuPodcasts.png';
 import settingsIcon from '../../assets/menuSettings.png';
 
+import chevron from '../../assets/chevron_white.png';
+
+
 function CustomDrawerContent(props) {
   const { navigation } = props;
   const [expanded, setExpanded] = useState({
@@ -39,12 +42,15 @@ function CustomDrawerContent(props) {
         <View style={styles.menuImageContainer}>
           <Image source={rmLogo} style={styles.menuImage} />
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}>
+        
+        {/* navigation.navigate(name), name must match exactly with name in Navigation.js */}
+        <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}> 
           <View style={styles.menuItem}>
             <Image source={dashIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Dashboard</Text>
           </View>
         </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate('Goals')}>
           <View style={styles.menuItem}>
             <Image source={goalsIcon} style={styles.menuIcon} />
@@ -62,7 +68,7 @@ function CustomDrawerContent(props) {
             <Image source={relIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Relationships</Text>
             <Image
-              source={transIcon}
+              source={chevron}
               style={[
                 styles.menuIcon,
                 styles.chevron,
@@ -72,13 +78,13 @@ function CustomDrawerContent(props) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.relationships}>
-          <TouchableOpacity onPress={() => navigation.navigate('Relationships')}>
+          <TouchableOpacity onPress={() => navigation.navigate('managerelationships')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Manage Relationships</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+          <TouchableOpacity onPress={() => navigation.navigate('recentcontactactivity')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Recent Contact Activity</Text>
@@ -96,7 +102,7 @@ function CustomDrawerContent(props) {
             <Image source={transIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Transactions</Text>
             <Image
-              source={transIcon}
+              source={chevron}
               style={[
                 styles.menuIcon,
                 styles.chevron,
@@ -106,7 +112,7 @@ function CustomDrawerContent(props) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.transactions}>
-          <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Transactions')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Real Estate Transactions</Text>
@@ -195,5 +201,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '65%',
     right: 0,
+    width: 15,
+    height: 15,
+    opacity: .75
   },
 });
