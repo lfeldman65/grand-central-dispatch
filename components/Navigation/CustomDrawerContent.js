@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Animated } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
+import { Analytics, PageHit, Event} from 'expo-analytics';
 
 // Hamburger Menu test
 import rmLogo from '../../assets/logoWide.png';
@@ -17,6 +18,8 @@ import podcastIcon from '../../assets/menuPodcasts.png';
 import settingsIcon from '../../assets/menuSettings.png';
 
 import chevron from '../../assets/chevron_white.png';
+
+const analytics = new Analytics('UA-65596113-1');
 
 
 function CustomDrawerContent(props) {
@@ -35,6 +38,34 @@ function CustomDrawerContent(props) {
     }
   };
 
+  
+  
+  const trackPressed = (screenName) =>{
+
+     console.log(screenName);
+	
+     analytics.event(new Event('Menu', 'Menu Item Pressed', screenName, 0))
+     .then(() => console.log("button success"))
+     .catch(e => console.log(e.message));
+   }
+
+
+//****** there are 2 ways to create a function
+	//pressed and pressed2
+  const pressed = (screenName) => {
+  	navigation.navigate(screenName)
+  	trackPressed(screenName)
+  	//console.log('111');
+  }
+  
+  
+  function pressed2(screenName) {
+  	console.log('p2');
+  	navigation.navigate(screenName)
+  	trackPressed(screenName)
+  }
+  
+
   return (
     <DrawerContentScrollView {...props}>
       {/* <DrawerItemList {...props} /> */}
@@ -42,22 +73,22 @@ function CustomDrawerContent(props) {
         <View style={styles.menuImageContainer}>
           <Image source={rmLogo} style={styles.menuImage} />
         </View>
-        
+
         {/* navigation.navigate(name), name must match exactly with name in Navigation.js */}
-        <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}> 
+        <TouchableOpacity onPress={() => pressed('Dashboard')}>
           <View style={styles.menuItem}>
             <Image source={dashIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Dashboard</Text>
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Goals')}>
+        <TouchableOpacity onPress={() => pressed('Goals')}>
           <View style={styles.menuItem}>
             <Image source={goalsIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Goals</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('PAC')}>
+        <TouchableOpacity onPress={() => pressed('PAC')}>
           <View style={styles.menuItem}>
             <Image source={pacIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Priority Action Center</Text>
@@ -78,19 +109,19 @@ function CustomDrawerContent(props) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.relationships}>
-          <TouchableOpacity onPress={() => navigation.navigate('manageRelationships')}>
+          <TouchableOpacity onPress={() => pressed('manageRelationships')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Manage Relationships</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('recentcontactactivity')}>
+          <TouchableOpacity onPress={() => pressed('recentcontactactivity')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Recent Contact Activity</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('videoHistory')}>
+          <TouchableOpacity onPress={() => pressed('videoHistory')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Video History</Text>
@@ -112,50 +143,50 @@ function CustomDrawerContent(props) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.transactions}>
-          <TouchableOpacity onPress={() => navigation.navigate('realEstateTransactions')}>
+          <TouchableOpacity onPress={() => pressed('realEstateTransactions')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Real Estate Transactions</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('lenderTransactions')}>
+          <TouchableOpacity onPress={() => pressed('lenderTransactions')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Lender Transactions</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('otherTransactions')}>
+          <TouchableOpacity onPress={() => pressed('otherTransactions')}>
             <View style={[styles.menuItem, expanded && styles.visible]}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Other Transactions</Text>
             </View>
           </TouchableOpacity>
         </Collapsible>
-        <TouchableOpacity onPress={() => navigation.navigate('Pop-Bys')}>
+        <TouchableOpacity onPress={() => pressed('Pop-Bys')}>
           <View style={styles.menuItem}>
             <Image source={popIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Pop-By</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('To-Do')}>
+        <TouchableOpacity onPress={() => pressed('To-Do')}>
           <View style={styles.menuItem}>
             <Image source={todoIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>To Do</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Calendar')}>
+        <TouchableOpacity onPress={() => pressed('Calendar')}>
           <View style={styles.menuItem}>
             <Image source={calendarIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Calendar</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Podcasts')}>
+        <TouchableOpacity onPress={() => pressed('Podcasts')}>
           <View style={styles.menuItem}>
             <Image source={podcastIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Podcasts</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+        <TouchableOpacity onPress={() => pressed('Settings')}>
           <View style={styles.menuItem}>
             <Image source={settingsIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Settings</Text>
