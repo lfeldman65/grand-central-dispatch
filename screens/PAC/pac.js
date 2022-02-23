@@ -3,9 +3,9 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking, S
 import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import dayTrophy from '../../assets/weeklyTrophy.png';
-import weekTrophy from '../../assets/dailyTrophy.png';
-import noTrophy from '../../assets/noTrophy.png';
+import { Analytics, PageHit, Event} from 'expo-analytics';
+
+const analytics = new Analytics('UA-65596113-1');
 
 export default function PACScreen() {
 
@@ -29,29 +29,33 @@ export default function PACScreen() {
 
     //take this out if you don't want to simulate delay
     setTimeout(() => {
-      fetchPressed();
+      fetchPressed('calls');
     }, 2000);
 
   }, []);
 
   function callsPressed() {
-    console.log('calls pressed');
+    analytics.event(new Event('PAC', 'Tab Button', 'Calls', 0))
     setCallsSelected(true);
     setNotesSelected(false);
     setPopSelected(false);
+    fetchPressed("calls");
   }
 
   function notesPressed() {
-    console.log('notes pressed');
+    analytics.event(new Event('PAC', 'Tab Button', 'Notes', 0))
     setCallsSelected(false);
     setNotesSelected(true);
-    setPopSelected(false);  }
+    setPopSelected(false);  
+    fetchPressed("notes");
+  }
 
   function popPressed() {
-    console.log('pop pressed');
+    analytics.event(new Event('PAC', 'Tab Button', 'Pop-By', 0))
     setCallsSelected(false);
     setNotesSelected(false);
-    setPopSelected(true);  
+    setPopSelected(true); 
+    fetchPressed("popby"); 
   }
 
   function sanityCheck() 
@@ -73,27 +77,20 @@ export default function PACScreen() {
     return true;
   }
 
-  function activityDisplay(index) 
+  function contactName(index) 
   {
     if (!sanityCheck())
       return "";
 
-    if (winTheDaySelected) {
-      return data["data"][index]["achievedToday"]
-    }
-    return data["data"][index]["achievedThisWeek"]
+    return data["data"][index]["contactName"];
   }
 
-  function goalNumDisplay(index) 
+  function notes(index) 
   {
     if (!sanityCheck())
       return "";
 
-    if (winTheDaySelected) {
-      var weeklyTarget = data["data"][index]["goal"]["weeklyTarget"];
-      return Math.ceil(weeklyTarget / 5);
-    }
-    return data["data"][index]["goal"]["weeklyTarget"]
+    return data["data"][index]["notes"];
   }
 
   function shouldDisplay(index) 
@@ -101,7 +98,7 @@ export default function PACScreen() {
     if (!sanityCheck())
       return false;
 
-    return data["data"][index]["goal"]["displayOnDashboard"];
+    return true;
   }
 
   function titleFor(index) 
@@ -115,22 +112,13 @@ export default function PACScreen() {
     if (data["data"].length == 0) {
       return "";
     }
-    var oldTitle = data["data"][index]["goal"]["title"];
-    if (oldTitle == "Pop-By Made") {
-      return "Pop-Bys Delivered"
-    }
-    if (oldTitle == "New Contacts") {
-      return "Database Additions"
-    }
-    if (oldTitle == "Notes Made") {
-      return "Notes Written"
-    }
-    return oldTitle;
+    return "title";
   }
 
-  function fetchPressed() 
+  function fetchPressed(type)
   {
-    console.log('Fetch Press');
+    console.log(type);
+   
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
     myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
@@ -142,7 +130,7 @@ export default function PACScreen() {
       redirect: 'follow'
     };
 
-    fetch("https://www.referralmaker.com/services/mobileapi/priorityActions?type=call", requestOptions)
+    fetch("https://www.referralmaker.com/services/mobileapi/priorityActions?type=" + type, requestOptions)
       .then(response => response.json()) //this line converts it to JSON
       .then((result) => {                  //then we can treat it as a JSON object
         console.log(result);
@@ -174,6 +162,22 @@ export default function PACScreen() {
             <Text style={notesSelected == true ? styles.selected : styles.unselected} onPress={notesPressed}>Notes</Text>
             <Text style={popSelected == true ? styles.selected : styles.unselected} onPress={popPressed}>Pop-By</Text>
           </View>
+
+          <ScrollView>
+            {
+              data["data"].map((name, index) => (
+                shouldDisplay(index) ? (
+                  <View  style={styles.row} key={index}>
+                    <Text style={styles.personName}>{contactName(index)}</Text>
+                    <Text style={styles.notes}>{notes(index)}</Text>
+                  </View>
+
+                ) : (<View></View>)
+              )
+              )
+            }
+            <View style={styles.hack}></View>
+          </ScrollView>
         </View>
       )
   );
@@ -186,6 +190,13 @@ const styles = StyleSheet.create({
   hack: {
     height:100,
     backgroundColor: 'white',
+  },
+  row: {
+    paddingTop: 10,
+    backgroundColor: 'white',
+    borderColor: 'lightgray',
+    borderWidth: .5,
+    paddingBottom: 10
   },
   tabButtonRow: {
     flexDirection: 'row',
@@ -213,16 +224,6 @@ const styles = StyleSheet.create({
     borderColor: 'lightblue',
     borderWidth: 2
   },
-  goalTitle: {
-    paddingRight: 30,
-    color: '#1A6295',
-    fontSize: 18,
-    textAlign: 'right',
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: 16
-  },
   progress: {
     display: 'flex',
     flexDirection: 'row',
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginBottom: 10
   },
-  goalName: {
+  notes: {
     width: 200,
     color: '#1A6295',
     fontSize: 20,
@@ -240,28 +241,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16
   },
-  goalNum: {
-    width: 20,
+  personName: {
+    width: 400,
     height: 32,
     color: 'black',
     fontSize: 18,
-    textAlign: "right",
-    marginRight: 20,
-  },
-  grayRectangle: {
-    height: 25,
-    width: '75%',
-    backgroundColor: 'lightgray',
-    marginRight: 10,
-    borderRadius: 5
-  },
-  trophy: {
-    width: 35,
-    height: 35,
-    paddingBottom: 10,
-  },
-  trackText: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    textAlign: "left",
+    marginLeft: 10
   },
 });
