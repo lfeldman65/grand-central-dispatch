@@ -1,22 +1,48 @@
-import {useState} from "react"; 
+import { useState } from "react";
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
+import { Analytics, PageHit, Event} from 'expo-analytics';
 
-export default function SettingsScreen() {
+const analytics = new Analytics('UA-65596113-1');
 
-const navigation = useNavigation();
+export default function SettingsScreen(props) {
 
-useEffect(() => {
+  const navigation = useNavigation();
+
+  function signOutPressed() {
+    console.log('Sign Out');
+    navigation.navigate('Login')
+    analytics.event(new Event('Settings', 'Sign Out', 'Pressed', 0))
+    .then(() => console.log("button success"))
+    .catch(e => console.log(e.message));
+  }
+
+  useEffect(() => {
     navigation.setOptions({
-      headerLeft: (props) => (<MenuIcon/>)
+      headerLeft: (props) => (<MenuIcon />)
     });
   });
-  
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Settings Screen</Text>
-    </View>
+    <TouchableOpacity onPress={signOutPressed}>
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+         <Text style={styles.signOutText}>Sign Out</Text>
+      </View>
+    </TouchableOpacity>
+
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#004F89',
+    alignItems: 'center',
+  },
+  signOutText: {
+    marginTop: 20,
+    color: 'blue'
+  }
+});
