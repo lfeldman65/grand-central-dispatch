@@ -73,7 +73,7 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Relationships"
+        name="relationships"
         component={RelationshipsScreen}
         options={{
           title: 'Relationships',
