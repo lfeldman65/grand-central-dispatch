@@ -1,13 +1,39 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking, ScrollView, ActivityIndicator, TouchableHighlight } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event} from 'expo-analytics';
+import { Analytics, PageHit, Event } from 'expo-analytics';
+import Swipeable from 'react-native-swipeable-row';
 
 const analytics = new Analytics('UA-65596113-1');
 
+function handleComplete() {
+  console.log('Complete');
+}
+
+function handlePostpone() {
+  console.log('Postpone');
+}
+
 export default function PACScreen() {
+
+  const rightButtons = [
+    <View style={styles.completeView}>
+      <TouchableOpacity onPress={handleComplete}>
+        <Text style={styles.complete}>Complete</Text>
+      </TouchableOpacity>
+    </View>,
+  ];
+
+  const leftButtons = [
+    <View style={styles.postponeView}>
+      <TouchableOpacity onPress={handlePostpone}>
+        <Text style={styles.complete}>Postpone</Text>
+      </TouchableOpacity>
+    </View>
+    ,
+  ];
 
   let deviceWidth = Dimensions.get('window').width;
 
@@ -35,7 +61,7 @@ export default function PACScreen() {
   }, []);
 
   function callsPressed() {
-    analytics.event(new Event('PAC', 'Tab Button', 'Calls', 0))
+    analytics.event(new Event('PAC', 'Calls', 0))
     setCallsSelected(true);
     setNotesSelected(false);
     setPopSelected(false);
@@ -43,66 +69,68 @@ export default function PACScreen() {
   }
 
   function notesPressed() {
-    analytics.event(new Event('PAC', 'Tab Button', 'Notes', 0))
+    analytics.event(new Event('PAC', 'Notes', 0))
     setCallsSelected(false);
     setNotesSelected(true);
-    setPopSelected(false);  
+    setPopSelected(false);
     fetchPressed("notes");
   }
 
   function popPressed() {
-    analytics.event(new Event('PAC', 'Tab Button', 'Pop-By', 0))
+    analytics.event(new Event('PAC', 'Pop-By', 0))
     setCallsSelected(false);
     setNotesSelected(false);
-    setPopSelected(true); 
-    fetchPressed("popby"); 
+    setPopSelected(true);
+    fetchPressed("popby");
   }
 
-  function sanityCheck() 
-  {
-    if (data == null) 
-    {
+  function sanityCheck() {
+    if (data == null) {
       return false;
     }
 
-    if (data["data"] == null) 
-    {
+    if (data["data"] == null) {
       return false;
     }
 
-    if (data["data"].length == 0) 
-    {
+    if (data["data"].length == 0) {
       return false;
     }
     return true;
   }
 
-  function contactName(index) 
-  {
+  function contactName(index) {
     if (!sanityCheck())
       return "";
 
     return data["data"][index]["contactName"];
   }
 
-  function notes(index) 
-  {
+  function notes(index) {
     if (!sanityCheck())
       return "";
 
-    return data["data"][index]["notes"];
+    var notes = data["data"][index]["notes"];
+    return getRanking(notes);
   }
 
-  function shouldDisplay(index) 
-  {
+  function getRanking(notes) {
+    if (!sanityCheck())
+      return "";
+
+    console.log(notes);
+
+    return notes;
+  }
+
+  function shouldDisplay(index) {
     if (!sanityCheck())
       return false;
 
     return true;
   }
 
-  function titleFor(index) 
-  {
+  function titleFor(index) {
     if (data == null) {
       return "";
     }
@@ -115,10 +143,9 @@ export default function PACScreen() {
     return "title";
   }
 
-  function fetchPressed(type)
-  {
+  function fetchPressed(type) {
     console.log(type);
-   
+
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
     myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
@@ -167,13 +194,15 @@ export default function PACScreen() {
             {
               data["data"].map((name, index) => (
                 shouldDisplay(index) ? (
-                  <View  style={styles.row} key={index}>
-                    <Text style={styles.personName}>{contactName(index)}</Text>
-                    <Text style={styles.notes}>{notes(index)}</Text>
-                  </View>
-
+                  <Swipeable leftButtons={leftButtons} rightButtons={rightButtons}>
+                    <View style={styles.row} key={index}>
+                      <Text style={styles.personName}>{contactName(index)}</Text>
+                      <Text style={styles.notes}>{notes(index)}</Text>
+                    </View>
+                  </Swipeable>
                 ) : (<View></View>)
               )
+
               )
             }
             <View style={styles.hack}></View>
@@ -183,13 +212,45 @@ export default function PACScreen() {
   );
 }
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
   },
   hack: {
-    height:100,
+    height: 100,
     backgroundColor: 'white',
+  },
+  completeView: {
+    width: 200,
+    backgroundColor: 'green',
+    fontSize: 20,
+    textAlign: "left",
+    alignContent: "center",
+    justifyContent: "center",
+    fontSize: 16
+  },
+  complete: {
+    width: 200,
+    color: 'orange',
+    fontSize: 20,
+    fontSize: 16
+  },
+  postponeView: {
+    width: 200,
+    backgroundColor: 'orange',
+    fontSize: 20,
+    textAlign: "right",
+    alignContent: "center",
+    justifyContent: "center",
+    fontSize: 16,
+  },
+  postpone: {
+    width: 200,
+    color: 'white',
+    fontSize: 20,
+    textAlign: "left",
+    marginLeft: 10,
+    fontSize: 16
   },
   row: {
     paddingTop: 10,
