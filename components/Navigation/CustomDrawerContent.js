@@ -44,7 +44,7 @@ function CustomDrawerContent(props) {
 
      console.log(screenName);
 	
-     analytics.event(new Event('Menu', 'Menu Item Pressed', screenName, 0))
+     analytics.event(new Event('Menu Item Pressed', screenName, 0))
      .then(() => console.log("button success"))
      .catch(e => console.log(e.message));
    }

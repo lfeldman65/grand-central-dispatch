@@ -12,7 +12,7 @@ let deviceWidth = Dimensions.get('window').width;
 
 function ForgotPasswordPressed() {
   console.log('Forgot Press');
-  analytics.event(new Event('Login', 'Forgot Password Button', 'Pressed', 0))
+  analytics.event(new Event('Login', 'Forgot Password Button Pressed', 0))
   .then(() => console.log("button success"))
   .catch(e => console.log(e.message));
   Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
@@ -25,7 +25,7 @@ export default function LoginScreen({navigation})
 
   HandleLoginPress = () => {  // https://aboutreact.com/react-native-login-and-signup/
 
-    analytics.event(new Event('Login', 'Login Button', 'Pressed', 0))
+    analytics.event(new Event('Login', 'Login Button Pressed', 0))
     .then(() => console.log("button success"))
     .catch(e => console.log(e.message));
     
@@ -105,7 +105,7 @@ export default function LoginScreen({navigation})
             unfillColor='#004F89'
             iconStyle={{ borderColor: "white" }}
             text='Remember Me'
-            onPress={(isChecked) => { analytics.event(new Event('Login', 'Remember Me', 'Pressed', 0))
+            onPress={(isChecked) => { analytics.event(new Event('Login', 'Remember Me Pressed', 0))
             .then(() => console.log("button success"))
             .catch(e => console.log(e.message));}}/>
 
