@@ -40,14 +40,14 @@ export default function Dashboard(props) {
   const pressedCalls = (screenName) => 
   {
     console.log(screenName);
-    analytics.event(new Event('Dashboard', 'Calls', 'Pressed', 0))
+    analytics.event(new Event('Dashboard', 'Calls Pressed', 0))
   	navigation.navigate(screenName)
   }
 
   const pressedNotes = (screenName) => 
   {
     console.log(screenName);
-    analytics.event(new Event('Dashboard', 'Notes', 'Pressed', 0))
+    analytics.event(new Event('Dashboard', 'Notes Pressed', 0))
   	navigation.navigate(screenName)
   }
 
@@ -63,7 +63,7 @@ export default function Dashboard(props) {
     {
       prettyName = "Transactions";
     }
-    analytics.event(new Event('Dashboard', prettyName, 'Pressed', 0))
+    analytics.event(new Event('Dashboard', prettyName + ' Pressed', 0))
   	navigation.navigate(screenName)
   }
 
