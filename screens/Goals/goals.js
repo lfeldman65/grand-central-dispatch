@@ -166,6 +166,8 @@ export default function GoalsScreen() {
   }
 
   const handleLinkPress = (index) => {
+  
+  	console.log("here " + index.toString());
   	if (!sanityCheck())
       return false;
     navigation.navigate('PAC')
@@ -228,7 +230,7 @@ export default function GoalsScreen() {
                 shouldDisplay(index) ? (
                   <View key={index}>
 
-                    <TouchableOpacity onPress={handleLinkPress(index)}>
+                    <TouchableOpacity onPress={ () => handleLinkPress(index)}>
                       <Text style={styleForGoalTitle(index)}>{titleFor(index)} ({activityCount(index)})</Text>
                     </TouchableOpacity>
 
