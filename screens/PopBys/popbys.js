@@ -166,20 +166,31 @@ export default function PopByScreen() {
       </View>) :
 
       (
-        <View style={styles.container}>
+        <><View style={styles.container}>
           <View style={styles.tabButtonRow}>
             <Text style={nearSelected == true ? styles.selected : styles.unselected} onPress={nearPressed}>Near Me</Text>
             <Text style={prioritySelected == true ? styles.selected : styles.unselected} onPress={priorityPressed}>Priority</Text>
             <Text style={savedSelected == true ? styles.selected : styles.unselected} onPress={savedPressed}>Saved</Text>
           </View>
         </View>
+        
+        <View style={styles.bottom}>
+
+
+        </View></>
       )
   );
 }
 
 const styles = StyleSheet.create({ 
   container: {
-    backgroundColor: 'white',
+    flex: 7,
+    backgroundColor: 'black',
+  },
+  bottom: {
+    flex: 1,
+    backgroundColor: 'red',
+    height: 100
   },
   hack: {
     height:100,
