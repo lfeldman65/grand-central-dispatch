@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Swipeable from 'react-native-swipeable-row';
+import pacDetail from '../../screens/PAC/pacDetail.js';
 
 const analytics = new Analytics('UA-65596113-1');
 
@@ -16,7 +17,16 @@ function handlePostpone() {
   console.log('Postpone');
 }
 
+
+
 export default function PACScreen() {
+
+  const navigation = useNavigation();
+
+  const handleRowPress = (index) => {
+    console.log('row press');
+    navigation.navigate(pacDetail);  // Error
+  }
 
   const rightButtons = [
     <View style={styles.completeView}>
@@ -37,7 +47,6 @@ export default function PACScreen() {
 
   let deviceWidth = Dimensions.get('window').width;
 
-  const navigation = useNavigation();
   const [callsSelected, setCallsSelected] = useState(true);
   const [notesSelected, setNotesSelected] = useState(false);
   const [popSelected, setPopSelected] = useState(false);
@@ -194,12 +203,22 @@ export default function PACScreen() {
             {
               data["data"].map((name, index) => (
                 shouldDisplay(index) ? (
+
+
+
                   <Swipeable leftButtons={leftButtons} rightButtons={rightButtons}>
-                    <View style={styles.row} key={index}>
-                      <Text style={styles.personName}>{contactName(index)}</Text>
-                      <Text style={styles.notes}>{notes(index)}</Text>
-                    </View>
+                    <TouchableOpacity onPress={() => handleRowPress(index)}>
+
+
+                      <View style={styles.row} key={index}>
+                        <Text style={styles.personName}>{contactName(index)}</Text>
+                        <Text style={styles.notes}>{notes(index)}</Text>
+                      </View>
+                    </TouchableOpacity>
+
+
                   </Swipeable>
+
                 ) : (<View></View>)
               )
 
