@@ -17,15 +17,13 @@ function handlePostpone() {
   console.log('Postpone');
 }
 
-
-
 export default function PACScreen() {
 
   const navigation = useNavigation();
 
   const handleRowPress = (index) => {
     console.log('row press');
-    navigation.navigate(pacDetail);  // Error
+    navigation.navigate("PACDetail");  // Error
   }
 
   const rightButtons = [
@@ -39,7 +37,7 @@ export default function PACScreen() {
   const leftButtons = [
     <View style={styles.postponeView}>
       <TouchableOpacity onPress={handlePostpone}>
-        <Text style={styles.complete}>Postpone</Text>
+        <Text style={styles.postphone}>Postpone</Text>
       </TouchableOpacity>
     </View>
     ,
@@ -204,11 +202,9 @@ export default function PACScreen() {
               data["data"].map((name, index) => (
                 shouldDisplay(index) ? (
 
+                    <Swipeable leftButtonWidth={100}  rightButtonWidth={110} leftButtons={leftButtons} rightButtons={rightButtons}>
 
-
-                  <Swipeable leftButtons={leftButtons} rightButtons={rightButtons}>
                     <TouchableOpacity onPress={() => handleRowPress(index)}>
-
 
                       <View style={styles.row} key={index}>
                         <Text style={styles.personName}>{contactName(index)}</Text>
@@ -240,13 +236,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   completeView: {
-    width: 200,
+  
     backgroundColor: 'green',
     fontSize: 20,
-    textAlign: "left",
     alignContent: "center",
     justifyContent: "center",
-    fontSize: 16
+    flex: 1,
+    paddingLeft: 20
+    
   },
   complete: {
     width: 200,
@@ -255,13 +252,13 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   postponeView: {
-    width: 200,
+    
     backgroundColor: 'orange',
-    fontSize: 20,
-    textAlign: "right",
-    alignContent: "center",
-    justifyContent: "center",
-    fontSize: 16,
+    fontSize: 20,    
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 20
   },
   postpone: {
     width: 200,
@@ -329,4 +326,16 @@ const styles = StyleSheet.create({
     textAlign: "left",
     marginLeft: 10
   },
+  leftSwipeItem: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 20
+  },
+  rightSwipeItem: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 20
+  },
+  
 });
