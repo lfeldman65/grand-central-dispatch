@@ -12,7 +12,7 @@ let deviceWidth = Dimensions.get('window').width;
 
 function ForgotPasswordPressed() {
   console.log('Forgot Press');
-  analytics.event(new Event('Login', 'Forgot Password Button', 'Pressed', 0))
+  analytics.event(new Event('Login', 'Forgot Password Button Pressed', 0))
   .then(() => console.log("button success"))
   .catch(e => console.log(e.message));
   Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
@@ -25,7 +25,7 @@ export default function LoginScreen({navigation})
 
   HandleLoginPress = () => {  // https://aboutreact.com/react-native-login-and-signup/
 
-    analytics.event(new Event('Login', 'Login Button', 'Pressed', 0))
+    analytics.event(new Event('Login', 'Login Button Pressed', 0))
     .then(() => console.log("button success"))
     .catch(e => console.log(e.message));
     
@@ -96,7 +96,7 @@ export default function LoginScreen({navigation})
           />
         </View>
 
-        <View style={{ flexDirection: 'row', paddingLeft: 1 }}>
+        <View style={{ flexDirection: 'row', paddingLeft: 1}}>
 
           <BouncyCheckbox  // https://github.com/WrathChaos/react-native-bouncy-checkbox
             size={25}
@@ -105,7 +105,8 @@ export default function LoginScreen({navigation})
             unfillColor='#004F89'
             iconStyle={{ borderColor: "white" }}
             text='Remember Me'
-            onPress={(isChecked) => { analytics.event(new Event('Login', 'Remember Me', 'Pressed', 0))
+            textContainerStyle={{marginLeft: 15}}
+            onPress={(isChecked) => { analytics.event(new Event('Login', 'Remember Me Pressed', 0))
             .then(() => console.log("button success"))
             .catch(e => console.log(e.message));}}/>
 

@@ -7,6 +7,10 @@ import dayTrophy from '../../assets/weeklyTrophy.png';
 import weekTrophy from '../../assets/dailyTrophy.png';
 import noTrophy from '../../assets/noTrophy.png';
 
+import { Analytics, PageHit, Event} from 'expo-analytics';
+
+const analytics = new Analytics('UA-65596113-1');
+
 export default function GoalsScreen() {
 
   let deviceWidth = Dimensions.get('window').width;
@@ -33,11 +37,13 @@ export default function GoalsScreen() {
 
   function winTheDayPressed() {
     console.log('win the day pressed');
+    analytics.event(new Event('Goals', 'Win the Day Pressed', 0))
     setWinTheDaySelected(true);
   }
 
   function winTheWeekPressed() {
     console.log('win the week pressed');
+    analytics.event(new Event('Goals', 'Win the Week Pressed', 0))
     setWinTheDaySelected(false);
   }
 
@@ -112,14 +118,20 @@ export default function GoalsScreen() {
       if (dailyTarget == 0 && dailyNum == 0) {
         return 0.0;
       }
+      if (dailyNum > dailyTarget) {
+        return 1.0;
+      }
       return dailyNum / dailyTarget;
     }
     var weeklyNum = data["data"][index]["achievedThisWeek"];
     if (weeklyTarget == 0 && weeklyNum > 0) {
       return 1.0;
     }
-    if (dailyTarget == 0 && dailyNum == 0) {
+    if (weeklyTarget == 0 && weeklyNum == 0) {
       return 0.0;
+    }
+    if (weeklyNum > weeklyTarget) {
+      return 1.0;
     }
     return weeklyNum / weeklyTarget;
   }
@@ -166,11 +178,29 @@ export default function GoalsScreen() {
   }
 
   const handleLinkPress = (index) => {
-  
-  	console.log("here " + index.toString());
-  	if (!sanityCheck())
+
+    console.log("here " + index.toString());
+    if (!sanityCheck())
       return false;
-    navigation.navigate('PAC')
+
+    switch (index) {
+      case 0:
+        analytics.event(new Event('Goals', 'Calls Pressed', 0))
+        navigation.navigate('PAC');
+        break;
+      case 1:
+        analytics.event(new Event('Goals', 'Notes Pressed', 0))
+        navigation.navigate('PAC');
+        break;
+      case 2:
+        analytics.event(new Event('Goals', 'Pop-Bys Pressed', 0))
+        navigation.navigate('Pop-Bys');
+        break;
+      case 3:
+        analytics.event(new Event('Goals', 'Database Additions Pressed', 0))
+      //  navigation.navigate('Pop-Bys');  // Add new relationship
+        break;
+    }
   }
 
   function fetchPressed() {
@@ -230,7 +260,7 @@ export default function GoalsScreen() {
                 shouldDisplay(index) ? (
                   <View key={index}>
 
-                    <TouchableOpacity onPress={ () => handleLinkPress(index)}>
+                    <TouchableOpacity onPress={() => handleLinkPress(index)}>
                       <Text style={styleForGoalTitle(index)}>{titleFor(index)} ({activityCount(index)})</Text>
                     </TouchableOpacity>
 
