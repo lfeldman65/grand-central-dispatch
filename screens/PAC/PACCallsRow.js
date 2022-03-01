@@ -8,10 +8,12 @@ import Swipeable from 'react-native-swipeable-row';
 import styles from './styles';
 import { analytics } from '../../constants/analytics';
 
-//const analytics = new Analytics('UA-65596113-1');
-
 export default function PACCallsRow(props) {
   const navigation = useNavigation();
+ 
+  const handlePhonePressed = () => {
+    console.log('Phone');
+  }
 
   function handleComplete() {
     console.log('Complete');
@@ -52,7 +54,19 @@ export default function PACCallsRow(props) {
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.row}>
         <Text style={styles.personName}>{props.data.contactName}</Text>
-        <Text style={styles.notes}>{props.data.notes}</Text>
+        <Text style={styles.otherText}>{"Ranking: " + props.data.mobile}</Text>
+        <Text style={styles.otherText}>{"Last Call: " + "08/10/2021"}</Text>
+
+        <TouchableOpacity onPress={() => handlePhonePressed()}>
+          <Text style={styles.phoneNumber}>{"Mobile: " + props.data.mobile}</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.phoneNumber}>{"Office: " + props.data.officePhone}</Text>
+
+
+        <Text style={styles.phoneNumber}>{"Home: " + props.data.homePhone}</Text>
+
+
       </View>
     </TouchableOpacity>
   );

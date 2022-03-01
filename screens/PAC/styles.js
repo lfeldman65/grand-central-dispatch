@@ -5,6 +5,29 @@ export default styles = StyleSheet.create({
       backgroundColor: 'white',
       height: '100%'
     },
+    personName: {
+      color: 'black',
+      fontSize: 20,
+      textAlign: "left",
+      marginLeft: 10,
+      margin: 5,
+    },
+    phoneNumber: {
+      color: 'blue',
+      fontSize: 15,
+      textAlign: "left",
+      marginLeft: 10,
+      margin: 5,
+      width: 180,
+      backgroundColor: 'yellow'
+    },
+    otherText: {
+      color: 'black',
+      fontSize: 15,
+      textAlign: "left",
+      marginLeft: 10,
+      margin: 5
+    },
     bottomContainer: {
       backgroundColor: '#1A6295',
       height: 60,
@@ -105,14 +128,6 @@ export default styles = StyleSheet.create({
       textAlign: "left",
       marginLeft: 10,
       fontSize: 16
-    },
-    personName: {
-      width: 400,
-      height: 32,
-      color: 'black',
-      fontSize: 18,
-      textAlign: "left",
-      marginLeft: 10
     },
     leftSwipeItem: {
       flex: 1,

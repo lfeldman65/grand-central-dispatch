@@ -4,20 +4,25 @@ import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { StatusBar } from 'expo-status-bar';
+import {analytics} from '../../constants/analytics';
 
-const analytics = new Analytics('UA-65596113-1');
 let deviceHeight = Dimensions.get('window').height;
 
-export default function PACDetailScreen() {
-
+export default function PACDetailScreen({route}) 
+{
+  const { contactId } = route.params;
   const navigation = useNavigation();
 
-  function postponePressed() {
-    console.log('Postpone');
+  function postponePressed() 
+  {
+    analytics.event(new Event('PAC Detail', 'Postpone', 0));
+    postponeAPI();
   }
 
-  function completePressed() {
+  function completePressed() 
+  {
     console.log('Complete');
+    analytics.event(new Event('PAC Detail', 'Complete', 0))
   }
 
   const [data, setData] = useState({ "data": [] });
@@ -53,12 +58,56 @@ export default function PACDetailScreen() {
     return displayName;
   }
 
+  function mobileNumber() {
+    if (!sanityCheck())
+      return "";
+
+    var mobile = data["data"]["mobile"];
+    return mobile;
+  }
+
   function ranking() {
     if (!sanityCheck())
       return "";
 
     var notes = data["data"]["ranking"];
     return getRanking(notes);
+  }
+
+  function postponeAPI() 
+  {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
+    myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
+    myHeaders.append("Cookie", "ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a");
+
+    var raw = JSON.stringify({
+      
+   });
+
+   var requestOptions = {
+     method: 'POST',
+     headers: myHeaders,
+     redirect: 'follow'
+   };
+
+    var apiURL = "https://www.referralmaker.com/services/mobileapi/contactsPostponeAction/" + data["data"]["userID"];
+    console.log(apiURL);
+    fetch(apiURL, requestOptions)
+      .then(response => response.json())   //this line converts it to JSON
+      .then((result) => {                  //then we can treat it as a JSON object
+        console.log(result);
+      //  setData(result);
+        if (result.status == "error") {
+          alert(result.error);
+          setIsLoading(false);
+        }
+        else {
+          setIsLoading(false);
+          navigation.goBack();
+        }
+      })
+      .catch(error => alert("failure " + error));
   }
 
   function fetchPressed() {
@@ -71,9 +120,9 @@ export default function PACDetailScreen() {
       method: 'GET',
       headers: myHeaders,
       redirect: 'follow'
-    };
+    }; 
 
-    var apiURL = "https://www.referralmaker.com/services/mobileapi/contacts/c404ca6b-9f57-4ff9-a296-8f7dff936c48"
+    var apiURL = "https://www.referralmaker.com/services/mobileapi/contacts/" + contactId;
     fetch(apiURL, requestOptions)
       .then(response => response.json()) //this line converts it to JSON
       .then((result) => {                  //then we can treat it as a JSON object
@@ -102,6 +151,10 @@ export default function PACDetailScreen() {
           <View style={styles.topContainer}>
 
             <Text style={styles.personName}>{contactName()}</Text>
+            <Text style={styles.detailTitle}>{'Mobile Phone'}</Text>
+            <Text style={styles.detailTitle}>{mobileNumber()}</Text>
+
+
 
           </View>
 
@@ -127,10 +180,27 @@ const styles = StyleSheet.create({
   topContainer:
   {
     height: .75*deviceHeight,
-    backgroundColor: 'red'
+    backgroundColor: 'white'
   },
   bottomContainer: {
     backgroundColor: 'white'
+  },
+  detailTitle: {
+    color: 'black',
+    fontSize: 15,
+    textAlign: "left",
+    marginLeft: 20,
+    margin: 3,
+    width: 180,
+  },
+  phoneNumber: {
+    color: 'blue',
+    fontSize: 15,
+    textAlign: "left",
+    marginLeft: 10,
+    margin: 3,
+    width: 180,
+    backgroundColor: 'yellow'
   },
   postponeText: {
     color: 'orange',
@@ -156,10 +226,10 @@ const styles = StyleSheet.create({
   },
   personName: {
     marginTop: 20,
-    marginLeft: 10,
+    marginLeft: 20,
     color: '#1A6295',
     fontSize: 18,
     textAlign: "left",
-    marginLeft: 10
+    marginBottom: 20
   },
 });
