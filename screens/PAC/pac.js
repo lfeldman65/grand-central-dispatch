@@ -252,16 +252,17 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   postponeView: {
+    
     backgroundColor: 'orange',
     fontSize: 20,    
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'center',
-    paddingRight: 20,
+    paddingRight: 20
   },
   postpone: {
     width: 200,
-    color: 'red',
+    color: 'white',
     fontSize: 20,
     textAlign: "left",
     marginLeft: 10,
