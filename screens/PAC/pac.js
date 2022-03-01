@@ -23,16 +23,10 @@ export default function PACScreen() {
 
   const handleRowPress = (index) => {
     console.log('row press');
-    navigation.navigate("PACDetail");
+    navigation.navigate("PACDetail");  // Error
   }
 
   const rightButtons = [
-    <View style={styles.postponeView}>
-      <TouchableOpacity onPress={handlePostpone}>
-        <Text style={styles.postpone}>Postpone</Text>
-      </TouchableOpacity>
-    </View>,
-
     <View style={styles.completeView}>
       <TouchableOpacity onPress={handleComplete}>
         <Text style={styles.complete}>Complete</Text>
@@ -41,9 +35,9 @@ export default function PACScreen() {
   ];
 
   const leftButtons = [
-    <View style={styles.completeView}>
+    <View style={styles.postponeView}>
       <TouchableOpacity onPress={handlePostpone}>
-        <Text style={styles.complete}>Postpone</Text>
+        <Text style={styles.postphone}>Postpone</Text>
       </TouchableOpacity>
     </View>
     ,
@@ -208,7 +202,7 @@ export default function PACScreen() {
               data["data"].map((name, index) => (
                 shouldDisplay(index) ? (
 
-                  <Swipeable rightButtonWidth={110} rightButtons={rightButtons}>
+                    <Swipeable leftButtonWidth={100}  rightButtonWidth={110} leftButtons={leftButtons} rightButtons={rightButtons}>
 
                     <TouchableOpacity onPress={() => handleRowPress(index)}>
 
@@ -242,31 +236,35 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   completeView: {
+  
     backgroundColor: 'green',
     fontSize: 20,
     alignContent: "center",
     justifyContent: "center",
     flex: 1,
-    paddingLeft: 20,
+    paddingLeft: 20
+    
   },
   complete: {
     width: 200,
-    color: 'white',
+    color: 'orange',
     fontSize: 20,
     fontSize: 16
   },
   postponeView: {
     backgroundColor: 'orange',
-    fontSize: 20,
-    alignContent: "center",
-    justifyContent: "center",
+    fontSize: 20,    
     flex: 1,
-    paddingLeft: 20
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    paddingRight: 20,
   },
   postpone: {
     width: 200,
-    color: 'white',
+    color: 'red',
     fontSize: 20,
+    textAlign: "left",
+    marginLeft: 10,
     fontSize: 16
   },
   row: {
@@ -338,5 +336,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 20
   },
-
+  
 });
