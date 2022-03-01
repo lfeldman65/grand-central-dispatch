@@ -95,11 +95,9 @@ export default function PACScreen() {
     if (data == null) {
       return false;
     }
-
     if (data["data"] == null) {
       return false;
     }
-
     if (data["data"].length == 0) {
       return false;
     }
@@ -202,7 +200,7 @@ export default function PACScreen() {
               data["data"].map((name, index) => (
                 shouldDisplay(index) ? (
 
-                    <Swipeable leftButtonWidth={100}  rightButtonWidth={110} leftButtons={leftButtons} rightButtons={rightButtons}>
+                  <Swipeable leftButtonWidth={100} rightButtonWidth={110} leftButtons={leftButtons} rightButtons={rightButtons}>
 
                     <TouchableOpacity onPress={() => handleRowPress(index)}>
 
@@ -210,6 +208,7 @@ export default function PACScreen() {
                         <Text style={styles.personName}>{contactName(index)}</Text>
                         <Text style={styles.notes}>{notes(index)}</Text>
                       </View>
+
                     </TouchableOpacity>
 
 
@@ -236,14 +235,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   completeView: {
-  
+
     backgroundColor: 'green',
     fontSize: 20,
     alignContent: "center",
     justifyContent: "center",
     flex: 1,
     paddingLeft: 20
-    
+
   },
   complete: {
     width: 200,
@@ -252,9 +251,9 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   postponeView: {
-    
+
     backgroundColor: 'orange',
-    fontSize: 20,    
+    fontSize: 20,
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'center',
@@ -337,5 +336,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 20
   },
-  
+
 });

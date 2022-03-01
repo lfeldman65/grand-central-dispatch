@@ -34,9 +34,9 @@ const Drawer = createDrawerNavigator();
 export const PACStackNavigator = () => {
 
 
-return (
+  return (
     <Stack.Navigator>
-    <Stack.Screen
+      <Stack.Screen
         name="PAC1"
         component={PACScreen}
         options={{
@@ -49,21 +49,21 @@ return (
         }}
       />
 
-	<Stack.Screen
+      <Stack.Screen
         name="PACDetail"
         component={PACDetailScreen}
         options={{
-          title: 'Priority Action Center Detail',
+          title: 'Detail',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
           },
           headerBackVisible: true,
-          
+
         }}
       />
-      </Stack.Navigator>);
-      
+    </Stack.Navigator>);
+
 };
 
 export const HomeStackNavigator = () => {
@@ -95,19 +95,19 @@ export const HomeStackNavigator = () => {
         }}
       />
 
-      
 
-	<Stack.Screen
+
+      <Stack.Screen
         name="PAC"
         component={PACStackNavigator}
         options={{
-         
+
           headerBackVisible: false,
           headerShown: false
         }}
       />
-      
-      
+
+
       <Stack.Screen
         name="relationships"
         component={RelationshipsScreen}
