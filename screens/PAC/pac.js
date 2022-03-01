@@ -1,29 +1,35 @@
-import { useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking, ScrollView, ActivityIndicator, TouchableHighlight } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
-import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Swipeable from 'react-native-swipeable-row';
 import pacDetail from '../../screens/PAC/pacDetail.js';
-
-const analytics = new Analytics('UA-65596113-1');
-
-function handleComplete() {
-  console.log('Complete');
-}
-
-function handlePostpone() {
-  console.log('Postpone');
-}
+import PACCallsRow from './PACCallsRow';
+import PACNotesRow from './PACNotesRow';
+import PACPopRow from './PACPopRow';
+import styles from './styles';  
+import {analytics} from '../../constants/analytics';
 
 export default function PACScreen() {
 
   const navigation = useNavigation();
 
+  function handleComplete() {
+    console.log('Complete');
+  }
+  
+  function handlePostpone() {
+    console.log('Postpone');
+  }
+
   const handleRowPress = (index) => {
     console.log('row press');
-    navigation.navigate("PACDetail");  // Error
+    navigation.navigate("PACDetail");
+  }
+
+  const handleIdeasPressed = () => {
+    console.log('Ideas');
   }
 
   const rightButtons = [
@@ -42,8 +48,6 @@ export default function PACScreen() {
     </View>
     ,
   ];
-
-  let deviceWidth = Dimensions.get('window').width;
 
   const [callsSelected, setCallsSelected] = useState(true);
   const [notesSelected, setNotesSelected] = useState(false);
@@ -197,144 +201,43 @@ export default function PACScreen() {
 
           <ScrollView>
             {
-              data["data"].map((name, index) => (
+              data["data"].map((item, index) => (
                 shouldDisplay(index) ? (
+                  <View>
+                    { callsSelected == true ? <PACCallsRow key={index} data={item} onPress={() => handleRowPress(index)} /> : null }
+                    { notesSelected == true ? <PACNotesRow key={index} data={item} onPress={() => handleRowPress(index)} /> : null }
+                    { popSelected == true ? <PACPopRow key={index} data={item} onPress={() => handleRowPress(index)} /> : null }
+                  </View>
+                  // <Swipeable leftButtonWidth={100} rightButtonWidth={110} leftButtons={leftButtons} rightButtons={rightButtons}>
 
-                  <Swipeable leftButtonWidth={100} rightButtonWidth={110} leftButtons={leftButtons} rightButtons={rightButtons}>
+                  //   <TouchableOpacity onPress={() => handleRowPress(index)}>
 
-                    <TouchableOpacity onPress={() => handleRowPress(index)}>
+                  //     <View style={styles.row} key={index}>
+                  //       <Text style={styles.personName}>{contactName(index)}</Text>
+                  //       <Text style={styles.notes}>{notes(index)}</Text>
+                  //     </View>
 
-                      <View style={styles.row} key={index}>
-                        <Text style={styles.personName}>{contactName(index)}</Text>
-                        <Text style={styles.notes}>{notes(index)}</Text>
-                      </View>
-
-                    </TouchableOpacity>
+                  //   </TouchableOpacity>
 
 
-                  </Swipeable>
+                  // </Swipeable>
 
                 ) : (<View></View>)
               )
 
               )
             }
-            <View style={styles.hack}></View>
           </ScrollView>
+
+          <TouchableOpacity style={styles.bottomContainer} onPress={() => handleIdeasPressed()}>
+            <View style={styles.ideasButton}>
+              <Text style={styles.ideasText}>{'View Ideas'}</Text>
+            </View>
+          </TouchableOpacity>
+
         </View>
       )
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-  },
-  hack: {
-    height: 100,
-    backgroundColor: 'white',
-  },
-  completeView: {
 
-    backgroundColor: 'green',
-    fontSize: 20,
-    alignContent: "center",
-    justifyContent: "center",
-    flex: 1,
-    paddingLeft: 20
-
-  },
-  complete: {
-    width: 200,
-    color: 'orange',
-    fontSize: 20,
-    fontSize: 16
-  },
-  postponeView: {
-
-    backgroundColor: 'orange',
-    fontSize: 20,
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingRight: 20
-  },
-  postpone: {
-    width: 200,
-    color: 'white',
-    fontSize: 20,
-    textAlign: "left",
-    marginLeft: 10,
-    fontSize: 16
-  },
-  row: {
-    paddingTop: 10,
-    backgroundColor: 'white',
-    borderColor: 'lightgray',
-    borderWidth: .5,
-    paddingBottom: 10
-  },
-  tabButtonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    height: 40,
-    alignItems: 'center',
-  },
-  unselected: {
-    color: 'lightgray',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#09334a',
-    flex: 1,
-    paddingTop: 10
-  },
-  selected: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#04121b',
-    flex: 1,
-    paddingTop: 10,
-    borderColor: 'lightblue',
-    borderWidth: 2
-  },
-  progress: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10
-  },
-  notes: {
-    width: 200,
-    color: '#1A6295',
-    fontSize: 20,
-    textAlign: "left",
-    marginLeft: 10,
-    fontSize: 16
-  },
-  personName: {
-    width: 400,
-    height: 32,
-    color: 'black',
-    fontSize: 18,
-    textAlign: "left",
-    marginLeft: 10
-  },
-  leftSwipeItem: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingRight: 20
-  },
-  rightSwipeItem: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingLeft: 20
-  },
-
-});
