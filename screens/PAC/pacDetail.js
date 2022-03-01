@@ -6,7 +6,6 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import { StatusBar } from 'expo-status-bar';
 
 const analytics = new Analytics('UA-65596113-1');
-let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height;
 
 export default function PACDetailScreen() {
@@ -120,15 +119,10 @@ export default function PACDetailScreen() {
   );
 }
 
-{/* <View style={styles.bottom}>
-
-
-</View> */}
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    height: deviceHeight
+    height: '100%'
   },
   topContainer:
   {
