@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { StatusBar } from 'expo-status-bar';
 
 const analytics = new Analytics('UA-65596113-1');
+let deviceWidth = Dimensions.get('window').width;
+let deviceHeight = Dimensions.get('window').height;
 
 export default function PACDetailScreen() {
 
@@ -97,26 +99,44 @@ export default function PACDetailScreen() {
       </View>) :
       (
         <View style={styles.container}>
-          <Text style={styles.personName}>{contactName()}</Text>
 
-          <TouchableOpacity onPress={completePressed}>
-            <Text style={styles.completeText}>Complete</Text>
-          </TouchableOpacity>
+          <View style={styles.topContainer}>
 
-          <TouchableOpacity onPress={postponePressed}>
-            <Text style={styles.postponeText}>Postpone</Text>
-          </TouchableOpacity>
+            <Text style={styles.personName}>{contactName()}</Text>
 
-          <StatusBar style="auto" />
+          </View>
+
+          <View style={styles.bottomContainer}>
+            <TouchableOpacity onPress={completePressed}>
+              <Text style={styles.completeText}>Complete</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={postponePressed}>
+              <Text style={styles.postponeText}>Postpone</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       )
   );
 }
 
+{/* <View style={styles.bottom}>
+
+
+</View> */}
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: 'white',
+    height: deviceHeight
+  },
+  topContainer:
+  {
+    height: .75*deviceHeight,
+    backgroundColor: 'red'
+  },
+  bottomContainer: {
+    backgroundColor: 'white'
   },
   postponeText: {
     color: 'orange',
@@ -125,6 +145,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   completeText: {
+    marginTop: 20,
     color: 'green',
     marginLeft: 10,
     textAlign: 'center',
