@@ -1,16 +1,26 @@
-import { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking, ScrollView, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  Linking,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
+import Button from '../../components/Button';
 
 import chevron from '../../assets/chevron_blue.png';
 
 const analytics = new Analytics('UA-65596113-1');
 
-export default function ManageRelationshipsScreen() 
-{
+export default function ManageRelationshipsScreen() {
   let deviceWidth = Dimensions.get('window').width;
 
   const navigation = useNavigation();
@@ -19,48 +29,46 @@ export default function ManageRelationshipsScreen()
   const [groupsSelected, setGroupsSelected] = useState(false);
   const [filterRel, setFilterRel] = useState(true);
 
-  const [data, setData] = useState({ "data": [] });
+  const [data, setData] = useState({ data: [] });
   const [isLoading, setIsLoading] = useState(true);
 
-  var filterTitle = "Relationships";
+  var filterTitle = 'Relationships';
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: () => (<MenuIcon />)
+      headerLeft: () => <MenuIcon />,
     });
   });
 
   useEffect(() => {
-
     //take this out if you don't want to simulate delay
     setTimeout(() => {
-      fetchPressed("alpha");
+      fetchPressed('alpha');
     }, 2000);
-
   }, []);
 
   function azPressed() {
-    analytics.event(new Event('Manage Relationships', 'Tab Button', 'A-Z', 0))
+    analytics.event(new Event('Manage Relationships', 'Tab Button', 'A-Z', 0));
     setAZSelected(true);
     setRankingSelected(false);
     setGroupsSelected(false);
-    fetchPressed("alpha");
+    fetchPressed('alpha');
   }
 
   function rankingPressed() {
-    analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0))
+    analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
     setAZSelected(false);
     setRankingSelected(true);
     setGroupsSelected(false);
-    fetchPressed("ranking");
+    fetchPressed('ranking');
   }
 
   function groupsPressed() {
-    analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0))
+    analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
     setAZSelected(false);
     setRankingSelected(false);
     setGroupsSelected(true);
-    fetchPressed("groups");
+    fetchPressed('groups');
   }
 
   function filterPressed() {
@@ -68,11 +76,11 @@ export default function ManageRelationshipsScreen()
     if (filterRel) {
       console.log(1);
       setFilterRel(false);
-      return "Businesses"
+      return 'Businesses';
     }
     console.log(2);
     setFilterRel(true);
-    return "Relationships"
+    return 'Relationships';
 
     //  analytics.event(new Event('Manage Relationships', 'Filter', filterTitle, 0))
   }
@@ -82,127 +90,131 @@ export default function ManageRelationshipsScreen()
       return false;
     }
 
-    if (data["data"] == null) {
+    if (data['data'] == null) {
       return false;
     }
 
-    if (data["data"].length == 0) {
+    if (data['data'].length == 0) {
       return false;
     }
     return true;
   }
 
   function activityDisplay(index) {
-    if (!sanityCheck())
-      return "";
+    if (!sanityCheck()) return '';
 
     if (winTheDaySelected) {
-      return data["data"][index]["achievedToday"]
+      return data['data'][index]['achievedToday'];
     }
-    return data["data"][index]["achievedThisWeek"]
+    return data['data'][index]['achievedThisWeek'];
   }
 
-  function filterTitle() 
-  {
+  function filterTitle() {
     if (filterRel) {
       console.log(10);
-    //  setFilterRel(false);
-      return "Businesses"
+      //  setFilterRel(false);
+      return 'Businesses';
     }
     console.log(20);
-  //  setFilterRel(true);
-    return "Relationships"
+    //  setFilterRel(true);
+    return 'Relationships';
   }
 
   function shouldDisplay(index) {
-    if (!sanityCheck())
-      return false;
+    if (!sanityCheck()) return false;
 
-    return data["data"][index]["goal"]["displayOnDashboard"];
+    return data['data'][index]['goal']['displayOnDashboard'];
   }
 
   function titleFor(index) {
     if (data == null) {
-      return "";
+      return '';
     }
-    if (data["data"] == null) {
-      return "";
+    if (data['data'] == null) {
+      return '';
     }
-    if (data["data"].length == 0) {
-      return "";
+    if (data['data'].length == 0) {
+      return '';
     }
-    var oldTitle = data["data"][index]["goal"]["title"];
-    if (oldTitle == "Pop-By Made") {
-      return "Pop-Bys Delivered"
+    var oldTitle = data['data'][index]['goal']['title'];
+    if (oldTitle == 'Pop-By Made') {
+      return 'Pop-Bys Delivered';
     }
-    if (oldTitle == "New Contacts") {
-      return "Database Additions"
+    if (oldTitle == 'New Contacts') {
+      return 'Database Additions';
     }
-    if (oldTitle == "Notes Made") {
-      return "Notes Written"
+    if (oldTitle == 'Notes Made') {
+      return 'Notes Written';
     }
     return oldTitle;
   }
 
   function fetchPressed(type) {
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
-    myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
-    myHeaders.append("Cookie", "ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a");
+    myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
+    myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
+    myHeaders.append('Cookie', 'ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a');
 
     var requestOptions = {
       method: 'GET',
       headers: myHeaders,
-      redirect: 'follow'
+      redirect: 'follow',
     };
 
-    var azOrRankingURL = "https://www.referralmaker.com/services/mobileapi/contacts?sortType=" + type + "&lastItem=0&batchSize=1";
-    var groupURL = "https://www.referralmaker.com/services/mobileapi/groups?lastItem=0&batchSize=10";
+    var azOrRankingURL =
+      'https://www.referralmaker.com/services/mobileapi/contacts?sortType=' + type + '&lastItem=0&batchSize=1';
+    var groupURL = 'https://www.referralmaker.com/services/mobileapi/groups?lastItem=0&batchSize=10';
     var apiURL = azOrRankingURL;
-    if (type == "groups") {
+    if (type == 'groups') {
       apiURL = groupURL;
     }
 
     fetch(apiURL, requestOptions)
-      .then(response => response.json()) //this line converts it to JSON
-      .then((result) => {                  //then we can treat it as a JSON object
+      .then((response) => response.json()) //this line converts it to JSON
+      .then((result) => {
+        //then we can treat it as a JSON object
         console.log(result);
         setData(result);
-        if (result.status == "error") {
+        if (result.status == 'error') {
           alert(result.error);
-          setIsLoading(false)
-        }
-        else {
-          setIsLoading(false)
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
           //  navigation.navigate('Home');
           //  alert(result.status);
         }
       })
-      .catch(error => alert("failure " + error));
+      .catch((error) => alert('failure ' + error));
   }
 
-  return (
+  function handleTestButtonPress() {
+    console.log('test button pressed');
+  }
 
-    isLoading ? (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#000" />
-      </View>) :
-
-      (
-        <View style={styles.container}>
-          <View style={styles.tabButtonRow}>
-            <Text style={azSelected == true ? styles.selected : styles.unselected} onPress={azPressed}>A-Z</Text>
-            <Text style={rankingSelected == true ? styles.selected : styles.unselected} onPress={rankingPressed}>Ranking</Text>
-            <Text style={groupsSelected == true ? styles.selected : styles.unselected} onPress={groupsPressed}>Groups</Text>
-          </View>
-          <View style={styles.filterBox}>
-            <TouchableOpacity onPress={filterPressed}>
-              <Text style={styles.filterText}>{filterTitle}</Text>
-              {/* <Image source={chevron} style={styles.chevron} /> */}
-            </TouchableOpacity>
-          </View>
-        </View>
-      )
+  return isLoading ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#000" />
+    </View>
+  ) : (
+    <View style={styles.container}>
+      <View style={styles.tabButtonRow}>
+        <Text style={azSelected == true ? styles.selected : styles.unselected} onPress={azPressed}>
+          A-Z
+        </Text>
+        <Text style={rankingSelected == true ? styles.selected : styles.unselected} onPress={rankingPressed}>
+          Ranking
+        </Text>
+        <Text style={groupsSelected == true ? styles.selected : styles.unselected} onPress={groupsPressed}>
+          Groups
+        </Text>
+      </View>
+      <View style={styles.filterBox}>
+        <TouchableOpacity onPress={filterPressed}>
+          <Text style={styles.filterText}>{filterTitle}</Text>
+          {/* <Image source={chevron} style={styles.chevron} /> */}
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -233,13 +245,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: 'lightgray',
     borderWidth: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
-  filterText:
-  {
+  filterText: {
     flexDirection: 'row',
     fontSize: 18,
-    color: 'black'
+    color: 'black',
   },
   unselected: {
     color: 'lightgray',
@@ -248,7 +259,7 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#09334a',
     flex: 1,
-    paddingTop: 10
+    paddingTop: 10,
   },
   selected: {
     color: 'white',
@@ -259,7 +270,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     borderColor: 'lightblue',
-    borderWidth: 2
+    borderWidth: 2,
   },
   goalTitle: {
     paddingRight: 30,
@@ -269,7 +280,7 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 16
+    fontSize: 16,
   },
   progress: {
     display: 'flex',
@@ -278,22 +289,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
     marginRight: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
   goalName: {
     width: 200,
     color: '#1A6295',
     fontSize: 20,
-    textAlign: "left",
+    textAlign: 'left',
     marginLeft: 10,
-    fontSize: 16
+    fontSize: 16,
   },
   goalNum: {
     width: 20,
     height: 32,
     color: 'black',
     fontSize: 18,
-    textAlign: "right",
+    textAlign: 'right',
     marginRight: 20,
   },
   grayRectangle: {
@@ -301,7 +312,7 @@ const styles = StyleSheet.create({
     width: '75%',
     backgroundColor: 'lightgray',
     marginRight: 10,
-    borderRadius: 5
+    borderRadius: 5,
   },
   trophy: {
     width: 35,
