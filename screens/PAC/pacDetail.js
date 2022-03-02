@@ -10,11 +10,12 @@ let deviceHeight = Dimensions.get('window').height;
 
 export default function PACDetailScreen({route}) 
 {
-  const { contactId } = route.params;
+  const { contactId, type } = route.params;
   const navigation = useNavigation();
 
   function postponePressed() 
   {
+    console.log("type: " + type);
     analytics.event(new Event('PAC Detail', 'Postpone', 0));
     postponeAPI();
   }
@@ -80,19 +81,21 @@ export default function PACDetailScreen({route})
     myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
     myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
     myHeaders.append("Cookie", "ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a");
+    myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      
+      "type": type,
    });
 
    var requestOptions = {
      method: 'POST',
      headers: myHeaders,
+     body: raw,
      redirect: 'follow'
    };
 
-    var apiURL = "https://www.referralmaker.com/services/mobileapi/contactsPostponeAction/" + data["data"]["userID"];
-    console.log(apiURL);
+    var apiURL = "https://www.referralmaker.com/services/mobileapi/contactsPostponeAction/" + contactId;
+    console.log("postpone: " + apiURL);
     fetch(apiURL, requestOptions)
       .then(response => response.json())   //this line converts it to JSON
       .then((result) => {                  //then we can treat it as a JSON object
@@ -123,6 +126,7 @@ export default function PACDetailScreen({route})
     }; 
 
     var apiURL = "https://www.referralmaker.com/services/mobileapi/contacts/" + contactId;
+    console.log("contact api: " + apiURL);
     fetch(apiURL, requestOptions)
       .then(response => response.json()) //this line converts it to JSON
       .then((result) => {                  //then we can treat it as a JSON object

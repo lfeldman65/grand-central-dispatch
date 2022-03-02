@@ -25,7 +25,7 @@ export default function PACScreen() {
 
   const handleRowPress = (index) => {
     console.log('row press');
-    navigation.navigate("PACDetail", {"contactId": data["data"][index]["contactId"]});
+    navigation.navigate("PACDetail", {"contactId": data["data"][index]["contactId"], "type": data["data"][index]["type"]});
   }
 
   const handleIdeasPressed = () => {

@@ -21,6 +21,9 @@ export default styles = StyleSheet.create({
       width: 180,
       backgroundColor: 'yellow'
     },
+    phoneRow: {
+      width: 180,
+    },
     otherText: {
       color: 'black',
       fontSize: 15,
