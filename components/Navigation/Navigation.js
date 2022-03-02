@@ -8,6 +8,7 @@ import LoginScreen from '../../screens/login.js';
 import DashboardScreen from '../../screens/Dashboard/dashboard.js';
 import GoalsScreen from '../../screens/Goals/goals.js';
 import PACScreen from '../../screens/PAC/pac.js';
+import PACDetailScreen from '../../screens/PAC/pacDetail.js';
 import RelationshipsScreen from '../../screens/Relationships/relationships.js';
 import TransactionsScreen from '../../screens/Transactions/transactions.js';
 import PopBysScreen from '../../screens/PopBys/popbys.js';
@@ -29,6 +30,41 @@ import OtherTransactionsScreen from '../../screens/Transactions/otherTransaction
 import CustomDrawerContent from './CustomDrawerContent.js';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
+
+export const PACStackNavigator = () => {
+
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="PAC1"
+        component={PACScreen}
+        options={{
+          title: 'Priority Action Center',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="PACDetail"
+        component={PACDetailScreen}
+        options={{
+          title: 'Detail',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+
+        }}
+      />
+    </Stack.Navigator>);
+
+};
 
 export const HomeStackNavigator = () => {
   return (
@@ -59,18 +95,18 @@ export const HomeStackNavigator = () => {
         }}
       />
 
+
+
       <Stack.Screen
         name="PAC"
-        component={PACScreen}
+        component={PACStackNavigator}
         options={{
-          title: 'Priority Action Center',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
+
           headerBackVisible: false,
+          headerShown: false
         }}
       />
+
 
       <Stack.Screen
         name="relationships"

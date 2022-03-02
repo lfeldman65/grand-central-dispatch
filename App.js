@@ -12,7 +12,7 @@ const MainStackNavigator = () => {  // test
   return (
     <Stack.Navigator>
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Home" component={DrawerNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Home"  component={DrawerNavigator} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
