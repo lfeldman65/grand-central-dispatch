@@ -24,6 +24,7 @@ export default function PACDetailScreen({route})
   {
     console.log('Complete');
     analytics.event(new Event('PAC Detail', 'Complete', 0))
+    completeAPI();
   }
 
   const [data, setData] = useState({ "data": [] });
@@ -50,21 +51,23 @@ export default function PACDetailScreen({route})
     return true;
   }
 
-  function contactName() {
+  function contactName() 
+  {
     if (!sanityCheck())
       return "";
-
-    var displayName = data["data"]["firstName"] + " " + data["data"]["lastName"];
-    console.log(displayName);
-    return displayName;
+    return data["data"]["firstName"] + " " + data["data"]["lastName"];
   }
 
-  function mobileNumber() {
+  function phoneNumber(type) {
     if (!sanityCheck())
       return "";
+    return  data["data"][type];
+  }
 
-    var mobile = data["data"]["mobile"];
-    return mobile;
+  function address(type) {
+    if (!sanityCheck())
+      return "";
+    return data["data"]["address"][type];
   }
 
   function ranking() {
@@ -73,6 +76,74 @@ export default function PACDetailScreen({route})
 
     var notes = data["data"]["ranking"];
     return getRanking(notes);
+  }
+
+  function completeAPI() 
+  {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
+    myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
+    myHeaders.append("Cookie", "ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a");
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      "type": type,
+   });
+
+   var requestOptions = {
+     method: 'POST',
+     headers: myHeaders,
+     body: raw,
+     redirect: 'follow'
+   };
+
+    var apiURL = "https://www.referralmaker.com/services/mobileapi/contactsPostponeAction/" + contactId;
+    console.log("postpone: " + apiURL);
+    fetch(apiURL, requestOptions)
+      .then(response => response.json())   //this line converts it to JSON
+      .then((result) => {                  //then we can treat it as a JSON object
+        console.log(result);
+      //  setData(result);
+        if (result.status == "error") {
+          alert(result.error);
+          setIsLoading(false);
+        }
+        else {
+          setIsLoading(false);
+          navigation.goBack();
+        }
+      })
+      .catch(error => alert("failure " + error));
+  }
+
+  function fetchPressed() {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
+    myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
+    myHeaders.append("Cookie", "ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a");
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    }; 
+
+    var apiURL = "https://www.referralmaker.com/services/mobileapi/contacts/" + contactId;
+    console.log("contact api: " + apiURL);
+    fetch(apiURL, requestOptions)
+      .then(response => response.json()) //this line converts it to JSON
+      .then((result) => {                  //then we can treat it as a JSON object
+        console.log(result);
+        setData(result);
+        if (result.status == "error") {
+          alert(result.error);
+          setIsLoading(false)
+        }
+        else {
+          setIsLoading(false)
+        }
+      })
+      .catch(error => alert("failure " + error));
   }
 
   function postponeAPI() 
@@ -155,8 +226,29 @@ export default function PACDetailScreen({route})
           <View style={styles.topContainer}>
 
             <Text style={styles.personName}>{contactName()}</Text>
+
             <Text style={styles.detailTitle}>{'Mobile Phone'}</Text>
-            <Text style={styles.detailTitle}>{mobileNumber()}</Text>
+
+            <Text style={styles.phoneNumber}>{phoneNumber('mobile')}</Text>
+
+            <Text style={styles.detailTitle}>{'Office Phone'}</Text>
+
+            <Text style={styles.phoneNumber}>{phoneNumber('officePhone')}</Text>
+
+            <Text style={styles.detailTitle}>{'Home Phone'}</Text>
+
+            <Text style={styles.phoneNumber}>{phoneNumber('homePhone')}</Text>
+
+            <Text style={styles.detailTitle}>{'Location'}</Text>
+
+            <Text style={styles.detailTitle}>{address('street')}</Text>
+            <Text style={styles.detailTitle}>{address('street2')}</Text>
+            <Text style={styles.detailTitle}>{address('city') + " " + address('state') + " " + address('zip')}</Text>
+
+
+            <Text style={styles.detailTitle}>{'Notes'}</Text>
+
+
 
 
 
@@ -194,15 +286,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "left",
     marginLeft: 20,
-    margin: 3,
     width: 180,
   },
   phoneNumber: {
     color: 'blue',
     fontSize: 15,
     textAlign: "left",
-    marginLeft: 10,
-    margin: 3,
+    marginLeft: 20,
     width: 180,
     backgroundColor: 'yellow'
   },
@@ -234,6 +324,7 @@ const styles = StyleSheet.create({
     color: '#1A6295',
     fontSize: 18,
     textAlign: "left",
-    marginBottom: 20
+    marginBottom: 20,
+   // fontWeight: 'bold'
   },
 });

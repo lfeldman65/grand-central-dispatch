@@ -10,9 +10,9 @@ import { analytics } from '../../constants/analytics';
 
 export default function PACCallsRow(props) {
   const navigation = useNavigation();
- 
-  const handlePhonePressed = () => {
-    console.log('Phone');
+
+  const handlePhonePressed = (number) => {
+    console.log(number);
   }
 
   function handleComplete() {
@@ -57,14 +57,17 @@ export default function PACCallsRow(props) {
         <Text style={styles.otherText}>{"Ranking: " + props.data.mobile}</Text>
         <Text style={styles.otherText}>{"Last Call: " + "08/10/2021"}</Text>
 
-        <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed()}>
+        <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.mobile)}>
           <Text style={styles.phoneNumber}>{"Mobile: " + props.data.mobile}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.phoneNumber}>{"Office: " + props.data.officePhone}</Text>
+        <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.officePhone)}>
+          <Text style={styles.phoneNumber}>{"Office: " + props.data.officePhone}</Text>
+        </TouchableOpacity>
 
-
-        <Text style={styles.phoneNumber}>{"Home: " + props.data.homePhone}</Text>
+        <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.homePhone)}>
+          <Text style={styles.phoneNumber}>{"Home: " + props.data.homePhone}</Text>
+        </TouchableOpacity>
 
 
       </View>
