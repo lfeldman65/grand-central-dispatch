@@ -23,8 +23,9 @@ export default function PACDetailScreen({route})
   function completePressed() 
   {
     console.log('Complete');
-    analytics.event(new Event('PAC Detail', 'Complete', 0))
-    completeAPI();
+    analytics.event(new Event('PAC Detail', 'Complete', 0));
+    navigation.navigate('PACCompleteScreen');
+  //  completeAPI();
   }
 
   const [data, setData] = useState({ "data": [] });
