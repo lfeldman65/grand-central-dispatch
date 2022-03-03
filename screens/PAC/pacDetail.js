@@ -88,6 +88,7 @@ export default function PACDetailScreen({route})
 
     var raw = JSON.stringify({
       "type": type,
+      "note":"some note"
    });
 
    var requestOptions = {
@@ -97,8 +98,8 @@ export default function PACDetailScreen({route})
      redirect: 'follow'
    };
 
-    var apiURL = "https://www.referralmaker.com/services/mobileapi/contactsPostponeAction/" + contactId;
-    console.log("postpone: " + apiURL);
+    var apiURL = "https://www.referralmaker.com/services/mobileapi/contactsTrackAction/" + contactId;
+    console.log("complete: " + apiURL);
     fetch(apiURL, requestOptions)
       .then(response => response.json())   //this line converts it to JSON
       .then((result) => {                  //then we can treat it as a JSON object
@@ -111,36 +112,6 @@ export default function PACDetailScreen({route})
         else {
           setIsLoading(false);
           navigation.goBack();
-        }
-      })
-      .catch(error => alert("failure " + error));
-  }
-
-  function fetchPressed() {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
-    myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
-    myHeaders.append("Cookie", "ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a");
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    }; 
-
-    var apiURL = "https://www.referralmaker.com/services/mobileapi/contacts/" + contactId;
-    console.log("contact api: " + apiURL);
-    fetch(apiURL, requestOptions)
-      .then(response => response.json()) //this line converts it to JSON
-      .then((result) => {                  //then we can treat it as a JSON object
-        console.log(result);
-        setData(result);
-        if (result.status == "error") {
-          alert(result.error);
-          setIsLoading(false)
-        }
-        else {
-          setIsLoading(false)
         }
       })
       .catch(error => alert("failure " + error));
