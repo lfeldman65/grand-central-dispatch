@@ -53,7 +53,7 @@ export const PACStackNavigator = () => {
 
       <Stack.Screen
         name="PACDetail"
-        component={PACCompleteScreen}
+        component={PACDetailScreen}
         options={{
           title: 'Name',
           headerTintColor: 'white',
@@ -61,15 +61,14 @@ export const PACStackNavigator = () => {
             backgroundColor: '#1A6295',
           },
           headerBackVisible: true,
-
         }}
       />
 
       <Stack.Screen
-        name="PACComplete"
+        name="PACCompleteScreen"
         component={PACCompleteScreen}
         options={{
-          title: 'Detail',
+          title: 'Name',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

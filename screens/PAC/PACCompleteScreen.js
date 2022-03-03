@@ -5,16 +5,54 @@ import { StatusBar } from 'expo-status-bar';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { useNavigation } from '@react-navigation/native';
 
-let deviceWidth = Dimensions.get('window').width;
-
 
 function SavePressed() {
     console.log('Save Press');
-    // analytics.event(new Event('Login', 'Forgot Password Button Pressed', 0))
+    completeAPI();
 }
+
+function completeAPI() {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
+    myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
+    myHeaders.append("Cookie", "ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a");
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+        "type": "Calls",
+        "note": "some note"
+    });
+
+    var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+    };
+
+    var apiURL = "https://www.referralmaker.com/services/mobileapi/contactsTrackAction/" + "16bb0787-312b-4c01-a53d-605427ac3a34";
+    console.log("complete: " + apiURL);
+    fetch(apiURL, requestOptions)
+        .then(response => response.json())   //this line converts it to JSON
+        .then((result) => {                  //then we can treat it as a JSON object
+            console.log(result);
+            //  setData(result);
+            if (result.status == "error") {
+                alert(result.error);
+              //  setIsLoading(false);
+            }
+            else {
+             //   setIsLoading(false);
+                navigation.goBack();
+            }
+        })
+        .catch(error => alert("failure " + error));
+}
+
 
 export default function PACCompleteScreen() {
 
+    const navigation = useNavigation();
     return (
         <View style={styles.container}>
 
@@ -25,7 +63,7 @@ export default function PACCompleteScreen() {
                     placeholderTextColor='#AFB9C2'
                     color='black'
                     textAlign='left'
-                    //   fontSize={18}
+                //   fontSize={18}
                 />
             </View>
 
@@ -58,8 +96,8 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '50%',
         marginBottom: 2,
-      //  alignItems: "baseline",
-      //  justifyContent: "center",
+        //  alignItems: "baseline",
+        //  justifyContent: "center",
         paddingLeft: 10,
         fontSize: 29,
     },

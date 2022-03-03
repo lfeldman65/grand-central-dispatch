@@ -57,19 +57,17 @@ export default function PACCallsRow(props) {
         <Text style={styles.otherText}>{"Ranking: " + props.data.mobile}</Text>
         <Text style={styles.otherText}>{"Last Call: " + "08/10/2021"}</Text>
 
-        <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.mobile)}>
+        {props.data.mobile != null && <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.mobile)}>
           <Text style={styles.phoneNumber}>{"Mobile: " + props.data.mobile}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
 
-        <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.officePhone)}>
+       {props.data.officePhone != null && <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.officePhone)}>
           <Text style={styles.phoneNumber}>{"Office: " + props.data.officePhone}</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
 
-        <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.homePhone)}>
+       {props.data.homePhone != null && <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.homePhone)}>
           <Text style={styles.phoneNumber}>{"Home: " + props.data.homePhone}</Text>
-        </TouchableOpacity>
-
-
+        </TouchableOpacity>}
       </View>
     </TouchableOpacity>
   );
