@@ -10,6 +10,7 @@ import GoalsScreen from '../../screens/Goals/goals.js';
 import PACScreen from '../../screens/PAC/pac.js';
 import PACDetailScreen from '../../screens/PAC/pacDetail.js';
 import RelationshipsScreen from '../../screens/Relationships/RelationshipsScreen';
+import PACCompleteScreen from '../../screens/PAC/PACCompleteScreen.js';
 import TransactionsScreen from '../../screens/Transactions/transactions.js';
 import PopBysScreen from '../../screens/PopBys/popbys.js';
 import ToDoScreen from '../../screens/ToDo/todos.js';
@@ -52,7 +53,20 @@ export const PACStackNavigator = () => {
         name="PACDetail"
         component={PACDetailScreen}
         options={{
-          title: 'Detail',
+          title: 'Name',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="PACCompleteScreen"
+        component={PACCompleteScreen}
+        options={{
+          title: 'Name',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

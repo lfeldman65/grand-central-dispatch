@@ -18,11 +18,9 @@ export default styles = StyleSheet.create({
       textAlign: "left",
       marginLeft: 10,
       margin: 5,
-      width: 180,
-      backgroundColor: 'yellow'
     },
     phoneRow: {
-      width: 180,
+      width: 210,
     },
     otherText: {
       color: 'black',

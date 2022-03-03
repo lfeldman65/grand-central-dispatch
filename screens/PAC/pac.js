@@ -1,26 +1,33 @@
 import { Fragment, useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking, ScrollView, ActivityIndicator, TouchableHighlight } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Swipeable from 'react-native-swipeable-row';
-import pacDetail from '../../screens/PAC/pacDetail.js';
+//import pacDetail from '../../screens/PAC/pacDetail.js';
 import PACCallsRow from './PACCallsRow';
 import PACNotesRow from './PACNotesRow';
 import PACPopRow from './PACPopRow';
 import styles from './styles';  
 import {analytics} from '../../constants/analytics';
 
-export default function PACScreen() {
+export default function PACScreen({route}) {
 
   const navigation = useNavigation();
-
-  function handleComplete() {
-    console.log('Complete');
+  const isFocused = useIsFocused();
+ // const { contactToRemove } = route.params;
+  function handlePostpone() 
+  {
+    analytics.event(new Event('PAC Detail', 'Postpone', 0));
+    postponeAPI();
   }
-  
-  function handlePostpone() {
-    console.log('Postpone');
+
+  function handleComplete() 
+  {
+    console.log('Complete');
+    analytics.event(new Event('PAC Detail', 'Complete', 0));
+    navigation.navigate('PACCompleteScreen');
+  //  completeAPI();
   }
 
   const handleRowPress = (index) => {
@@ -63,13 +70,13 @@ export default function PACScreen() {
   });
 
   useEffect(() => {
-
+    console.log('daniel init');
     //take this out if you don't want to simulate delay
     setTimeout(() => {
       fetchPressed('calls');
-    }, 2000);
-
-  }, []);
+    }, 1000);
+    console.log(route?.params?.contactToRemove)
+  }, [isFocused]);
 
   function callsPressed() {
     analytics.event(new Event('PAC', 'Calls', 0))
@@ -169,7 +176,7 @@ export default function PACScreen() {
     fetch("https://www.referralmaker.com/services/mobileapi/priorityActions?type=" + type, requestOptions)
       .then(response => response.json()) //this line converts it to JSON
       .then((result) => {                  //then we can treat it as a JSON object
-        console.log(result);
+       // console.log(result);
         setData(result);
         if (result.status == "error") {
           alert(result.error);
