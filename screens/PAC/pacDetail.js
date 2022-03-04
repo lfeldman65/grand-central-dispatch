@@ -6,7 +6,7 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import { StatusBar } from 'expo-status-bar';
 import {analytics} from '../../constants/analytics';
 
-let deviceHeight = Dimensions.get('window').height;
+let deviceHeight = Dimensions.get('window').height;  // test
 
 export default function PACDetailScreen({route}) 
 {
