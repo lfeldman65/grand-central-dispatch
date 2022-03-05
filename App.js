@@ -3,16 +3,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 // Components
-import DrawerNavigator from './components/Navigation/Navigation';
+import DrawerNavigator from './components/Navigation';
 import LoginScreen from './screens/login.js';
 
 const Stack = createNativeStackNavigator();
 
-const MainStackNavigator = () => {  // test
+const MainStackNavigator = () => {
+  // test
   return (
     <Stack.Navigator>
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Home"  component={DrawerNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="Home" component={DrawerNavigator} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

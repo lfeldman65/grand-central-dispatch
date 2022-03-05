@@ -1,39 +1,41 @@
+import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { createNativeStackNavigator, createStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 
 // Sections test
 
-import LoginScreen from '../../screens/login.js';
-import DashboardScreen from '../../screens/Dashboard/dashboard.js';
-import GoalsScreen from '../../screens/Goals/goals.js';
-import PACScreen from '../../screens/PAC/pac.js';
-import PACDetailScreen from '../../screens/PAC/pacDetail.js';
-import RelationshipsScreen from '../../screens/Relationships/RelationshipsScreen';
-import PACCompleteScreen from '../../screens/PAC/PACCompleteScreen.js';
-import TransactionsScreen from '../../screens/Transactions/transactions.js';
-import PopBysScreen from '../../screens/PopBys/popbys.js';
-import ToDoScreen from '../../screens/ToDo/todos.js';
-import CalendarScreen from '../../screens/Calendar/calendar.js';
-import PodcastScreen from '../../screens/Podcasts/podcasts.js';
-import SettingsScreen from '../../screens/Settings/appsettings.js';
+import LoginScreen from '../screens/login';
+import DashboardScreen from '../screens/Dashboard/dashboard';
+import GoalsScreen from '../screens/Goals/goals';
+import PACScreen from '../screens/PAC/PACScreen';
+import PACDetailScreen from '../screens/PAC/pacDetail';
+import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
+import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
+import TransactionsScreen from '../screens/Transactions/transactions';
+import PopBysScreen from '../screens/PopBys/popbys';
+import ToDoScreen from '../screens/ToDo/todos';
+import CalendarScreen from '../screens/Calendar/calendar';
+import PodcastScreen from '../screens/Podcasts/podcasts';
+import SettingsScreen from '../screens/Settings/appsettings';
 
-import ManageRelationshipsScreen from '../../screens/Relationships/ManageRelationshipsScreen.js';
-import RecentContactActivityScreen from '../../screens/Relationships/recentcontactactivity.js';
-import VideoHistoryScreen from '../../screens/Relationships/videoHistory';
+import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
+import RecentContactActivityScreen from '../screens/Relationships/recentcontactactivity';
+import VideoHistoryScreen from '../screens/Relationships/videoHistory';
 
-import RealEstateTransactionsScreen from '../../screens/Transactions/realEstateTransactions';
-import LenderTransactionsScreen from '../../screens/Transactions/lenderTransactions';
-import OtherTransactionsScreen from '../../screens/Transactions/otherTransactions';
+import RealEstateTransactionsScreen from '../screens/Transactions/realEstateTransactions';
+import LenderTransactionsScreen from '../screens/Transactions/lenderTransactions';
+import OtherTransactionsScreen from '../screens/Transactions/otherTransactions';
 
-// Components
-import CustomDrawerContent from './CustomDrawerContent.js';
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  [x: string]: any;
+};
+
+import NavigationContent from './NavigationContent';
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
 
 export const PACStackNavigator = () => {
-
-
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -72,11 +74,10 @@ export const PACStackNavigator = () => {
             backgroundColor: '#1A6295',
           },
           headerBackVisible: true,
-
         }}
       />
-    </Stack.Navigator>);
-
+    </Stack.Navigator>
+  );
 };
 
 export const HomeStackNavigator = () => {
@@ -108,18 +109,14 @@ export const HomeStackNavigator = () => {
         }}
       />
 
-
-
       <Stack.Screen
         name="PAC"
         component={PACStackNavigator}
         options={{
-
           headerBackVisible: false,
-          headerShown: false
+          headerShown: false,
         }}
       />
-
 
       <Stack.Screen
         name="relationships"
@@ -296,7 +293,7 @@ export const HomeStackNavigator = () => {
 function DrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
-      <CustomDrawerContent {...props} />
+      <NavigationContent {...props} />
     </DrawerContentScrollView>
   );
 }

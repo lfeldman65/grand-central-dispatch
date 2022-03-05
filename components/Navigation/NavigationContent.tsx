@@ -2,25 +2,24 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Animated } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
-import { Analytics, PageHit, Event} from 'expo-analytics';
+import { Analytics, PageHit, Event } from 'expo-analytics';
 
 // Hamburger Menu test
-import rmLogo from '../../assets/logoWide.png';
-import dashIcon from '../../assets/menuDashboard.png';
-import goalsIcon from '../../assets/menuGoals.png';
-import pacIcon from '../../assets/menuPAC.png';
-import relIcon from '../../assets/menuRel.png';
-import transIcon from '../../assets/menuTransactions.png';
-import popIcon from '../../assets/menuPopBys.png';
-import todoIcon from '../../assets/menuToDo.png';
-import calendarIcon from '../../assets/menuCalendar.png';
-import podcastIcon from '../../assets/menuPodcasts.png';
-import settingsIcon from '../../assets/menuSettings.png';
+import rmLogo from '../assets/logoWide.png';
+import dashIcon from '../assets/menuDashboard.png';
+import goalsIcon from '../assets/menuGoals.png';
+import pacIcon from '../assets/menuPAC.png';
+import relIcon from '../assets/menuRel.png';
+import transIcon from '../assets/menuTransactions.png';
+import popIcon from '../assets/menuPopBys.png';
+import todoIcon from '../assets/menuToDo.png';
+import calendarIcon from '../assets/menuCalendar.png';
+import podcastIcon from '../assets/menuPodcasts.png';
+import settingsIcon from '../assets/menuSettings.png';
 
-import chevron from '../../assets/chevron_white.png';
+import chevron from '../assets/chevron_white.png';
 
 const analytics = new Analytics('UA-65596113-1');
-
 
 function CustomDrawerContent(props) {
   const { navigation } = props;
@@ -38,38 +37,33 @@ function CustomDrawerContent(props) {
     }
   };
 
-  
-  
-  const trackPressed = (screenName) =>{
+  const trackPressed = (screenName) => {
+    console.log(screenName);
 
-     console.log(screenName);
-	
-     analytics.event(new Event('Menu Item Pressed', screenName, 0))
-     .then(() => console.log("button success"))
-     .catch(e => console.log(e.message));
-   }
+    analytics
+      .event(new Event('Menu Item Pressed', screenName, '0'))
+      .then(() => console.log('button success'))
+      .catch((e) => console.log(e.message));
+  };
 
-
-//****** there are 2 ways to create a function
-	//pressed and pressed2
+  //****** there are 2 ways to create a function
+  //pressed and pressed2
   const pressed = (screenName) => {
-  	navigation.navigate(screenName)
-  	trackPressed(screenName)
-  	//console.log('111');
-  }
-  
-  
+    navigation.navigate(screenName);
+    trackPressed(screenName);
+    //console.log('111');
+  };
+
   function pressed2(screenName) {
-  	console.log('p2');
-  	navigation.navigate(screenName)
-  	trackPressed(screenName)
+    console.log('p2');
+    navigation.navigate(screenName);
+    trackPressed(screenName);
   }
-  
 
   return (
     <DrawerContentScrollView {...props}>
       {/* <DrawerItemList {...props} /> */}
-      <View style={{ display: 'flex', color: 'white' }}>
+      <View style={{ display: 'flex' }}>
         <View style={styles.menuImageContainer}>
           <Image source={rmLogo} style={styles.menuImage} />
         </View>
@@ -110,19 +104,19 @@ function CustomDrawerContent(props) {
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.relationships}>
           <TouchableOpacity onPress={() => pressed('manageRelationships')}>
-            <View style={[styles.menuItem, expanded && styles.visible]}>
+            <View style={styles.menuItem}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Manage Relationships</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => pressed('recentcontactactivity')}>
-            <View style={[styles.menuItem, expanded && styles.visible]}>
+            <View style={styles.menuItem}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Recent Contact Activity</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => pressed('videoHistory')}>
-            <View style={[styles.menuItem, expanded && styles.visible]}>
+            <View style={styles.menuItem}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Video History</Text>
             </View>
@@ -144,19 +138,19 @@ function CustomDrawerContent(props) {
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.transactions}>
           <TouchableOpacity onPress={() => pressed('realEstateTransactions')}>
-            <View style={[styles.menuItem, expanded && styles.visible]}>
+            <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Real Estate Transactions</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => pressed('lenderTransactions')}>
-            <View style={[styles.menuItem, expanded && styles.visible]}>
+            <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Lender Transactions</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => pressed('otherTransactions')}>
-            <View style={[styles.menuItem, expanded && styles.visible]}>
+            <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Other Transactions</Text>
             </View>
@@ -240,6 +234,6 @@ const styles = StyleSheet.create({
     right: 0,
     width: 15,
     height: 15,
-    opacity: .75
+    opacity: 0.75,
   },
 });
