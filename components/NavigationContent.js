@@ -5,7 +5,9 @@ import Collapsible from 'react-native-collapsible';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 
 // Hamburger Menu test
-import rmLogo from '../assets/logoWide.png';
+//import rmLogo from '../assets/logoWide.png';
+const rmLogo =  require('../assets/logoWide.png')
+
 import dashIcon from '../assets/menuDashboard.png';
 import goalsIcon from '../assets/menuGoals.png';
 import pacIcon from '../assets/menuPAC.png';

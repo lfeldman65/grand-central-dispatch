@@ -16,7 +16,7 @@ export default function PACDetailScreen({ route }) {
     // console.log('type: ' + type);
     analytics.event(new Event('PAC Detail', 'Postpone', 0));
     postponeAPI();
-    navigation.goBack();
+  //  navigation.goBack();
   }
 
   function completePressed() {
