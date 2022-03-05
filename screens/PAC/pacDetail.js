@@ -229,11 +229,15 @@ export default function PACDetailScreen({ route }) {
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <Text style={styles.personName}>{contactName()}</Text>
-        <Text style={styles.detailTitle}>{contactId}</Text>
 
-        <Text style={styles.detailTitle}>{'Mobile Phone'}</Text>
+        {/* <Text style={styles.detailTitle}>{contactId}</Text> */}
 
-        <Text style={styles.phoneNumber}>{phoneNumber('mobile')}</Text>
+        {/* {phoneNumber('mobile') !== '' && (
+          <View>
+            <Text style={styles.detailTitle}>{'Mobile Phone'}</Text>
+            <Text style={styles.phoneNumber}>{phoneNumber('mobile')}</Text>
+          </View>
+        )}
 
         {phoneNumber('officePhone') !== '' && (
           <View>
@@ -242,17 +246,24 @@ export default function PACDetailScreen({ route }) {
           </View>
         )}
 
-        <Text style={styles.detailTitle}>{'Home Phone'}</Text>
+        {phoneNumber('homePhone') !== '' && (
+          <View>
+            <Text style={styles.detailTitle}>{'Home Phone'}</Text>
+            <Text style={styles.phoneNumber}>{phoneNumber('homePhone')}</Text>)
+          </View>
+        )} */}
 
-        <Text style={styles.phoneNumber}>{phoneNumber('homePhone')}</Text>
+        {/* <Text style={styles.detailTitle}>{'Home Phone'}</Text>
 
-        <Text style={styles.detailTitle}>{'Location'}</Text>
+        <Text style={styles.phoneNumber}>{phoneNumber('homePhone')}</Text> */}
+
+        {/* <Text style={styles.detailTitle}>{'Location'}</Text>
 
         <Text style={styles.detailTitle}>{address('street')}</Text>
         <Text style={styles.detailTitle}>{address('street2')}</Text>
         <Text style={styles.detailTitle}>{address('city') + ' ' + address('state') + ' ' + address('zip')}</Text>
 
-        <Text style={styles.detailTitle}>{'Notes'}</Text>
+        <Text style={styles.detailTitle}>{'Notes'}</Text> */}
       </View>
 
       <View style={styles.bottomContainer}>
