@@ -31,6 +31,7 @@ export default function LoginScreen({navigation})
 {
   const [userName, setUserName] = useState("larryf@buffiniandcompany.com");
   const [password, setPassword] = useState("success");
+  var rememberMeChecked = false;
 
   HandleLoginPress = () => {  // https://aboutreact.com/react-native-login-and-signup/
 
@@ -117,7 +118,7 @@ export default function LoginScreen({navigation})
             text='Remember Me'
             textContainerStyle={{marginLeft: 15}}
             onPress={() => { analytics.event(new Event('Login', 'Remember Me Pressed', 0))
-            .then(() => console.log("button success"))
+            .then(() => !rememberMeChecked)
             .catch(e => console.log(e.message));}}/>
 
           <TouchableOpacity onPress={ForgotPasswordPressed}>

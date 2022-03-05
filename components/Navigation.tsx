@@ -55,7 +55,7 @@ export const PACStackNavigator = () => {
         name="PACDetail"
         component={PACDetailScreen}
         options={{
-          title: 'Name',
+          title: 'Details',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

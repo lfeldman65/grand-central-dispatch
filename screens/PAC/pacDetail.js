@@ -1,10 +1,21 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+  Modal,
+  Pressable,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { StatusBar } from 'expo-status-bar';
 import { analytics } from '../../utils/analytics';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import PacComplete from '../PAC/PACCompleteScreen';
 
 let deviceHeight = Dimensions.get('window').height;
 
@@ -12,27 +23,53 @@ export default function PACDetailScreen({ route }) {
   const { contactId, type } = route.params;
   const navigation = useNavigation();
 
+  const storeData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (e) {
+      // saving error
+    }
+  };
+
+  const getData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        console.log(value);
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
   function postponePressed() {
     // console.log('type: ' + type);
     analytics.event(new Event('PAC Detail', 'Postpone', 0));
     postponeAPI();
-  //  navigation.goBack();
   }
 
-  function completePressed() {
-    console.log('Complete');
+  async function completePressed() {
+    console.log('complete pressed: ' + contactId);
     analytics.event(new Event('PAC Detail', 'Complete', 0));
-    navigation.navigate('PACCompleteScreen');
-    //  completeAPI();
+    await storeData('pacID', contactId);
+    setModalVisible(!modalVisible);
+    //   navigation.navigate('PACCompleteScreen');
+    // completeAPI();
+  }
+
+  function saveComplete(note) {
+    // console.log('Note ', note);
+    completeAPI(note);
   }
 
   const [data, setData] = useState({ data: [] });
   const [isLoading, setIsLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     //take this out if you don't want to simulate delay
     setTimeout(() => {
-      fetchPressed();
+      fetchPACData();
     }, 2000);
   }, []);
 
@@ -71,7 +108,7 @@ export default function PACDetailScreen({ route }) {
     return getRanking(notes);
   }
 
-  function completeAPI() {
+  function completeAPI(note) {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
     myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
@@ -80,7 +117,7 @@ export default function PACDetailScreen({ route }) {
 
     var raw = JSON.stringify({
       type: type,
-      note: 'some note',
+      note: note,
     });
 
     var requestOptions = {
@@ -146,7 +183,7 @@ export default function PACDetailScreen({ route }) {
       .catch((error) => alert('failure ' + error));
   }
 
-  function fetchPressed() {
+  function fetchPACData() {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
     myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
@@ -176,22 +213,34 @@ export default function PACDetailScreen({ route }) {
       .catch((error) => alert('failure ' + error));
   }
 
-  return isLoading ? (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#000" />
-    </View>
-  ) : (
+  function toggleModalVisibility() {
+    setModalVisible(!modalVisible);
+  }
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
+  }
+
+  return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <Text style={styles.personName}>{contactName()}</Text>
+        <Text style={styles.detailTitle}>{contactId}</Text>
 
         <Text style={styles.detailTitle}>{'Mobile Phone'}</Text>
 
         <Text style={styles.phoneNumber}>{phoneNumber('mobile')}</Text>
 
-        <Text style={styles.detailTitle}>{'Office Phone'}</Text>
-
-        <Text style={styles.phoneNumber}>{phoneNumber('officePhone')}</Text>
+        {phoneNumber('officePhone') !== '' && (
+          <View>
+            <Text style={styles.detailTitle}>{'Office Phone'}</Text>
+            <Text style={styles.phoneNumber}>{phoneNumber('officePhone')}</Text>)
+          </View>
+        )}
 
         <Text style={styles.detailTitle}>{'Home Phone'}</Text>
 
@@ -215,6 +264,20 @@ export default function PACDetailScreen({ route }) {
           <Text style={styles.postponeText}>Postpone</Text>
         </TouchableOpacity>
       </View>
+
+      {modalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <PacComplete onSave={saveComplete} setModalVisible={setModalVisible} />
+        </Modal>
+      )}
     </View>
   );
 }
@@ -244,7 +307,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 20,
     width: 180,
-    backgroundColor: 'yellow',
   },
   postponeText: {
     color: 'orange',
@@ -276,5 +338,49 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginBottom: 20,
     // fontWeight: 'bold'
+  },
+});
+
+const stylesModal = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    height: '90%',
+    width: '90%',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });

@@ -24,9 +24,9 @@ const analytics = new Analytics('UA-65596113-1');
 
 const getData = async (key) => {
   try {
-    const value = await AsyncStorage.getItem("userName")
+    const value = await AsyncStorage.getItem(key)
     if (value !== null) {
-      console.log(value)
+      return(value);
     }
   } catch (e) {
     // error reading value
