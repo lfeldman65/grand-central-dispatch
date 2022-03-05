@@ -4,7 +4,8 @@ import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import {useState} from "react"; 
+import { useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import callImage from '../../assets/quickCalls.png';
 import noteImage from '../../assets/quickNotes.png';
@@ -21,6 +22,16 @@ const analytics = new Analytics('UA-65596113-1');
   .then(() => console.log("success"))
   .catch(e => console.log(e.message)); */
 
+const getData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem("userName")
+    if (value !== null) {
+      console.log(value)
+    }
+  } catch (e) {
+    // error reading value
+  }
+}
 
 export default function Dashboard(props) {
   //const { navigation } = props;
@@ -28,7 +39,7 @@ export default function Dashboard(props) {
     relationships: false,
     transactions: false,
   });
-  
+
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -37,34 +48,31 @@ export default function Dashboard(props) {
     });
   });
 
-  const pressedCalls = (screenName) => 
-  {
+  const pressedCalls = (screenName) => {
     console.log(screenName);
-    analytics.event(new Event('Dashboard', 'Calls Pressed', 0))
-  	navigation.navigate(screenName)
+    analytics.event(new Event('Dashboard', 'Calls Pressed', 0));
+    var name = getData('userName');
+    console.log(name)
+    navigation.navigate(screenName)
   }
 
-  const pressedNotes = (screenName) => 
-  {
+  const pressedNotes = (screenName) => {
     console.log(screenName);
     analytics.event(new Event('Dashboard', 'Notes Pressed', 0))
-  	navigation.navigate(screenName)
+    navigation.navigate(screenName)
   }
 
-  const otherPressed = (screenName) => 
-  {
+  const otherPressed = (screenName) => {
     console.log(screenName);
     var prettyName = screenName;
-    if(screenName == "manageRelationships") 
-    {
+    if (screenName == "manageRelationships") {
       prettyName = "Relationships";
     }
-    else if(screenName == "realEstateTransactions") 
-    {
+    else if (screenName == "realEstateTransactions") {
       prettyName = "Transactions";
     }
     analytics.event(new Event('Dashboard', prettyName + ' Pressed', 0))
-  	navigation.navigate(screenName)
+    navigation.navigate(screenName)
   }
 
   return (
@@ -72,19 +80,19 @@ export default function Dashboard(props) {
       <View style={styles.container}>
         <View style={styles.row}>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => pressedCalls('PAC')}>
+            <TouchableOpacity onPress={() => pressedCalls('PAC')}>
               <Image source={callImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>Calls</Text>
           </View>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => pressedNotes('PAC')}>
+            <TouchableOpacity onPress={() => pressedNotes('PAC')}>
               <Image source={noteImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>Notes</Text>
           </View>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => otherPressed('Pop-Bys')}>
+            <TouchableOpacity onPress={() => otherPressed('Pop-Bys')}>
               <Image source={popImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>Pop-Bys</Text>
@@ -92,7 +100,7 @@ export default function Dashboard(props) {
         </View>
         <View style={styles.row}>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => otherPressed('PAC')}>
+            <TouchableOpacity onPress={() => otherPressed('PAC')}>
               <Image source={pacImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>Priority</Text>
@@ -100,13 +108,13 @@ export default function Dashboard(props) {
             <Text style={styles.names}>Center</Text>
           </View>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => otherPressed('manageRelationships')}>
+            <TouchableOpacity onPress={() => otherPressed('manageRelationships')}>
               <Image source={relImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>Relationships</Text>
           </View>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => otherPressed('Goals')}>
+            <TouchableOpacity onPress={() => otherPressed('Goals')}>
               <Image source={goalsImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>Goals</Text>
@@ -114,19 +122,19 @@ export default function Dashboard(props) {
         </View>
         <View style={styles.row}>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => otherPressed('realEstateTransactions')}>
+            <TouchableOpacity onPress={() => otherPressed('realEstateTransactions')}>
               <Image source={transImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>Transactions</Text>
           </View>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => otherPressed('To-Do')}>
+            <TouchableOpacity onPress={() => otherPressed('To-Do')}>
               <Image source={todoImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>To-Do's</Text>
           </View>
           <View style={styles.pair}>
-          <TouchableOpacity onPress={() => otherPressed('Calendar')}>
+            <TouchableOpacity onPress={() => otherPressed('Calendar')}>
               <Image source={calendarImage} style={styles.logo} />
             </TouchableOpacity>
             <Text style={styles.names}>Calendar</Text>

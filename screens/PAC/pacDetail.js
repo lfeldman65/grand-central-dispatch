@@ -8,8 +8,9 @@ import {analytics} from '../../constants/analytics';
 
 let deviceHeight = Dimensions.get('window').height;  // test
 
-export default function PACDetailScreen({route}) 
+export default function PACDetailScreen(props) 
 {
+  const { route } = props;
   const { contactId, type } = route.params;
   const navigation = useNavigation();
 
@@ -37,6 +38,10 @@ export default function PACDetailScreen({route})
       fetchPressed();
     }, 2000);
 
+  }, []);
+
+  useEffect(() => {
+    props.navigation.setOptions({ headerTitle: contactName(), });
   }, []);
 
   function sanityCheck() {
