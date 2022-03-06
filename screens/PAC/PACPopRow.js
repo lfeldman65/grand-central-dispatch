@@ -22,43 +22,6 @@ import { analytics } from '../../utils/analytics';
 //const analytics = new Analytics('UA-65596113-1');
 
 export default function PACPopRow(props) {
-  const navigation = useNavigation();
-
-  function handleComplete() {
-    console.log('Complete');
-    analytics.event(new Event('PAC', 'Complete Pressed', 0));
-  }
-
-  function handlePostpone() {
-    console.log('Postpone');
-  }
-
-  // Use Paschal case for components
-  function RightButtons() {
-    <View style={styles.completeView}>
-      <TouchableOpacity onPress={handleComplete}>
-        <Text style={styles.complete}>Complete</Text>
-      </TouchableOpacity>
-    </View>;
-  }
-
-  function LeftButtons() {
-    <View style={styles.postponeView}>
-      <TouchableOpacity onPress={handlePostpone}>
-        <Text style={styles.postphone}>Postpone</Text>
-      </TouchableOpacity>
-    </View>;
-  }
-
-  // function getRanking(notes) {
-  //   if (!sanityCheck())
-  //     return "";
-
-  //   console.log(notes);
-
-  //   return notes;
-  // }
-
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.row}>
