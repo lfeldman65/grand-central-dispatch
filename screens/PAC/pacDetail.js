@@ -23,27 +23,7 @@ export default function PACDetailScreen({ route }) {
   const { contactId, type } = route.params;
   const navigation = useNavigation();
 
-  const storeData = async (key, value) => {
-    try {
-      await AsyncStorage.setItem(key, value);
-    } catch (e) {
-      // saving error
-    }
-  };
-
-  const getData = async (key) => {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        console.log(value);
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
-
   function postponePressed() {
-    // console.log('type: ' + type);
     analytics.event(new Event('PAC Detail', 'Postpone', 0));
     postponeAPI();
   }
@@ -51,10 +31,7 @@ export default function PACDetailScreen({ route }) {
   async function completePressed() {
     console.log('complete pressed: ' + contactId);
     analytics.event(new Event('PAC Detail', 'Complete', 0));
-    await storeData('pacID', contactId);
     setModalVisible(!modalVisible);
-    //   navigation.navigate('PACCompleteScreen');
-    // completeAPI();
   }
 
   function saveComplete(note) {
@@ -66,11 +43,13 @@ export default function PACDetailScreen({ route }) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
+  navigation.setOptions({ title: contactName() });
+
   useEffect(() => {
     //take this out if you don't want to simulate delay
     setTimeout(() => {
       fetchPACData();
-    }, 2000);
+    }, 250);
   }, []);
 
   function sanityCheck() {
