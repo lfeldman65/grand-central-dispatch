@@ -36,7 +36,6 @@ export default function PACScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index) => {
-    console.log('row press');
     navigation.navigate('PACDetail', {
       contactId: data[index]['contactId'],
       type: data[index]['type'],
