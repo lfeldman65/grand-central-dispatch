@@ -21,7 +21,7 @@ import PACNotesRow from './PACNotesRow';
 import PACPopRow from './PACPopRow';
 import styles from './styles';
 import { analytics } from '../../utils/analytics';
-import { getPACData } from './GetPACListAPI';
+import { getPACData } from './api';
 import { PACDataProps } from './interfaces';
 
 export default function PACScreen() {

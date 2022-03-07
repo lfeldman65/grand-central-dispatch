@@ -16,6 +16,8 @@ import { StatusBar } from 'expo-status-bar';
 import { analytics } from '../../utils/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PacComplete from '../PAC/PACCompleteScreen';
+import { postPACPostpone } from './postponeAPI';
+import { PACPostponeProps, PACCompleteProps } from './interfaces';
 
 let deviceHeight = Dimensions.get('window').height;
 
@@ -25,7 +27,8 @@ export default function PACDetailScreen({ route }) {
 
   function postponePressed() {
     analytics.event(new Event('PAC Detail', 'Postpone', 0));
-    postponeAPI();
+    postponeAPIOld();
+    //  postponeAPINew();
   }
 
   async function completePressed() {
@@ -40,6 +43,10 @@ export default function PACDetailScreen({ route }) {
   }
 
   const [data, setData] = useState({ data: [] });
+
+  // const [data1, setData1] = useState<PACCompleteProps[]>([]);
+  // const [data2, setData2] = useState<PACPostponeProps[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -130,7 +137,22 @@ export default function PACDetailScreen({ route }) {
       .catch((error) => alert('failure ' + error));
   }
 
-  function postponeAPI() {
+  function postponeAPINew(relID) {
+    // Testing!!!
+    setIsLoading(true);
+    postPACPostpone(relID)
+      .then((res) => {
+        if (res.status == 'error') {
+          alert(res.error);
+        } else {
+          setData(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => alert('failure ' + error));
+  }
+
+  function postponeAPIOld() {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
     myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');

@@ -19,12 +19,24 @@ export interface PACDataResponse {
 
 // PAC Postpone
 
-export interface PACPostponeProps {}
+export interface PACPostponeProps {
+  contactId: string;
+}
 
 export interface PACPostponeResponse {
-  data: PACDataProps[];
+  data: PACPostponeProps[];
   error: string;
   status: string;
 }
 
 // PAC Complete
+
+export interface PACCompleteProps {
+  contactId: string;
+}
+
+export interface PACCompleteResponse {
+  data: PACCompleteProps[];
+  error: string;
+  status: string;
+}
