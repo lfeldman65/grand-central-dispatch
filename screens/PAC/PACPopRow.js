@@ -55,24 +55,27 @@ export default function PACPopRow(props) {
         </View>
 
         <View style={styles.row1}>
-          <Text style={styles.otherText}>{'Ranking: ' + props.data.mobile}</Text>
+          <Text style={styles.otherText}>{'Ranking: ' + props.data.ranking}</Text>
           <TouchableOpacity style={styles.phoneRow} onPress={() => handleSavedPressed()}>
             <Text style={styles.phoneNumber}>{'Saved'}</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.row1}>
-          <Text style={styles.otherText}>{'Last PopBy: ' + '08/10/2021'}</Text>
+          <Text style={styles.otherText}>{'Last PopBy: ' + props.data.lastPopByDate}</Text>
           <TouchableOpacity style={styles.phoneRow} onPress={() => handlePopPressed()}>
             <Text style={styles.phoneNumber}>{'Pop-By Map'}</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.otherText}>{props.data.notes}</Text>
-
-        {props.data.mobile != null && (
-          <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.mobile)}>
-            <Text style={styles.phoneNumber}>{'Mobile: ' + props.data.mobile}</Text>
+        {props.data.street1 != null && <Text style={styles.otherText}>{props.data.street1}</Text>}
+        {props.data.street2 != null && <Text style={styles.otherText}>{props.data.street2}</Text>}
+        {props.data.city != null && (
+          <Text style={styles.otherText}>{props.data.city + ' ' + props.data.state + ' ' + props.data.zip}</Text>
+        )}
+        {props.data.mobilePhone != null && (
+          <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.mobilePhone)}>
+            <Text style={styles.phoneNumber}>{'Mobile: ' + props.data.mobilePhone}</Text>
           </TouchableOpacity>
         )}
 

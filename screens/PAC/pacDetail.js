@@ -99,7 +99,7 @@ export default function PACDetailScreen({ route }) {
   function ranking() {
     if (!sanityCheck()) return '';
 
-    var notes = data['data']['ranking'];
+    //  var notes = data['data']['ranking'];
     return getRanking(notes);
   }
 
@@ -223,9 +223,9 @@ export default function PACDetailScreen({ route }) {
       .catch((error) => alert('failure ' + error));
   }
 
-  function toggleModalVisibility() {
-    setModalVisible(!modalVisible);
-  }
+  // function toggleModalVisibility() {
+  //   setModalVisible(!modalVisible);
+  // }
 
   if (isLoading) {
     return (
@@ -240,14 +240,16 @@ export default function PACDetailScreen({ route }) {
       <View style={styles.topContainer}>
         <Text style={styles.personName}>{contactName()}</Text>
 
-        {phoneNumber('mobile') != '' && <Text style={styles.detailTitle}>{'Mobile Phone'}</Text>}
-        {phoneNumber('mobile') != '' && <Text style={styles.phoneNumber}>{phoneNumber('mobile')}</Text>}
+        {phoneNumber('mobilePhone') != null && <Text style={styles.detailTitle}>{'Mobile Phone'}</Text>}
+        {phoneNumber('mobilePhone') != null && <Text style={styles.phoneNumber}>{phoneNumber('mobilePhone')}</Text>}
 
-        {phoneNumber('officePhone') != '' && <Text style={styles.detailTitle}>{'Office Phone'}</Text>}
-        {phoneNumber('officePhone') != '' && <Text style={styles.phoneNumber}>{phoneNumber('officePhone')}</Text>}
+        {phoneNumber('officePhone') != null && <Text style={styles.detailTitle}>{'Office Phone'}</Text>}
+        {phoneNumber('officePhone') != null && <Text style={styles.phoneNumber}>{phoneNumber('officePhone')}</Text>}
 
-        {phoneNumber('homePhone') != '' && <Text style={styles.detailTitle}>{'Home Phone'}</Text>}
-        {phoneNumber('homePhone') != '' && <Text style={styles.phoneNumber}>{phoneNumber('homePhone')}</Text>}
+        {phoneNumber('homePhone') != null && <Text style={styles.detailTitle}>{'Home Phone'}</Text>}
+        {phoneNumber('homePhone') != null && <Text style={styles.phoneNumber}>{phoneNumber('homePhone')}</Text>}
+
+        {address('street') != null && <Text style={styles.phoneNumber}>{address('street')}</Text>}
       </View>
 
       <View style={styles.bottomContainer}>

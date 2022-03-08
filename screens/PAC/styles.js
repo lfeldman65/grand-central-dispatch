@@ -14,7 +14,7 @@ export default styles = StyleSheet.create({
     fontWeight: '500',
   },
   phoneNumber: {
-    color: 'blue',
+    color: '#02ABF7',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,

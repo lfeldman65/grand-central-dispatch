@@ -5,10 +5,18 @@ export interface PACDataProps {
   contactName: string;
   homePhone: string;
   isFavorite: boolean;
-  mobile: string;
-  notes: string;
+  mobilePhone: string;
   officePhone: string;
   type: string;
+  ranking: string;
+  lastCallDate: string;
+  lastNoteDate: string;
+  lastPopByDate: string;
+  street1: string;
+  street2: string;
+  city: string;
+  state: string;
+  zip: string;
 }
 
 export interface PACDataResponse {
