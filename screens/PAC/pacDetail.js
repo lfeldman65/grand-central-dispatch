@@ -50,8 +50,12 @@ export default function PACDetailScreen({ route }) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
-  navigation.setOptions({ title: contactName() });
-
+  //put it in a useEffect to prevent the warning about rendering a different component blah blah
+  useEffect(() => {
+    //contact name will be initially be blank, when data is received
+    //render happens again and will run everything in this function again
+    navigation.setOptions({ title: contactName() });
+  }); // this will run on every rendeer
   useEffect(() => {
     //take this out if you don't want to simulate delay
     setTimeout(() => {
