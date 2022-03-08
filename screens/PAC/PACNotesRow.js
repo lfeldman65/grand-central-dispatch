@@ -26,10 +26,10 @@ export default function PACNotesRow(props) {
 
         <Text style={styles.otherText}>{'Last Note Sent: ' + props.data.lastNoteDate}</Text>
 
-        {props.data.street1 != null && <Text style={styles.otherText}>{props.data.street1}</Text>}
-        {props.data.street2 != null && <Text style={styles.otherText}>{props.data.street2}</Text>}
+        {props.data.street1 != null && <Text style={styles.streetText}>{props.data.street1}</Text>}
+        {props.data.street2 != null && <Text style={styles.streetText}>{props.data.street2}</Text>}
         {props.data.city != null && (
-          <Text style={styles.otherText}>{props.data.city + ' ' + props.data.state + ' ' + props.data.zip}</Text>
+          <Text style={styles.cityStateZipText}>{props.data.city + ' ' + props.data.state + ' ' + props.data.zip}</Text>
         )}
       </View>
     </TouchableOpacity>

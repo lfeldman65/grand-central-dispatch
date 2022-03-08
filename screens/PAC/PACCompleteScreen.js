@@ -20,25 +20,27 @@ export default function PACCompleteScreen(props) {
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
 
-        <Text style={styles.nameLabel}>Name</Text>
+        <Text style={styles.nameLabel}>Notes</Text>
 
         <TouchableOpacity onPress={SavePressed}>
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.notesText}>Notes</Text>
+      <View style={styles.mainContent}>
+        <Text style={styles.notesText}>Notes</Text>
 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Type Here"
-          placeholderTextColor="#AFB9C2"
-          color="black"
-          textAlign="left"
-          value={note}
-          onChangeText={onNoteChange}
-        />
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Type Here"
+            placeholderTextColor="#AFB9C2"
+            color="black"
+            textAlign="left"
+            value={note}
+            onChangeText={onNoteChange}
+          />
+        </View>
       </View>
     </View>
   );
@@ -48,18 +50,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#004F89',
+  },
+  mainContent: {
+    flex: 1,
     alignItems: 'center',
   },
   topRow: {
-    display: 'flex',
     flexDirection: 'row',
-    padding: 1,
-    justifyContent: 'space-around',
+    padding: 10,
+    justifyContent: 'space-between',
     marginTop: 20,
   },
   closeX: {
-    width: 25,
-    height: 25,
+    width: 15,
+    height: 15,
+    marginLeft: '10%',
   },
   nameLabel: {
     color: 'white',
@@ -69,6 +74,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
+    marginRight: '10%',
   },
   notesText: {
     color: 'white',

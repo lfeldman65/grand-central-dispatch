@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 
+const marginLeft = 10;
 export default styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
@@ -20,6 +21,13 @@ export default styles = StyleSheet.create({
     marginLeft: 10,
     margin: 5,
   },
+  popByButtons: {
+    color: '#02ABF7',
+    fontSize: 15,
+    textAlign: 'right',
+    marginLeft: 10,
+    margin: 5,
+  },
   phoneRow: {
     width: 210,
   },
@@ -29,6 +37,20 @@ export default styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 10,
     margin: 5,
+  },
+  streetText: {
+    marginTop: 5,
+    color: 'black',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 10,
+  },
+  cityStateZipText: {
+    color: 'black',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 5,
   },
   bottomContainer: {
     backgroundColor: '#1A6295',
@@ -90,15 +112,15 @@ export default styles = StyleSheet.create({
   },
   tabButtonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     height: 40,
     alignItems: 'center',
   },
-  row1: {
+  popbyRow: {
+    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    height: 40,
-    alignItems: 'center',
+    padding: 1,
+    justifyContent: 'space-between',
   },
   unselected: {
     color: 'lightgray',

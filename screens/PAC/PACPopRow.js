@@ -47,31 +47,31 @@ export default function PACPopRow(props) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.row}>
-        <View style={styles.row1}>
+        <View style={styles.popbyRow}>
           <Text style={styles.personName}>{props.data.contactName}</Text>
-          <TouchableOpacity style={styles.phoneRow} onPress={() => handleDirectionsPressed()}>
+          <TouchableOpacity style={styles.popByButtons} onPress={() => handleDirectionsPressed()}>
             <Text style={styles.phoneNumber}>{'Directions'}</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.row1}>
+        <View style={styles.popbyRow}>
           <Text style={styles.otherText}>{'Ranking: ' + props.data.ranking}</Text>
-          <TouchableOpacity style={styles.phoneRow} onPress={() => handleSavedPressed()}>
+          <TouchableOpacity style={styles.popByButtons} onPress={() => handleSavedPressed()}>
             <Text style={styles.phoneNumber}>{'Saved'}</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.row1}>
+        <View style={styles.popbyRow}>
           <Text style={styles.otherText}>{'Last PopBy: ' + props.data.lastPopByDate}</Text>
-          <TouchableOpacity style={styles.phoneRow} onPress={() => handlePopPressed()}>
+          <TouchableOpacity style={styles.popByButtons} onPress={() => handlePopPressed()}>
             <Text style={styles.phoneNumber}>{'Pop-By Map'}</Text>
           </TouchableOpacity>
         </View>
 
-        {props.data.street1 != null && <Text style={styles.otherText}>{props.data.street1}</Text>}
-        {props.data.street2 != null && <Text style={styles.otherText}>{props.data.street2}</Text>}
+        {props.data.street1 != null && <Text style={styles.streetText}>{props.data.street1}</Text>}
+        {props.data.street2 != null && <Text style={styles.streetText}>{props.data.street2}</Text>}
         {props.data.city != null && (
-          <Text style={styles.otherText}>{props.data.city + ' ' + props.data.state + ' ' + props.data.zip}</Text>
+          <Text style={styles.cityStateZipText}>{props.data.city + ' ' + props.data.state + ' ' + props.data.zip}</Text>
         )}
         {props.data.mobilePhone != null && (
           <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.mobilePhone)}>
