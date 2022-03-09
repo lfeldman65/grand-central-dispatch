@@ -20,6 +20,7 @@ import * as SMS from 'expo-sms';
 import { set } from 'react-native-reanimated';
 import { saveAsFavorite } from './api';
 import { SaveAsFavoriteProps } from './interfaces';
+import openMap from 'react-native-open-maps';
 
 export default function PACPopRow(props) {
   const [saveShown, setSaveShown] = useState(!props.data.isFavorite);
@@ -58,6 +59,7 @@ export default function PACPopRow(props) {
 
   function handleDirectionsPressed() {
     console.log('directions');
+    openMap({ latitude: 33.1175, longitude: -117.0722, zoom: 10 });
   }
 
   function handleSavePressed() {
