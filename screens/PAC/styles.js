@@ -25,8 +25,8 @@ export default styles = StyleSheet.create({
     color: '#02ABF7',
     fontSize: 15,
     textAlign: 'right',
-    marginLeft: 10,
-    margin: 5,
+    marginRight: 10,
+    marginBottom: 5,
   },
   phoneRow: {
     width: 210,
@@ -36,10 +36,9 @@ export default styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
-    margin: 5,
+    marginTop: 5,
   },
   streetText: {
-    marginTop: 5,
     color: 'black',
     fontSize: 15,
     textAlign: 'left',

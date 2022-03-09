@@ -1,4 +1,4 @@
-// PAC Top Level (PAC list in Postman)
+// PAC List RN in Postman
 
 export interface PACDataProps {
   contactId: string;
@@ -25,7 +25,7 @@ export interface PACDataResponse {
   status: string;
 }
 
-// PAC Postpone
+// PAC Postpone in Postman
 
 export interface PACPostponeProps {
   contactId: string;
@@ -37,7 +37,7 @@ export interface PACPostponeResponse {
   status: string;
 }
 
-// PAC Complete
+// Track Action in Postman
 
 export interface PACCompleteProps {
   contactId: string;
@@ -45,6 +45,30 @@ export interface PACCompleteProps {
 
 export interface PACCompleteResponse {
   data: PACCompleteProps[];
+  error: string;
+  status: string;
+}
+
+// Contact Details in Postman
+
+export interface PACDetailsProps {
+  contactId: string;
+}
+
+export interface PACCDetailsResponse {
+  data: PACCompleteProps[];
+  error: string;
+  status: string;
+}
+
+// Save as Pop Favorite in Postman
+
+export interface SaveAsFavoriteProps {
+  contactId: string;
+}
+
+export interface SaveAsFavoriteResponse {
+  data: SaveAsFavoriteProps[];
   error: string;
   status: string;
 }

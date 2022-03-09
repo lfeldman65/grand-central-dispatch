@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
-import logo from '../assets/iconLogo.png';
+import logo from '../../assets/iconLogo.png';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { Analytics, PageHit, Event } from 'expo-analytics';

@@ -16,8 +16,8 @@ import { StatusBar } from 'expo-status-bar';
 import { analytics } from '../../utils/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PacComplete from '../PAC/PACCompleteScreen';
-import { postPACPostpone } from './postponeAPI';
-import { PACPostponeProps, PACCompleteProps } from './interfaces';
+import { postPACPostpone, saveAsFavorite } from './api';
+import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
 
 let deviceHeight = Dimensions.get('window').height;
 
