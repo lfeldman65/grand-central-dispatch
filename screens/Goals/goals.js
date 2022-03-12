@@ -1,5 +1,15 @@
-import { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking, ScrollView, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  Linking,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -7,49 +17,45 @@ import dayTrophy from '../../assets/weeklyTrophy.png';
 import weekTrophy from '../../assets/dailyTrophy.png';
 import noTrophy from '../../assets/noTrophy.png';
 
-import { Analytics, PageHit, Event} from 'expo-analytics';
+import { Analytics, PageHit, Event } from 'expo-analytics';
+import { analytics } from '../../utils/analytics';
 
-const analytics = new Analytics('UA-65596113-1');
+// const analytics = new Analytics('UA-65596113-1');
 
 export default function GoalsScreen() {
-
-  let deviceWidth = Dimensions.get('window').width;
-
   const navigation = useNavigation();
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
-  const [data, setData] = useState({ "data": [] });
+  const [data, setData] = useState({ data: [] });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: () => (<MenuIcon />)
+      headerLeft: () => <MenuIcon />,
     });
   });
 
   useEffect(() => {
-
     //take this out if you don't want to simulate delay
     setTimeout(() => {
       fetchPressed();
     }, 2000);
-
   }, []);
 
   function winTheDayPressed() {
     console.log('win the day pressed');
-    analytics.event(new Event('Goals', 'Win the Day Pressed', 0))
+    analytics.event(new Event('Goals', 'Win the Day Pressed', 0));
     setWinTheDaySelected(true);
   }
 
   function winTheWeekPressed() {
     console.log('win the week pressed');
-    analytics.event(new Event('Goals', 'Win the Week Pressed', 0))
+    analytics.event(new Event('Goals', 'Win the Week Pressed', 0));
     setWinTheDaySelected(false);
   }
 
   function styleForProgress(index) {
     var barColor = '#1398f5';
-    var barWidth = 75 * barPercentage(index) + "%";
+    var barWidth = 75 * barPercentage(index) + '%';
     if (winTheDaySelected) {
       barColor = '#55bf43';
     }
@@ -72,7 +78,7 @@ export default function GoalsScreen() {
       width: 200,
       color: textColor,
       fontSize: 20,
-      textAlign: "left",
+      textAlign: 'left',
       marginLeft: 10,
       fontSize: 16,
     };
@@ -83,35 +89,33 @@ export default function GoalsScreen() {
       return false;
     }
 
-    if (data["data"] == null) {
+    if (data['data'] == null) {
       return false;
     }
 
-    if (data["data"].length == 0) {
+    if (data['data'].length == 0) {
       return false;
     }
     return true;
   }
 
   function activityCount(index) {
-    if (!sanityCheck())
-      return "";
+    if (!sanityCheck()) return '';
 
     if (winTheDaySelected) {
-      return data["data"][index]["achievedToday"]
+      return data['data'][index]['achievedToday'];
     }
-    return data["data"][index]["achievedThisWeek"]
+    return data['data'][index]['achievedThisWeek'];
   }
 
   function barPercentage(index) {
-    if (!sanityCheck())
-      return 0;
+    if (!sanityCheck()) return 0;
 
-    var weeklyTarget = data["data"][index]["goal"]["weeklyTarget"];
+    var weeklyTarget = data['data'][index]['goal']['weeklyTarget'];
     var dailyTarget = Math.ceil(weeklyTarget / 5);
 
     if (winTheDaySelected) {
-      var dailyNum = data["data"][index]["achievedToday"];
+      var dailyNum = data['data'][index]['achievedToday'];
       if (dailyTarget == 0 && dailyNum > 0) {
         return 1.0;
       }
@@ -123,7 +127,7 @@ export default function GoalsScreen() {
       }
       return dailyNum / dailyTarget;
     }
-    var weeklyNum = data["data"][index]["achievedThisWeek"];
+    var weeklyNum = data['data'][index]['achievedThisWeek'];
     if (weeklyTarget == 0 && weeklyNum > 0) {
       return 1.0;
     }
@@ -137,155 +141,149 @@ export default function GoalsScreen() {
   }
 
   function goalTargetDisplay(index) {
-    if (!sanityCheck())
-      return "";
+    if (!sanityCheck()) return '';
 
     if (winTheDaySelected) {
-      var weeklyTarget = data["data"][index]["goal"]["weeklyTarget"];
+      var weeklyTarget = data['data'][index]['goal']['weeklyTarget'];
       return Math.ceil(weeklyTarget / 5);
     }
-    return data["data"][index]["goal"]["weeklyTarget"]
+    return data['data'][index]['goal']['weeklyTarget'];
   }
 
   function shouldDisplay(index) {
-    if (!sanityCheck())
-      return false;
+    if (!sanityCheck()) return false;
 
-    return data["data"][index]["goal"]["displayOnDashboard"];
+    return data['data'][index]['goal']['displayOnDashboard'];
   }
 
   function titleFor(index) {
     if (data == null) {
-      return "";
+      return '';
     }
-    if (data["data"] == null) {
-      return "";
+    if (data['data'] == null) {
+      return '';
     }
-    if (data["data"].length == 0) {
-      return "";
+    if (data['data'].length == 0) {
+      return '';
     }
-    var oldTitle = data["data"][index]["goal"]["title"];
-    if (oldTitle == "Pop-By Made") {
-      return "Pop-Bys Delivered"
+    var oldTitle = data['data'][index]['goal']['title'];
+    if (oldTitle == 'Pop-By Made') {
+      return 'Pop-Bys Delivered';
     }
-    if (oldTitle == "New Contacts") {
-      return "Database Additions"
+    if (oldTitle == 'New Contacts') {
+      return 'Database Additions';
     }
-    if (oldTitle == "Notes Made") {
-      return "Notes Written"
+    if (oldTitle == 'Notes Made') {
+      return 'Notes Written';
     }
     return oldTitle;
   }
 
   const handleLinkPress = (index) => {
-
-    console.log("here " + index.toString());
-    if (!sanityCheck())
-      return false;
+    console.log('here ' + index.toString());
+    if (!sanityCheck()) return false;
 
     switch (index) {
       case 0:
-        analytics.event(new Event('Goals', 'Calls Pressed', 0))
+        analytics.event(new Event('Goals', 'Calls Pressed', 0));
         navigation.navigate('PAC');
         break;
       case 1:
-        analytics.event(new Event('Goals', 'Notes Pressed', 0))
+        analytics.event(new Event('Goals', 'Notes Pressed', 0));
         navigation.navigate('PAC');
         break;
       case 2:
-        analytics.event(new Event('Goals', 'Pop-Bys Pressed', 0))
+        analytics.event(new Event('Goals', 'Pop-Bys Pressed', 0));
         navigation.navigate('Pop-Bys');
         break;
       case 3:
-        analytics.event(new Event('Goals', 'Database Additions Pressed', 0))
-      //  navigation.navigate('Pop-Bys');  // Add new relationship
+        analytics.event(new Event('Goals', 'Database Additions Pressed', 0));
+        //  navigation.navigate('Pop-Bys');  // Add new relationship
         break;
     }
-  }
+  };
 
   function fetchPressed() {
     console.log('Fetch Press');
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", "YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd");
-    myHeaders.append("SessionToken", "56B6DEC45D864875820ECB094377E191");
-    myHeaders.append("Cookie", "ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a");
+    myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
+    myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
+    myHeaders.append('Cookie', 'ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a');
 
     var requestOptions = {
       method: 'GET',
       headers: myHeaders,
-      redirect: 'follow'
+      redirect: 'follow',
     };
 
-
-
-    fetch("https://www.referralmaker.com/services/mobileapi/activityGoalsWins", requestOptions)
-      .then(response => response.json()) //this line converts it to JSON
-      .then((result) => {                  //then we can treat it as a JSON object
+    fetch('https://www.referralmaker.com/services/mobileapi/activityGoalsWins', requestOptions)
+      .then((response) => response.json()) //this line converts it to JSON
+      .then((result) => {
+        //then we can treat it as a JSON object
         console.log(result);
         setData(result);
-        if (result.status == "error") {
+        if (result.status == 'error') {
           alert(result.error);
-          setIsLoading(false)
-        }
-        else {
-          setIsLoading(false)
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
           //  navigation.navigate('Home');
           //  alert(result.status);
         }
       })
-      .catch(error => alert("failure " + error));
+      .catch((error) => alert('failure ' + error));
   }
 
-  return (
+  return isLoading ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color="#000" />
+    </View>
+  ) : (
+    <View style={styles.container}>
+      <View style={styles.tabButtonRow}>
+        <Text style={winTheDaySelected == true ? styles.selected : styles.unselected} onPress={winTheDayPressed}>
+          Win the Day
+        </Text>
+        <Text style={winTheDaySelected == false ? styles.selected : styles.unselected} onPress={winTheWeekPressed}>
+          Win the Week
+        </Text>
+      </View>
 
-    isLoading ? (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#000" />
-      </View>) :
+      <Text style={styles.goalTitle}>Goal</Text>
 
-      (
-        <View style={styles.container}>
+      <ScrollView>
+        {data['data'].map((name, index) =>
+          shouldDisplay(index) ? (
+            <View key={index}>
+              <TouchableOpacity onPress={() => handleLinkPress(index)}>
+                <Text style={styleForGoalTitle(index)}>
+                  {titleFor(index)} ({activityCount(index)})
+                </Text>
+              </TouchableOpacity>
 
-          <View style={styles.tabButtonRow}>
-            <Text style={winTheDaySelected == true ? styles.selected : styles.unselected} onPress={winTheDayPressed}>Win the Day</Text>
-            <Text style={winTheDaySelected == false ? styles.selected : styles.unselected} onPress={winTheWeekPressed}>Win the Week</Text>
-          </View>
+              <View style={styles.progress}>
+                <View style={styles.grayRectangle}></View>
+                <Image
+                  source={barPercentage(index) >= 1.0 ? (winTheDaySelected == true ? dayTrophy : weekTrophy) : noTrophy}
+                  style={styles.trophy}
+                />
+                <Text style={styles.goalTarget}>{goalTargetDisplay(index)}</Text>
+              </View>
+              <View style={styles.progress}>
+                <View style={styleForProgress(index)}></View>
+              </View>
+            </View>
+          ) : (
+            <View></View>
+          )
+        )}
+        <View style={styles.hack}></View>
+      </ScrollView>
 
-          <Text style={styles.goalTitle}>Goal</Text>
-
-          <ScrollView>
-            {
-              data["data"].map((name, index) => (
-
-                shouldDisplay(index) ? (
-                  <View key={index}>
-
-                    <TouchableOpacity onPress={() => handleLinkPress(index)}>
-                      <Text style={styleForGoalTitle(index)}>{titleFor(index)} ({activityCount(index)})</Text>
-                    </TouchableOpacity>
-
-                    <View style={styles.progress}>
-                      <View style={styles.grayRectangle}></View>
-                      <Image source={barPercentage(index) >= 1.0 ? (winTheDaySelected == true ? dayTrophy : weekTrophy) : noTrophy} style={styles.trophy} />
-                      <Text style={styles.goalTarget}>{goalTargetDisplay(index)}</Text>
-                    </View>
-                    <View style={styles.progress}>
-                      <View style={styleForProgress(index)}></View>
-                    </View>
-                  </View>
-
-                ) : (<View></View>)
-              )
-              )
-            }
-            <View style={styles.hack}></View>
-          </ScrollView>
-
-          {/* {<TouchableOpacity onPress={fetchPressed}>
+      {/* {<TouchableOpacity onPress={fetchPressed}>
         <Text style={styles.trackText}>Track Activity</Text>
       </TouchableOpacity> } */}
-        </View>
-      )
+    </View>
   );
 }
 
@@ -310,7 +308,7 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#09334a',
     flex: 1,
-    paddingTop: 10
+    paddingTop: 10,
   },
   selected: {
     color: 'white',
@@ -321,7 +319,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 10,
     borderColor: 'lightblue',
-    borderWidth: 2
+    borderWidth: 2,
   },
   goalTitle: {
     paddingRight: 30,
@@ -331,7 +329,7 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 16
+    fontSize: 16,
   },
   progress: {
     display: 'flex',
@@ -340,22 +338,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
     marginRight: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
   goalName: {
     width: 200,
     color: '#1A6295',
     fontSize: 20,
-    textAlign: "left",
+    textAlign: 'left',
     marginLeft: 10,
-    fontSize: 16
+    fontSize: 16,
   },
   goalTarget: {
     width: 20,
     height: 32,
     color: 'black',
     fontSize: 18,
-    textAlign: "right",
+    textAlign: 'right',
     marginRight: 20,
   },
   grayRectangle: {

@@ -16,8 +16,9 @@ import goalsImage from '../../assets/quickGoals.png';
 import transImage from '../../assets/quickTrans.png';
 import todoImage from '../../assets/quickToDo.png';
 import calendarImage from '../../assets/quickCalendar.png';
+import { analytics } from '../../utils/analytics';
 
-const analytics = new Analytics('UA-65596113-1');
+//const analytics = new Analytics('UA-65596113-1');
 /*analytics.hit(new PageHit('Home'))
   .then(() => console.log("success"))
   .catch(e => console.log(e.message)); */

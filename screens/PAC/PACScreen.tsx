@@ -36,6 +36,7 @@ export default function PACScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index) => {
+    analytics.event(new Event('PAC', 'Go To Details'));
     navigation.navigate('PACDetail', {
       contactId: data[index]['contactId'],
       type: data[index]['type'],
@@ -44,10 +45,11 @@ export default function PACScreen() {
 
   const handleIdeasPressed = () => {
     console.log('Ideas');
+    analytics.event(new Event('PAC', 'View Ideas'));
   };
 
   function callsPressed() {
-    analytics.event(new Event('PAC', 'Calls'));
+    analytics.event(new Event('PAC', 'Calls Tab'));
     setCallsSelected(true);
     setNotesSelected(false);
     setPopSelected(false);
@@ -55,7 +57,7 @@ export default function PACScreen() {
   }
 
   function notesPressed() {
-    analytics.event(new Event('PAC', 'Notes'));
+    analytics.event(new Event('PAC', 'Notes Tab'));
     setCallsSelected(false);
     setNotesSelected(true);
     setPopSelected(false);
@@ -63,7 +65,7 @@ export default function PACScreen() {
   }
 
   function popPressed() {
-    analytics.event(new Event('PAC', 'Pop-By'));
+    analytics.event(new Event('PAC', 'Pop-By Tab'));
     setCallsSelected(false);
     setNotesSelected(false);
     setPopSelected(true);

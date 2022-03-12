@@ -6,7 +6,7 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 
 // Hamburger Menu test
 //import rmLogo from '../assets/logoWide.png';
-const rmLogo =  require('../assets/logoWide.png')
+const rmLogo = require('../assets/logoWide.png');
 
 import dashIcon from '../assets/menuDashboard.png';
 import goalsIcon from '../assets/menuGoals.png';
@@ -20,8 +20,7 @@ import podcastIcon from '../assets/menuPodcasts.png';
 import settingsIcon from '../assets/menuSettings.png';
 
 import chevron from '../assets/chevron_white.png';
-
-const analytics = new Analytics('UA-65596113-1');
+import { analytics } from '../utils/analytics';
 
 function CustomDrawerContent(props) {
   const { navigation } = props;
