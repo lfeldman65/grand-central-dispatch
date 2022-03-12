@@ -8,10 +8,10 @@ export default styles = StyleSheet.create({
   },
   personName: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 18,
     textAlign: 'left',
     marginLeft: 10,
-    margin: 5,
+    marginBottom: 7,
     fontWeight: '500',
   },
   phoneNumber: {
@@ -19,7 +19,7 @@ export default styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
-    margin: 5,
+    marginBottom: 7,
   },
   popByButtons: {
     color: '#02ABF7',
@@ -36,7 +36,7 @@ export default styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
-    marginTop: 5,
+    marginBottom: 7,
   },
   streetText: {
     color: 'black',
@@ -49,7 +49,7 @@ export default styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
-    marginBottom: 5,
+    marginBottom: 7,
   },
   bottomContainer: {
     backgroundColor: '#1A6295',

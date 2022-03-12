@@ -21,6 +21,7 @@ import { set } from 'react-native-reanimated';
 import { saveAsFavorite } from './api';
 import { SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
+import { useNavigation } from '@react-navigation/native';
 
 export default function PACPopRow(props) {
   const [saveShown, setSaveShown] = useState(!props.data.isFavorite);
@@ -28,6 +29,8 @@ export default function PACPopRow(props) {
   // const [data, setData] = useState<SaveAsFavoriteProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({ data: [] });
+
+  const navigation = useNavigation();
 
   function handlePhonePressed(number) {
     console.log(number);
@@ -78,6 +81,7 @@ export default function PACPopRow(props) {
         fontSize: 15,
         textAlign: 'right',
         marginRight: 10,
+        marginTop: -2,
       };
     }
     return {
@@ -85,11 +89,13 @@ export default function PACPopRow(props) {
       fontSize: 15,
       textAlign: 'right',
       marginRight: 10,
+      marginTop: -2,
     };
   }
 
   function handlePopPressed() {
     console.log('pop');
+    navigation.navigate('Pop-Bys');
   }
 
   function saveAsFavoriteAPI() {
@@ -131,7 +137,7 @@ export default function PACPopRow(props) {
           <Text style={styles.personName}>{props.data.contactName}</Text>
           {props.data.street1 != null && (
             <TouchableOpacity style={styles.popByButtons} onPress={() => handleDirectionsPressed()}>
-              <Text style={styles.phoneNumber}>{'Directions'}</Text>
+              <Text style={styles.popByButtons}>{'Directions'}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -149,7 +155,7 @@ export default function PACPopRow(props) {
           <Text style={styles.otherText}>{'Last Pop-By: ' + props.data.lastPopByDate}</Text>
           {props.data.street1 && (
             <TouchableOpacity style={styles.popByButtons} onPress={() => handlePopPressed()}>
-              <Text style={styles.phoneNumber}>{'Pop-By Map'}</Text>
+              <Text style={styles.popByButtons}>{'Pop-By Map'}</Text>
             </TouchableOpacity>
           )}
         </View>

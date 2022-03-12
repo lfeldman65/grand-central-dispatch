@@ -4,7 +4,7 @@ import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import { useState } from "react";
+import { useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import callImage from '../../assets/quickCalls.png';
@@ -24,14 +24,14 @@ const analytics = new Analytics('UA-65596113-1');
 
 const getData = async (key) => {
   try {
-    const value = await AsyncStorage.getItem(key)
+    const value = await AsyncStorage.getItem(key);
     if (value !== null) {
-      return(value);
+      return value;
     }
   } catch (e) {
     // error reading value
   }
-}
+};
 
 export default function Dashboard(props) {
   //const { navigation } = props;
@@ -44,7 +44,7 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: () => (<MenuIcon />)
+      headerLeft: () => <MenuIcon />,
     });
   });
 
@@ -52,28 +52,27 @@ export default function Dashboard(props) {
     console.log(screenName);
     analytics.event(new Event('Dashboard', 'Calls Pressed', 0));
     var name = getData('userName');
-    console.log(name)
-    navigation.navigate(screenName)
-  }
+    console.log(name);
+    navigation.navigate(screenName);
+  };
 
   const pressedNotes = (screenName) => {
     console.log(screenName);
-    analytics.event(new Event('Dashboard', 'Notes Pressed', 0))
-    navigation.navigate(screenName)
-  }
+    analytics.event(new Event('Dashboard', 'Notes Pressed', 0));
+    navigation.navigate(screenName);
+  };
 
   const otherPressed = (screenName) => {
     console.log(screenName);
     var prettyName = screenName;
-    if (screenName == "manageRelationships") {
-      prettyName = "Relationships";
+    if (screenName == 'manageRelationships') {
+      prettyName = 'Relationships';
+    } else if (screenName == 'realEstateTransactions') {
+      prettyName = 'Transactions';
     }
-    else if (screenName == "realEstateTransactions") {
-      prettyName = "Transactions";
-    }
-    analytics.event(new Event('Dashboard', prettyName + ' Pressed', 0))
-    navigation.navigate(screenName)
-  }
+    analytics.event(new Event('Dashboard', prettyName + ' Pressed', 0));
+    navigation.navigate(screenName);
+  };
 
   return (
     <>
@@ -148,12 +147,12 @@ export default function Dashboard(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
   },
   row: {
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   pair: {
     flex: 1,
@@ -161,18 +160,16 @@ const styles = StyleSheet.create({
     padding: 8,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'black'
+    backgroundColor: 'white',
   },
   logo: {
     width: 48,
     height: 48,
-    marginBottom: 5
+    marginBottom: 5,
   },
   names: {
     height: 18,
-    color: 'white',
+    color: 'black',
     textAlign: 'center',
   },
 });
-
-
