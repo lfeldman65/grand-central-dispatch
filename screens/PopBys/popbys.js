@@ -181,7 +181,7 @@ export default function PopByScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 7,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
   },
   bottom: {
     flex: 1,
