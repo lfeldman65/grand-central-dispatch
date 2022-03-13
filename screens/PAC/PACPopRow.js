@@ -17,7 +17,7 @@ import Swipeable from 'react-native-swipeable-row';
 import styles from './styles';
 import { analytics } from '../../constants/analytics';
 import * as SMS from 'expo-sms';
-import { set } from 'react-native-reanimated';
+import { add, set } from 'react-native-reanimated';
 import { saveAsFavorite } from './api';
 import { SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
@@ -61,8 +61,29 @@ export default function PACPopRow(props) {
   }
 
   function handleDirectionsPressed() {
-    console.log('directions');
-    openMap({ latitude: 33.1175, longitude: -117.0722, zoom: 10 });
+    //   openMap({ latitude: 33.1175, longitude: -117.0722, zoom: 10 });
+    //   openMap({ query: '7743 Royal Park Dr. Lewis Center OH 43035' });
+    openMap({ query: completeAddress() });
+  }
+
+  function completeAddress() {
+    var addressString = '';
+    if (props.data.street1 != null) {
+      addressString = addressString + ' ' + props.data.street1;
+    }
+    if (props.data.street2 != null) {
+      addressString = addressString + ' ' + props.data.street2;
+    }
+    if (props.data.city != null) {
+      addressString = addressString + ' ' + props.data.city;
+    }
+    if (props.data.state != null) {
+      addressString = addressString + ' ' + props.data.state;
+    }
+    if (props.data.zip != null) {
+      addressString = addressString + ' ' + props.data.street2;
+    }
+    return addressString;
   }
 
   function handleSavePressed() {
