@@ -24,13 +24,25 @@ import styles from './styles';
 let deviceHeight = Dimensions.get('window').height;
 
 export default function PACDetailScreen({ route }) {
-  const { contactId, type } = route.params;
+  const { contactId, type, ranking, lastCallDate, lastNoteDate, lastPopByDate } = route.params;
   const navigation = useNavigation();
 
   function postponePressed() {
     analytics.event(new Event('PAC Detail', 'Postpone', 0));
     postponeAPIOld();
     //  postponeAPINew();
+  }
+
+  function lastDate() {
+    if (type == 'call') {
+      return 'Last Call: ' + lastCallDate;
+    }
+    if (type == 'notes') {
+      return 'Last Note Sent: ' + lastNoteDate;
+    }
+    if (type == 'popby') {
+      return 'Last Pop-By: ' + lastPopByDate;
+    }
   }
 
   async function completePressed() {
@@ -52,10 +64,10 @@ export default function PACDetailScreen({ route }) {
   function cityStateZip() {
     var cityStateZip = '';
     if (address('city') != '' && address('city') != null) {
-      cityStateZip = cityStateZip + ' ' + address('city');
+      cityStateZip = cityStateZip + address('city');
     }
     if (address('state') != '' && address('state') != null) {
-      cityStateZip = cityStateZip + ' ' + address('state');
+      cityStateZip = cityStateZip + ', ' + address('state');
     }
     if (address('zip') != '' && address('zip') != null) {
       cityStateZip = cityStateZip + ' ' + address('zip');
@@ -64,22 +76,14 @@ export default function PACDetailScreen({ route }) {
   }
 
   function completeAddress() {
+    // Can't contain commas because they screw up the directions
     var completeAddress = '';
     if (address('street') != '' && address('street') != null) {
-      completeAddress = completeAddress + ' ' + address('street');
+      completeAddress = completeAddress + address('street');
     }
     if (address('street2') != '' && address('street2') != null) {
       completeAddress = completeAddress + ' ' + address('street2');
     }
-    // if (address('city') != '' && address('city') != null) {
-    //   fullAddress = fullAddress + ' ' + address('city');
-    // }
-    // if (address('state') != '' && address('state') != null) {
-    //   fullAddress = fullAddress + ' ' + address('state');
-    // }
-    // if (address('zip') != '' && address('zip') != null) {
-    //   fullAddress = fullAddress + ' ' + address('zip');
-    // }
     return completeAddress + cityStateZip();
   }
 
@@ -137,12 +141,12 @@ export default function PACDetailScreen({ route }) {
     return data['data']['address'][type];
   }
 
-  function ranking() {
-    if (!sanityCheck()) return '';
+  // function ranking() {
+  //   if (!sanityCheck()) return '';
 
-    //  var notes = data['data']['ranking'];
-    return getRanking(notes);
-  }
+  //   //  var notes = data['data']['ranking'];
+  //   return getRanking(notes);
+  // }
 
   function completeAPI(note) {
     var myHeaders = new Headers();
@@ -304,8 +308,8 @@ export default function PACDetailScreen({ route }) {
         {cityStateZip != '' && <Text style={stylesDetail.cityStateZipText}>{cityStateZip()}</Text>}
 
         <Text style={stylesDetail.sectionTitle}>Notes</Text>
-        <Text style={stylesDetail.standardText}>Ranking: A+</Text>
-        <Text style={stylesDetail.standardText}>Last Call: 02/11/2022</Text>
+        <Text style={stylesDetail.standardText}>{'Ranking: ' + ranking}</Text>
+        <Text style={stylesDetail.standardText}>{lastDate()}</Text>
       </View>
 
       <View style={stylesDetail.bottomContainer}>

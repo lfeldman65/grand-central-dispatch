@@ -40,6 +40,10 @@ export default function PACScreen() {
     navigation.navigate('PACDetail', {
       contactId: data[index]['contactId'],
       type: data[index]['type'],
+      ranking: data[index]['ranking'],
+      lastCallDate: data[index]['lastCallDate'],
+      lastNoteDate: data[index]['lastNoteDate'],
+      lastPopByDate: data[index]['lastPopByDate'],
     });
   };
 
