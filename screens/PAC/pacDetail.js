@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import PacComplete from '../PAC/PACCompleteScreen';
 import { postPACPostpone, saveAsFavorite } from './api';
 import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
+import openMap from 'react-native-open-maps';
 import styles from './styles';
 
 let deviceHeight = Dimensions.get('window').height;
@@ -45,6 +46,41 @@ export default function PACDetailScreen({ route }) {
 
   function handleDirectionsPressed() {
     console.log('Directions');
+    openMap({ query: completeAddress() });
+  }
+
+  function cityStateZip() {
+    var cityStateZip = '';
+    if (address('city') != '' && address('city') != null) {
+      cityStateZip = cityStateZip + ' ' + address('city');
+    }
+    if (address('state') != '' && address('state') != null) {
+      cityStateZip = cityStateZip + ' ' + address('state');
+    }
+    if (address('zip') != '' && address('zip') != null) {
+      cityStateZip = cityStateZip + ' ' + address('zip');
+    }
+    return cityStateZip;
+  }
+
+  function completeAddress() {
+    var completeAddress = '';
+    if (address('street') != '' && address('street') != null) {
+      completeAddress = completeAddress + ' ' + address('street');
+    }
+    if (address('street2') != '' && address('street2') != null) {
+      completeAddress = completeAddress + ' ' + address('street2');
+    }
+    // if (address('city') != '' && address('city') != null) {
+    //   fullAddress = fullAddress + ' ' + address('city');
+    // }
+    // if (address('state') != '' && address('state') != null) {
+    //   fullAddress = fullAddress + ' ' + address('state');
+    // }
+    // if (address('zip') != '' && address('zip') != null) {
+    //   fullAddress = fullAddress + ' ' + address('zip');
+    // }
+    return completeAddress + cityStateZip();
   }
 
   const [data, setData] = useState({ data: [] });
@@ -255,7 +291,7 @@ export default function PACDetailScreen({ route }) {
         {phoneNumber('homePhone') != '' && <Text style={stylesDetail.phoneNumber}>{phoneNumber('homePhone')}</Text>}
 
         <View style={styles.popbyRow}>
-          <Text style={stylesDetail.sectionTitle}>Location</Text>
+          {completeAddress() != '' && <Text style={stylesDetail.sectionTitle}>Location</Text>}
           {address('street') != null && (
             <TouchableOpacity style={styles.popByButtons} onPress={() => handleDirectionsPressed()}>
               <Text style={styles.popByButtons}>{'Directions'}</Text>
@@ -265,11 +301,7 @@ export default function PACDetailScreen({ route }) {
 
         {address('street') != '' && <Text style={stylesDetail.standardText}>{address('street')}</Text>}
         {address('street2') != '' && <Text style={stylesDetail.standardText}>{address('street2')}</Text>}
-        {address('city') != '' && (
-          <Text style={stylesDetail.cityStateZipText}>
-            {address('city') + ', ' + address('state') + ' ' + address('zip')}
-          </Text>
-        )}
+        {cityStateZip != '' && <Text style={stylesDetail.cityStateZipText}>{cityStateZip()}</Text>}
 
         <Text style={stylesDetail.sectionTitle}>Notes</Text>
         <Text style={stylesDetail.standardText}>Ranking: A+</Text>
@@ -319,7 +351,7 @@ const stylesDetail = StyleSheet.create({
   sectionTitle: {
     marginLeft: 20,
     color: 'gray',
-    fontSize: 16,
+    fontSize: 15,
     textAlign: 'left',
     marginBottom: 5,
   },
