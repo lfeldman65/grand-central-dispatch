@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import PacComplete from '../PAC/PACCompleteScreen';
 import { postPACPostpone, saveAsFavorite } from './api';
 import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
+import styles from './styles';
 
 let deviceHeight = Dimensions.get('window').height;
 
@@ -40,6 +41,10 @@ export default function PACDetailScreen({ route }) {
   function saveComplete(note) {
     // console.log('Note ', note);
     completeAPI(note);
+  }
+
+  function handleDirectionsPressed() {
+    console.log('Directions');
   }
 
   const [data, setData] = useState({ data: [] });
@@ -237,28 +242,47 @@ export default function PACDetailScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <Text style={styles.personName}>{contactName()}</Text>
+      <View style={stylesDetail.topContainer}>
+        <Text style={stylesDetail.personName}>{contactName()}</Text>
 
-        {phoneNumber('mobilePhone') != null && <Text style={styles.detailTitle}>{'Mobile Phone'}</Text>}
-        {phoneNumber('mobilePhone') != null && <Text style={styles.phoneNumber}>{phoneNumber('mobilePhone')}</Text>}
+        {phoneNumber('mobile') != '' && <Text style={stylesDetail.sectionTitle}>{'Mobile Phone'}</Text>}
+        {phoneNumber('mobile') != '' && <Text style={stylesDetail.phoneNumber}>{phoneNumber('mobile')}</Text>}
 
-        {phoneNumber('officePhone') != null && <Text style={styles.detailTitle}>{'Office Phone'}</Text>}
-        {phoneNumber('officePhone') != null && <Text style={styles.phoneNumber}>{phoneNumber('officePhone')}</Text>}
+        {phoneNumber('officePhone') != '' && <Text style={stylesDetail.sectionTitle}>{'Office Phone'}</Text>}
+        {phoneNumber('officePhone') != '' && <Text style={stylesDetail.phoneNumber}>{phoneNumber('officePhone')}</Text>}
 
-        {phoneNumber('homePhone') != null && <Text style={styles.detailTitle}>{'Home Phone'}</Text>}
-        {phoneNumber('homePhone') != null && <Text style={styles.phoneNumber}>{phoneNumber('homePhone')}</Text>}
+        {phoneNumber('homePhone') != '' && <Text style={stylesDetail.sectionTitle}>{'Home Phone'}</Text>}
+        {phoneNumber('homePhone') != '' && <Text style={stylesDetail.phoneNumber}>{phoneNumber('homePhone')}</Text>}
 
-        {address('street') != null && <Text style={styles.phoneNumber}>{address('street')}</Text>}
+        <View style={styles.popbyRow}>
+          <Text style={stylesDetail.sectionTitle}>Location</Text>
+          {address('street') != null && (
+            <TouchableOpacity style={styles.popByButtons} onPress={() => handleDirectionsPressed()}>
+              <Text style={styles.popByButtons}>{'Directions'}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {address('street') != '' && <Text style={stylesDetail.standardText}>{address('street')}</Text>}
+        {address('street2') != '' && <Text style={stylesDetail.standardText}>{address('street2')}</Text>}
+        {address('city') != '' && (
+          <Text style={stylesDetail.cityStateZipText}>
+            {address('city') + ', ' + address('state') + ' ' + address('zip')}
+          </Text>
+        )}
+
+        <Text style={stylesDetail.sectionTitle}>Notes</Text>
+        <Text style={stylesDetail.standardText}>Ranking: A+</Text>
+        <Text style={stylesDetail.standardText}>Last Call: 02/11/2022</Text>
       </View>
 
-      <View style={styles.bottomContainer}>
+      <View style={stylesDetail.bottomContainer}>
         <TouchableOpacity onPress={completePressed}>
-          <Text style={styles.completeText}>Complete</Text>
+          <Text style={stylesDetail.completeText}>Complete</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={postponePressed}>
-          <Text style={styles.postponeText}>Postpone</Text>
+          <Text style={stylesDetail.postponeText}>Postpone</Text>
         </TouchableOpacity>
       </View>
 
@@ -279,31 +303,50 @@ export default function PACDetailScreen({ route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    height: '100%',
-  },
+const stylesDetail = StyleSheet.create({
   topContainer: {
     height: 0.75 * deviceHeight,
     backgroundColor: 'white',
   },
+  personName: {
+    marginTop: 20,
+    marginLeft: 20,
+    color: '#02ABF7',
+    fontSize: 18,
+    textAlign: 'left',
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    marginLeft: 20,
+    color: 'gray',
+    fontSize: 16,
+    textAlign: 'left',
+    marginBottom: 5,
+  },
   bottomContainer: {
     backgroundColor: 'white',
   },
-  detailTitle: {
+  standardText: {
     color: 'black',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 20,
-    width: 180,
+    marginBottom: 5,
+  },
+  cityStateZipText: {
+    color: 'black',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 20,
+    marginBottom: 20,
   },
   phoneNumber: {
-    color: 'blue',
+    color: '#02ABF7',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 20,
     width: 180,
+    marginBottom: 15,
   },
   postponeText: {
     color: 'orange',
@@ -326,58 +369,5 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 10,
     fontSize: 16,
-  },
-  personName: {
-    marginTop: 20,
-    marginLeft: 20,
-    color: '#1A6295',
-    fontSize: 18,
-    textAlign: 'left',
-    marginBottom: 20,
-    // fontWeight: 'bold'
-  },
-});
-
-const stylesModal = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalView: {
-    backgroundColor: 'white',
-    borderRadius: 5,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    height: '90%',
-    width: '90%',
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
   },
 });
