@@ -102,7 +102,7 @@ export default function PACPopRow(props) {
         fontSize: 15,
         textAlign: 'right',
         marginRight: 10,
-        marginTop: -2,
+        marginTop: -3,
       };
     }
     return {
@@ -110,7 +110,7 @@ export default function PACPopRow(props) {
       fontSize: 15,
       textAlign: 'right',
       marginRight: 10,
-      marginTop: -2,
+      marginTop: -3,
     };
   }
 

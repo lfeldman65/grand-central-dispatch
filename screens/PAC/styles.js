@@ -12,6 +12,7 @@ export default styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 7,
+    marginTop: 5,
     fontWeight: '500',
   },
   phoneNumber: {
@@ -19,7 +20,7 @@ export default styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
-    marginBottom: 7,
+    marginBottom: 5,
   },
   popByButtons: {
     color: '#02ABF7',
