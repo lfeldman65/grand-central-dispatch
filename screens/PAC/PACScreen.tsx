@@ -24,13 +24,12 @@ import { analytics } from '../../utils/analytics';
 import { getPACData } from './api';
 import { PACDataProps } from './interfaces';
 
+type TabType = 'calls' | 'notes' | 'popby';
+
 export default function PACScreen() {
+  const [tabSelected, setTabSelected] = useState<TabType>('calls');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-
-  const [callsSelected, setCallsSelected] = useState(true);
-  const [notesSelected, setNotesSelected] = useState(false);
-  const [popSelected, setPopSelected] = useState(false);
 
   const [data, setData] = useState<PACDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,25 +53,19 @@ export default function PACScreen() {
 
   function callsPressed() {
     analytics.event(new Event('PAC', 'Calls Tab'));
-    setCallsSelected(true);
-    setNotesSelected(false);
-    setPopSelected(false);
+    setTabSelected('calls');
     fetchData('calls');
   }
 
   function notesPressed() {
     analytics.event(new Event('PAC', 'Notes Tab'));
-    setCallsSelected(false);
-    setNotesSelected(true);
-    setPopSelected(false);
+    setTabSelected('notes');
     fetchData('notes');
   }
 
   function popPressed() {
     analytics.event(new Event('PAC', 'Pop-By Tab'));
-    setCallsSelected(false);
-    setNotesSelected(false);
-    setPopSelected(true);
+    setTabSelected('popby');
     fetchData('popby');
   }
 
@@ -97,9 +90,7 @@ export default function PACScreen() {
   });
 
   useEffect(() => {
-    setTimeout(() => {
-      fetchData('calls');
-    }, 500);
+    fetchData(tabSelected);
   }, [isFocused]);
 
   // useEffect(() => {
@@ -117,13 +108,13 @@ export default function PACScreen() {
   ) : (
     <View style={styles.container}>
       <View style={styles.tabButtonRow}>
-        <Text style={callsSelected == true ? styles.selected : styles.unselected} onPress={callsPressed}>
+        <Text style={tabSelected == 'calls' ? styles.selected : styles.unselected} onPress={callsPressed}>
           Calls
         </Text>
-        <Text style={notesSelected == true ? styles.selected : styles.unselected} onPress={notesPressed}>
+        <Text style={tabSelected == 'notes' ? styles.selected : styles.unselected} onPress={notesPressed}>
           Notes
         </Text>
-        <Text style={popSelected == true ? styles.selected : styles.unselected} onPress={popPressed}>
+        <Text style={tabSelected == 'popby' ? styles.selected : styles.unselected} onPress={popPressed}>
           Pop-By
         </Text>
       </View>
@@ -131,13 +122,15 @@ export default function PACScreen() {
       <ScrollView>
         {data.map((item, index) => (
           <View key={index}>
-            {callsSelected == true ? (
+            {tabSelected == 'calls' ? (
               <PACCallsRow key={index} data={item} onPress={() => handleRowPress(index)} />
             ) : null}
-            {notesSelected == true ? (
+            {tabSelected == 'notes' ? (
               <PACNotesRow key={index} data={item} onPress={() => handleRowPress(index)} />
             ) : null}
-            {popSelected == true ? <PACPopRow key={index} data={item} onPress={() => handleRowPress(index)} /> : null}
+            {tabSelected == 'popby' ? (
+              <PACPopRow key={index} data={item} onPress={() => handleRowPress(index)} />
+            ) : null}
           </View>
         ))}
       </ScrollView>

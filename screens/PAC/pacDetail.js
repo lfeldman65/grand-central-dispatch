@@ -64,7 +64,7 @@ export default function PACDetailScreen({ route }) {
   function cityStateZip() {
     var cityStateZip = '';
     if (address('city') != '' && address('city') != null) {
-      cityStateZip = cityStateZip + address('city');
+      cityStateZip = address('city');
     }
     if (address('state') != '' && address('state') != null) {
       cityStateZip = cityStateZip + ', ' + address('state');
@@ -76,15 +76,18 @@ export default function PACDetailScreen({ route }) {
   }
 
   function completeAddress() {
-    // Can't contain commas because they screw up the directions
     var completeAddress = '';
     if (address('street') != '' && address('street') != null) {
-      completeAddress = completeAddress + address('street');
+      completeAddress = address('street');
     }
     if (address('street2') != '' && address('street2') != null) {
       completeAddress = completeAddress + ' ' + address('street2');
     }
     return completeAddress + cityStateZip();
+  }
+
+  function isNotNullOrEmpty(data) {
+    return data != null && data != '';
   }
 
   const [data, setData] = useState({ data: [] });
@@ -285,14 +288,22 @@ export default function PACDetailScreen({ route }) {
       <View style={stylesDetail.topContainer}>
         <Text style={stylesDetail.personName}>{contactName()}</Text>
 
-        {phoneNumber('mobile') != '' && <Text style={stylesDetail.sectionTitle}>{'Mobile Phone'}</Text>}
-        {phoneNumber('mobile') != '' && <Text style={stylesDetail.phoneNumber}>{phoneNumber('mobile')}</Text>}
+        {isNotNullOrEmpty(phoneNumber('mobile')) && <Text style={stylesDetail.sectionTitle}>{'Mobile Phone'}</Text>}
+        {isNotNullOrEmpty(phoneNumber('mobile')) && (
+          <Text style={stylesDetail.phoneNumber}>{phoneNumber('mobile')}</Text>
+        )}
 
-        {phoneNumber('officePhone') != '' && <Text style={stylesDetail.sectionTitle}>{'Office Phone'}</Text>}
-        {phoneNumber('officePhone') != '' && <Text style={stylesDetail.phoneNumber}>{phoneNumber('officePhone')}</Text>}
+        {isNotNullOrEmpty(phoneNumber('officePhone')) && (
+          <Text style={stylesDetail.sectionTitle}>{'Office Phone'}</Text>
+        )}
+        {isNotNullOrEmpty(phoneNumber('officePhone')) && (
+          <Text style={stylesDetail.phoneNumber}>{phoneNumber('officePhone')}</Text>
+        )}
 
-        {phoneNumber('homePhone') != '' && <Text style={stylesDetail.sectionTitle}>{'Home Phone'}</Text>}
-        {phoneNumber('homePhone') != '' && <Text style={stylesDetail.phoneNumber}>{phoneNumber('homePhone')}</Text>}
+        {isNotNullOrEmpty(phoneNumber('homePhone')) && <Text style={stylesDetail.sectionTitle}>{'Home Phone'}</Text>}
+        {isNotNullOrEmpty(phoneNumber('homePhone')) && (
+          <Text style={stylesDetail.phoneNumber}>{phoneNumber('homePhone')}</Text>
+        )}
 
         <View style={styles.popbyRow}>
           {completeAddress() != '' && <Text style={stylesDetail.sectionTitle}>Location</Text>}
@@ -303,9 +314,9 @@ export default function PACDetailScreen({ route }) {
           )}
         </View>
 
-        {address('street') != '' && <Text style={stylesDetail.standardText}>{address('street')}</Text>}
-        {address('street2') != '' && <Text style={stylesDetail.standardText}>{address('street2')}</Text>}
-        {cityStateZip != '' && <Text style={stylesDetail.cityStateZipText}>{cityStateZip()}</Text>}
+        {isNotNullOrEmpty(address('street')) && <Text style={stylesDetail.standardText}>{address('street')}</Text>}
+        {isNotNullOrEmpty(address('street2')) && <Text style={stylesDetail.standardText}>{address('street2')}</Text>}
+        {isNotNullOrEmpty(cityStateZip()) && <Text style={stylesDetail.cityStateZipText}>{cityStateZip()}</Text>}
 
         <Text style={stylesDetail.sectionTitle}>Notes</Text>
         <Text style={stylesDetail.standardText}>{'Ranking: ' + ranking}</Text>
