@@ -16,7 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import { analytics } from '../../utils/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import PacComplete from '../PAC/PACCompleteScreen';
-import { postPACPostpone, saveAsFavorite } from './api';
+import { postponePAC, completePAC, saveAsFavorite } from './api';
 import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
 import styles from './styles';
@@ -332,7 +332,7 @@ export default function PACDetailScreen({ route }) {
             setModalVisible(!modalVisible);
           }}
         >
-          <PacComplete onSave={saveComplete} setModalVisible={setModalVisible} />
+          <PacComplete contactName={contactName()} onSave={saveComplete} setModalVisible={setModalVisible} />
         </Modal>
       )}
     </View>
@@ -385,7 +385,7 @@ const stylesDetail = StyleSheet.create({
     marginBottom: 15,
   },
   postponeText: {
-    color: 'orange',
+    color: '#F99055',
     marginLeft: 10,
     textAlign: 'center',
     fontSize: 20,

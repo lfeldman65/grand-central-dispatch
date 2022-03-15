@@ -9,10 +9,10 @@ export function saveAsFavorite(guid: string): Promise<SaveAsFavoriteProps> {
   return http.get(`setasfavorite?contactGuid=${guid}`);
 }
 
-export function postPACPostpone(contactGUID: string): Promise<PACPostponeResponse> {
+export function postponePAC(guid: string): Promise<PACPostponeResponse> {
   return http.post(`contactsPostponeAction/' + 'contactGUID`);
 }
 
-export function postPACComplete(contactGUID: string): Promise<PACCompleteResponse> {
+export function completePAC(contactGUID: string): Promise<PACCompleteResponse> {
   return http.post(`contactsTrackAction/' + 'contactGUID`);
 }

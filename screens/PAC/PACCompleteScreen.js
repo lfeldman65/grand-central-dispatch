@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions,
 import closeButton from '../../assets/button_close_white.png';
 
 export default function PACCompleteScreen(props) {
-  const { onSave, setModalVisible } = props;
+  const { onSave, setModalVisible, contactName } = props;
   const [note, onNoteChange] = useState('');
 
   function SavePressed() {
@@ -20,7 +20,7 @@ export default function PACCompleteScreen(props) {
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
 
-        <Text style={styles.nameLabel}>Notes</Text>
+        <Text style={styles.nameLabel}>{contactName}</Text>
 
         <TouchableOpacity onPress={SavePressed}>
           <Text style={styles.saveButton}>Save</Text>
