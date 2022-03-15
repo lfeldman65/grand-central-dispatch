@@ -63,13 +63,13 @@ export default function PACDetailScreen({ route }) {
 
   function cityStateZip() {
     var cityStateZip = '';
-    if (address('city') != '' && address('city') != null) {
+    if (isNotNullOrEmpty(address('city'))) {
       cityStateZip = address('city');
     }
-    if (address('state') != '' && address('state') != null) {
+    if (isNotNullOrEmpty(address('state'))) {
       cityStateZip = cityStateZip + ', ' + address('state');
     }
-    if (address('zip') != '' && address('zip') != null) {
+    if (isNotNullOrEmpty(address('zip'))) {
       cityStateZip = cityStateZip + ' ' + address('zip');
     }
     return cityStateZip;
@@ -77,10 +77,10 @@ export default function PACDetailScreen({ route }) {
 
   function completeAddress() {
     var completeAddress = '';
-    if (address('street') != '' && address('street') != null) {
+    if (isNotNullOrEmpty(address('street'))) {
       completeAddress = address('street');
     }
-    if (address('street2') != '' && address('street2') != null) {
+    if (isNotNullOrEmpty(address('street2'))) {
       completeAddress = completeAddress + ' ' + address('street2');
     }
     return completeAddress + cityStateZip();
