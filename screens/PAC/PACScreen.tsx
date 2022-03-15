@@ -29,7 +29,7 @@ import IdeasPop from '../PAC/IdeasPopScreen';
 type TabType = 'calls' | 'notes' | 'popby';
 
 export default function PACScreen({ route }) {
-  //  const { defaultTab } = route.params;
+  const { defaultTab } = route.params;
   const [tabSelected, setTabSelected] = useState<TabType>('calls');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
