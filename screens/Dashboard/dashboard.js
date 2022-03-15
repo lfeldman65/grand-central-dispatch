@@ -35,12 +35,6 @@ const getData = async (key) => {
 };
 
 export default function Dashboard(props) {
-  //const { navigation } = props;
-  const [expanded, setExpanded] = useState({
-    relationships: false,
-    transactions: false,
-  });
-
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -54,13 +48,13 @@ export default function Dashboard(props) {
     analytics.event(new Event('Dashboard', 'Calls Pressed', 0));
     var name = getData('userName');
     console.log(name);
-    navigation.navigate(screenName);
+    navigation.navigate(screenName, { defaultTab: 'calls' });
   };
 
   const pressedNotes = (screenName) => {
     console.log(screenName);
     analytics.event(new Event('Dashboard', 'Notes Pressed', 0));
-    navigation.navigate(screenName);
+    navigation.navigate(screenName, { defaultTab: 'notes' });
   };
 
   const otherPressed = (screenName) => {
