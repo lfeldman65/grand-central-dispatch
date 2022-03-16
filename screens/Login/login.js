@@ -4,7 +4,7 @@ import logo from '../../assets/iconLogo.png';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storage } from '../../utils/storage';
 
 const analytics = new Analytics('UA-65596113-1');
 
@@ -19,14 +19,6 @@ function ForgotPasswordPressed() {
   Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
 }
 
-const storeData = async (key, value) => {
-  try {
-    await AsyncStorage.setItem(key, value);
-  } catch (e) {
-    // saving error
-  }
-};
-
 export default function LoginScreen({ navigation }) {
   const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
   const [password, setPassword] = useState('success');
@@ -34,7 +26,6 @@ export default function LoginScreen({ navigation }) {
 
   HandleLoginPress = () => {
     // https://aboutreact.com/react-native-login-and-signup/
-
     analytics
       .event(new Event('Login', 'Login Button Pressed', 0))
       .then(() => console.log('button success'))
@@ -69,7 +60,7 @@ export default function LoginScreen({ navigation }) {
         if (result.status == 'error') {
           alert(result.error);
         } else {
-          storeData('userName', userName);
+          storage.setItem('userName', userName);
           navigation.navigate('Home');
           //  alert(result.status);
         }

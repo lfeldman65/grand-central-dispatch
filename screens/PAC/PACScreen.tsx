@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import {
   Modal,
   Text,
@@ -12,9 +12,9 @@ import {
   TouchableHighlight,
 } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import Swipeable from 'react-native-swipeable-row';
+// import Swipeable from 'react-native-swipeable-row';
 import PACCallsRow from './PACCallsRow';
 import PACNotesRow from './PACNotesRow';
 import PACPopRow from './PACPopRow';
@@ -28,9 +28,14 @@ import IdeasPop from '../PAC/IdeasPopScreen';
 
 type TabType = 'calls' | 'notes' | 'popby';
 
-export default function PACScreen({ route }) {
-  const { defaultTab } = route.params;
-  const [tabSelected, setTabSelected] = useState<TabType>('calls');
+interface PACScreenProps {
+  route: RouteProp<any>;
+}
+
+export default function PACScreen(props: PACScreenProps) {
+  console.log('route param defaultTab', props.route.params?.defaultTab);
+
+  const [tabSelected, setTabSelected] = useState<TabType>(props.route.params?.defaultTab ?? 'calls');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [modalCallsVisible, setModalCallsVisible] = useState(false);
@@ -40,8 +45,7 @@ export default function PACScreen({ route }) {
   const [data, setData] = useState<PACDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleRowPress = (index) => {
-    //  console.log('default tab: ' + defaultTab);
+  const handleRowPress = (index: number) => {
     analytics.event(new Event('PAC', 'Go To Details'));
     navigation.navigate('PACDetail', {
       contactId: data[index]['contactId'],
@@ -83,18 +87,18 @@ export default function PACScreen({ route }) {
     fetchData('popby');
   }
 
-  function fetchData(type) {
+  function fetchData(type: string) {
     setIsLoading(true);
     getPACData(type)
       .then((res) => {
         if (res.status == 'error') {
-          alert(res.error);
+          console.error(res.error);
         } else {
           setData(res.data);
         }
         setIsLoading(false);
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
   useEffect(() => {
@@ -115,11 +119,7 @@ export default function PACScreen({ route }) {
   //   }
   // }, []);
 
-  return isLoading ? (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#000" />
-    </View>
-  ) : (
+  return (
     <View style={styles.container}>
       <View style={styles.tabButtonRow}>
         <Text style={tabSelected == 'calls' ? styles.selected : styles.unselected} onPress={callsPressed}>
@@ -133,65 +133,72 @@ export default function PACScreen({ route }) {
         </Text>
       </View>
 
-      <ScrollView>
-        {data.map((item, index) => (
-          <View key={index}>
-            {tabSelected == 'calls' ? (
-              <PACCallsRow key={index} data={item} onPress={() => handleRowPress(index)} />
-            ) : null}
-            {tabSelected == 'notes' ? (
-              <PACNotesRow key={index} data={item} onPress={() => handleRowPress(index)} />
-            ) : null}
-            {tabSelected == 'popby' ? (
-              <PACPopRow key={index} data={item} onPress={() => handleRowPress(index)} />
-            ) : null}
-          </View>
-        ))}
-      </ScrollView>
-
-      <TouchableOpacity style={styles.bottomContainer} onPress={() => handleIdeasPressed()}>
-        <View style={styles.ideasButton}>
-          <Text style={styles.ideasText}>{'View Ideas'}</Text>
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#000" />
         </View>
-      </TouchableOpacity>
-      {modalCallsVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalCallsVisible}
-          onRequestClose={() => {
-            //  Alert.alert('Modal has been closed.');
-            setModalCallsVisible(!modalCallsVisible);
-          }}
-        >
-          <IdeasCalls setModalCallsVisible={setModalCallsVisible} />
-        </Modal>
-      )}
-      {modalNotesVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalNotesVisible}
-          onRequestClose={() => {
-            //  Alert.alert('Modal has been closed.');
-            setModalNotesVisible(!modalNotesVisible);
-          }}
-        >
-          <IdeasNotes setModalNotesVisible={setModalNotesVisible} />
-        </Modal>
-      )}
-      {modalPopVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalPopVisible}
-          onRequestClose={() => {
-            //  Alert.alert('Modal has been closed.');
-            setModalNotesVisible(!modalPopVisible);
-          }}
-        >
-          <IdeasPop setModalPopVisible={setModalPopVisible} />
-        </Modal>
+      ) : (
+        <React.Fragment>
+          <ScrollView>
+            {data.map((item, index) => (
+              <View key={index}>
+                {tabSelected == 'calls' ? (
+                  <PACCallsRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                ) : null}
+                {tabSelected == 'notes' ? (
+                  <PACNotesRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                ) : null}
+                {tabSelected == 'popby' ? (
+                  <PACPopRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                ) : null}
+              </View>
+            ))}
+          </ScrollView>
+          <TouchableOpacity style={styles.bottomContainer} onPress={() => handleIdeasPressed()}>
+            <View style={styles.ideasButton}>
+              <Text style={styles.ideasText}>{'View Ideas'}</Text>
+            </View>
+          </TouchableOpacity>
+          {modalCallsVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalCallsVisible}
+              onRequestClose={() => {
+                //  Alert.alert('Modal has been closed.');
+                setModalCallsVisible(!modalCallsVisible);
+              }}
+            >
+              <IdeasCalls setModalCallsVisible={setModalCallsVisible} />
+            </Modal>
+          )}
+          {modalNotesVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalNotesVisible}
+              onRequestClose={() => {
+                //  Alert.alert('Modal has been closed.');
+                setModalNotesVisible(!modalNotesVisible);
+              }}
+            >
+              <IdeasNotes setModalNotesVisible={setModalNotesVisible} />
+            </Modal>
+          )}
+          {modalPopVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalPopVisible}
+              onRequestClose={() => {
+                //  Alert.alert('Modal has been closed.');
+                setModalNotesVisible(!modalPopVisible);
+              }}
+            >
+              <IdeasPop setModalPopVisible={setModalPopVisible} />
+            </Modal>
+          )}
+        </React.Fragment>
       )}
     </View>
   );

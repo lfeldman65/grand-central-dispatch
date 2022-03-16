@@ -6,7 +6,7 @@ import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigatio
 // Sections test
 
 import LoginScreen from '../screens/Login/login';
-import DashboardScreen from '../screens/Dashboard/dashboard';
+import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import GoalsScreen from '../screens/Goals/goals';
 import PACScreen from '../screens/PAC/PACScreen';
 import PACDetailScreen from '../screens/PAC/pacDetail';
@@ -290,7 +290,7 @@ export const HomeStackNavigator = () => {
   );
 };
 
-function DrawerContent(props) {
+function DrawerContent(props: any) {
   return (
     <DrawerContentScrollView {...props}>
       <NavigationContent {...props} />

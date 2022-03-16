@@ -1,3 +1,5 @@
+// import { storage } from "./storage";
+
 interface HttpOptions {
     method?: string;
     headers?: any;
@@ -7,7 +9,10 @@ interface HttpOptions {
   
   const apiBaseUrl = "https://www.referralmaker.com/services/mobileapi";
   
-  export function httpBase(endpoint: string, { body, ...customConfig }: HttpOptions = {}) {
+  export async function httpBase(endpoint: string, { body, ...customConfig }: HttpOptions = {}) {
+
+    // const sessionToken = await storage.getItem('sessionToken');
+
     const headers = { 
       'content-type': 'application/json',
       'Authorization': 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd',
@@ -25,9 +30,7 @@ interface HttpOptions {
     if (body) {
       config.body = JSON.stringify(body)
     }
-    return window
-      .fetch(`${apiBaseUrl}/${endpoint}`, config)
-      .then(async response => {
+    return fetch(`${apiBaseUrl}/${endpoint}`, config).then(async response => {
         if (response.ok) {
           const contentType = response.headers.get("content-type");
           if (contentType && contentType.indexOf("application/json") !== -1) {
