@@ -4,7 +4,7 @@ import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import { analytics } from '../../constants/analytics';
+import { analytics } from '../../constants/analytics'; // why me?
 
 export default function SettingsScreen(props) {
   const navigation = useNavigation();
@@ -30,16 +30,16 @@ export default function SettingsScreen(props) {
   });
 
   return (
-    <View style={{ flex: 1, backgroundColor: { isDarkMode }, alignItems: 'center' }}>
+    <View style={isDarkMode ? styles.dark : styles.light}>
       <TouchableOpacity onPress={signOutPressed}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={styles.buttonText}>Sign Out</Text>
+          <Text style={isDarkMode ? styles.darkButtonText : styles.lightButtonText}>Sign Out</Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={changeBackground}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={styles.buttonText}>Toggle Dark Mode</Text>
+          <Text style={isDarkMode ? styles.darkButtonText : styles.lightButtonText}>Toggle Dark Mode</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -47,8 +47,24 @@ export default function SettingsScreen(props) {
 }
 
 const styles = StyleSheet.create({
-  buttonText: {
+  lightButtonText: {
     marginTop: 20,
     color: 'blue',
+  },
+
+  darkButtonText: {
+    marginTop: 20,
+    color: 'white',
+  },
+  dark: {
+    flex: 1,
+    backgroundColor: '#000000',
+    alignItems: 'center',
+  },
+
+  light: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
   },
 });
