@@ -1,4 +1,9 @@
 // PAC List RN in Postman
+// export interface APIResponseProps {
+//   data: any;
+//   error: string;
+//   status: string;
+// }
 
 export interface PACDataProps {
   contactId: string;
@@ -71,4 +76,26 @@ export interface SaveAsFavoriteResponse {
   data: SaveAsFavoriteProps[];
   error: string;
   status: string;
+}
+
+export interface ContactDetailProps {
+  // ranking: string;
+  // qualified: string;
+  // mobile: string;
+  // homePhone: string;
+  // officePhone: string;
+  // email: string;
+  // spouse: any,
+  // website: string,
+  address: AddressProps;
+}
+
+interface AddressProps {
+  street: string;
+  street2: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  isFavorite: string;
 }

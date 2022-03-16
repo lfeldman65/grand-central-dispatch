@@ -33,7 +33,7 @@ interface PACScreenProps {
 }
 
 export default function PACScreen(props: PACScreenProps) {
-  console.log('route param defaultTab', props.route.params?.defaultTab);
+  // console.log('route param defaultTab', props.route.params?.defaultTab);
 
   const [tabSelected, setTabSelected] = useState<TabType>(props.route.params?.defaultTab ?? 'calls');
   const navigation = useNavigation();

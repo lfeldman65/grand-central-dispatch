@@ -9,7 +9,7 @@ import LoginScreen from '../screens/Login/login';
 import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import GoalsScreen from '../screens/Goals/goals';
 import PACScreen from '../screens/PAC/PACScreen';
-import PACDetailScreen from '../screens/PAC/pacDetail';
+import PACDetailScreen from '../screens/PAC/PACDetailScreen';
 import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
 import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
 import TransactionsScreen from '../screens/Transactions/transactions';
