@@ -5,6 +5,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
+import { http } from '../../utils/http';
 
 const analytics = new Analytics('UA-65596113-1');
 
@@ -51,6 +52,8 @@ export default function LoginScreen({ navigation }) {
       body: raw,
       redirect: 'follow',
     };
+
+    http.post('https://www.referralmaker.com/services/mobileapi/login');
 
     fetch('https://www.referralmaker.com/services/mobileapi/login', requestOptions)
       .then((response) => response.json()) //this line converts it to JSON

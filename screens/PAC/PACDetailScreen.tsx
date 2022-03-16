@@ -9,12 +9,12 @@ import {
   Modal,
   Pressable,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { StatusBar } from 'expo-status-bar';
 import { analytics } from '../../utils/analytics';
-import PacComplete from '../PAC/PACCompleteScreen';
+import PacComplete from './PACCompleteScreen';
 import { postponePAC, completePAC, saveAsFavorite } from './api';
 import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
@@ -22,14 +22,22 @@ import styles from './styles';
 
 let deviceHeight = Dimensions.get('window').height;
 
-export default function PACDetailScreen({ route }) {
+export default function PACDetailScreen(props: any) {
+  const { route } = props;
   const { contactId, type, ranking, lastCallDate, lastNoteDate, lastPopByDate } = route.params;
   const navigation = useNavigation();
 
+  const [data, setData] = useState<any>({ data: [] });
+  const [isLoading, setIsLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // const [data1, setData1] = useState<PACCompleteProps[]>([]);
+  // const [data2, setData2] = useState<PACPostponeProps[]>([]);
+
   function postponePressed() {
-    analytics.event(new Event('PAC Detail', 'Postpone', 0));
-    postponeAPIOld();
-    //  postponeAPINew();
+    analytics.event(new Event('PAC Detail', 'Postpone', '0'));
+    // postponeAPIOld();
+    postponeAPINew(contactId, type);
   }
 
   function lastDate() {
@@ -46,11 +54,11 @@ export default function PACDetailScreen({ route }) {
 
   async function completePressed() {
     console.log('complete pressed: ' + contactId);
-    analytics.event(new Event('PAC Detail', 'Complete', 0));
+    analytics.event(new Event('PAC Detail', 'Complete', '0'));
     setModalVisible(!modalVisible);
   }
 
-  function saveComplete(note) {
+  function saveComplete(note: string) {
     // console.log('Note ', note);
     completeAPI(note);
   }
@@ -85,30 +93,9 @@ export default function PACDetailScreen({ route }) {
     return completeAddress + cityStateZip();
   }
 
-  function isNotNullOrEmpty(data) {
-    return data != null && data != '';
+  function isNotNullOrEmpty(value: string | number) {
+    return value != null && value != '';
   }
-
-  const [data, setData] = useState({ data: [] });
-
-  // const [data1, setData1] = useState<PACCompleteProps[]>([]);
-  // const [data2, setData2] = useState<PACPostponeProps[]>([]);
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  //put it in a useEffect to prevent the warning about rendering a different component blah blah
-  useEffect(() => {
-    //contact name will be initially be blank, when data is received
-    //render happens again and will run everything in this function again
-    navigation.setOptions({ title: contactName() });
-  }); // this will run on every rendeer
-  useEffect(() => {
-    //take this out if you don't want to simulate delay
-    setTimeout(() => {
-      fetchPACData();
-    }, 250);
-  }, []);
 
   function sanityCheck() {
     if (data == null) {
@@ -128,17 +115,17 @@ export default function PACDetailScreen({ route }) {
     return data['data']['firstName'] + ' ' + data['data']['lastName'];
   }
 
-  function phoneNumber(type) {
+  function phoneNumber(type: string) {
     if (!sanityCheck()) return '';
     const phone = data['data'][type];
-    console.log('phone = ' + phone);
+    // console.log('phone = ' + phone);
     if (phone == null || phone == '') {
       return '';
     }
     return phone;
   }
 
-  function address(type) {
+  function address(type: string) {
     if (!sanityCheck()) return '';
     return data['data']['address'][type];
   }
@@ -150,7 +137,7 @@ export default function PACDetailScreen({ route }) {
   //   return getRanking(notes);
   // }
 
-  function completeAPI(note) {
+  function completeAPI(note: string) {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
     myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
@@ -178,29 +165,30 @@ export default function PACDetailScreen({ route }) {
         // console.log(result);
         //  setData(result);
         if (result.status == 'error') {
-          alert(result.error);
+          console.error(result.error);
           setIsLoading(false);
         } else {
           setIsLoading(false);
           navigation.goBack();
         }
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
-  function postponeAPINew(relID) {
+  function postponeAPINew(contactId: string, type: string) {
     // Testing!!!
     setIsLoading(true);
-    postPACPostpone(relID)
+    postponePAC(contactId, type)
       .then((res) => {
+        console.log(res);
         if (res.status == 'error') {
-          alert(res.error);
+          console.error(res.error);
         } else {
           setData(res.data);
         }
         setIsLoading(false);
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
   function postponeAPIOld() {
@@ -230,17 +218,17 @@ export default function PACDetailScreen({ route }) {
         // console.log(result);
         //  setData(result);
         if (result.status == 'error') {
-          alert(result.error);
+          console.error(result.error);
           setIsLoading(false);
         } else {
           setIsLoading(false);
           navigation.goBack();
         }
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
-  function fetchPACData() {
+  function fetchPacDetailData() {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
     myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
@@ -253,26 +241,39 @@ export default function PACDetailScreen({ route }) {
     };
 
     var apiURL = 'https://www.referralmaker.com/services/mobileapi/contacts/' + contactId;
-    console.log('contact api: ' + apiURL);
+    // console.log('contact api: ' + apiURL);
     fetch(apiURL, requestOptions)
       .then((response) => response.json()) //this line converts it to JSON
       .then((result) => {
         //then we can treat it as a JSON object
-        // console.log(result);
         setData(result);
+        console.log(result);
         if (result.status == 'error') {
-          alert(result.error);
+          console.error(result.error);
           setIsLoading(false);
         } else {
           setIsLoading(false);
         }
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
   // function toggleModalVisibility() {
   //   setModalVisible(!modalVisible);
   // }
+
+  //put it in a useEffect to prevent the warning about rendering a different component blah blah
+  useEffect(() => {
+    //contact name will be initially be blank, when data is received
+    //render happens again and will run everything in this function again
+    navigation.setOptions({ title: contactName() });
+  }); // this will run on every rendeer
+  useEffect(() => {
+    //take this out if you don't want to simulate delay
+    setTimeout(() => {
+      fetchPacDetailData();
+    }, 250);
+  }, []);
 
   if (isLoading) {
     return (
@@ -338,7 +339,6 @@ export default function PACDetailScreen({ route }) {
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
             setModalVisible(!modalVisible);
           }}
         >
@@ -411,7 +411,6 @@ const stylesDetail = StyleSheet.create({
   notes: {
     width: 200,
     color: '#1A6295',
-    fontSize: 20,
     textAlign: 'left',
     marginLeft: 10,
     fontSize: 16,
