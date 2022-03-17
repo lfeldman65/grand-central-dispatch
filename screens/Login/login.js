@@ -7,6 +7,8 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
 import { http } from '../../utils/http';
 import { analytics } from '../../utils/analytics';
+import { loginToApp } from './api';
+import { LoginDataProps } from './interfaces';
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -23,6 +25,20 @@ export default function LoginScreen({ navigation }) {
   const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
   const [password, setPassword] = useState('success');
   var rememberMeChecked = false;
+
+  function HandleLoginPressNew() {
+    // setIsLoading(true);
+    loginToApp(userName, password)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setData(res.data);
+        }
+        //   setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
 
   HandleLoginPress = () => {
     // https://aboutreact.com/react-native-login-and-signup/
