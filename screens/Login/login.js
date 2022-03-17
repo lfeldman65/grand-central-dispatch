@@ -6,8 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
 import { http } from '../../utils/http';
-
-const analytics = new Analytics('UA-65596113-1');
+import { analytics } from '../../utils/analytics';
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -53,7 +52,7 @@ export default function LoginScreen({ navigation }) {
       redirect: 'follow',
     };
 
-    http.post('https://www.referralmaker.com/services/mobileapi/login');
+    //  http.post('https://www.referralmaker.com/services/mobileapi/login');
 
     fetch('https://www.referralmaker.com/services/mobileapi/login', requestOptions)
       .then((response) => response.json()) //this line converts it to JSON

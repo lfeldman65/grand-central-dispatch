@@ -7,6 +7,7 @@ export default function PACCompleteScreen(props) {
   const [note, onNoteChange] = useState('');
 
   function SavePressed() {
+    // setModalVisible(false);
     onSave(note);
   }
   function CancelPressed() {

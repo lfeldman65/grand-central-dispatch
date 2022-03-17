@@ -15,7 +15,7 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import { StatusBar } from 'expo-status-bar';
 import { analytics } from '../../utils/analytics';
 import PacComplete from './PACCompleteScreen';
-import { postponePAC, completePAC, saveAsFavorite } from './api';
+import { postponePAC, completePAC, saveAsFavorite, getPACDetails } from './api';
 import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
 import styles from './styles';
@@ -36,8 +36,8 @@ export default function PACDetailScreen(props: any) {
 
   function postponePressed() {
     analytics.event(new Event('PAC Detail', 'Postpone', '0'));
-    // postponeAPIOld();
-    postponeAPINew(contactId, type);
+    // postponeActionOld();
+    postponeAction(contactId, type);
   }
 
   function lastDate() {
@@ -60,7 +60,8 @@ export default function PACDetailScreen(props: any) {
 
   function saveComplete(note: string) {
     // console.log('Note ', note);
-    completeAPI(note);
+    //   completeActionOld(note);
+    completeAction(contactId, note, type);
   }
 
   function handleDirectionsPressed() {
@@ -127,17 +128,27 @@ export default function PACDetailScreen(props: any) {
 
   function address(type: string) {
     if (!sanityCheck()) return '';
+    console.log('addressxx: ' + data['data']['address'][type]);
     return data['data']['address'][type];
   }
 
-  // function ranking() {
-  //   if (!sanityCheck()) return '';
+  function completeAction(contactId: string, type: string, notes: string) {
+    setIsLoading(true);
+    completePAC(contactId, type, notes)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setData(res.data);
+        }
+        setIsLoading(false);
+        navigation.goBack();
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
 
-  //   //  var notes = data['data']['ranking'];
-  //   return getRanking(notes);
-  // }
-
-  function completeAPI(note: string) {
+  function completeActionOld(note: string) {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
     myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
@@ -153,7 +164,7 @@ export default function PACDetailScreen(props: any) {
       method: 'POST',
       headers: myHeaders,
       body: raw,
-      redirect: 'follow',
+      //   redirect: 'follow',
     };
 
     var apiURL = 'https://www.referralmaker.com/services/mobileapi/contactsTrackAction/' + contactId;
@@ -175,8 +186,7 @@ export default function PACDetailScreen(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function postponeAPINew(contactId: string, type: string) {
-    // Testing!!!
+  function postponeAction(contactId: string, type: string) {
     setIsLoading(true);
     postponePAC(contactId, type)
       .then((res) => {
@@ -187,6 +197,7 @@ export default function PACDetailScreen(props: any) {
           setData(res.data);
         }
         setIsLoading(false);
+        navigation.goBack();
       })
       .catch((error) => console.error('failure ' + error));
   }
@@ -206,7 +217,7 @@ export default function PACDetailScreen(props: any) {
       method: 'POST',
       headers: myHeaders,
       body: raw,
-      redirect: 'follow',
+      //   redirect: 'follow',
     };
 
     var apiURL = 'https://www.referralmaker.com/services/mobileapi/contactsPostponeAction/' + contactId;
@@ -228,6 +239,21 @@ export default function PACDetailScreen(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
+  function fetchPacDetailDataNew(id: string) {
+    setIsLoading(true);
+    getPACDetails(id)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setData(res.data);
+          console.log(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
   function fetchPacDetailData() {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
@@ -237,7 +263,7 @@ export default function PACDetailScreen(props: any) {
     var requestOptions = {
       method: 'GET',
       headers: myHeaders,
-      redirect: 'follow',
+      //  redirect: 'follow',
     };
 
     var apiURL = 'https://www.referralmaker.com/services/mobileapi/contacts/' + contactId;
@@ -269,10 +295,7 @@ export default function PACDetailScreen(props: any) {
     navigation.setOptions({ title: contactName() });
   }); // this will run on every rendeer
   useEffect(() => {
-    //take this out if you don't want to simulate delay
-    setTimeout(() => {
-      fetchPacDetailData();
-    }, 250);
+    fetchPacDetailData();
   }, []);
 
   if (isLoading) {

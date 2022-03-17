@@ -61,7 +61,7 @@ export interface PACDetailsProps {
 }
 
 export interface PACCDetailsResponse {
-  data: PACCompleteProps[];
+  data: PACDetailsProps[];
   error: string;
   status: string;
 }
