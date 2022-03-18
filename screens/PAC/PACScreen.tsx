@@ -63,9 +63,9 @@ export default function PACScreen(props: PACScreenProps) {
     if (tabSelected == 'calls') {
       setModalCallsVisible(!modalCallsVisible);
     } else if (tabSelected == 'notes') {
-      setModalCallsVisible(!modalNotesVisible);
+      setModalNotesVisible(!modalNotesVisible);
     } else if (tabSelected == 'popby') {
-      setModalCallsVisible(!modalPopVisible);
+      setModalPopVisible(!modalPopVisible);
     }
   };
 

@@ -11,7 +11,6 @@ export default function IdeasPopScreen(props) {
   const [section2Selected, setSection2Selected] = useState(false);
   const [section3Selected, setSection3Selected] = useState(false);
   const [section4Selected, setSection4Selected] = useState(false);
-  const [section5Selected, setSection5Selected] = useState(false);
 
   function CancelPressed() {
     setModalPopVisible(false);
@@ -28,8 +27,6 @@ export default function IdeasPopScreen(props) {
       setSection3Selected(!section3Selected);
     } else if (sectionIndex == 4) {
       setSection4Selected(!section4Selected);
-    } else if (sectionIndex == 5) {
-      setSection5Selected(!section5Selected);
     }
   }
 
@@ -39,7 +36,7 @@ export default function IdeasPopScreen(props) {
         <TouchableOpacity onPress={CancelPressed}>
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
-        <Text style={styles.pageTitle}>Call Ideas</Text>
+        <Text style={styles.pageTitle}>Pop-By Ideas</Text>
         <TouchableOpacity>
           <Text style={styles.blankButton}></Text>
         </TouchableOpacity>
@@ -47,135 +44,74 @@ export default function IdeasPopScreen(props) {
 
       <View style={styles.mainContent}>
         <TouchableOpacity onPress={() => handleSectionTap(0)}>
-          <Text style={styles.sectionTitleText}>Mayor Campaign Dialogue</Text>
+          <Text style={styles.sectionTitleText}>Pop-By Dialogue</Text>
         </TouchableOpacity>
-        {section0Selected && <Text style={styles.sectionHeaderText}>General</Text>}
+        {section0Selected && <Text style={styles.sectionHeaderText}>Set-Up Dialogue</Text>}
         {section0Selected && (
           <Text style={styles.contentText}>
-            Oh, by the way, if you were buying or selling a home, or had a friend or family member who was, do you have
-            an agent you would refer them to?
+            "I'm going to be in your area tomorrow between [2:00 and 3:00]; I'd love to Pop-By and see how you're
+            doing."
           </Text>
         )}
-        {section0Selected && <Text style={styles.sectionHeaderText}>For People You Know Well</Text>}
+        {section0Selected && <Text style={styles.sectionHeaderText}>During Pop-By</Text>}
+        {section0Selected && <Text style={styles.contentText}>Use Big 3 Dialogue.</Text>}
+        {section0Selected && <Text style={styles.sectionHeaderText}>Leaving Dialogue</Text>}
         {section0Selected && (
-          <Text style={styles.contentText}>
-            Oh, by the way, if you were buying or selling a home, or had a friend or family member who was, am I the
-            person you would refer them to?
-          </Text>
+          <Text style={styles.contentText}>"Oh, by the way®... I'm never too busy for any of your referrals."</Text>
         )}
 
         <TouchableOpacity onPress={() => handleSectionTap(1)}>
-          <Text style={styles.sectionTitleText}>Big 3 Dialogue</Text>
+          <Text style={styles.sectionTitleText}>Pop-By Gift Ideas: Winter</Text>
         </TouchableOpacity>
-        {section1Selected && <Text style={styles.sectionHeaderText}>Can I Be of Any Help?</Text>}
+        {section1Selected && <Text style={styles.sectionHeaderText}>Can opener</Text>}
         {section1Selected && (
           <Text style={styles.contentText}>
-            Hi, _______, this is ________ calling. How are you doing? How's the family [business, etc. (chit chat)]?
-            _______, the reason I'm calling is because I want to know if you received the information I sent you this
-            month on [raising your credit score]. I hope it was helpful to you...
+            I can open the world of real estate for you, your friends and your family.
           </Text>
         )}
-        {section1Selected && <Text style={styles.sectionHeaderText}>Keep In Mind</Text>}
+        {section1Selected && <Text style={styles.sectionHeaderText}>Box of chocolates</Text>}
         {section1Selected && (
           <Text style={styles.contentText}>
             Also, keep in mind if you need a referral to a good trade or service professional, I come across some really
             good people from time to time...
           </Text>
         )}
-        {section1Selected && <Text style={styles.sectionHeaderText}>The Value You Represent to Me</Text>}
-        {section1Selected && (
-          <Text style={styles.contentText}>
-            ______, I just want to make sure you know how much I value our relationship. And, I want to build my
-            business by working with great people like you.
-          </Text>
-        )}
-        {section1Selected && <Text style={styles.sectionHeaderText}>Oh, By The Way®...</Text>}
-        {section1Selected && (
-          <Text style={styles.contentText}>
-            Oh, by the way...________ if you know of someone who is looking to buy or sell a home, I'd love to help
-            them. So when you come across these people, just give me a call with their name and business number and I'll
-            be happy to follow up and take great care of them for you. Does that sound good to you?
-          </Text>
-        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
-          <Text style={styles.sectionTitleText}>Easy Ways to Ask for a Referral</Text>
+          <Text style={styles.sectionTitleText}>Pop-By Gift Ideas: Spring</Text>
+          {section2Selected && <Text style={styles.sectionHeaderText}>Reusable shopping bag</Text>}
         </TouchableOpacity>
         {section2Selected && (
-          <Text style={styles.contentText}>1. Oh, by the way®... I'm never too busy for your referrals</Text>
+          <Text style={styles.contentText}>Helping the environment and all of your referrals...</Text>
         )}
-        {section2Selected && (
-          <Text style={styles.contentText}>
-            2. Oh, by the way®, if you know of someone who would appreciate the level of service I provide, please call
-            me with their name and business number. I'll be happy to follow up and take great care of them.
-          </Text>
-        )}
+        {section2Selected && <Text style={styles.sectionHeaderText}>Peeps candy</Text>}
+        {section2Selected && <Text style={styles.contentText}>Have your peeps call my peeps.</Text>}
 
         <TouchableOpacity onPress={() => handleSectionTap(3)}>
-          <Text style={styles.sectionTitleText}>Check-in Call Dialogue for Buyers: Nothing New</Text>
+          <Text style={styles.sectionTitleText}>Pop-By Gift Ideas: Summer</Text>
         </TouchableOpacity>
-        {section3Selected && <Text style={styles.sectionHeaderText}>Nothing new to report</Text>}
+        {section3Selected && <Text style={styles.sectionHeaderText}>Ice cream scoop</Text>}
         {section3Selected && (
           <Text style={styles.contentText}>
-            Hello ______, ______ here. I just wanted to check in with you for a quick update.
+            Want the scoop on what the market is really like? Give me a call and I'd be happy to help!
           </Text>
         )}
-        {section3Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
+        {section3Selected && <Text style={styles.sectionHeaderText}>Condiment pack (ketchup, mustard, relish)</Text>}
         {section3Selected && (
           <Text style={styles.contentText}>
-            I've been monitoring activity on the market today and no new properties that meet our criteria have
-            surfaced.
-          </Text>
-        )}
-        {section3Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
-        {section3Selected && (
-          <Text style={styles.contentText}>
-            I'll be checking again first thing tomorrow morning and I'll call to give you a quick update then. Bye for
-            now!
-          </Text>
-        )}
-        {section3Selected && <Text style={styles.sectionHeaderText}>Oh, By The Way®...</Text>}
-
-        <TouchableOpacity onPress={() => handleSectionTap(4)}>
-          <Text style={styles.sectionTitleText}>Check-in Call Dialogue for Buyers: Something New</Text>
-        </TouchableOpacity>
-        {section4Selected && <Text style={styles.sectionHeaderText}>Something new to report</Text>}
-        {section4Selected && (
-          <Text style={styles.contentText}>
-            Hello ______, ______ here. I just wanted to check in to give you a quick update.
-          </Text>
-        )}
-        {section4Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
-        {section4Selected && (
-          <Text style={styles.contentText}>
-            I've been monitoring activity on the market today and I've found [two] new homes that meet our criteria. The
-            addresses are ________ and ________. I'll email you the property information.
-          </Text>
-        )}
-        {section4Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
-        {section4Selected && (
-          <Text style={styles.contentText}>
-            If you get a chance to drive by and check them out, let me know. Bye for now!
+            I just wanted to ketch-up and let you know that I relish your referrals! My clients are the best and always
+            cut the mustard!
           </Text>
         )}
 
-        <TouchableOpacity onPress={() => handleSectionTap(5)}>
-          <Text style={styles.sectionTitleText}>Check-in Call Dialogue for Sellers</Text>
+        <TouchableOpacity onPress={() => handleSectionTap(4)}>
+          <Text style={styles.sectionTitleText}>Pop-By Gift Ideas: Fall</Text>
         </TouchableOpacity>
-        {section5Selected && (
-          <Text style={styles.contentText}>
-            Hi _______, _______ here. I'm just checking in to give you an update. I want you to know _______, that
-            getting your home sold is a high priority to me. I'm doing everything possible to get it sold. Here's the
-            activity on your home this week
-          </Text>
-        )}
-        {section5Selected && <Text style={styles.contentText}>(List activities you have engaged in)</Text>}
-        {section5Selected && (
-          <Text style={styles.contentText}>
-            Do you have any questions or concerns for me _______? Just to remind you, I'm committed to being the
-            megaphone to the marketplace for your home and we're doing everything we can to get you a good offer. Unless
-            something comes up before then, I'll check in with you about this time next week.
-          </Text>
+        {section4Selected && <Text style={styles.sectionHeaderText}>Ice pack</Text>}
+        {section4Selected && <Text style={styles.contentText}>I won't leave your referrals cold! </Text>}
+        {section4Selected && <Text style={styles.sectionHeaderText}>Dog biscuits or bones</Text>}
+        {section4Selected && (
+          <Text style={styles.contentText}>No bones about it, I have your real estate needs covered.</Text>
         )}
       </View>
     </ScrollView>
