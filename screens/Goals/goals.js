@@ -20,8 +20,6 @@ import noTrophy from '../../assets/noTrophy.png';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 
-// const analytics = new Analytics('UA-65596113-1');
-
 export default function GoalsScreen() {
   const navigation = useNavigation();
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
@@ -186,15 +184,27 @@ export default function GoalsScreen() {
     switch (index) {
       case 0:
         analytics.event(new Event('Goals', 'Calls Pressed', 0));
-        navigation.navigate('PAC');
+        navigation.popToTop();
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'calls' },
+        });
         break;
       case 1:
         analytics.event(new Event('Goals', 'Notes Pressed', 0));
-        navigation.navigate('PAC');
+        navigation.popToTop();
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'notes' },
+        });
         break;
       case 2:
         analytics.event(new Event('Goals', 'Pop-Bys Pressed', 0));
-        navigation.navigate('Pop-Bys');
+        navigation.popToTop();
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'popby' },
+        });
         break;
       case 3:
         analytics.event(new Event('Goals', 'Database Additions Pressed', 0));
