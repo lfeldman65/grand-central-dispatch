@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "HelloWorld",
-    "slug": "helloWorld",
-    "version": "1.0.0",
+    "name": "Referral Maker",
+    "slug": "referralMaker",
+    "version": "3.4.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -13,9 +13,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },

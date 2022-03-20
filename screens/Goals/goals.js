@@ -20,6 +20,8 @@ import noTrophy from '../../assets/noTrophy.png';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 
+//import globalStyles from '../../utils/globalStyles';
+
 export default function GoalsScreen() {
   const navigation = useNavigation();
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
@@ -70,7 +72,7 @@ export default function GoalsScreen() {
   function styleForGoalTitle(index) {
     var textColor = 'black';
     if (index < 4) {
-      textColor = '#1A6295';
+      textColor = '#1F1DFF';
     }
     return {
       width: 200,
