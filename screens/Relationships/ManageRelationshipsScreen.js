@@ -11,28 +11,34 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Button from '../../components/Button';
 
 import chevron from '../../assets/chevron_blue.png';
+import { analytics } from '../../utils/analytics';
 
-const analytics = new Analytics('UA-65596113-1');
+//type TabType = 'a-z' | 'ranking' | 'groups';
+
+// interface RolodexScreenProps {
+//   route: RouteProp<any>;
+// }
+
+//export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
 
 export default function ManageRelationshipsScreen() {
   let deviceWidth = Dimensions.get('window').width;
 
+  // const [tabSelected, setTabSelected] = useState(props.route.params?.defaultTab ?? 'A-Z');
+  const [tabSelected, setTabSelected] = useState('a-z');
+
   const navigation = useNavigation();
-  const [azSelected, setAZSelected] = useState(true);
-  const [rankingSelected, setRankingSelected] = useState(false);
-  const [groupsSelected, setGroupsSelected] = useState(false);
-  const [filterRel, setFilterRel] = useState(true);
+  const isFocused = useIsFocused();
+  const [isFilterRel, setIsFilterRel] = useState(true);
 
   const [data, setData] = useState({ data: [] });
   const [isLoading, setIsLoading] = useState(true);
-
-  var filterTitle = 'Relationships';
 
   useEffect(() => {
     navigation.setOptions({
@@ -41,48 +47,55 @@ export default function ManageRelationshipsScreen() {
   });
 
   useEffect(() => {
-    //take this out if you don't want to simulate delay
-    setTimeout(() => {
-      fetchPressed('alpha');
-    }, 2000);
-  }, []);
+    fetchPressed(tabSelected);
+  }, [isFocused]);
+
+  useEffect(() => {
+    showFilterTitle();
+  }, [isFilterRel]);
+
+  // useEffect(() => {
+  //   showFilterTitle(!filterTitle);
+  // }, [isFocused]);
+
+  function showFilterTitle() {
+    if (isFilterRel) {
+      return 'Relationships';
+    }
+    return 'Businesses';
+  }
+
+  function handleAddRelPressed() {
+    console.log('Add Rel Pressed');
+  }
 
   function azPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'A-Z', 0));
-    setAZSelected(true);
-    setRankingSelected(false);
-    setGroupsSelected(false);
+    setTabSelected('a-z');
     fetchPressed('alpha');
   }
 
   function rankingPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
-    setAZSelected(false);
-    setRankingSelected(true);
-    setGroupsSelected(false);
+    setTabSelected('ranking');
     fetchPressed('ranking');
   }
 
   function groupsPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
-    setAZSelected(false);
-    setRankingSelected(false);
-    setGroupsSelected(true);
+    setTabSelected('groups');
     fetchPressed('groups');
   }
 
   function filterPressed() {
-    console.log('here');
-    if (filterRel) {
-      console.log(1);
-      setFilterRel(false);
-      return 'Businesses';
+    console.log('filter');
+    analytics.event(new Event('Manage Relationships', 'Filter', 'Press', 0));
+    if (isFilterRel) {
+      setIsFilterRel(false);
+    } else {
+      setIsFilterRel(true);
+      showFilterTitle();
     }
-    console.log(2);
-    setFilterRel(true);
-    return 'Relationships';
-
-    //  analytics.event(new Event('Manage Relationships', 'Filter', filterTitle, 0))
   }
 
   function sanityCheck() {
@@ -100,53 +113,10 @@ export default function ManageRelationshipsScreen() {
     return true;
   }
 
-  function activityDisplay(index) {
-    if (!sanityCheck()) return '';
-
-    if (winTheDaySelected) {
-      return data['data'][index]['achievedToday'];
-    }
-    return data['data'][index]['achievedThisWeek'];
-  }
-
-  function filterTitle() {
-    if (filterRel) {
-      console.log(10);
-      //  setFilterRel(false);
-      return 'Businesses';
-    }
-    console.log(20);
-    //  setFilterRel(true);
-    return 'Relationships';
-  }
-
   function shouldDisplay(index) {
     if (!sanityCheck()) return false;
 
-    return data['data'][index]['goal']['displayOnDashboard'];
-  }
-
-  function titleFor(index) {
-    if (data == null) {
-      return '';
-    }
-    if (data['data'] == null) {
-      return '';
-    }
-    if (data['data'].length == 0) {
-      return '';
-    }
-    var oldTitle = data['data'][index]['goal']['title'];
-    if (oldTitle == 'Pop-By Made') {
-      return 'Pop-Bys Delivered';
-    }
-    if (oldTitle == 'New Contacts') {
-      return 'Database Additions';
-    }
-    if (oldTitle == 'Notes Made') {
-      return 'Notes Written';
-    }
-    return oldTitle;
+    return true;
   }
 
   function fetchPressed(type) {
@@ -187,10 +157,6 @@ export default function ManageRelationshipsScreen() {
       .catch((error) => alert('failure ' + error));
   }
 
-  function handleTestButtonPress() {
-    console.log('test button pressed');
-  }
-
   return isLoading ? (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <ActivityIndicator size="large" color="#000" />
@@ -198,22 +164,44 @@ export default function ManageRelationshipsScreen() {
   ) : (
     <View style={styles.container}>
       <View style={styles.tabButtonRow}>
-        <Text style={azSelected == true ? styles.selected : styles.unselected} onPress={azPressed}>
+        <Text style={tabSelected == 'a-z' ? styles.selected : styles.unselected} onPress={azPressed}>
           A-Z
         </Text>
-        <Text style={rankingSelected == true ? styles.selected : styles.unselected} onPress={rankingPressed}>
+        <Text style={tabSelected == 'ranking' ? styles.selected : styles.unselected} onPress={rankingPressed}>
           Ranking
         </Text>
-        <Text style={groupsSelected == true ? styles.selected : styles.unselected} onPress={groupsPressed}>
+        <Text style={tabSelected == 'groups' ? styles.selected : styles.unselected} onPress={groupsPressed}>
           Groups
         </Text>
       </View>
       <View style={styles.filterBox}>
         <TouchableOpacity onPress={filterPressed}>
-          <Text style={styles.filterText}>{filterTitle}</Text>
-          {/* <Image source={chevron} style={styles.chevron} /> */}
+          <Text style={styles.spacing}>spacing</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={filterPressed}>
+          <Text style={styles.filterText}>{isFilterRel ? 'Relationships' : 'Businesses'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={filterPressed}>
+          <Image source={chevron} style={styles.chevron} />
         </TouchableOpacity>
       </View>
+      <ScrollView>
+        {data['data'].map((name, index) =>
+          shouldDisplay(index) ? (
+            <View key={index}>
+              <Text style={styles.filterText}>{isFilterRel ? 'Relationships' : 'Businesses'}</Text>
+            </View>
+          ) : (
+            <View></View>
+          )
+        )}
+      </ScrollView>
+      <TouchableOpacity style={styles.bottomContainer} onPress={() => handleAddRelPressed()}>
+        <View style={styles.addButton}>
+          <Text style={styles.addText}>Add Relationships</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -221,16 +209,26 @@ export default function ManageRelationshipsScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    height: '100%',
   },
-  hack: {
-    height: 100,
+  bottomContainer: {
+    backgroundColor: '#1A6295',
+    height: 60,
+  },
+  spacing: {
+    color: 'white',
     backgroundColor: 'white',
   },
+  invisible: {
+    width: 15,
+    height: 15,
+    marginLeft: '10%',
+  },
   chevron: {
-    flexDirection: 'row',
-    flex: 1,
-    height: 25,
-    width: 25,
+    marginRight: 20,
+    marginTop: 5,
+    height: 15,
+    width: 27,
   },
   tabButtonRow: {
     flexDirection: 'row',
@@ -240,12 +238,12 @@ const styles = StyleSheet.create({
   },
   filterBox: {
     flexDirection: 'row',
-    justifyContent: 'center',
     height: 40,
-    alignItems: 'center',
+    justifyContent: 'space-between',
     borderColor: 'lightgray',
     borderWidth: 1,
     backgroundColor: 'white',
+    padding: 8,
   },
   filterText: {
     flexDirection: 'row',
@@ -272,55 +270,21 @@ const styles = StyleSheet.create({
     borderColor: 'lightblue',
     borderWidth: 2,
   },
-  goalTitle: {
-    paddingRight: 30,
-    color: '#1A6295',
-    fontSize: 18,
-    textAlign: 'right',
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: 16,
+  addButton: {
+    marginTop: 5,
+    backgroundColor: '#1A6295',
+    paddingTop: 10,
+    borderColor: 'white',
+    borderWidth: 2,
+    borderRadius: 10,
+    height: 50,
+    width: '95%',
+    alignSelf: 'center',
   },
-  progress: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-  },
-  goalName: {
-    width: 200,
-    color: '#1A6295',
+  addText: {
+    textAlign: 'center',
+    color: 'white',
     fontSize: 20,
-    textAlign: 'left',
-    marginLeft: 10,
-    fontSize: 16,
-  },
-  goalNum: {
-    width: 20,
-    height: 32,
-    color: 'black',
-    fontSize: 18,
-    textAlign: 'right',
-    marginRight: 20,
-  },
-  grayRectangle: {
-    height: 25,
-    width: '75%',
-    backgroundColor: 'lightgray',
-    marginRight: 10,
-    borderRadius: 5,
-  },
-  trophy: {
-    width: 35,
-    height: 35,
-    paddingBottom: 10,
-  },
-  trackText: {
     justifyContent: 'center',
-    alignItems: 'center',
   },
 });
