@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 // Components
 import DrawerNavigator from './components/Navigation';
-import LoginScreen from './screens/Login/login';
+import LoginScreen from './screens/Login/LoginScreen';
 
 const Stack = createNativeStackNavigator();
 

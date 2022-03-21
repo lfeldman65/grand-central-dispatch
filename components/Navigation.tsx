@@ -5,7 +5,6 @@ import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigatio
 
 // Sections test
 
-import LoginScreen from '../screens/Login/login';
 import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import GoalsScreen from '../screens/Goals/goals';
 import PACScreen from '../screens/PAC/PACScreen';

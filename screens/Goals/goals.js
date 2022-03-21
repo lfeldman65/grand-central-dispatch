@@ -13,9 +13,9 @@ import {
 import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import dayTrophy from '../../assets/weeklyTrophy.png';
-import weekTrophy from '../../assets/dailyTrophy.png';
-import noTrophy from '../../assets/noTrophy.png';
+import dayTrophy from '../../images/weeklyTrophy.png';
+import weekTrophy from '../../images/dailyTrophy.png';
+import noTrophy from '../../images/noTrophy.png';
 
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';

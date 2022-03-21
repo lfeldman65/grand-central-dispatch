@@ -5,15 +5,15 @@ import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 
-const callImage = require('../../assets/quickCalls.png');
-const noteImage = require('../../assets/quickNotes.png');
-const popImage = require('../../assets/quickPop.png');
-const pacImage = require('../../assets/quickPAC.png');
-const relImage = require('../../assets/quickRel.png');
-const goalsImage = require('../../assets/quickGoals.png');
-const transImage = require('../../assets/quickTrans.png');
-const todoImage = require('../../assets/quickToDo.png');
-const calendarImage = require('../../assets/quickCalendar.png');
+const callImage = require('../../images/quickCalls.png');
+const noteImage = require('../../images/quickNotes.png');
+const popImage = require('../../images/quickPop.png');
+const pacImage = require('../../images/quickPAC.png');
+const relImage = require('../../images/quickRel.png');
+const goalsImage = require('../../images/quickGoals.png');
+const transImage = require('../../images/quickTrans.png');
+const todoImage = require('../../images/quickToDo.png');
+const calendarImage = require('../../images/quickCalendar.png');
 
 import { analytics } from '../../utils/analytics';
 import { storage } from '../../utils/storage';

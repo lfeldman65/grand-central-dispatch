@@ -1,5 +1,5 @@
 export interface LoginDataResponse {
-  data: LoginDataProps[];
+  data: LoginDataProps;
   error: string;
   status: string;
 }

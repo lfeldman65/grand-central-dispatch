@@ -5,21 +5,21 @@ import Collapsible from 'react-native-collapsible';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 
 // Hamburger Menu test
-//import rmLogo from '../assets/logoWide.png';
-const rmLogo = require('../assets/logoWide.png');
+//import rmLogo from '../images/logoWide.png';
+const rmLogo = require('../images/logoWide.png');
 
-import dashIcon from '../assets/menuDashboard.png';
-import goalsIcon from '../assets/menuGoals.png';
-import pacIcon from '../assets/menuPAC.png';
-import relIcon from '../assets/menuRel.png';
-import transIcon from '../assets/menuTransactions.png';
-import popIcon from '../assets/menuPopBys.png';
-import todoIcon from '../assets/menuToDo.png';
-import calendarIcon from '../assets/menuCalendar.png';
-import podcastIcon from '../assets/menuPodcasts.png';
-import settingsIcon from '../assets/menuSettings.png';
+import dashIcon from '../images/menuDashboard.png';
+import goalsIcon from '../images/menuGoals.png';
+import pacIcon from '../images/menuPAC.png';
+import relIcon from '../images/menuRel.png';
+import transIcon from '../images/menuTransactions.png';
+import popIcon from '../images/menuPopBys.png';
+import todoIcon from '../images/menuToDo.png';
+import calendarIcon from '../images/menuCalendar.png';
+import podcastIcon from '../images/menuPodcasts.png';
+import settingsIcon from '../images/menuSettings.png';
 
-import chevron from '../assets/chevron_white.png';
+import chevron from '../images/chevron_white.png';
 import { analytics } from '../utils/analytics';
 
 function CustomDrawerContent(props) {

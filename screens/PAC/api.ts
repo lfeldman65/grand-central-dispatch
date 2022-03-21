@@ -9,7 +9,7 @@ import {
 
 export function getPACData(type: string): Promise<PACDataResponse> {
   return http.get(`priorityActionsRN?type=${type}`);
-}
+} // back tick (`) only necessary for string interpolation
 
 export function getPACDetails(guid: string): Promise<PACCDetailsResponse> {
   return http.get(`contacts/${guid}`);

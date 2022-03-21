@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Button from '../../components/Button';
 
-import chevron from '../../assets/chevron_blue.png';
+import chevron from '../../images/chevron_blue.png';
 import { analytics } from '../../utils/analytics';
 
 //type TabType = 'a-z' | 'ranking' | 'groups';

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
-import closeButton from '../../assets/button_close_white.png';
+import closeButton from '../../images/button_close_white.png';
 
 export default function PACCompleteScreen(props) {
   const { onSave, setModalVisible, contactName } = props;

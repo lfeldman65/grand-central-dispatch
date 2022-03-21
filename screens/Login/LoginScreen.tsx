@@ -1,8 +1,10 @@
 import { useState, useEffect, useImperativeHandle } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
-import logo from '../../assets/iconLogo.png';
-import eyeClosed from '../../assets/eyeClosed.png';
-import eyeOpen from '../../assets/eyeOpen.png';
+
+const eyeClosed = require('../../images/eyeClosed.png');
+const eyeOpen = require('../../images/eyeOpen.png');
+const logo = require('../../images/iconLogo.png');
+
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { Analytics, PageHit, Event } from 'expo-analytics';
@@ -17,11 +19,11 @@ import { set } from 'react-native-reanimated';
 let deviceWidth = Dimensions.get('window').width;
 
 export default function LoginScreen({ navigation }) {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
+  const [password, setPassword] = useState('success');
   const [rememberChecked, setRememberCheck] = useState(false);
   const [showPW, setShowPW] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const isFocused = useIsFocused();
 
   function ForgotPasswordPressed() {
@@ -54,7 +56,8 @@ export default function LoginScreen({ navigation }) {
     setShowPW(!showPW);
   }
 
-  function saveCredentialsIfRememberChecked() {
+  function saveCredentials(myToken: string) {
+    storage.setItem('sessionToken', myToken);
     if (rememberChecked) {
       storage.setItem('userName', userName);
       storage.setItem('password', password);
@@ -65,27 +68,32 @@ export default function LoginScreen({ navigation }) {
   }
 
   useEffect(() => {
-    populateCredentialsIfRemembered();
+    //  populateCredentialsIfRemembered();
   }, [isFocused]);
 
-  function HandleLoginPressNew() {
-    // setIsLoading(true);
+  function HandleLoginPress() {
+    //  setIsLoading(true);
+    console.log(userName);
+    console.log(password);
     loginToApp(userName, password)
       .then((res) => {
         if (res.status == 'error') {
+          console.log(res);
           console.error(res.error);
         } else {
-          setData(res.data);
+          console.log(res);
+          saveCredentials(res.data.token);
+          navigation.navigate('Home');
         }
         //   setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
 
-  HandleLoginPress = () => {
+  const HandleLoginPressOld = () => {
     // https://aboutreact.com/react-native-login-and-signup/
     analytics
-      .event(new Event('Login', 'Login Button Pressed', 0))
+      .event(new Event('Login', 'Login Button', 'Pressed', 0))
       .then(() => console.log('button success'))
       .catch((e) => console.log(e.message));
 
@@ -107,7 +115,7 @@ export default function LoginScreen({ navigation }) {
       method: 'POST',
       headers: myHeaders,
       body: raw,
-      redirect: 'follow',
+      // redirect: 'follow',
     };
 
     //  http.post('https://www.referralmaker.com/services/mobileapi/login');
@@ -120,7 +128,7 @@ export default function LoginScreen({ navigation }) {
         if (result.status == 'error') {
           alert(result.error);
         } else {
-          saveCredentialsIfRememberChecked();
+          //  saveCredentialsIfRememberChecked();
           navigation.navigate('Home');
           //  alert(result.status);
         }
@@ -137,9 +145,7 @@ export default function LoginScreen({ navigation }) {
           style={styles.textInput}
           placeholder="Username"
           placeholderTextColor="#AFB9C2"
-          color="#FFFFFF"
           textAlign="left"
-          //   fontSize={18}
           onChangeText={(text) => setUserName(text)}
           defaultValue={userName}
         />
@@ -150,12 +156,9 @@ export default function LoginScreen({ navigation }) {
           style={styles.textInput}
           placeholder="Password"
           placeholderTextColor="#AFB9C2"
-          color="#FFFFFF"
           secureTextEntry={!showPW}
           onChangeText={(text) => setPassword(text)}
-          //  fontSize={18}
           defaultValue={password}
-          width={300}
         />
       </View>
 
@@ -170,7 +173,7 @@ export default function LoginScreen({ navigation }) {
           textContainerStyle={{ marginLeft: 15 }}
           onPress={() => {
             analytics
-              .event(new Event('Login', 'Remember Me Pressed', 0))
+              .event(new Event('Login', 'Remember Me', 'Pressed', 0))
               .then(() => setRememberCheck(!rememberChecked))
               .catch((e) => console.log(e.message));
           }}
@@ -241,5 +244,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 18,
+    color: '#FFFFFF',
+    width: 300,
   },
 });

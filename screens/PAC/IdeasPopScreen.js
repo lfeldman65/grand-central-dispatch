@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-//import closeButton from '../../assets/button_close_white.png';
-import closeButton from '../../assets/button_close_black.png';
+//import closeButton from '../../images/button_close_white.png';
+import closeButton from '../../images/button_close_black.png';
 
 export default function IdeasPopScreen(props) {
   const { setModalPopVisible } = props;
