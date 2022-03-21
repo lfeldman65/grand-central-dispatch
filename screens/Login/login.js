@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useImperativeHandle } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
 import logo from '../../assets/iconLogo.png';
+import eyeClosed from '../../assets/eyeClosed.png';
+import eyeOpen from '../../assets/eyeOpen.png';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { Analytics, PageHit, Event } from 'expo-analytics';
@@ -9,22 +11,62 @@ import { http } from '../../utils/http';
 import { analytics } from '../../utils/analytics';
 import { loginToApp } from './api';
 import { LoginDataProps } from './interfaces';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { set } from 'react-native-reanimated';
 
 let deviceWidth = Dimensions.get('window').width;
 
-function ForgotPasswordPressed() {
-  console.log('Forgot Press');
-  analytics
-    .event(new Event('Login', 'Forgot Password Button Pressed', 0))
-    .then(() => console.log('button success'))
-    .catch((e) => console.log(e.message));
-  Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
-}
-
 export default function LoginScreen({ navigation }) {
-  const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
-  const [password, setPassword] = useState('success');
-  var rememberMeChecked = false;
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberChecked, setRememberCheck] = useState(false);
+  const [showPW, setShowPW] = useState(false);
+
+  const isFocused = useIsFocused();
+
+  function ForgotPasswordPressed() {
+    // console.log('Forgot Press');
+    // analytics
+    //   .event(new Event('Login', 'Forgot Password Button Pressed', 0))
+    //   .then(() => console.log('button success'))
+    //   .catch((e) => console.log(e.message));
+    // Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
+
+    setShowPW(!showPW);
+  }
+  async function populateCredentialsIfRemembered() {
+    const userNameFromStorage = await storage.getItem('userName');
+    const pwFromStorage = await storage.getItem('password');
+    if (rememberChecked) {
+      if (userNameFromStorage != '' && userNameFromStorage != null) {
+        setUserName(userNameFromStorage);
+      }
+      if (pwFromStorage != '' && pwFromStorage != null) {
+        setPassword(pwFromStorage);
+      }
+    } else {
+      setUserName('');
+      setPassword('');
+    }
+  }
+
+  function toggleEye() {
+    setShowPW(!showPW);
+  }
+
+  function saveCredentialsIfRememberChecked() {
+    if (rememberChecked) {
+      storage.setItem('userName', userName);
+      storage.setItem('password', password);
+    } else {
+      storage.setItem('userName', '');
+      storage.setItem('password', '');
+    }
+  }
+
+  useEffect(() => {
+    populateCredentialsIfRemembered();
+  }, [isFocused]);
 
   function HandleLoginPressNew() {
     // setIsLoading(true);
@@ -74,11 +116,11 @@ export default function LoginScreen({ navigation }) {
       .then((response) => response.json()) //this line converts it to JSON
       .then((result) => {
         //then we can treat it as a JSON object
-        console.log(result);
+        //   console.log(result);
         if (result.status == 'error') {
           alert(result.error);
         } else {
-          storage.setItem('userName', userName);
+          saveCredentialsIfRememberChecked();
           navigation.navigate('Home');
           //  alert(result.status);
         }
@@ -109,7 +151,7 @@ export default function LoginScreen({ navigation }) {
           placeholder="Password"
           placeholderTextColor="#AFB9C2"
           color="#FFFFFF"
-          secureTextEntry={true}
+          secureTextEntry={!showPW}
           onChangeText={(text) => setPassword(text)}
           //  fontSize={18}
           defaultValue={password}
@@ -129,7 +171,7 @@ export default function LoginScreen({ navigation }) {
           onPress={() => {
             analytics
               .event(new Event('Login', 'Remember Me Pressed', 0))
-              .then(() => !rememberMeChecked)
+              .then(() => setRememberCheck(!rememberChecked))
               .catch((e) => console.log(e.message));
           }}
         />
@@ -141,6 +183,10 @@ export default function LoginScreen({ navigation }) {
 
       <TouchableOpacity onPress={HandleLoginPress}>
         <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={toggleEye}>
+        <Image source={showPW ? eyeClosed : eyeOpen} style={styles.eye} />
       </TouchableOpacity>
 
       <StatusBar style="auto" />
@@ -157,6 +203,12 @@ const styles = StyleSheet.create({
   logo: {
     width: 173,
     height: 242,
+    marginBottom: 20,
+    marginTop: 40,
+  },
+  eye: {
+    width: 25,
+    height: 25,
     marginBottom: 20,
     marginTop: 40,
   },

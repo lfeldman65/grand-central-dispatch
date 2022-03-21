@@ -10,7 +10,6 @@ export default function SettingsScreen(props) {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(true);
   function signOutPressed() {
-    console.log('Sign Out');
     navigation.navigate('Login');
     analytics
       .event(new Event('Settings', 'Sign Out', 'Pressed', 0))
