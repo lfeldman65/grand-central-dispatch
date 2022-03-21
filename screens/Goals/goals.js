@@ -55,6 +55,7 @@ export default function GoalsScreen() {
 
   function styleForProgress(index) {
     var barColor = '#1398f5';
+
     var barWidth = 75 * barPercentage(index) + '%';
     if (winTheDaySelected) {
       barColor = '#55bf43';
@@ -72,7 +73,7 @@ export default function GoalsScreen() {
   function styleForGoalTitle(index) {
     var textColor = 'black';
     if (index < 4) {
-      textColor = '#1F1DFF';
+      textColor = '#1398f5';
     }
     return {
       width: 200,
@@ -354,7 +355,7 @@ const styles = StyleSheet.create({
   },
   goalName: {
     width: 200,
-    color: '#1A6295',
+    color: 'yellow',
     fontSize: 20,
     textAlign: 'left',
     marginLeft: 10,

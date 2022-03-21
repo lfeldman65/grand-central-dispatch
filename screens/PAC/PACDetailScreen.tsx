@@ -380,7 +380,7 @@ const stylesDetail = StyleSheet.create({
   personName: {
     marginTop: 20,
     marginLeft: 20,
-    color: '#02ABF7',
+    color: '#1398f5',
     fontSize: 18,
     textAlign: 'left',
     marginBottom: 30,
