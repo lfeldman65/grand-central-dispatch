@@ -11,12 +11,13 @@ const apiBaseUrl = 'https://www.referralmaker.com/services/mobileapi';
 
 export async function httpBase(endpoint: string, { body, ...customConfig }: HttpOptions = {}) {
   const sessionToken = await storage.getItem('sessionToken');
+  console.log(sessionToken);
   const larryToken = '56B6DEC45D864875820ECB094377E191';
 
   const headers = {
     'content-type': 'application/json',
     Authorization: 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd',
-    SessionToken: larryToken,
+    SessionToken: sessionToken,
     Cookie: 'ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a',
   };
   const config: HttpOptions = {

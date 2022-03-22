@@ -1,9 +1,9 @@
 import { useState, useEffect, useImperativeHandle } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
 
-const eyeClosed = require('../../images/eyeClosed.png');
-const eyeOpen = require('../../images/eyeOpen.png');
-const logo = require('../../images/iconLogo.png');
+const eyeClosed = require('../Login/images/eyeClosed.png');
+const eyeOpen = require('../Login/images/eyeOpen.png');
+const logo = require('../Login/images/iconLogo.png');
 
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
