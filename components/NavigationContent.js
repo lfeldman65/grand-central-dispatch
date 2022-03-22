@@ -144,7 +144,7 @@ function CustomDrawerContent(props) {
               <Text style={styles.menuItemText}>Real Estate Transactions</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressed('lenderTransactions')}>
+          <TouchableOpacity onPress={() => pressed('LenderTransactionsScreen')}>
             <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Lender Transactions</Text>
@@ -181,7 +181,7 @@ function CustomDrawerContent(props) {
             <Text style={styles.menuItemText}>Podcasts</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressed('Settings')}>
+        <TouchableOpacity onPress={() => pressed('SettingsScreen')}>
           <View style={styles.menuItem}>
             <Image source={settingsIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Settings</Text>

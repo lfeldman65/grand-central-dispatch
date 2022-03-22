@@ -16,14 +16,14 @@ import PopBysScreen from '../screens/PopBys/PopBysScreen';
 import ToDoScreen from '../screens/ToDo/todos';
 import CalendarScreen from '../screens/Calendar/CalendarScreen';
 import PodcastScreen from '../screens/Podcasts/PodcastsScreen';
-import SettingsScreen from '../screens/Settings/appsettings';
+import SettingsScreen from '../screens/Settings/SettingsScreen';
 
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
 import RecentContactActivityScreen from '../screens/Relationships/recentcontactactivity';
 import VideoHistoryScreen from '../screens/Relationships/videoHistory';
 
 import RealEstateTransactionsScreen from '../screens/Transactions/realEstateTransactions';
-import LenderTransactionsScreen from '../screens/Transactions/lenderTransactions';
+import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
 import OtherTransactionsScreen from '../screens/Transactions/otherTransactions';
 
 export type RootStackParamList = {
@@ -196,7 +196,7 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="lenderTransactions"
+        name="LenderTransactionsScreen"
         component={LenderTransactionsScreen}
         options={{
           title: 'Lender Transactions',
@@ -274,10 +274,10 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Settings"
+        name="SettingsScreen"
         component={SettingsScreen}
         options={{
-          title: 'Settings',
+          title: 'SettingsScreen',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

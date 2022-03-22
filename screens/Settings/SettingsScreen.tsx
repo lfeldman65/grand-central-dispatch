@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../constants/analytics'; // why me?
 
-export default function SettingsScreen(props) {
+export default function SettingsScreen(props: any) {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(true);
   function signOutPressed() {
