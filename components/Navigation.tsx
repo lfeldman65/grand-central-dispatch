@@ -12,7 +12,7 @@ import PACDetailScreen from '../screens/PAC/PACDetailScreen';
 import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
 import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
 import TransactionsScreen from '../screens/Transactions/transactions';
-import PopBysScreen from '../screens/PopBys/popbys';
+import PopBysScreen from '../screens/PopBys/PoPysScreen';
 import ToDoScreen from '../screens/ToDo/todos';
 import CalendarScreen from '../screens/Calendar/calendar';
 import PodcastScreen from '../screens/Podcasts/podcasts';
