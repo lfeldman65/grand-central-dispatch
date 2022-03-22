@@ -16,8 +16,14 @@ import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import styles from './styles';
 import { analytics } from '../../utils/analytics';
+import { PACDataProps } from './interfaces';
 
-export default function PACNotesRow(props) {
+interface PACNotesRowProps {
+  data: PACDataProps;
+  onPress(): void;
+}
+
+export default function PACNotesRow(props: PACNotesRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.row}>

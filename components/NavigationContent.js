@@ -157,7 +157,7 @@ function CustomDrawerContent(props) {
             </View>
           </TouchableOpacity>
         </Collapsible>
-        <TouchableOpacity onPress={() => pressed('Pop-Bys')}>
+        <TouchableOpacity onPress={() => pressed('PopBysScreen')}>
           <View style={styles.menuItem}>
             <Image source={popIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Pop-By</Text>
@@ -169,13 +169,13 @@ function CustomDrawerContent(props) {
             <Text style={styles.menuItemText}>To Do</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressed('Calendar')}>
+        <TouchableOpacity onPress={() => pressed('CalendarScreen')}>
           <View style={styles.menuItem}>
             <Image source={calendarIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Calendar</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressed('Podcasts')}>
+        <TouchableOpacity onPress={() => pressed('PodcastsScreen')}>
           <View style={styles.menuItem}>
             <Image source={podcastIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Podcasts</Text>

@@ -17,8 +17,14 @@ import { Event } from 'expo-analytics';
 import Swipeable from 'react-native-swipeable-row';
 import styles from './styles';
 import { analytics } from '../../utils/analytics';
+import { RolodexDataProps } from './interfaces';
 
-export default function AtoZRow(props: any) {
+interface AtoZRowProps {
+  data: RolodexDataProps;
+  onPress(): void;
+}
+
+export default function AtoZRow(props: AtoZRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.row}>

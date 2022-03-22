@@ -17,9 +17,15 @@ import { Event } from 'expo-analytics';
 import Swipeable from 'react-native-swipeable-row';
 import styles from './styles';
 import { analytics } from '../../utils/analytics';
+import { PACDataProps } from './interfaces';
 
-export default function PACCallsRow(props) {
-  const handlePhonePressed = (number) => {
+interface PACRowProps {
+  data: PACDataProps;
+  onPress(): void;
+}
+
+export default function PACCallsRow(props: PACRowProps) {
+  const handlePhonePressed = (number: number) => {
     console.log(number);
   };
 

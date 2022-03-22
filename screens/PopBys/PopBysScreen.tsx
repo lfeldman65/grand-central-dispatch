@@ -74,54 +74,6 @@ export default function PopByScreen() {
     return true;
   }
 
-  function activityDisplay(index) {
-    if (!sanityCheck()) return '';
-
-    if (winTheDaySelected) {
-      return data['data'][index]['achievedToday'];
-    }
-    return data['data'][index]['achievedThisWeek'];
-  }
-
-  function goalNumDisplay(index) {
-    if (!sanityCheck()) return '';
-
-    if (winTheDaySelected) {
-      var weeklyTarget = data['data'][index]['goal']['weeklyTarget'];
-      return Math.ceil(weeklyTarget / 5);
-    }
-    return data['data'][index]['goal']['weeklyTarget'];
-  }
-
-  function shouldDisplay(index) {
-    if (!sanityCheck()) return false;
-
-    return data['data'][index]['goal']['displayOnDashboard'];
-  }
-
-  function titleFor(index) {
-    if (data == null) {
-      return '';
-    }
-    if (data['data'] == null) {
-      return '';
-    }
-    if (data['data'].length == 0) {
-      return '';
-    }
-    var oldTitle = data['data'][index]['goal']['title'];
-    if (oldTitle == 'Pop-By Made') {
-      return 'Pop-Bys Delivered';
-    }
-    if (oldTitle == 'New Contacts') {
-      return 'Database Additions';
-    }
-    if (oldTitle == 'Notes Made') {
-      return 'Notes Written';
-    }
-    return oldTitle;
-  }
-
   function fetchPressed() {
     console.log('Fetch Press');
     var myHeaders = new Headers();
@@ -132,7 +84,7 @@ export default function PopByScreen() {
     var requestOptions = {
       method: 'GET',
       headers: myHeaders,
-      redirect: 'follow',
+      //  redirect: 'follow',
     };
 
     fetch('https://www.referralmaker.com/services/mobileapi/priorityActions?type=call', requestOptions)

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
-import closeButton from '../../images/button_close_white.png';
+const closeButton = require('../../images/button_close_white.png');
 
 export default function PACCompleteScreen(props) {
   const { onSave, setModalVisible, contactName } = props;
@@ -36,7 +36,6 @@ export default function PACCompleteScreen(props) {
             style={styles.textInput}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
-            color="black"
             textAlign="left"
             value={note}
             onChangeText={onNoteChange}
@@ -99,5 +98,6 @@ const styles = StyleSheet.create({
   textInput: {
     paddingTop: 5,
     fontSize: 18,
+    color: 'black',
   },
 });

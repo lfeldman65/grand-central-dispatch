@@ -12,10 +12,10 @@ import PACDetailScreen from '../screens/PAC/PACDetailScreen';
 import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
 import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
 import TransactionsScreen from '../screens/Transactions/transactions';
-import PopBysScreen from '../screens/PopBys/PoPysScreen';
+import PopBysScreen from '../screens/PopBys/PopBysScreen';
 import ToDoScreen from '../screens/ToDo/todos';
-import CalendarScreen from '../screens/Calendar/calendar';
-import PodcastScreen from '../screens/Podcasts/podcasts';
+import CalendarScreen from '../screens/Calendar/CalendarScreen';
+import PodcastScreen from '../screens/Podcasts/PodcastsScreen';
 import SettingsScreen from '../screens/Settings/appsettings';
 
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
@@ -222,7 +222,7 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Pop-Bys"
+        name="PopBysScreen"
         component={PopBysScreen}
         options={{
           title: 'Pop-By',
@@ -248,10 +248,10 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Calendar"
+        name="CalendarScreen"
         component={CalendarScreen}
         options={{
-          title: 'Calendar',
+          title: 'CalendarScreeen',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
@@ -261,10 +261,10 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Podcasts"
+        name="PodcastsScreen"
         component={PodcastScreen}
         options={{
-          title: 'Podcasts',
+          title: 'PodcastsScreen',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

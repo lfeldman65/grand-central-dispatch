@@ -7,13 +7,13 @@ import { Event } from 'expo-analytics';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
-const popImage = require('../Dashboard/images/quickNotes.png');
-const pacImage = require('../Dashboard/images/quickNotes.png');
-const relImage = require('../Dashboard/images/quickNotes.png');
-const goalsImage = require('../Dashboard/images/quickNotes.png');
-const transImage = require('../Dashboard/images/quickNotes.png');
-const todoImage = require('../Dashboard/images/quickNotes.png');
-const calendarImage = require('../Dashboard/images/quickNotes.png');
+const popImage = require('../Dashboard/images/quickPop.png');
+const pacImage = require('../Dashboard/images/quickPAC.png');
+const relImage = require('../Dashboard/images/quickRel.png');
+const goalsImage = require('../Dashboard/images/quickGoals.png');
+const transImage = require('../Dashboard/images/quickTrans.png');
+const todoImage = require('../Dashboard/images/quickToDo.png');
+const calendarImage = require('../Dashboard/images/quickCalendar.png');
 
 import { analytics } from '../../utils/analytics';
 import { storage } from '../../utils/storage';
@@ -98,7 +98,7 @@ export default function DashboardScreen() {
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
-                  screen: 'Pop-Bys',
+                  screen: 'PopBysScreen',
                   label: 'Pop-Bys Pressed',
                 })
               }
@@ -184,7 +184,7 @@ export default function DashboardScreen() {
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
-                  screen: 'Calendar',
+                  screen: 'CalendarScreen',
                   label: 'Calendar',
                 })
               }

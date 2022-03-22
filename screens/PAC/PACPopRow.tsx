@@ -22,8 +22,14 @@ import { saveAsFavorite } from './api';
 import { SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
 import { useNavigation } from '@react-navigation/native';
+import { PACDataProps } from './interfaces';
 
-export default function PACPopRow(props) {
+interface PACRowProps {
+  data: PACDataProps;
+  onPress(): void;
+}
+
+export default function PACPopRow(props: PACRowProps) {
   const [saveShown, setSaveShown] = useState(!props.data.isFavorite);
 
   // const [data, setData] = useState<SaveAsFavoriteProps[]>([]);
