@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,10 +16,19 @@ import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Button from '../../components/Button';
 
-import chevron from '../../images/chevron_blue.png';
-import { analytics } from '../../utils/analytics';
+import AtoZRow from './AtoZRow';
+import RankingRow from './RankingRow';
+import GroupsRow from './GroupsRow';
 
-//type TabType = 'a-z' | 'ranking' | 'groups';
+import { getGroupsData, getRolodexData } from './api';
+import { GroupsDataProps, RolodexDataProps } from './interfaces';
+import styles2 from './styles';
+
+const chevron = require('../../images/chevron_blue.png');
+import { analytics } from '../../utils/analytics';
+import React from 'react';
+
+type TabType = 'a-z' | 'ranking' | 'groups';
 
 // interface RolodexScreenProps {
 //   route: RouteProp<any>;
@@ -31,32 +40,41 @@ export default function ManageRelationshipsScreen() {
   let deviceWidth = Dimensions.get('window').width;
 
   // const [tabSelected, setTabSelected] = useState(props.route.params?.defaultTab ?? 'A-Z');
-  const [tabSelected, setTabSelected] = useState('a-z');
-
+  const [tabSelected, setTabSelected] = useState<TabType>('a-z');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [isFilterRel, setIsFilterRel] = useState(true);
 
-  const [data, setData] = useState({ data: [] });
+  const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
+  const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
 
+  const handleRowPress = (index: number) => {
+    analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    // navigation.navigate('PACDetail', {
+    //   contactId: data[index]['contactId'],
+    //   type: data[index]['type'],
+    //   ranking: data[index]['ranking'],
+    //   lastCallDate: data[index]['lastCallDate'],
+    //   lastNoteDate: data[index]['lastNoteDate'],
+    //   lastPopByDate: data[index]['lastPopByDate'],
+    // });
+    console.log('rolodex row press');
+  };
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  });
+  }, []);
 
   useEffect(() => {
-    fetchPressed(tabSelected);
+    fetchRolodexPressed(tabSelected);
   }, [isFocused]);
 
   useEffect(() => {
     showFilterTitle();
   }, [isFilterRel]);
-
-  // useEffect(() => {
-  //   showFilterTitle(!filterTitle);
-  // }, [isFocused]);
 
   function showFilterTitle() {
     if (isFilterRel) {
@@ -72,19 +90,19 @@ export default function ManageRelationshipsScreen() {
   function azPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'A-Z', 0));
     setTabSelected('a-z');
-    fetchPressed('alpha');
+    fetchRolodexPressed('alpha');
   }
 
   function rankingPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
     setTabSelected('ranking');
-    fetchPressed('ranking');
+    fetchRolodexPressed('ranking');
   }
 
   function groupsPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
     setTabSelected('groups');
-    fetchPressed('groups');
+    fetchGroupsPressed('groups');
   }
 
   function filterPressed() {
@@ -98,70 +116,36 @@ export default function ManageRelationshipsScreen() {
     }
   }
 
-  function sanityCheck() {
-    if (data == null) {
-      return false;
-    }
-
-    if (data['data'] == null) {
-      return false;
-    }
-
-    if (data['data'].length == 0) {
-      return false;
-    }
-    return true;
-  }
-
-  function shouldDisplay(index) {
-    if (!sanityCheck()) return false;
-
-    return true;
-  }
-
-  function fetchPressed(type) {
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
-    myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
-    myHeaders.append('Cookie', 'ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a');
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow',
-    };
-
-    var azOrRankingURL =
-      'https://www.referralmaker.com/services/mobileapi/contacts?sortType=' + type + '&lastItem=0&batchSize=1';
-    var groupURL = 'https://www.referralmaker.com/services/mobileapi/groups?lastItem=0&batchSize=10';
-    var apiURL = azOrRankingURL;
-    if (type == 'groups') {
-      apiURL = groupURL;
-    }
-
-    fetch(apiURL, requestOptions)
-      .then((response) => response.json()) //this line converts it to JSON
-      .then((result) => {
-        //then we can treat it as a JSON object
-        console.log(result);
-        setData(result);
-        if (result.status == 'error') {
-          alert(result.error);
-          setIsLoading(false);
+  function fetchRolodexPressed(type: string) {
+    setIsLoading(true);
+    getRolodexData(type)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
         } else {
-          setIsLoading(false);
-          //  navigation.navigate('Home');
-          //  alert(result.status);
+          setDataRolodex(res.data);
         }
+        setIsLoading(false);
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
-  return isLoading ? (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#000" />
-    </View>
-  ) : (
+  function fetchGroupsPressed(type: string) {
+    setIsLoading(true);
+    getGroupsData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log(res);
+          setDataGroups(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  return (
     <View style={styles.container}>
       <View style={styles.tabButtonRow}>
         <Text style={tabSelected == 'a-z' ? styles.selected : styles.unselected} onPress={azPressed}>
@@ -174,34 +158,55 @@ export default function ManageRelationshipsScreen() {
           Groups
         </Text>
       </View>
-      <View style={styles.filterBox}>
-        <TouchableOpacity onPress={filterPressed}>
-          <Text style={styles.spacing}>spacing</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity onPress={filterPressed}>
-          <Text style={styles.filterText}>{isFilterRel ? 'Relationships' : 'Businesses'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={filterPressed}>
-          <Image source={chevron} style={styles.chevron} />
-        </TouchableOpacity>
-      </View>
-      <ScrollView>
-        {data['data'].map((name, index) =>
-          shouldDisplay(index) ? (
-            <View key={index}>
-              <Text style={styles.filterText}>{isFilterRel ? 'Relationships' : 'Businesses'}</Text>
-            </View>
-          ) : (
-            <View></View>
-          )
-        )}
-      </ScrollView>
-      <TouchableOpacity style={styles.bottomContainer} onPress={() => handleAddRelPressed()}>
-        <View style={styles.addButton}>
-          <Text style={styles.addText}>Add Relationships</Text>
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#000" />
         </View>
-      </TouchableOpacity>
+      ) : (
+        <React.Fragment>
+          <View style={styles.filterBox}>
+            <TouchableOpacity onPress={filterPressed}>
+              <Text style={styles.spacing}>spacing</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={filterPressed}>
+              <Text style={styles.filterText}>{isFilterRel ? 'Relationships' : 'Businesses'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={filterPressed}>
+              <Image source={chevron} style={styles.chevron} />
+            </TouchableOpacity>
+          </View>
+          <ScrollView>
+            {tabSelected == 'a-z' && (
+              <View>
+                {dataRolodex.map((item, index) => (
+                  <AtoZRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                ))}
+              </View>
+            )}
+            {tabSelected == 'ranking' && (
+              <View>
+                {dataRolodex.map((item, index) => (
+                  <RankingRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                ))}
+              </View>
+            )}
+            {tabSelected == 'groups' && (
+              <View>
+                {dataGroups.map((item, index) => (
+                  <GroupsRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                ))}
+              </View>
+            )}
+          </ScrollView>
+          <TouchableOpacity style={styles.bottomContainer} onPress={() => handleAddRelPressed()}>
+            <View style={styles2.ideasButton}>
+              <Text style={styles2.ideasText}>{'Add Relationship'}</Text>
+            </View>
+          </TouchableOpacity>
+        </React.Fragment>
+      )}
     </View>
   );
 }
