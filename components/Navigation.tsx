@@ -20,7 +20,7 @@ import SettingsScreen from '../screens/Settings/SettingsScreen';
 
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
 import RecentContactActivityScreen from '../screens/Relationships/RecentActivityScreen';
-import VideoHistoryScreen from '../screens/Relationships/videoHistory';
+import VideoHistoryScreen from '../screens/Relationships/VideoHistoryScreen';
 
 import RealEstateTransactionsScreen from '../screens/Transactions/realEstateTransactions';
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
