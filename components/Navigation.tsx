@@ -22,9 +22,9 @@ import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationsh
 import RecentContactActivityScreen from '../screens/Relationships/RecentActivityScreen';
 import VideoHistoryScreen from '../screens/Relationships/VideoHistoryScreen';
 
-import RealEstateTransactionsScreen from '../screens/Transactions/realEstateTransactions';
+import RealEstateTransactionsScreen from '../screens/Transactions/RealEstateTransactionsScreen';
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
-import OtherTransactionsScreen from '../screens/Transactions/otherTransactions';
+import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
 
 export type RootStackParamList = {
   [x: string]: any;
@@ -183,7 +183,7 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="realEstateTransactions"
+        name="realEstateTransactions11" // is this ued?
         component={RealEstateTransactionsScreen}
         options={{
           title: 'Real Estate Transactions',
