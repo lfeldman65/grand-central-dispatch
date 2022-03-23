@@ -51,13 +51,13 @@ export default function PACPopRow(props: PACRowProps) {
     styleForSaveButton;
   }, [saveShown]);
 
-  function handleText(number) {
-    console.log(number);
-    if (SMS.isAvailableAsync()) {
-      const { result } = SMS.sendSMSAsync(['8478774043'], 'My sample HelloWorld message');
-    } else {
-    }
-  }
+  // function handleText(number) {
+  //   console.log(number);
+  //   if (SMS.isAvailableAsync()) {
+  //     const result = SMS.sendSMSAsync(['8478774043'], 'My sample HelloWorld message');
+  //   } else {
+  //   }
+  // }
 
   function titleForSaveButton() {
     if (saveShown) {
@@ -126,35 +126,18 @@ export default function PACPopRow(props: PACRowProps) {
   }
 
   function saveAsFavoriteAPI() {
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
-    myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
-    myHeaders.append('Cookie', 'ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a');
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow',
-    };
-
-    var testGuid = 'e501958d-ee78-4ebb-8549-5bbf8ed6a5f2';
-    var apiURL = 'https://www.referralmaker.com/services/mobileapi/setasfavorite?contactGuid=' + props.data.contactId;
-    ('1158a33e-2451-4de4-94e1-8336b419ef05');
-    console.log('contact api: ' + apiURL);
-    fetch(apiURL, requestOptions)
-      .then((response) => response.json()) //this line converts it to JSON
-      .then((result) => {
-        //then we can treat it as a JSON object
-        // console.log(result);
-        setData(result);
-        if (result.status == 'error') {
-          alert(result.error);
-          setIsLoading(false);
+    setIsLoading(true);
+    saveAsFavorite(props.data.contactId)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
         } else {
-          setIsLoading(false);
+          console.log('here');
+          //  setDataFav(res.data);
         }
+        setIsLoading(false);
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
   return (
@@ -173,7 +156,7 @@ export default function PACPopRow(props: PACRowProps) {
           <Text style={styles.otherText}>{'Ranking: ' + props.data.ranking}</Text>
           {props.data.street1 && (
             <TouchableOpacity style={styles.popByButtons} onPress={() => handleSavePressed()}>
-              <Text style={styleForSaveButton()}>{titleForSaveButton()}</Text>
+              <Text style={saveShown ? styles.saveToMapButton : styles.savedButton}>{titleForSaveButton()}</Text>
             </TouchableOpacity>
           )}
         </View>

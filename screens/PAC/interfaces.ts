@@ -73,7 +73,7 @@ export interface SaveAsFavoriteProps {
 }
 
 export interface SaveAsFavoriteResponse {
-  data: SaveAsFavoriteProps[];
+  data: SaveAsFavoriteProps;
   error: string;
   status: string;
 }

@@ -25,8 +25,8 @@ export function postponePAC(guid: string, type: string): Promise<PACPostponeResp
   });
 }
 
-export function completePAC(contactGUID: string, type: string, notes: string): Promise<PACCompleteResponse> {
+export function completePAC(contactGUID: string, type: string, note: string): Promise<PACCompleteResponse> {
   return http.post(`contactsTrackAction/${contactGUID}`, {
-    body: { type, notes },
+    body: { type, note },
   });
 }

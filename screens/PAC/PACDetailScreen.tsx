@@ -61,7 +61,8 @@ export default function PACDetailScreen(props: any) {
   function saveComplete(note: string) {
     // console.log('Note ', note);
     //   completeActionOld(note);
-    completeAction(contactId, note, type);
+    completeAction(contactId, type, note);
+    //  completeAction();
   }
 
   function handleDirectionsPressed() {
@@ -132,9 +133,12 @@ export default function PACDetailScreen(props: any) {
     return data['data']['address'][type];
   }
 
-  function completeAction(contactId: string, type: string, notes: string) {
+  function completeAction(contactId: string, type: string, note: string) {
     setIsLoading(true);
-    completePAC(contactId, type, notes)
+    console.log('contactId: ' + contactId);
+    console.log('type: ' + type);
+    console.log('note: ' + note);
+    completePAC(contactId, type, note)
       .then((res) => {
         console.log(res);
         if (res.status == 'error') {

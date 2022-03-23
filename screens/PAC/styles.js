@@ -29,6 +29,20 @@ export default styles = StyleSheet.create({
     marginRight: 10,
     marginBottom: 5,
   },
+  saveToMapButton: {
+    color: '#02ABF7',
+    fontSize: 15,
+    textAlign: 'right',
+    marginRight: 10,
+    marginTop: -3,
+  },
+  savedButton: {
+    color: 'gray',
+    fontSize: 15,
+    textAlign: 'right',
+    marginRight: 10,
+    marginTop: -3,
+  },
   phoneRow: {
     width: 210,
   },
@@ -158,16 +172,5 @@ export default styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 10,
     fontSize: 16,
-  },
-  leftSwipeItem: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingRight: 20,
-  },
-  rightSwipeItem: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingLeft: 20,
   },
 });
