@@ -11,7 +11,7 @@ import PACScreen from '../screens/PAC/PACScreen';
 import PACDetailScreen from '../screens/PAC/PACDetailScreen';
 import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
 import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
-import TransactionsScreen from '../screens/Transactions/transactions';
+import TransactionsScreen from '../screens/Transactions/TransactionsSection';
 import PopBysScreen from '../screens/PopBys/PopBysScreen';
 import ToDoScreen from '../screens/ToDo/todos';
 import CalendarScreen from '../screens/Calendar/CalendarScreen';
