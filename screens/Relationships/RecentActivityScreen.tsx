@@ -4,7 +4,7 @@ import MenuIcon from '../../components/menuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 
-export default function RecentContactActivityScreen() {
+export default function RecentActivityScreen() {
   const navigation = useNavigation();
 
   useEffect(() => {

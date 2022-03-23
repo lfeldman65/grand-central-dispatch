@@ -19,7 +19,7 @@ import PodcastScreen from '../screens/Podcasts/PodcastsScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
 
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
-import RecentContactActivityScreen from '../screens/Relationships/recentcontactactivity';
+import RecentContactActivityScreen from '../screens/Relationships/RecentActivityScreen';
 import VideoHistoryScreen from '../screens/Relationships/videoHistory';
 
 import RealEstateTransactionsScreen from '../screens/Transactions/realEstateTransactions';
