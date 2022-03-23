@@ -8,18 +8,18 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 //import rmLogo from '../images/logoWide.png';
 const rmLogo = require('../images/logoWide.png');
 
-import dashIcon from '../images/menuDashboard.png';
-import goalsIcon from '../images/menuGoals.png';
-import pacIcon from '../images/menuPAC.png';
-import relIcon from '../images/menuRel.png';
-import transIcon from '../images/menuTransactions.png';
-import popIcon from '../images/menuPopBys.png';
-import todoIcon from '../images/menuToDo.png';
-import calendarIcon from '../images/menuCalendar.png';
-import podcastIcon from '../images/menuPodcasts.png';
-import settingsIcon from '../images/menuSettings.png';
+const dashIcon = require('../images/menuDashboard.png');
+const goalsIcon = require('../images/menuGoals.png');
+const pacIcon = require('../images/menuPAC.png');
+const relIcon = require('../images/menuRel.png');
+const transIcon = require('../images/menuTransactions.png');
+const popIcon = require('../images/menuPopBys.png');
+const todoIcon = require('../images/menuToDo.png');
+const calendarIcon = require('../images/menuCalendar.png');
+const podcastIcon = require('../images/menuPodcasts.png');
+const settingsIcon = require('../images/menuSettings.png');
 
-import chevron from '../images/chevron_white.png';
+const chevron = require('../images/chevron_white.png');
 import { analytics } from '../utils/analytics';
 
 function CustomDrawerContent(props) {

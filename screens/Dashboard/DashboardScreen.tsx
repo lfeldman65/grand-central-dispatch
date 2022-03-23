@@ -79,6 +79,7 @@ export default function DashboardScreen() {
             </TouchableOpacity>
             <Text style={styles.names}>Calls</Text>
           </View>
+
           <View style={styles.pair}>
             <TouchableOpacity
               onPress={() =>
@@ -94,6 +95,7 @@ export default function DashboardScreen() {
             </TouchableOpacity>
             <Text style={styles.names}>Notes</Text>
           </View>
+
           <View style={styles.pair}>
             <TouchableOpacity
               onPress={() =>
@@ -108,6 +110,7 @@ export default function DashboardScreen() {
             <Text style={styles.names}>Pop-Bys</Text>
           </View>
         </View>
+
         <View style={styles.row}>
           <View style={styles.pair}>
             <TouchableOpacity
@@ -126,12 +129,13 @@ export default function DashboardScreen() {
             <Text style={styles.names}>Action</Text>
             <Text style={styles.names}>Center</Text>
           </View>
+
           <View style={styles.pair}>
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
-                  screen: 'manageRelationships',
-                  label: 'Relationships',
+                  screen: 'manageRelationships', // what?
+                  label: 'Relationships', // what?
                 })
               }
             >
@@ -143,7 +147,7 @@ export default function DashboardScreen() {
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
-                  screen: 'Goals',
+                  screen: 'Goals1', // doesn't matter?
                   label: 'Goals',
                 })
               }
@@ -153,6 +157,7 @@ export default function DashboardScreen() {
             <Text style={styles.names}>Goals</Text>
           </View>
         </View>
+
         <View style={styles.row}>
           <View style={styles.pair}>
             <TouchableOpacity
@@ -180,6 +185,7 @@ export default function DashboardScreen() {
             </TouchableOpacity>
             <Text style={styles.names}>To-Do's</Text>
           </View>
+
           <View style={styles.pair}>
             <TouchableOpacity
               onPress={() =>
