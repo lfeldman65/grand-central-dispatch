@@ -16,14 +16,14 @@ export default styles = StyleSheet.create({
     fontWeight: '500',
   },
   phoneNumber: {
-    color: '#1398f5',
+    color: '#1C6597',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 5,
   },
   popByButtons: {
-    color: '#1398f5',
+    color: '#1C6597',
     fontSize: 15,
     textAlign: 'right',
     marginRight: 10,

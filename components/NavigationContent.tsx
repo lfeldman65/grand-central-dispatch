@@ -76,7 +76,7 @@ function CustomDrawerContent(props) {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => pressed('Goals')}>
+        <TouchableOpacity onPress={() => pressed('goals')}>
           <View style={styles.menuItem}>
             <Image source={goalsIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Goals</Text>

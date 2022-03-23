@@ -73,7 +73,7 @@ export default function GoalsScreen() {
   function styleForGoalTitle(index) {
     var textColor = 'black';
     if (index < 4) {
-      textColor = '#1398f5';
+      textColor = '#1C6597';
     }
     return {
       width: 200,
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   },
   goalTitle: {
     paddingRight: 30,
-    color: '#1A6295',
+    color: '#1C6597',
     fontSize: 18,
     textAlign: 'right',
     padding: 10,
@@ -352,14 +352,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     marginBottom: 10,
-  },
-  goalName: {
-    width: 200,
-    color: 'yellow',
-    fontSize: 20,
-    textAlign: 'left',
-    marginLeft: 10,
-    fontSize: 16,
   },
   goalTarget: {
     width: 20,

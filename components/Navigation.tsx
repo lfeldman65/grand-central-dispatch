@@ -83,7 +83,7 @@ export const HomeStackNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Dashboard" // must match exactly name in CustomDrawerContent
+        name="Dashboard" // must match exactly name in NavigationContent
         component={DashboardScreen}
         options={{
           title: 'Dashboard',
@@ -96,7 +96,7 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Goals"
+        name="goals"
         component={GoalsScreen}
         options={{
           title: 'Goals',
@@ -183,7 +183,7 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="realEstateTransactions11" // is this ued?
+        name="realEstateTransactions"
         component={RealEstateTransactionsScreen}
         options={{
           title: 'Real Estate Transactions',

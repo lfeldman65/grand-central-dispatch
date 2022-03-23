@@ -147,7 +147,7 @@ export default function DashboardScreen() {
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
-                  screen: 'Goals1', // doesn't matter?
+                  screen: 'goals', // doesn't matter?
                   label: 'Goals',
                 })
               }

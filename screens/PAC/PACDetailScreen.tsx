@@ -384,7 +384,7 @@ const stylesDetail = StyleSheet.create({
   personName: {
     marginTop: 20,
     marginLeft: 20,
-    color: '#1398f5',
+    color: '#1C6597',
     fontSize: 18,
     textAlign: 'left',
     marginBottom: 30,
@@ -414,7 +414,7 @@ const stylesDetail = StyleSheet.create({
     marginBottom: 20,
   },
   phoneNumber: {
-    color: '#02ABF7',
+    color: '#1C6597',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 20,
