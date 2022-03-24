@@ -16,7 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import { analytics } from '../../utils/analytics';
 import PacComplete from './PACCompleteScreen';
 import { postponePAC, completePAC, saveAsFavorite, getPACDetails } from './api';
-import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
+//import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
 import styles from './styles';
 
@@ -55,7 +55,7 @@ export default function PACDetailScreen(props: any) {
   async function completePressed() {
     console.log('complete pressed: ' + contactId);
     analytics.event(new Event('PAC Detail', 'Complete', '0'));
-    setModalVisible(!modalVisible);
+    setModalVisible(true);
   }
 
   function saveComplete(note: string) {

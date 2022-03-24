@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  Linking,
+  Modal,
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
@@ -15,6 +15,7 @@ import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Button from '../../components/Button';
+import AddRelScreen from './AddRelationshipScreen';
 
 import AtoZRow from './AtoZRow';
 import RankingRow from './RankingRow';
@@ -43,6 +44,7 @@ export default function ManageRelationshipsScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [isFilterRel, setIsFilterRel] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
@@ -82,6 +84,7 @@ export default function ManageRelationshipsScreen() {
   function handleAddRelPressed() {
     console.log('Add Rel Pressed');
     analytics.event(new Event('Relationships', 'Add Relationship', 'Press', 0));
+    setModalVisible(true);
   }
 
   function azPressed() {
@@ -140,6 +143,10 @@ export default function ManageRelationshipsScreen() {
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  function saveComplete() {
+    console.log('Save Complete');
   }
 
   return (
@@ -203,6 +210,18 @@ export default function ManageRelationshipsScreen() {
             </View>
           </TouchableOpacity>
         </React.Fragment>
+      )}
+      {modalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <AddRelScreen contactName={'New Relationship'} onSave={saveComplete} setModalVisible={setModalVisible} />
+        </Modal>
       )}
     </View>
   );
