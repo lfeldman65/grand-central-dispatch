@@ -3,7 +3,7 @@ import { RolodexDataResponse } from './interfaces';
 import { GroupsDataResponse } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
-  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=1000`);
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=100`);
 } // back tick (`) only necessary for string interpolation
 
 export function getGroupsData(): Promise<GroupsDataResponse> {

@@ -25,7 +25,7 @@ interface PACRowProps {
 }
 
 export default function PACCallsRow(props: PACRowProps) {
-  const handlePhonePressed = (number: number) => {
+  const handlePhonePressed = (number: string) => {
     console.log(number);
   };
 

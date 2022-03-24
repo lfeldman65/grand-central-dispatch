@@ -27,8 +27,9 @@ interface GroupsRowProps {
 export default function GroupsRow(props: GroupsRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={styles.row}>
+      <View style={styles.groupRow}>
         <Text style={styles.personName}>{props.data.groupName}</Text>
+        <Text style={styles.personName}>{props.data.groupSizeLabel}</Text>
       </View>
     </TouchableOpacity>
   );

@@ -14,23 +14,7 @@ export default styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: '500',
   },
-  phoneNumber: {
-    color: '#1398f5',
-    fontSize: 15,
-    textAlign: 'left',
-    marginLeft: 10,
-    marginBottom: 5,
-  },
-  popByButtons: {
-    color: '#1398f5',
-    fontSize: 15,
-    textAlign: 'right',
-    marginRight: 10,
-    marginBottom: 5,
-  },
-  phoneRow: {
-    width: 210,
-  },
+
   otherText: {
     color: 'black',
     fontSize: 15,
@@ -38,24 +22,12 @@ export default styles = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 7,
   },
-  streetText: {
-    color: 'black',
-    fontSize: 15,
-    textAlign: 'left',
-    marginLeft: 10,
-  },
-  cityStateZipText: {
-    color: 'black',
-    fontSize: 15,
-    textAlign: 'left',
-    marginLeft: 10,
-    marginBottom: 7,
-  },
+
   bottomContainer: {
     backgroundColor: '#1A6295',
     height: 60,
   },
-  ideasButton: {
+  addRelButton: {
     marginTop: 5,
     backgroundColor: '#1A6295',
     paddingTop: 10,
@@ -66,60 +38,32 @@ export default styles = StyleSheet.create({
     width: '95%',
     alignSelf: 'center',
   },
-  ideasText: {
+  addRelText: {
     textAlign: 'center',
     color: 'white',
     fontSize: 20,
     justifyContent: 'center',
   },
-  complete: {
-    width: 200,
-    color: 'orange',
-    fontSize: 20,
-    fontSize: 16,
-  },
-  completeView: {
-    backgroundColor: 'green',
-    fontSize: 20,
-    alignContent: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingLeft: 20,
-  },
-  postponeView: {
-    backgroundColor: 'orange',
-    fontSize: 20,
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingRight: 20,
-  },
-  postpone: {
-    width: 200,
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'left',
-    marginLeft: 10,
-    fontSize: 16,
-  },
   row: {
+    flexDirection: 'row',
     paddingTop: 10,
     backgroundColor: 'white',
     borderColor: 'lightgray',
     borderWidth: 0.5,
     paddingBottom: 10,
   },
+  rankingCircle: {
+    height: 30,
+    width: 30,
+    borderRadius: 10,
+    marginLeft: 10,
+    marginRight: 5,
+  },
   tabButtonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 40,
     alignItems: 'center',
-  },
-  popbyRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: 1,
-    justifyContent: 'space-between',
   },
   unselected: {
     color: 'lightgray',
@@ -168,5 +112,16 @@ export default styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingLeft: 20,
+  },
+  groupRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    backgroundColor: 'white',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 20,
   },
 });

@@ -35,7 +35,6 @@ type TabType = 'a-z' | 'ranking' | 'groups';
 // }
 
 //export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
-
 export default function ManageRelationshipsScreen() {
   let deviceWidth = Dimensions.get('window').width;
 
@@ -51,16 +50,13 @@ export default function ManageRelationshipsScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
-    // navigation.navigate('PACDetail', {
-    //   contactId: data[index]['contactId'],
-    //   type: data[index]['type'],
-    //   ranking: data[index]['ranking'],
-    //   lastCallDate: data[index]['lastCallDate'],
-    //   lastNoteDate: data[index]['lastNoteDate'],
-    //   lastPopByDate: data[index]['lastPopByDate'],
-    // });
     console.log('rolodex row press');
+    analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+
+    // navigation.navigate('RelationshipDetailScreen', {});
+    // navigation.navigate('RelationshipDetailScreen', {
+    //   //  contactId: data[index]['contactId'],
+    // });
   };
   useEffect(() => {
     navigation.setOptions({
@@ -85,6 +81,7 @@ export default function ManageRelationshipsScreen() {
 
   function handleAddRelPressed() {
     console.log('Add Rel Pressed');
+    analytics.event(new Event('Relationships', 'Add Relationship', 'Press', 0));
   }
 
   function azPressed() {
@@ -201,8 +198,8 @@ export default function ManageRelationshipsScreen() {
             )}
           </ScrollView>
           <TouchableOpacity style={styles.bottomContainer} onPress={() => handleAddRelPressed()}>
-            <View style={styles2.ideasButton}>
-              <Text style={styles2.ideasText}>{'Add Relationship'}</Text>
+            <View style={styles2.addRelButton}>
+              <Text style={styles2.addRelText}>{'Add Relationship'}</Text>
             </View>
           </TouchableOpacity>
         </React.Fragment>
