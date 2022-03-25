@@ -50,25 +50,25 @@ export default function IdeasNotesScreen(props) {
             interested in looking into the opportunities we have for buyers in this market...
           </Text>
         )}
-        {section0Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
+        {section0Selected && <Text style={styles.sectionHeaderText}>Leaving a Message</Text>}
         {section0Selected && <Text style={styles.contentText}>I tried calling you today, but missed you...</Text>}
 
         <TouchableOpacity onPress={() => handleSectionTap(1)}>
           <Text style={styles.sectionTitleText}>Ideas to Get You Started: Reconnecting</Text>
         </TouchableOpacity>
-        {section1Selected && <Text style={styles.sectionHeaderText}>Reconnecting</Text>}
+        {section1Selected && <Text style={styles.sectionHeaderText}>Option 1</Text>}
         {section1Selected && (
           <Text style={styles.contentText}>
             I found myself thinking of you today, so I thought I would write a quick note...
           </Text>
         )}
-        {section1Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
+        {section1Selected && <Text style={styles.sectionHeaderText}>Option 2</Text>}
         {section1Selected && (
           <Text style={styles.contentText}>
             I was going through my files and realized it's been way too long since...
           </Text>
         )}
-        {section1Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
+        {section1Selected && <Text style={styles.sectionHeaderText}>Option 3</Text>}
         {section1Selected && <Text style={styles.contentText}>How is your new home working out?</Text>}
 
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
@@ -80,7 +80,7 @@ export default function IdeasNotesScreen(props) {
             A brief note to let you know it was a real pleasure to meet you today...
           </Text>
         )}
-        {section2Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
+        {section2Selected && <Text style={styles.sectionHeaderText}>Thank You Npte</Text>}
         {section2Selected && <Text style={styles.contentText}>Thank you for the great service today!</Text>}
         {section2Selected && <Text style={styles.sectionHeaderText}>Thanks for a Referral</Text>}
         {section2Selected && (

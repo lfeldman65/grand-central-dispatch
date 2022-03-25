@@ -63,13 +63,13 @@ export default function IdeasPopScreen(props) {
         <TouchableOpacity onPress={() => handleSectionTap(1)}>
           <Text style={styles.sectionTitleText}>Pop-By Gift Ideas: Winter</Text>
         </TouchableOpacity>
-        {section1Selected && <Text style={styles.sectionHeaderText}>Can opener</Text>}
+        {section1Selected && <Text style={styles.sectionHeaderText}>Can Opener</Text>}
         {section1Selected && (
           <Text style={styles.contentText}>
             I can open the world of real estate for you, your friends and your family.
           </Text>
         )}
-        {section1Selected && <Text style={styles.sectionHeaderText}>Box of chocolates</Text>}
+        {section1Selected && <Text style={styles.sectionHeaderText}>Box of Chocolates</Text>}
         {section1Selected && (
           <Text style={styles.contentText}>
             Also, keep in mind if you need a referral to a good trade or service professional, I come across some really
@@ -79,24 +79,24 @@ export default function IdeasPopScreen(props) {
 
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
           <Text style={styles.sectionTitleText}>Pop-By Gift Ideas: Spring</Text>
-          {section2Selected && <Text style={styles.sectionHeaderText}>Reusable shopping bag</Text>}
+          {section2Selected && <Text style={styles.sectionHeaderText}>Reusable Shopping Bag</Text>}
         </TouchableOpacity>
         {section2Selected && (
           <Text style={styles.contentText}>Helping the environment and all of your referrals...</Text>
         )}
-        {section2Selected && <Text style={styles.sectionHeaderText}>Peeps candy</Text>}
+        {section2Selected && <Text style={styles.sectionHeaderText}>Peeps Candy</Text>}
         {section2Selected && <Text style={styles.contentText}>Have your peeps call my peeps.</Text>}
 
         <TouchableOpacity onPress={() => handleSectionTap(3)}>
           <Text style={styles.sectionTitleText}>Pop-By Gift Ideas: Summer</Text>
         </TouchableOpacity>
-        {section3Selected && <Text style={styles.sectionHeaderText}>Ice cream scoop</Text>}
+        {section3Selected && <Text style={styles.sectionHeaderText}>Ice Cream Scoop</Text>}
         {section3Selected && (
           <Text style={styles.contentText}>
             Want the scoop on what the market is really like? Give me a call and I'd be happy to help!
           </Text>
         )}
-        {section3Selected && <Text style={styles.sectionHeaderText}>Condiment pack (ketchup, mustard, relish)</Text>}
+        {section3Selected && <Text style={styles.sectionHeaderText}>Condiment Pack (Ketchup, Mustard, Relish)</Text>}
         {section3Selected && (
           <Text style={styles.contentText}>
             I just wanted to ketch-up and let you know that I relish your referrals! My clients are the best and always
@@ -107,9 +107,9 @@ export default function IdeasPopScreen(props) {
         <TouchableOpacity onPress={() => handleSectionTap(4)}>
           <Text style={styles.sectionTitleText}>Pop-By Gift Ideas: Fall</Text>
         </TouchableOpacity>
-        {section4Selected && <Text style={styles.sectionHeaderText}>Ice pack</Text>}
+        {section4Selected && <Text style={styles.sectionHeaderText}>Ice Pack</Text>}
         {section4Selected && <Text style={styles.contentText}>I won't leave your referrals cold! </Text>}
-        {section4Selected && <Text style={styles.sectionHeaderText}>Dog biscuits or bones</Text>}
+        {section4Selected && <Text style={styles.sectionHeaderText}>Dog Biscuits or Bones</Text>}
         {section4Selected && (
           <Text style={styles.contentText}>No bones about it, I have your real estate needs covered.</Text>
         )}

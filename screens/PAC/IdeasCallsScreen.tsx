@@ -114,20 +114,20 @@ export default function IdeasCallsScreen(props) {
         <TouchableOpacity onPress={() => handleSectionTap(3)}>
           <Text style={styles.sectionTitleText}>Check-in Call Dialogue for Buyers: Nothing New</Text>
         </TouchableOpacity>
-        {section3Selected && <Text style={styles.sectionHeaderText}>Nothing new to report</Text>}
+        {section3Selected && <Text style={styles.sectionHeaderText}>Opening</Text>}
         {section3Selected && (
           <Text style={styles.contentText}>
             Hello ______, ______ here. I just wanted to check in with you for a quick update.
           </Text>
         )}
-        {section3Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
+        {section3Selected && <Text style={styles.sectionHeaderText}>No New Properties</Text>}
         {section3Selected && (
           <Text style={styles.contentText}>
             I've been monitoring activity on the market today and no new properties that meet our criteria have
             surfaced.
           </Text>
         )}
-        {section3Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
+        {section3Selected && <Text style={styles.sectionHeaderText}>Follow-Up</Text>}
         {section3Selected && (
           <Text style={styles.contentText}>
             I'll be checking again first thing tomorrow morning and I'll call to give you a quick update then. Bye for
@@ -139,23 +139,18 @@ export default function IdeasCallsScreen(props) {
         <TouchableOpacity onPress={() => handleSectionTap(4)}>
           <Text style={styles.sectionTitleText}>Check-in Call Dialogue for Buyers: Something New</Text>
         </TouchableOpacity>
-        {section4Selected && <Text style={styles.sectionHeaderText}>Something new to report</Text>}
+        {section4Selected && <Text style={styles.sectionHeaderText}>Opening</Text>}
         {section4Selected && (
           <Text style={styles.contentText}>
             Hello ______, ______ here. I just wanted to check in to give you a quick update.
           </Text>
         )}
-        {section4Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
+        {section4Selected && <Text style={styles.sectionHeaderText}>Good News</Text>}
         {section4Selected && (
           <Text style={styles.contentText}>
             I've been monitoring activity on the market today and I've found [two] new homes that meet our criteria. The
-            addresses are ________ and ________. I'll email you the property information.
-          </Text>
-        )}
-        {section4Selected && <Text style={styles.sectionHeaderText}>Need Header</Text>}
-        {section4Selected && (
-          <Text style={styles.contentText}>
-            If you get a chance to drive by and check them out, let me know. Bye for now!
+            addresses are ________ and ________. I'll email you the property information. If you get a chance to drive
+            by and check them out, let me know. Bye for now!
           </Text>
         )}
 
