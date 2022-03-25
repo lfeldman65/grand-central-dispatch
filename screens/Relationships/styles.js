@@ -124,4 +124,10 @@ export default styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 20,
   },
+  chevron: {
+    marginTop: 5,
+    backgroundColor: 'white',
+    height: 20,
+    width: 12,
+  },
 });

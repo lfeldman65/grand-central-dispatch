@@ -18,6 +18,7 @@ import Swipeable from 'react-native-swipeable-row';
 import styles from './styles';
 import { analytics } from '../../utils/analytics';
 import { GroupsDataProps } from './interfaces';
+const chevron = require('../../images/chevron_blue_right.png');
 
 interface GroupsRowProps {
   data: GroupsDataProps;
@@ -28,8 +29,8 @@ export default function GroupsRow(props: GroupsRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.groupRow}>
-        <Text style={styles.personName}>{props.data.groupName}</Text>
-        <Text style={styles.personName}>{props.data.groupSizeLabel}</Text>
+        <Text style={styles.personName}>{props.data.groupName + ' (' + props.data.groupSizeLabel + ')'}</Text>
+        <Image source={chevron} style={styles.chevron} />
       </View>
     </TouchableOpacity>
   );

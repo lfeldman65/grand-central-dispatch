@@ -6,6 +6,7 @@ export interface RolodexDataProps {
   lastName: string;
   ranking: string;
   contactTypeID: string;
+  employerName: string;
 }
 
 export interface RolodexDataResponse {

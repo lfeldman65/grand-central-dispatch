@@ -26,23 +26,32 @@ const rankC = require('../Relationships/images/rankC.png');
 interface AtoZRowProps {
   data: RolodexDataProps;
   onPress(): void;
+  relFromAbove: string;
 }
 
 function chooseImage(rank: string) {
-  console.log(rank);
   if (rank == 'A+') return rankAPlus;
   if (rank == 'A') return rankA;
   if (rank == 'B') return rankB;
   return rankC;
 }
 
+function formatName() {}
+
 export default function AtoZRow(props: AtoZRowProps) {
+  const { relFromAbove } = props;
+
+  console.log(relFromAbove);
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={styles.row}>
-        <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
-        <Text style={styles.personName}>{props.data.firstName + ' ' + props.data.lastName}</Text>
-      </View>
+      {props.data.contactTypeID == relFromAbove && (
+        <View style={styles.row}>
+          <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
+          <Text style={styles.personName}>
+            {props.data.firstName + ' ' + props.data.lastName + props.data.contactTypeID + props.data.employerName}
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 }

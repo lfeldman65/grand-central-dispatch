@@ -25,9 +25,9 @@ import { getGroupsData, getRolodexData } from './api';
 import { GroupsDataProps, RolodexDataProps } from './interfaces';
 import styles2 from './styles';
 
-const chevron = require('../../images/chevron_blue.png');
 import { analytics } from '../../utils/analytics';
 import React from 'react';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 
@@ -46,7 +46,7 @@ export default function ManageRelationshipsScreen() {
   const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
+  const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]); // A-Z and Ranking tabs
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -63,26 +63,38 @@ export default function ManageRelationshipsScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      tab: tabSelected,
     });
   }, []);
 
   useEffect(() => {
-    fetchRolodexPressed(tabSelected);
+    if (tabSelected != 'groups') {
+      fetchRolodexPressed(tabSelected);
+    } else {
+      fetchGroupsPressed(tabSelected);
+    }
   }, [isFocused]);
+
+  useEffect(() => {
+    navigation.setOptions({ isBiz: isFilterRel });
+    fetchRolodexPressed('a-z');
+    console.log('a-z');
+  }, [isFilterRel]);
 
   useEffect(() => {
     showFilterTitle();
   }, [isFilterRel]);
 
+  useEffect(() => {}); // this will run on every rendeer
+
   function showFilterTitle() {
     if (isFilterRel) {
-      return 'Relationships';
+      return 'Rel';
     }
-    return 'Businesses';
+    return 'Biz';
   }
 
   function handleAddRelPressed() {
-    console.log('Add Rel Pressed');
     analytics.event(new Event('Relationships', 'Add Relationship', 'Press', 0));
     setModalVisible(true);
   }
@@ -137,7 +149,7 @@ export default function ManageRelationshipsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res);
+          //   console.log(res);
           setDataGroups(res.data);
         }
         setIsLoading(false);
@@ -169,23 +181,23 @@ export default function ManageRelationshipsScreen() {
         </View>
       ) : (
         <React.Fragment>
-          <View style={styles.filterBox}>
-            <TouchableOpacity onPress={filterPressed}>
-              <Text style={styles.spacing}>spacing</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={filterPressed}>
-              <Text style={styles.filterText}>{isFilterRel ? 'Relationships' : 'Businesses'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={filterPressed}>
-              <Image source={chevron} style={styles.chevron} />
-            </TouchableOpacity>
-          </View>
+          {tabSelected != 'groups' && (
+            <View style={styles.filterButton}>
+              <TouchableOpacity onPress={filterPressed}>
+                <Text style={styles.filterText}>{isFilterRel ? 'Show Businesses' : 'Show Relationships'}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <ScrollView>
             {tabSelected == 'a-z' && (
               <View>
                 {dataRolodex.map((item, index) => (
-                  <AtoZRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                  <AtoZRow
+                    relFromAbove={showFilterTitle()}
+                    key={index}
+                    data={item}
+                    onPress={() => handleRowPress(index)}
+                  />
                 ))}
               </View>
             )}
@@ -257,10 +269,9 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
   },
-  filterBox: {
-    flexDirection: 'row',
+  filterButton: {
     height: 40,
-    justifyContent: 'space-between',
+    alignItems: 'center',
     borderColor: 'lightgray',
     borderWidth: 1,
     backgroundColor: 'white',
@@ -269,7 +280,7 @@ const styles = StyleSheet.create({
   filterText: {
     flexDirection: 'row',
     fontSize: 18,
-    color: 'black',
+    color: '#1C6597',
   },
   unselected: {
     color: 'lightgray',
