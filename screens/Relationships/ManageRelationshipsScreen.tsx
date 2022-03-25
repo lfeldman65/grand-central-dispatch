@@ -149,7 +149,6 @@ export default function ManageRelationshipsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          //   console.log(res);
           setDataGroups(res.data);
         }
         setIsLoading(false);
@@ -204,7 +203,12 @@ export default function ManageRelationshipsScreen() {
             {tabSelected == 'ranking' && (
               <View>
                 {dataRolodex.map((item, index) => (
-                  <RankingRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                  <RankingRow
+                    relFromAbove={showFilterTitle()}
+                    key={index}
+                    data={item}
+                    onPress={() => handleRowPress(index)}
+                  />
                 ))}
               </View>
             )}

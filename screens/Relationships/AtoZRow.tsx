@@ -36,20 +36,42 @@ function chooseImage(rank: string) {
   return rankC;
 }
 
-function formatName() {}
+function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
+  if (type == 'Rel') {
+    return first + ' ' + last;
+  }
+  return employer + ' (' + first + ')';
+}
 
 export default function AtoZRow(props: AtoZRowProps) {
   const { relFromAbove } = props;
-
-  console.log(relFromAbove);
   return (
     <TouchableOpacity onPress={props.onPress}>
       {props.data.contactTypeID == relFromAbove && (
         <View style={styles.row}>
           <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
-          <Text style={styles.personName}>
-            {props.data.firstName + ' ' + props.data.lastName + props.data.contactTypeID + props.data.employerName}
-          </Text>
+          {relFromAbove == 'Rel' && (
+            <Text style={styles.personName}>
+              {displayName(
+                props.data.firstName,
+                props.data.lastName,
+                props.data.contactTypeID,
+                props.data.employerName,
+                true
+              )}
+            </Text>
+          )}
+          {relFromAbove == 'Biz' && (
+            <Text style={styles.personName}>
+              {displayName(
+                props.data.firstName,
+                props.data.lastName,
+                props.data.contactTypeID,
+                props.data.employerName,
+                true
+              )}
+            </Text>
+          )}
         </View>
       )}
     </TouchableOpacity>
