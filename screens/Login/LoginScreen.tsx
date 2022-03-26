@@ -185,7 +185,7 @@ export default function LoginScreen({ navigation }) {
       </View>
 
       <TouchableOpacity onPress={HandleLoginPress}>
-        <Text style={styles.loginText}>Login</Text>
+        <Text style={styles.loginButtonText}>Login</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={toggleEye}>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 29,
   },
-  loginText: {
+  loginButtonText: {
     width: 100,
     height: 32,
     marginTop: 25,

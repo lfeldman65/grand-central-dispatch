@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
 const closeButton = require('../../images/button_close_white.png');
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { analytics } from '../../utils/analytics';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+
+let deviceWidth = Dimensions.get('window').width;
 
 export default function AddRelationshipScreen(props) {
   const { onSave, setModalVisible, contactName } = props;
-  const [note, onNoteChange] = useState('');
+  const [bizChecked, setbBizCheck] = useState(false);
+  const isFocused = useIsFocused();
 
   function SavePressed() {
     // setModalVisible(false);
-    onSave(note);
+    // onSave(note);
   }
   function CancelPressed() {
     setModalVisible(false);
@@ -28,19 +34,67 @@ export default function AddRelationshipScreen(props) {
         </TouchableOpacity>
       </View>
 
+      <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+        size={25}
+        textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+        fillColor="#37C0FF"
+        unfillColor="#004F89"
+        iconStyle={{ borderColor: 'white' }}
+        text="This is a Business"
+        textContainerStyle={{ marginLeft: 10 }}
+        onPress={(isChecked: boolean) => {
+          console.log(isChecked);
+          setbBizCheck(!bizChecked);
+        }}
+      />
+
       <View style={styles.mainContent}>
-        <Text style={styles.notesText}>Notes</Text>
+        {bizChecked && (
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              //   onChangeText={(text) => setUserName(text)}
+              //   defaultValue={userName}
+            />
+          </View>
+        )}
 
         <View style={styles.inputView}>
           <TextInput
             style={styles.textInput}
-            placeholder="Type Here"
+            placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            value={note}
-            onChangeText={onNoteChange}
+            //   onChangeText={(text) => setUserName(text)}
+            //   defaultValue={userName}
           />
         </View>
+
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            //   onChangeText={(text) => setPassword(text)}
+            //  defaultValue={password}
+          />
+        </View>
+        <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+          size={25}
+          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+          fillColor="#37C0FF"
+          unfillColor="#004F89"
+          iconStyle={{ borderColor: 'white' }}
+          text="This relationship is a referral"
+          textContainerStyle={{ marginLeft: 10 }}
+          onPress={(isChecked: boolean) => {
+            console.log(isChecked);
+            setbBizCheck(!bizChecked);
+          }}
+        />
       </View>
     </View>
   );
@@ -76,28 +130,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginRight: '10%',
   },
-  notesText: {
-    color: 'white',
-    fontSize: 16,
-    marginTop: 30,
-    fontWeight: '500',
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-    marginLeft: 20,
-  },
   inputView: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: '90%',
-    height: '50%',
+    backgroundColor: '#002341',
+    width: 0.9 * deviceWidth,
+    height: 50,
     marginBottom: 2,
+    alignItems: 'baseline',
+    justifyContent: 'center',
     paddingLeft: 10,
     fontSize: 29,
-    alignItems: 'flex-start',
   },
   textInput: {
-    paddingTop: 5,
     fontSize: 18,
-    color: 'black',
+    color: '#FFFFFF',
+    width: 300,
   },
 });
