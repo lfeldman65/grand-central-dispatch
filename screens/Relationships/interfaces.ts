@@ -29,3 +29,21 @@ export interface GroupsDataResponse {
   error: string;
   status: string;
 }
+
+// Recent Activity in Postman
+
+export interface RecentActivityDataProps {
+  ContactId: string;
+  ActivityType: string;
+  ActivityTypeID: number;
+  Name: string;
+  Subject: string;
+  Notes: string;
+  ActivityDate: string;
+}
+
+export interface RecentActivityDataResponse {
+  data: RecentActivityDataProps[];
+  error: string;
+  status: string;
+}

@@ -23,6 +23,7 @@ import GroupsRow from './GroupsRow';
 
 import { getGroupsData, getRolodexData } from './api';
 import { GroupsDataProps, RolodexDataProps } from './interfaces';
+import globalStyles from '../../utils/globalStyles';
 import styles2 from './styles';
 
 import { analytics } from '../../utils/analytics';
@@ -162,14 +163,17 @@ export default function ManageRelationshipsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.tabButtonRow}>
-        <Text style={tabSelected == 'a-z' ? styles.selected : styles.unselected} onPress={azPressed}>
+      <View style={globalStyles.tabButtonRow}>
+        <Text style={tabSelected == 'a-z' ? globalStyles.selected : globalStyles.unselected} onPress={azPressed}>
           A-Z
         </Text>
-        <Text style={tabSelected == 'ranking' ? styles.selected : styles.unselected} onPress={rankingPressed}>
+        <Text
+          style={tabSelected == 'ranking' ? globalStyles.selected : globalStyles.unselected}
+          onPress={rankingPressed}
+        >
           Ranking
         </Text>
-        <Text style={tabSelected == 'groups' ? styles.selected : styles.unselected} onPress={groupsPressed}>
+        <Text style={tabSelected == 'groups' ? globalStyles.selected : globalStyles.unselected} onPress={groupsPressed}>
           Groups
         </Text>
       </View>
@@ -220,9 +224,9 @@ export default function ManageRelationshipsScreen() {
               </View>
             )}
           </ScrollView>
-          <TouchableOpacity style={styles.bottomContainer} onPress={() => handleAddRelPressed()}>
-            <View style={styles2.addRelButton}>
-              <Text style={styles2.addRelText}>{'Add Relationship'}</Text>
+          <TouchableOpacity style={globalStyles.bottomContainer} onPress={() => handleAddRelPressed()}>
+            <View style={globalStyles.addButton}>
+              <Text style={globalStyles.addText}>{'Add Relationship'}</Text>
             </View>
           </TouchableOpacity>
         </React.Fragment>
@@ -248,10 +252,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
-  bottomContainer: {
-    backgroundColor: '#1A6295',
-    height: 60,
-  },
   spacing: {
     color: 'white',
     backgroundColor: 'white',
@@ -266,12 +266,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     height: 15,
     width: 27,
-  },
-  tabButtonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    height: 40,
-    alignItems: 'center',
   },
   filterButton: {
     height: 40,

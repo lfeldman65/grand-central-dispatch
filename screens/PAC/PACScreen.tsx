@@ -25,6 +25,7 @@ import { PACDataProps } from './interfaces';
 import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
+import globalStyles from '../../utils/globalStyles';
 
 type TabType = 'calls' | 'notes' | 'popby';
 
@@ -121,14 +122,14 @@ export default function PACScreen(props: PACScreenProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.tabButtonRow}>
-        <Text style={tabSelected == 'calls' ? styles.selected : styles.unselected} onPress={callsPressed}>
+      <View style={globalStyles.tabButtonRow}>
+        <Text style={tabSelected == 'calls' ? globalStyles.selected : globalStyles.unselected} onPress={callsPressed}>
           Calls
         </Text>
-        <Text style={tabSelected == 'notes' ? styles.selected : styles.unselected} onPress={notesPressed}>
+        <Text style={tabSelected == 'notes' ? globalStyles.selected : globalStyles.unselected} onPress={notesPressed}>
           Notes
         </Text>
-        <Text style={tabSelected == 'popby' ? styles.selected : styles.unselected} onPress={popPressed}>
+        <Text style={tabSelected == 'popby' ? globalStyles.selected : globalStyles.unselected} onPress={popPressed}>
           Pop-By
         </Text>
       </View>
