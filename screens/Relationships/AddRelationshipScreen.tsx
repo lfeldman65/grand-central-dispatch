@@ -4,17 +4,33 @@ const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { analytics } from '../../utils/analytics';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { addNewContact } from './api';
 
 let deviceWidth = Dimensions.get('window').width;
 
 export default function AddRelationshipScreen(props) {
-  const { onSave, setModalVisible, contactName } = props;
-  const [bizChecked, setbBizCheck] = useState(false);
+  const { setModalVisible, title } = props;
+  const [bizChecked, setBizCheck] = useState(false);
+  const [referralChecked, setReferralChecked] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [company, setCompany] = useState('');
+
   const isFocused = useIsFocused();
 
   function SavePressed() {
-    // setModalVisible(false);
-    // onSave(note);
+    addNewContact(firstName, lastName)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+          console.error(res.error);
+        } else {
+          console.log(res);
+          setModalVisible(false);
+        }
+        //   setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
   function CancelPressed() {
     setModalVisible(false);
@@ -27,7 +43,7 @@ export default function AddRelationshipScreen(props) {
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
 
-        <Text style={styles.nameLabel}>{contactName}</Text>
+        <Text style={styles.nameLabel}>{title}</Text>
 
         <TouchableOpacity onPress={SavePressed}>
           <Text style={styles.saveButton}>Save</Text>
@@ -42,46 +58,60 @@ export default function AddRelationshipScreen(props) {
         iconStyle={{ borderColor: 'white' }}
         text="This is a Business"
         textContainerStyle={{ marginLeft: 10 }}
+        style={styles.checkBox}
         onPress={(isChecked: boolean) => {
           console.log(isChecked);
-          setbBizCheck(!bizChecked);
+          setBizCheck(!bizChecked);
         }}
       />
 
-      <View style={styles.mainContent}>
-        {bizChecked && (
+      {bizChecked && <Text style={styles.nameTitle}>Company</Text>}
+
+      {bizChecked && (
+        <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <TextInput
               style={styles.textInput}
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
-              //   onChangeText={(text) => setUserName(text)}
-              //   defaultValue={userName}
+              onChangeText={(text) => setCompany(text)}
+              defaultValue={company}
             />
           </View>
-        )}
+        </View>
+      )}
+      <Text style={styles.nameTitle}>First Name</Text>
 
+      <View style={styles.mainContent}>
         <View style={styles.inputView}>
           <TextInput
             style={styles.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            //   onChangeText={(text) => setUserName(text)}
-            //   defaultValue={userName}
+            onChangeText={(text) => setFirstName(text)}
+            defaultValue={firstName}
           />
         </View>
+      </View>
 
+      <Text style={styles.nameTitle}>Last Name</Text>
+
+      <View style={styles.mainContent}>
         <View style={styles.inputView}>
           <TextInput
             style={styles.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
-            //   onChangeText={(text) => setPassword(text)}
-            //  defaultValue={password}
+            textAlign="left"
+            onChangeText={(text) => setLastName(text)}
+            defaultValue={lastName}
           />
         </View>
+      </View>
+
+      <View style={styles.container}>
         <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
           size={25}
           textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
@@ -90,9 +120,10 @@ export default function AddRelationshipScreen(props) {
           iconStyle={{ borderColor: 'white' }}
           text="This relationship is a referral"
           textContainerStyle={{ marginLeft: 10 }}
+          style={styles.checkBox}
           onPress={(isChecked: boolean) => {
             console.log(isChecked);
-            setbBizCheck(!bizChecked);
+            setReferralChecked(!referralChecked);
           }}
         />
       </View>
@@ -106,7 +137,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#004F89',
   },
   mainContent: {
-    flex: 1,
     alignItems: 'center',
   },
   topRow: {
@@ -119,6 +149,13 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
     marginLeft: '10%',
+  },
+  nameTitle: {
+    color: 'white',
+    marginLeft: 20,
+    fontWeight: '500',
+    marginBottom: 5,
+    textAlign: 'left',
   },
   nameLabel: {
     color: 'white',
@@ -134,7 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#002341',
     width: 0.9 * deviceWidth,
     height: 50,
-    marginBottom: 2,
+    marginBottom: 20,
     alignItems: 'baseline',
     justifyContent: 'center',
     paddingLeft: 10,
@@ -144,5 +181,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FFFFFF',
     width: 300,
+  },
+  checkBox: {
+    marginTop: 12,
+    left: 0.055 * deviceWidth,
+    marginBottom: 25,
   },
 });

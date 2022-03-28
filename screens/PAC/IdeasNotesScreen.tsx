@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   blankButton: {
     // Helps placement of X and title
-    marginRight: '10%',
+    marginRight: '15%',
   },
   sectionTitleText: {
     color: '#02ABF7',

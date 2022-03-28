@@ -47,3 +47,17 @@ export interface RecentActivityDataResponse {
   error: string;
   status: string;
 }
+
+// Add Contact in Postman
+
+export interface AddContactDataProps {
+  firstName: string;
+  lastName: string;
+  contactTypeID: string;
+}
+
+export interface AddContactDataResponse {
+  data: AddContactDataProps[];
+  error: string;
+  status: string;
+}

@@ -25,7 +25,7 @@ import { PACDataProps } from './interfaces';
 import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
-import globalStyles from '../../utils/globalStyles';
+import globalStyles from '../../globalStyles';
 
 type TabType = 'calls' | 'notes' | 'popby';
 

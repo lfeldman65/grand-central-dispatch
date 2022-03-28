@@ -23,7 +23,7 @@ import GroupsRow from './GroupsRow';
 
 import { getGroupsData, getRolodexData } from './api';
 import { GroupsDataProps, RolodexDataProps } from './interfaces';
-import globalStyles from '../../utils/globalStyles';
+import globalStyles from '../../globalStyles';
 import styles2 from './styles';
 
 import { analytics } from '../../utils/analytics';
@@ -77,7 +77,7 @@ export default function ManageRelationshipsScreen() {
   }, [isFocused]);
 
   useEffect(() => {
-    navigation.setOptions({ isBiz: isFilterRel });
+    navigation.setOptions({ title: 'Add Relationship' });
     fetchRolodexPressed('a-z');
     console.log('a-z');
   }, [isFilterRel]);
@@ -240,7 +240,7 @@ export default function ManageRelationshipsScreen() {
             setModalVisible(!modalVisible);
           }}
         >
-          <AddRelScreen contactName={'New Relationship'} onSave={saveComplete} setModalVisible={setModalVisible} />
+          <AddRelScreen title={'New Relationship'} onSave={saveComplete} setModalVisible={setModalVisible} />
         </Modal>
       )}
     </View>
