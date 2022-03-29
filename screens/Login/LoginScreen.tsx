@@ -73,6 +73,15 @@ export default function LoginScreen({ navigation }) {
 
   function HandleLoginPress() {
     //  setIsLoading(true);
+    analytics
+      .event(new Event('Login', 'Login Button', 'Pressed', 0))
+      .then(() => console.log('button success'))
+      .catch((e) => console.log(e.message));
+
+    if (userName == '' || password == '') {
+      alert('Please enter a Username and Password');
+      return;
+    }
     console.log(userName);
     console.log(password);
     loginToApp(userName, password)
@@ -89,52 +98,6 @@ export default function LoginScreen({ navigation }) {
       })
       .catch((error) => console.error('failure ' + error));
   }
-
-  const HandleLoginPressOld = () => {
-    // https://aboutreact.com/react-native-login-and-signup/
-    analytics
-      .event(new Event('Login', 'Login Button', 'Pressed', 0))
-      .then(() => console.log('button success'))
-      .catch((e) => console.log(e.message));
-
-    if (userName == '' || password == '') {
-      alert('Please enter a Username and Password');
-      return;
-    }
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', 'WNojb250cm9bmRvdZS5hY2Nlc3NYWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYsLndp');
-    myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('Cookie', 'ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a');
-
-    var raw = JSON.stringify({
-      email: userName,
-      password: password,
-    });
-
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      // redirect: 'follow',
-    };
-
-    //  http.post('https://www.referralmaker.com/services/mobileapi/login');
-
-    fetch('https://www.referralmaker.com/services/mobileapi/login', requestOptions)
-      .then((response) => response.json()) //this line converts it to JSON
-      .then((result) => {
-        //then we can treat it as a JSON object
-        //   console.log(result);
-        if (result.status == 'error') {
-          alert(result.error);
-        } else {
-          //  saveCredentialsIfRememberChecked();
-          navigation.navigate('Home');
-          //  alert(result.status);
-        }
-      })
-      .catch((error) => alert('failure ' + error));
-  };
 
   return (
     <View style={styles.container}>

@@ -12,14 +12,24 @@ export default function AddRelationshipScreen(props) {
   const { setModalVisible, title } = props;
   const [bizChecked, setBizCheck] = useState(false);
   const [referralChecked, setReferralChecked] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [company, setCompany] = useState('');
+  const [firstName, setFirstName] = useState(' ');
+  const [lastName, setLastName] = useState(' ');
+  const [company, setCompany] = useState(' ');
 
   const isFocused = useIsFocused();
 
   function SavePressed() {
-    addNewContact(firstName, lastName)
+    //   analytics.event(new Event('Login', 'Login Button', 'Pressed', 0));
+    if (firstName == ' ' && lastName == ' ') {
+      alert('Please enter a First Name and/or Last Name');
+      return;
+    }
+    if (bizChecked && company == ' ') {
+      alert('Please enter a Company Name');
+      return;
+    }
+    console.log(company);
+    addNewContact(firstName, lastName, bizChecked ? 'Biz' : 'Rel', company)
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);

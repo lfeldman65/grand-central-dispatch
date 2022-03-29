@@ -13,11 +13,22 @@ export function getGroupsData(): Promise<GroupsDataResponse> {
 
 export function addNewContact(
   firstName: string,
-  lastName: string
-  // contactTypeID: string
-  // employerName: string
+  lastName: string,
+  contactTypeID: string,
+  employerName: string
 ): Promise<AddContactDataResponse> {
   return http.post('contacts', {
-    body: [{ firstName, lastName }],
+    body: [
+      {
+        firstName: firstName,
+        lastName: lastName,
+        contactTypeID: contactTypeID,
+        businessAndCareer: {
+          occupation: '',
+          employerName: employerName,
+          careerNotes: '',
+        },
+      },
+    ],
   });
 }
