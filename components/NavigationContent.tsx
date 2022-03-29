@@ -21,14 +21,14 @@ const settingsIcon = require('../images/menuSettings.png');
 const chevron = require('../images/chevron_white.png');
 import { analytics } from '../utils/analytics';
 
-function CustomDrawerContent(props) {
+function CustomDrawerContent(props: any) {
   const { navigation } = props;
   const [expanded, setExpanded] = useState({
     relationships: false,
     transactions: false,
   });
 
-  const handleMenuExpand = (type) => {
+  const handleMenuExpand = (type: string) => {
     if (type === 'relationships') {
       setExpanded({ ...expanded, relationships: !expanded.relationships });
     }
@@ -37,7 +37,7 @@ function CustomDrawerContent(props) {
     }
   };
 
-  const trackPressed = (screenName) => {
+  const trackPressed = (screenName: string) => {
     console.log(screenName);
 
     analytics
@@ -48,13 +48,13 @@ function CustomDrawerContent(props) {
 
   //****** there are 2 ways to create a function
   //pressed and pressed2
-  const pressed = (screenName) => {
+  const pressed = (screenName: string) => {
     navigation.navigate(screenName);
     trackPressed(screenName);
     //console.log('111');
   };
 
-  function pressed2(screenName) {
+  function pressed2(screenName: string) {
     console.log('p2');
     navigation.navigate(screenName);
     trackPressed(screenName);
