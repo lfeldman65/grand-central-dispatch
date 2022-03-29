@@ -12,7 +12,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/drawer": "^6.1.8",
-    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.2.5",
     "expo": "~44.0.0",
     "expo-analytics": "^1.0.18",
