@@ -1,7 +1,10 @@
 import { http } from '../../utils/http';
-import { RolodexDataResponse } from './interfaces';
-import { GroupsDataResponse } from './interfaces';
-import { AddContactDataResponse } from './interfaces';
+import {
+  RolodexDataResponse,
+  GroupsDataResponse,
+  AddContactDataResponse,
+  RecentActivityDataResponse,
+} from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
   return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=100`);
@@ -31,4 +34,8 @@ export function addNewContact(
       },
     ],
   });
+}
+
+export function getRecentActivityData(type: string): Promise<RecentActivityDataResponse> {
+  return http.get(`getRecentActivity?filter=${type}`);
 }
