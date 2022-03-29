@@ -149,7 +149,7 @@ function CustomDrawerContent(props: any) {
               <Text style={styles.menuItemText}>Lender Transactions</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressed('otherTransactions')}>
+          <TouchableOpacity onPress={() => pressed('OtherTransactions')}>
             <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Other Transactions</Text>

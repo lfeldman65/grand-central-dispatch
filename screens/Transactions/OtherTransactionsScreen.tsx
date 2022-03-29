@@ -4,7 +4,7 @@ import MenuIcon from '../../components/MenuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 
-export default function otherTransactionsScreen() {
+export default function OtherTransactionsScreen() {
   const navigation = useNavigation();
 
   useEffect(() => {

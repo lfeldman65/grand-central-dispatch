@@ -209,7 +209,7 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="otherTransactions"
+        name="OtherTransactions"
         component={OtherTransactionsScreen}
         options={{
           title: 'Other Transactions',
