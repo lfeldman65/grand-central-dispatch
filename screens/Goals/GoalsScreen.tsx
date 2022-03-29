@@ -24,7 +24,7 @@ import { analytics } from '../../utils/analytics';
 //import globalStyles from '../../utils/globalStyles';
 
 export default function GoalsScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
   const [data, setData] = useState({ data: [] });
   const [isLoading, setIsLoading] = useState(true);
@@ -186,6 +186,7 @@ export default function GoalsScreen() {
     switch (index) {
       case 0:
         analytics.event(new Event('Goals', 'Calls Pressed'));
+        navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
@@ -193,6 +194,7 @@ export default function GoalsScreen() {
         break;
       case 1:
         analytics.event(new Event('Goals', 'Notes Pressed'));
+        navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'notes' },
@@ -200,6 +202,7 @@ export default function GoalsScreen() {
         break;
       case 2:
         analytics.event(new Event('Goals', 'Pop-Bys Pressed'));
+        navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'popby' },
