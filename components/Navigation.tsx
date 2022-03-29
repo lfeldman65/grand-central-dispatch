@@ -6,7 +6,7 @@ import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigatio
 // Sections test
 
 import DashboardScreen from '../screens/Dashboard/DashboardScreen';
-import GoalsScreen from '../screens/Goals/goals';
+import GoalsScreen from '../screens/Goals/GoalsScreen';
 import PACScreen from '../screens/PAC/PACScreen';
 import PACDetailScreen from '../screens/PAC/PACDetailScreen';
 import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
