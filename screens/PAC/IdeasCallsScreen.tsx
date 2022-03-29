@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-//import closeButton from '../../images/button_close_white.png';
 const closeButton = require('../../images/button_close_black.png');
 
-export default function IdeasCallsScreen(props) {
+export default function IdeasCallsScreen(props: any) {
   const { setModalCallsVisible } = props;
   const [section0Selected, setSection0Selected] = useState(false);
   const [section1Selected, setSection1Selected] = useState(false);
@@ -17,7 +16,7 @@ export default function IdeasCallsScreen(props) {
     setModalCallsVisible(false);
   }
 
-  function handleSectionTap(sectionIndex) {
+  function handleSectionTap(sectionIndex: number) {
     if (sectionIndex == 0) {
       setSection0Selected(!section0Selected);
     } else if (sectionIndex == 1) {

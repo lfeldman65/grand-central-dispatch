@@ -1,24 +1,13 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import {
-  Modal,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Linking,
-  ScrollView,
-  ActivityIndicator,
-  TouchableHighlight,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Modal, Text, View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { Analytics, PageHit, Event } from 'expo-analytics';
+import { Event } from 'expo-analytics';
 // import Swipeable from 'react-native-swipeable-row';
 import PACCallsRow from './PACCallsRow';
 import PACNotesRow from './PACNotesRow';
 import PACPopRow from './PACPopRow';
-import styles from './styles';
+import { styles } from './styles';
 import { analytics } from '../../utils/analytics';
 import { getPACData } from './api';
 import { PACDataProps } from './interfaces';

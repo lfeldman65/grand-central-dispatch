@@ -1,22 +1,5 @@
-import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Linking,
-  ScrollView,
-  ActivityIndicator,
-  TouchableHighlight,
-} from 'react-native';
-import MenuIcon from '../../components/MenuIcon';
-import { useEffect } from 'react';
-import { Event } from 'expo-analytics';
-import Swipeable from 'react-native-swipeable-row';
-import styles from './styles';
-import { analytics } from '../../utils/analytics';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { styles } from './styles';
 import { GroupsDataProps } from './interfaces';
 const chevron = require('../../images/chevron_blue_right.png');
 

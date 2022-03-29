@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
 const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { analytics } from '../../utils/analytics';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { addNewContact } from './api';
 
 let deviceWidth = Dimensions.get('window').width;
 
-export default function AddRelationshipScreen(props) {
+export default function AddRelationshipScreen(props: any) {
   const { setModalVisible, title } = props;
   const [bizChecked, setBizCheck] = useState(false);
   const [referralChecked, setReferralChecked] = useState(false);
@@ -21,11 +20,11 @@ export default function AddRelationshipScreen(props) {
   function SavePressed() {
     //   analytics.event(new Event('Login', 'Login Button', 'Pressed', 0));
     if (firstName == ' ' && lastName == ' ') {
-      alert('Please enter a First Name and/or Last Name');
+      console.error('Please enter a First Name and/or Last Name');
       return;
     }
     if (bizChecked && company == ' ') {
-      alert('Please enter a Company Name');
+      console.error('Please enter a Company Name');
       return;
     }
     console.log(company);
