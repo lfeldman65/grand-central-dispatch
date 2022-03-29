@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   TouchableHighlight,
 } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
+import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 // import Swipeable from 'react-native-swipeable-row';

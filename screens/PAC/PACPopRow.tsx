@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   TouchableHighlight,
 } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
+import MenuIcon from '../../components/MenuIcon';
 import { useState, useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import Swipeable from 'react-native-swipeable-row';
