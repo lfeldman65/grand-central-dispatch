@@ -13,7 +13,7 @@ export default function MenuIcon() {
 
   return (
     <TouchableOpacity onPress={openDrawer}>
-      <Menu size={24} style={{ marginRight: 10, marginTop: 3 }} stroke="white" backgroundColor="red" />
+      <Menu style={{ marginRight: 10, marginTop: 3 }} stroke="white" />
     </TouchableOpacity>
   );
 }

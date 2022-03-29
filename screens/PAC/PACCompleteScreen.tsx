@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 const closeButton = require('../../images/button_close_white.png');
 
-export default function PACCompleteScreen(props) {
+export default function PACCompleteScreen(props: any) {
   const { onSave, setModalVisible, contactName } = props;
   const [note, onNoteChange] = useState('');
 

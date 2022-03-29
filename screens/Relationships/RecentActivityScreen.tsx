@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
+import { Text, View } from 'react-native';
+import MenuIcon from '../../components/MenuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 

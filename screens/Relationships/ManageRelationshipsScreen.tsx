@@ -1,20 +1,18 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
   Dimensions,
   Modal,
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import MenuIcon from '../../components/MenuIcon';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
-import Button from '../../components/Button';
+import { Event } from 'expo-analytics';
 import AddRelScreen from './AddRelationshipScreen';
 
 import AtoZRow from './AtoZRow';
@@ -24,11 +22,9 @@ import GroupsRow from './GroupsRow';
 import { getGroupsData, getRolodexData } from './api';
 import { GroupsDataProps, RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
-import styles2 from './styles';
 
 import { analytics } from '../../utils/analytics';
 import React from 'react';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 

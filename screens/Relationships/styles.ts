@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     height: '100%',
@@ -97,7 +97,6 @@ export default styles = StyleSheet.create({
   notes: {
     width: 200,
     color: '#1A6295',
-    fontSize: 20,
     textAlign: 'left',
     marginLeft: 10,
     fontSize: 16,

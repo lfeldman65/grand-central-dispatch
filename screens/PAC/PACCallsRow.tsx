@@ -11,11 +11,10 @@ import {
   ActivityIndicator,
   TouchableHighlight,
 } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
+import MenuIcon from '../../components/MenuIcon';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
-import Swipeable from 'react-native-swipeable-row';
-import styles from './styles';
+import { styles } from './styles';
 import { analytics } from '../../utils/analytics';
 import { PACDataProps } from './interfaces';
 

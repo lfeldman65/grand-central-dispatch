@@ -1,24 +1,13 @@
 import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  Dimensions,
-  Modal,
-  Pressable,
-} from 'react-native';
-import { useNavigation, RouteProp } from '@react-navigation/native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Modal } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
-import { StatusBar } from 'expo-status-bar';
+import { Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import PacComplete from './PACCompleteScreen';
 import { postponePAC, completePAC, saveAsFavorite, getPACDetails } from './api';
-//import { PACPostponeProps, PACCompleteProps, SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
-import styles from './styles';
+import { styles } from './styles';
 
 let deviceHeight = Dimensions.get('window').height;
 

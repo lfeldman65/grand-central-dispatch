@@ -1,25 +1,7 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Linking,
-  ScrollView,
-  ActivityIndicator,
-  TouchableHighlight,
-} from 'react-native';
-import MenuIcon from '../../components/menuIcon';
+import { Text, View, TouchableOpacity, Linking } from 'react-native';
 import { useState, useEffect } from 'react';
-import { Event } from 'expo-analytics';
-import Swipeable from 'react-native-swipeable-row';
-import styles from './styles';
-import { analytics } from '../../constants/analytics';
-import * as SMS from 'expo-sms';
-import { add, set } from 'react-native-reanimated';
+import { styles } from './styles';
 import { saveAsFavorite } from './api';
-import { SaveAsFavoriteProps } from './interfaces';
 import openMap from 'react-native-open-maps';
 import { useNavigation } from '@react-navigation/native';
 import { PACDataProps } from './interfaces';
@@ -38,9 +20,8 @@ export default function PACPopRow(props: PACRowProps) {
 
   const navigation = useNavigation();
 
-  function handlePhonePressed(number) {
-    console.log(number);
-    Linking.openURL(`tel:${number}`);
+  function handlePhonePressed(phoneNumber: string) {
+    Linking.openURL(`tel:${phoneNumber}`);
   }
 
   useEffect(() => {

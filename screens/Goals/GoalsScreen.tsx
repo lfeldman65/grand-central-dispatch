@@ -10,12 +10,13 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
+import MenuIcon from '../../components/MenuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import dayTrophy from '../Goals/images/dailyTrophy.png';
-import weekTrophy from '../Goals/images/weeklyTrophy.png';
-import noTrophy from '../Goals/images/noTrophy.png';
+
+const dayTrophy = require('../Goals/images/dailyTrophy.png');
+const weekTrophy = require('../Goals/images/weeklyTrophy.png');
+const noTrophy = require('../Goals/images/noTrophy.png');
 
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
@@ -43,17 +44,17 @@ export default function GoalsScreen() {
 
   function winTheDayPressed() {
     console.log('win the day pressed');
-    analytics.event(new Event('Goals', 'Win the Day Pressed', 0));
+    analytics.event(new Event('Goals', 'Win the Day Pressed'));
     setWinTheDaySelected(true);
   }
 
   function winTheWeekPressed() {
     console.log('win the week pressed');
-    analytics.event(new Event('Goals', 'Win the Week Pressed', 0));
+    analytics.event(new Event('Goals', 'Win the Week Pressed'));
     setWinTheDaySelected(false);
   }
 
-  function styleForProgress(index) {
+  function styleForProgress(index: number) {
     var barColor = '#1398f5';
 
     var barWidth = 75 * barPercentage(index) + '%';
@@ -70,7 +71,7 @@ export default function GoalsScreen() {
     };
   }
 
-  function styleForGoalTitle(index) {
+  function styleForGoalTitle(index: number) {
     var textColor = 'black';
     if (index < 4) {
       textColor = '#1C6597';
@@ -78,10 +79,8 @@ export default function GoalsScreen() {
     return {
       width: 200,
       color: textColor,
-      fontSize: 20,
-      textAlign: 'left',
-      marginLeft: 10,
       fontSize: 16,
+      marginLeft: 10,
     };
   }
 
@@ -100,7 +99,7 @@ export default function GoalsScreen() {
     return true;
   }
 
-  function activityCount(index) {
+  function activityCount(index: number) {
     if (!sanityCheck()) return '';
 
     if (winTheDaySelected) {
@@ -109,7 +108,7 @@ export default function GoalsScreen() {
     return data['data'][index]['achievedThisWeek'];
   }
 
-  function barPercentage(index) {
+  function barPercentage(index: number) {
     if (!sanityCheck()) return 0;
 
     var weeklyTarget = data['data'][index]['goal']['weeklyTarget'];
@@ -141,7 +140,7 @@ export default function GoalsScreen() {
     return weeklyNum / weeklyTarget;
   }
 
-  function goalTargetDisplay(index) {
+  function goalTargetDisplay(index: number) {
     if (!sanityCheck()) return '';
 
     if (winTheDaySelected) {
@@ -151,13 +150,13 @@ export default function GoalsScreen() {
     return data['data'][index]['goal']['weeklyTarget'];
   }
 
-  function shouldDisplay(index) {
+  function shouldDisplay(index: number) {
     if (!sanityCheck()) return false;
 
     return data['data'][index]['goal']['displayOnDashboard'];
   }
 
-  function titleFor(index) {
+  function titleFor(index: number) {
     if (data == null) {
       return '';
     }
@@ -180,37 +179,34 @@ export default function GoalsScreen() {
     return oldTitle;
   }
 
-  const handleLinkPress = (index) => {
+  const handleLinkPress = (index: number) => {
     console.log('here ' + index.toString());
     if (!sanityCheck()) return false;
 
     switch (index) {
       case 0:
-        analytics.event(new Event('Goals', 'Calls Pressed', 0));
-        navigation.popToTop();
+        analytics.event(new Event('Goals', 'Calls Pressed'));
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
         break;
       case 1:
-        analytics.event(new Event('Goals', 'Notes Pressed', 0));
-        navigation.popToTop();
+        analytics.event(new Event('Goals', 'Notes Pressed'));
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'notes' },
         });
         break;
       case 2:
-        analytics.event(new Event('Goals', 'Pop-Bys Pressed', 0));
-        navigation.popToTop();
+        analytics.event(new Event('Goals', 'Pop-Bys Pressed'));
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'popby' },
         });
         break;
       case 3:
-        analytics.event(new Event('Goals', 'Database Additions Pressed', 0));
+        analytics.event(new Event('Goals', 'Database Additions Pressed'));
         //  navigation.navigate('Pop-Bys');  // Add new relationship
         break;
     }
@@ -236,7 +232,7 @@ export default function GoalsScreen() {
         console.log(result);
         setData(result);
         if (result.status == 'error') {
-          alert(result.error);
+          console.error(result.error);
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -244,7 +240,7 @@ export default function GoalsScreen() {
           //  alert(result.status);
         }
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
   return isLoading ? (
@@ -337,12 +333,11 @@ const styles = StyleSheet.create({
   goalTitle: {
     paddingRight: 30,
     color: '#1C6597',
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'right',
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 16,
   },
   progress: {
     display: 'flex',

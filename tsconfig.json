@@ -11,8 +11,7 @@
     "moduleResolution": "node",
     "noEmit": true,
     "strict": true,
-    "target": "esnext",
-    "noImplicitAny": true
+    "target": "esnext"
   },
   "exclude": [
     "node_modules",
