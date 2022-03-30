@@ -23,6 +23,7 @@ const noteImage = require('../Relationships/images/recentNote.png');
 const otherImage = require('../Relationships/images/recentOther.png');
 const popImage = require('../Relationships/images/recentPop.png');
 const referralImage = require('../Relationships/images/recentReferral.png');
+const chevron = require('../../images/chevron_blue_right.png');
 
 interface RecentActivityRowProps {
   data: RecentActivityDataProps;
@@ -39,40 +40,37 @@ function chooseImage(activityType: string) {
   return otherImage;
 }
 
-function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
-  if (type == 'Rel') {
-    return first + ' ' + last;
-  }
-  return employer + ' (' + first + ')';
+function prettyType(uglyType: string) {
+  if (uglyType == 'callMade') return 'Calls';
+  if (uglyType == 'noteWritten') return 'Notes';
+  if (uglyType == 'popByMade') return 'Pop-By';
+  if (uglyType == 'referralGiven') return 'Referral';
+  if (uglyType == 'otherActivity') return 'Other';
+  return otherImage;
 }
 
 export default function RecentActivityRow(props: RecentActivityRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.row}>
-        <Image source={chooseImage(props.data.ActivityType)} style={styles.recentImage} />
-        <Text style={styles.personName}>{props.data.Name}</Text>
-        <Text style={styles.personName}>{props.data.ActivityType}</Text>
+        <View style={styles.imageBox}>
+          <Image source={chooseImage(props.data.ActivityType)} style={styles.recentImage} />
+          <Text style={styles.activityText}>{prettyType(props.data.ActivityType)}</Text>
+        </View>
+        <View style={styles.textBox}>
+          <Text style={styles.nameText}>{props.data.Name}</Text>
+          <Text style={styles.regText}>{' ' + props.data.ActivityDate}</Text>
+          <Text style={styles.regText}>{props.data.Notes}</Text>
+        </View>
+        <View style={styles.chevronBox}>
+          <Image source={chevron} style={styles.chevron} />
+        </View>
       </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#004F89',
-    alignItems: 'center',
-  },
-  personName: {
-    color: 'black',
-    fontSize: 18,
-    textAlign: 'left',
-    marginLeft: 10,
-    marginBottom: 7,
-    marginTop: 5,
-    fontWeight: '500',
-  },
   row: {
     flexDirection: 'row',
     paddingTop: 10,
@@ -81,11 +79,66 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     paddingBottom: 10,
   },
+  imageBox: {
+    flexDirection: 'column',
+    width: 70,
+    height: 50,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    paddingTop: 10,
+  },
   recentImage: {
     height: 30,
     width: 30,
-    borderRadius: 10,
-    marginLeft: 10,
+    marginLeft: 15,
     marginRight: 5,
+    alignItems: 'center',
+  },
+  activityText: {
+    color: 'black',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 2,
+    marginTop: 5,
+  },
+  textBox: {
+    flexDirection: 'column',
+    height: 75,
+    backgroundColor: 'white',
+    width: '70%',
+    marginLeft: 5,
+    textAlign: 'left',
+  },
+  nameText: {
+    color: 'black',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 1,
+    marginBottom: 1,
+    marginTop: 5,
+    fontWeight: '500',
+  },
+  regText: {
+    color: 'black',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 1,
+    marginBottom: 1,
+    marginTop: 5,
+  },
+  chevronBox: {
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    backgroundColor: 'white',
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 20,
+  },
+  chevron: {
+    backgroundColor: 'white',
+    height: 20,
+    width: 12,
+    marginTop: 15,
   },
 });
