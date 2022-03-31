@@ -14,19 +14,26 @@ import MenuIcon from '../../components/MenuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 
+import { Analytics, PageHit, Event } from 'expo-analytics';
+import { analytics } from '../../utils/analytics';
+import { GoalDataProps } from './interfaces';
+import { getGoalData } from './api';
+
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
 
-import { Analytics, PageHit, Event } from 'expo-analytics';
-import { analytics } from '../../utils/analytics';
+interface RecentActivityRowProps {
+  data: GoalDataProps;
+  onPress(): void;
+}
 
 //import globalStyles from '../../utils/globalStyles';
 
-export default function GoalsScreen() {
+export default function GoalsScreen(props: RecentActivityRowProps) {
   const navigation = useNavigation<any>();
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
-  const [data, setData] = useState({ data: [] });
+  const [data, setData] = useState<GoalDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -85,37 +92,40 @@ export default function GoalsScreen() {
   }
 
   function sanityCheck() {
-    if (data == null) {
+    if (props == null) {
       return false;
     }
 
-    if (data['data'] == null) {
+    if (props.data == null) {
       return false;
     }
 
-    if (data['data'].length == 0) {
+    if (props.data.goal == null) {
       return false;
     }
     return true;
   }
 
   function activityCount(index: number) {
-    if (!sanityCheck()) return '';
-
-    if (winTheDaySelected) {
-      return data['data'][index]['achievedToday'];
+    if (!sanityCheck) {
+      return 0;
     }
-    return data['data'][index]['achievedThisWeek'];
+    if (winTheDaySelected) {
+      return props.data.achievedToday;
+    }
+    console.log(props.data.achievedThisWeek);
+    return props.data.achievedToday;
   }
 
   function barPercentage(index: number) {
-    if (!sanityCheck()) return 0;
-
-    var weeklyTarget = data['data'][index]['goal']['weeklyTarget'];
+    if (!sanityCheck) {
+      return 0;
+    }
+    var weeklyTarget = props.data.goal.weeklyTarget;
     var dailyTarget = Math.ceil(weeklyTarget / 5);
 
     if (winTheDaySelected) {
-      var dailyNum = data['data'][index]['achievedToday'];
+      var dailyNum = props.data.achievedToday;
       if (dailyTarget == 0 && dailyNum > 0) {
         return 1.0;
       }
@@ -127,7 +137,7 @@ export default function GoalsScreen() {
       }
       return dailyNum / dailyTarget;
     }
-    var weeklyNum = data['data'][index]['achievedThisWeek'];
+    var weeklyNum = props.data.achievedThisWeek;
     if (weeklyTarget == 0 && weeklyNum > 0) {
       return 1.0;
     }
@@ -141,32 +151,26 @@ export default function GoalsScreen() {
   }
 
   function goalTargetDisplay(index: number) {
-    if (!sanityCheck()) return '';
-
+    if (!sanityCheck) {
+      return 0;
+    }
     if (winTheDaySelected) {
-      var weeklyTarget = data['data'][index]['goal']['weeklyTarget'];
+      var weeklyTarget = props.data.goal.weeklyTarget;
       return Math.ceil(weeklyTarget / 5);
     }
-    return data['data'][index]['goal']['weeklyTarget'];
+    return props.data.goal.weeklyTarget;
   }
 
   function shouldDisplay(index: number) {
     if (!sanityCheck()) return false;
-
-    return data['data'][index]['goal']['displayOnDashboard'];
+    return props.data.goal.displayOnDashboard;
   }
 
-  function titleFor(index: number) {
-    if (data == null) {
-      return '';
+  function titleFor() {
+    if (!sanityCheck) {
+      return ' ';
     }
-    if (data['data'] == null) {
-      return '';
-    }
-    if (data['data'].length == 0) {
-      return '';
-    }
-    var oldTitle = data['data'][index]['goal']['title'];
+    var oldTitle = props.data.goal.title;
     if (oldTitle == 'Pop-By Made') {
       return 'Pop-Bys Delivered';
     }
@@ -181,7 +185,6 @@ export default function GoalsScreen() {
 
   const handleLinkPress = (index: number) => {
     console.log('here ' + index.toString());
-    if (!sanityCheck()) return false;
 
     switch (index) {
       case 0:
@@ -215,7 +218,7 @@ export default function GoalsScreen() {
     }
   };
 
-  function fetchPressed() {
+  function fetchPressedOld() {
     console.log('Fetch Press'); // test.
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
@@ -246,6 +249,21 @@ export default function GoalsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
+  function fetchPressed() {
+    setIsLoading(true);
+    getGoalData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setData(res.data);
+          //   console.log(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
   return isLoading ? (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <ActivityIndicator size="large" color="#000" />
@@ -264,30 +282,30 @@ export default function GoalsScreen() {
       <Text style={styles.goalTitle}>Goal</Text>
 
       <ScrollView>
-        {data['data'].map((name, index) =>
-          shouldDisplay(index) ? (
-            <View key={index}>
-              <TouchableOpacity onPress={() => handleLinkPress(index)}>
-                <Text style={styleForGoalTitle(index)}>
-                  {titleFor(index)} ({activityCount(index)})
-                </Text>
-              </TouchableOpacity>
-
-              <View style={styles.progress}>
-                <View style={styles.grayRectangle}></View>
-                <Image
-                  source={barPercentage(index) >= 1.0 ? (winTheDaySelected == true ? dayTrophy : weekTrophy) : noTrophy}
-                  style={styles.trophy}
-                />
-                <Text style={styles.goalTarget}>{goalTargetDisplay(index)}</Text>
+        {data.map(
+          (item, index) =>
+            shouldDisplay(index) && (
+              <View key={index}>
+                <TouchableOpacity onPress={() => handleLinkPress(index)}>
+                  <Text style={styleForGoalTitle(index)}>
+                    {titleFor()} ({activityCount(index)})
+                  </Text>
+                </TouchableOpacity>
+                <View style={styles.progress}>
+                  <View style={styles.grayRectangle}></View>
+                  <Image
+                    source={
+                      barPercentage(index) >= 1.0 ? (winTheDaySelected == true ? dayTrophy : weekTrophy) : noTrophy
+                    }
+                    style={styles.trophy}
+                  />
+                  <Text style={styles.goalTarget}>{goalTargetDisplay(index)}</Text>
+                </View>
+                <View style={styles.progress}>
+                  <View style={styleForProgress(index)}></View>
+                </View>
               </View>
-              <View style={styles.progress}>
-                <View style={styleForProgress(index)}></View>
-              </View>
-            </View>
-          ) : (
-            <View></View>
-          )
+            )
         )}
         <View style={styles.hack}></View>
       </ScrollView>
