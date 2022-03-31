@@ -46,7 +46,7 @@ function prettyType(uglyType: string) {
   if (uglyType == 'popByMade') return 'Pop-By';
   if (uglyType == 'referralGiven') return 'Referral';
   if (uglyType == 'otherActivity') return 'Other';
-  return otherImage;
+  return ' ';
 }
 
 export default function RecentActivityRow(props: RecentActivityRowProps) {
