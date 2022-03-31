@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   filterText: {
     flexDirection: 'row',
-    fontSize: 18,
+    fontSize: 16,
     color: '#1C6597',
   },
 });
