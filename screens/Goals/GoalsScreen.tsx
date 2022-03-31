@@ -216,7 +216,7 @@ export default function GoalsScreen() {
   };
 
   function fetchPressed() {
-    console.log('Fetch Press');
+    console.log('Fetch Press'); // test.
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
     myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
