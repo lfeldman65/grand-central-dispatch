@@ -73,6 +73,8 @@ export default function LoginScreen({ navigation }) {
 
   function HandleLoginPress() {
     //  setIsLoading(true);
+    console.log(userName);
+    console.log(password);
     analytics
       .event(new Event('Login', 'Login Button', 'Pressed', 0))
       .then(() => console.log('button success'))
@@ -82,8 +84,6 @@ export default function LoginScreen({ navigation }) {
       alert('Please enter a Username and Password');
       return;
     }
-    console.log(userName);
-    console.log(password);
     loginToApp(userName, password)
       .then((res) => {
         if (res.status == 'error') {
@@ -101,9 +101,11 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image source={logo} style={styles.logo} />
+      <View style={{ alignItems: 'center' }}>
+        <Image source={logo} style={styles.logo} />
+      </View>
 
-      <View style={styles.inputView}>
+      <View style={styles.usernameView}>
         <TextInput
           style={styles.textInput}
           placeholder="Username"
@@ -114,26 +116,33 @@ export default function LoginScreen({ navigation }) {
         />
       </View>
 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Password"
-          placeholderTextColor="#AFB9C2"
-          secureTextEntry={!showPW}
-          onChangeText={(text) => setPassword(text)}
-          defaultValue={password}
-        />
+      <View style={styles.passwordContainer}>
+        <View style={styles.passwordView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Password"
+            placeholderTextColor="#AFB9C2"
+            secureTextEntry={!showPW}
+            onChangeText={(text) => setPassword(text)}
+            defaultValue={password}
+          />
+        </View>
+        <TouchableOpacity onPress={toggleEye}>
+          <Image source={showPW ? eyeClosed : eyeOpen} style={styles.eye} />
+        </TouchableOpacity>
+        <View style={{ width: 10 }}></View>
       </View>
 
-      <View style={{ flexDirection: 'row', paddingLeft: 1 }}>
+      <View style={{ flexDirection: 'row', marginLeft: 0 }}>
         <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
           size={25}
-          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 14 }}
           fillColor="#37C0FF"
           unfillColor="#004F89"
           iconStyle={{ borderColor: 'white' }}
           text="Remember Me"
-          textContainerStyle={{ marginLeft: 15 }}
+          textContainerStyle={{ marginLeft: 10 }}
+          style={styles.checkBox}
           onPress={() => {
             analytics
               .event(new Event('Login', 'Remember Me', 'Pressed', 0))
@@ -148,11 +157,9 @@ export default function LoginScreen({ navigation }) {
       </View>
 
       <TouchableOpacity onPress={HandleLoginPress}>
-        <Text style={styles.loginButtonText}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={toggleEye}>
-        <Image source={showPW ? eyeClosed : eyeOpen} style={styles.eye} />
+        <View style={{ alignItems: 'center' }}>
+          <Text style={styles.loginText}>Login</Text>
+        </View>
       </TouchableOpacity>
 
       <StatusBar style="auto" />
@@ -164,7 +171,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#004F89',
-    alignItems: 'center',
+    //alignItems: 'center',
   },
   logo: {
     width: 173,
@@ -172,42 +179,65 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 40,
   },
+  usernameView: {
+    backgroundColor: '#002341',
+    height: 50,
+    marginLeft: '5%',
+    marginRight: '5%',
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    marginBottom: 2,
+    marginLeft: '5%',
+    marginRight: '5%',
+    backgroundColor: '#002341',
+    marginTop: 5,
+  },
+  passwordView: {
+    flex: 1,
+    backgroundColor: '#002341',
+    height: 50,
+
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  textInput: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    width: 300,
+  },
+
   eye: {
     width: 25,
     height: 25,
-    marginBottom: 20,
-    marginTop: 40,
-  },
-  inputView: {
+    alignSelf: 'center',
+    marginTop: 10,
     backgroundColor: '#002341',
-    width: 0.9 * deviceWidth,
-    height: 50,
-    marginBottom: 2,
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    fontSize: 29,
+    //  position: 'absolute',
   },
-  loginButtonText: {
+  loginText: {
     width: 100,
-    height: 32,
+    height: 40,
     marginTop: 25,
     color: '#37C0FF',
-    fontSize: 25,
+    fontSize: 20,
     textAlign: 'center',
+    marginLeft: 1,
+    marginRight: 1,
   },
   forgotText: {
-    width: 200,
-    height: 32,
-    marginTop: 10,
+    marginTop: 18,
     color: '#37C0FF',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'right',
-    paddingRight: 1,
+    position: 'absolute',
+    right: 0.05 * deviceWidth,
   },
-  textInput: {
-    fontSize: 18,
-    color: '#FFFFFF',
-    width: 300,
+  checkBox: {
+    marginTop: 12,
+    flex: 1,
+    left: 0.055 * deviceWidth,
   },
 });
