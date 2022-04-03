@@ -4,6 +4,7 @@ import {
   GroupsDataResponse,
   AddContactDataResponse,
   RecentActivityDataResponse,
+  VideoHistoryDataResponse,
 } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
@@ -38,4 +39,9 @@ export function addNewContact(
 
 export function getRecentActivityData(type: string): Promise<RecentActivityDataResponse> {
   return http.get(`getRecentActivity?filter=${type}`);
+}
+
+export function getVideoSummaryData(): Promise<VideoHistoryDataResponse> {
+  console.log('yep');
+  return http.get('videossummary');
 }

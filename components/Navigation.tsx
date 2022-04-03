@@ -251,7 +251,7 @@ export const HomeStackNavigator = () => {
         name="CalendarScreen"
         component={CalendarScreen}
         options={{
-          title: 'CalendarScreeen',
+          title: 'Calendar',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
@@ -264,7 +264,7 @@ export const HomeStackNavigator = () => {
         name="PodcastsScreen"
         component={PodcastScreen}
         options={{
-          title: 'PodcastsScreen',
+          title: 'Podcasts',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
@@ -277,7 +277,7 @@ export const HomeStackNavigator = () => {
         name="SettingsScreen"
         component={SettingsScreen}
         options={{
-          title: 'SettingsScreen',
+          title: 'Settings',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

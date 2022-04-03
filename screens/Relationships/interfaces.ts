@@ -79,3 +79,17 @@ export interface RecentActivityDataResponse {
   error: string;
   status: string;
 }
+
+// Video History Summary in Postman
+
+export interface VideoSummaryDataProps {
+  videoTitle: string;
+  videoGuid: string;
+  viewCount: number;
+}
+
+export interface VideoHistoryDataResponse {
+  data: VideoSummaryDataProps[];
+  error: string;
+  status: string;
+}

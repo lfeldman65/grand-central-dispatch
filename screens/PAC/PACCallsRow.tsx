@@ -10,25 +10,60 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableHighlight,
+  Animated,
+  Button,
 } from 'react-native';
-import MenuIcon from '../../components/MenuIcon';
+import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import { styles } from './styles';
 import { analytics } from '../../utils/analytics';
-import { PACDataProps } from './interfaces';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { RectButton } from 'react-native-gesture-handler';
 
-interface PACRowProps {
-  data: PACDataProps;
-  onPress(): void;
-}
-
-export default function PACCallsRow(props: PACRowProps) {
-  const handlePhonePressed = (number: string) => {
+export default function PACCallsRow(props) {
+  const handlePhonePressed = (number) => {
     console.log(number);
   };
 
+  const renderRightActions = () => {
+    return (
+      <View style={styles.rightSwipeItem}>
+        <Button
+          color="white"
+          onPress={() => {
+            console.log('hello');
+          }}
+          title="DELETE"
+        ></Button>
+      </View>
+    );
+  };
+
+  const renderLeftActions = () => {
+    return (
+      <View style={styles.leftSwipeItem}>
+        <Button
+          color="white"
+          onPress={() => {
+            console.log(props.data.contactName);
+          }}
+          title="COPY"
+        ></Button>
+      </View>
+    );
+  };
+
   return (
+    // <Swipeable
+    //   enableTrackpadTwoFingerGesture
+    //   leftThreshold={30}
+    //   rightThreshold={40}
+    //   overshootLeft={false}
+    //   overshootRight={false}
+    //   renderRightActions={renderRightActions}
+    //   renderLeftActions={renderLeftActions}
+    // >
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.row}>
         <Text style={styles.personName}>{props.data.contactName}</Text>
@@ -55,5 +90,6 @@ export default function PACCallsRow(props: PACRowProps) {
         )}
       </View>
     </TouchableOpacity>
+    //   </Swipeable>
   );
 }

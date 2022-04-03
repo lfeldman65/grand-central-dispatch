@@ -169,4 +169,18 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
   },
+  leftSwipeItem: {
+    justifyContent: 'center',
+    margin: 0,
+    alignContent: 'center',
+    width: 90,
+    backgroundColor: '#388e3c',
+  },
+  rightSwipeItem: {
+    justifyContent: 'center',
+    margin: 0,
+    alignContent: 'center',
+    width: 90,
+    backgroundColor: '#ff8e3c',
+  },
 });
