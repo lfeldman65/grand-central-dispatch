@@ -90,12 +90,7 @@ export default function VideoHistoryScreen() {
           <ScrollView>
             <View>
               {dataVid.map((item, index) => (
-                <VideoHistoryRow
-                  //   filterFromAbove={filterSetting}
-                  key={index}
-                  data={item}
-                  onPress={() => handleRowPress(index)}
-                />
+                <VideoHistoryRow key={index} data={item} onPress={() => handleRowPress(index)} />
               ))}
             </View>
           </ScrollView>

@@ -25,12 +25,19 @@ interface VideoHistoryRowProps {
   onPress(): void;
 }
 
+function makeTextPretty(name: string, count: number) {
+  if (count == 1) {
+    return '"' + name + '" has been watched 1 time';
+  }
+  return '"' + name + '" has been watched 1 times';
+}
+
 export default function VideoHistoryRow(props: VideoHistoryRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={styles.row}>
-        <View style={styles.imageBox}>
-          <Text style={styles.activityText}>{props.data.videoTitle}</Text>
+        <View style={styles.textBox}>
+          <Text style={styles.activityText}>{makeTextPretty(props.data.videoTitle, props.data.viewCount)}</Text>
         </View>
 
         <View style={styles.chevronBox}>
@@ -49,60 +56,27 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 0.5,
     paddingBottom: 10,
-  },
-  imageBox: {
-    flexDirection: 'column',
-    width: 70,
-    height: 50,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    paddingTop: 10,
-  },
-  recentImage: {
-    height: 30,
-    width: 30,
-    marginLeft: 15,
-    marginRight: 5,
-    alignItems: 'center',
-  },
-  activityText: {
-    color: 'black',
-    fontSize: 14,
-    textAlign: 'left',
-    marginLeft: 10,
-    marginBottom: 2,
-    marginTop: 5,
+    height: 60,
   },
   textBox: {
     flexDirection: 'column',
     height: 75,
     backgroundColor: 'white',
-    width: '70%',
+    width: '88%',
     marginLeft: 5,
     textAlign: 'left',
   },
-  nameText: {
+  activityText: {
     color: 'black',
-    fontSize: 14,
+    fontSize: 16,
     textAlign: 'left',
-    marginLeft: 1,
-    marginBottom: 1,
-    marginTop: 5,
-    fontWeight: '500',
-  },
-  regText: {
-    color: 'black',
-    fontSize: 14,
-    textAlign: 'left',
-    marginLeft: 1,
-    marginBottom: 1,
-    marginTop: 5,
+    marginLeft: 10,
+    marginBottom: 2,
+    marginTop: 14,
   },
   chevronBox: {
-    justifyContent: 'space-between',
     paddingTop: 10,
     backgroundColor: 'white',
-    paddingBottom: 10,
     paddingLeft: 10,
     paddingRight: 20,
   },
@@ -110,6 +84,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: 20,
     width: 12,
-    marginTop: 15,
   },
 });
