@@ -31,6 +31,7 @@ interface RecentActivityRowProps {
 //import globalStyles from '../../utils/globalStyles';
 
 export default function GoalsScreen(props: RecentActivityRowProps) {
+  // test
   const navigation = useNavigation<any>();
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
   const [data, setData] = useState<GoalDataProps[]>([]);
