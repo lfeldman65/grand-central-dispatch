@@ -28,7 +28,7 @@ const chevron = require('../../images/chevron_blue_right.png');
 interface RecentActivityRowProps {
   data: RecentActivityDataProps;
   onPress(): void;
-} // test
+}
 
 function chooseImage(activityType: string) {
   console.log(activityType);

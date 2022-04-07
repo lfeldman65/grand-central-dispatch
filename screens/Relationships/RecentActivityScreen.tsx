@@ -104,12 +104,7 @@ export default function RecentActivityScreenScreen() {
           <ScrollView>
             <View>
               {dataActivity.map((item, index) => (
-                <RecentActivityRow
-                  //   filterFromAbove={filterSetting}
-                  key={index}
-                  data={item}
-                  onPress={() => handleRowPress(index)}
-                />
+                <RecentActivityRow key={index} data={item} onPress={() => handleRowPress(index)} />
               ))}
             </View>
           </ScrollView>
