@@ -8,6 +8,7 @@ import PacComplete from './PACCompleteScreen';
 import { postponePAC, completePAC, saveAsFavorite, getPACDetails } from './api';
 import openMap from 'react-native-open-maps';
 import { styles } from './styles';
+import { storage } from '../../utils/storage';
 
 let deviceHeight = Dimensions.get('window').height;
 
@@ -17,6 +18,7 @@ export default function PACDetailScreen(props: any) {
   const navigation = useNavigation();
 
   const [data, setData] = useState<any>({ data: [] });
+  const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -144,7 +146,7 @@ export default function PACDetailScreen(props: any) {
   function completeActionOld(note: string) {
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
-    myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
+    myHeaders.append('SessionToken', token);
     myHeaders.append('Cookie', 'ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a');
     myHeaders.append('Content-Type', 'application/json');
 
@@ -281,6 +283,12 @@ export default function PACDetailScreen(props: any) {
   //   setModalVisible(!modalVisible);
   // }
 
+  async function fetchToken() {
+    const tokenFromStorage = await storage.getItem('sessionToken');
+    console.log('token: ' + tokenFromStorage);
+    setToken(tokenFromStorage);
+  }
+
   //put it in a useEffect to prevent the warning about rendering a different component blah blah
   useEffect(() => {
     //contact name will be initially be blank, when data is received
@@ -288,6 +296,7 @@ export default function PACDetailScreen(props: any) {
     navigation.setOptions({ title: contactName() });
   }); // this will run on every rendeer
   useEffect(() => {
+    fetchToken();
     fetchPacDetailData();
   }, []);
 
