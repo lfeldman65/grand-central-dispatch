@@ -1,5 +1,5 @@
 export interface GoalObject {
-  id: string;
+  id: number;
   title: string;
   custom: boolean;
   weeklyTarget: number;

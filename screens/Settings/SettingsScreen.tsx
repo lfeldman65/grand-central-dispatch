@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../constants/analytics'; // why me?
 
-export default function SettingsScreen(props: any) {
+export default function SettingsScreen() {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(true);
   function signOutPressed() {
@@ -24,7 +24,7 @@ export default function SettingsScreen(props: any) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: (props) => <MenuIcon />,
+      headerLeft: () => <MenuIcon />,
     });
   });
 

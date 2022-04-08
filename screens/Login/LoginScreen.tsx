@@ -1,5 +1,5 @@
-import { useState, useEffect, useImperativeHandle } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
 
 const eyeClosed = require('../Login/images/eyeClosed.png');
 const eyeOpen = require('../Login/images/eyeOpen.png');
@@ -7,24 +7,22 @@ const logo = require('../Login/images/iconLogo.png');
 
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
-import { Analytics, PageHit, Event } from 'expo-analytics';
+import { Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
-import { http } from '../../utils/http';
 import { analytics } from '../../utils/analytics';
 import { loginToApp } from './api';
-import { LoginDataProps } from './interfaces';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { set } from 'react-native-reanimated';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 let deviceWidth = Dimensions.get('window').width;
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen() {
   const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
   const [password, setPassword] = useState('success');
   const [rememberChecked, setRememberCheck] = useState(false);
   const [showPW, setShowPW] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const isFocused = useIsFocused();
+  const navigation = useNavigation();
 
   function ForgotPasswordPressed() {
     // console.log('Forgot Press');
@@ -81,7 +79,7 @@ export default function LoginScreen({ navigation }) {
       .catch((e) => console.log(e.message));
 
     if (userName == '' || password == '') {
-      alert('Please enter a Username and Password');
+      console.error('Please enter a Username and Password');
       return;
     }
     loginToApp(userName, password)
