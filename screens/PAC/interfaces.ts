@@ -1,9 +1,4 @@
 // PAC List RN in Postman
-// export interface APIResponseProps {
-//   data: any;
-//   error: string;
-//   status: string;
-// }
 
 export interface PACDataProps {
   contactId: string;
@@ -54,18 +49,6 @@ export interface PACCompleteResponse {
   status: string;
 }
 
-// Contact Details in Postman
-
-export interface PACDetailsProps {
-  contactId: string;
-}
-
-export interface PACCDetailsResponse {
-  data: PACDetailsProps[];
-  error: string;
-  status: string;
-}
-
 // Save as Pop Favorite in Postman
 
 export interface SaveAsFavoriteProps {
@@ -78,19 +61,20 @@ export interface SaveAsFavoriteResponse {
   status: string;
 }
 
-export interface ContactDetailProps {
-  // ranking: string;
-  // qualified: string;
-  // mobile: string;
-  // homePhone: string;
-  // officePhone: string;
-  // email: string;
-  // spouse: any,
-  // website: string,
+// Contact Details in Postman
+
+export interface ContactDetailDataProps {
+  id: string;
+  firstName: string;
+  lastName: string;
+  ranking: string;
+  mobile: string;
+  homePhone: string;
+  officePhone: string;
   address: AddressProps;
 }
 
-interface AddressProps {
+export interface AddressProps {
   street: string;
   street2: string;
   city: string;
@@ -98,4 +82,10 @@ interface AddressProps {
   zip: string;
   country: string;
   isFavorite: string;
+}
+
+export interface ContactDetailDataResponse {
+  data: ContactDetailDataProps;
+  error: string;
+  status: string;
 }

@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     marginBottom: 5,
   },
   saveToMapButton: {
-    color: '#02ABF7',
+    color: '#1C6597',
     fontSize: 15,
     textAlign: 'right',
     marginRight: 10,

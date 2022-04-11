@@ -4,14 +4,14 @@ import {
   SaveAsFavoriteResponse,
   PACPostponeResponse,
   PACCompleteResponse,
-  PACCDetailsResponse,
-} from './interfaces'; // branch.
+  ContactDetailDataResponse,
+} from './interfaces';
 
 export function getPACData(type: string): Promise<PACDataResponse> {
   return http.get(`priorityActionsRN?type=${type}`);
 } // back tick (`) only necessary for string interpolation
 
-export function getPACDetails(guid: string): Promise<PACCDetailsResponse> {
+export function getPACDetails(guid: string): Promise<ContactDetailDataResponse> {
   return http.get(`contacts/${guid}`);
 }
 
