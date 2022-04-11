@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 import { Event } from 'expo-analytics';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
@@ -32,10 +32,19 @@ interface DashboardNavigationProps {
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
+  // var isDarkMode = false;
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
 
-  async function testOutAsyncStorage() {
-    const userNameFromStorage = await storage.getItem('userName');
-    console.log(userNameFromStorage);
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    if (dOrlight == 'dark') {
+      //  isDarkMode = true;
+    } else {
+      //   isDarkMode = false;
+    }
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
   }
 
   useEffect(() => {
@@ -45,8 +54,8 @@ export default function DashboardScreen() {
   });
 
   useEffect(() => {
-    testOutAsyncStorage();
-  }, []);
+    getDarkOrLightMode();
+  }, [isFocused]);
 
   const handleNavigation = (props: DashboardNavigationProps) => {
     if (props.parentScreen) {
@@ -62,7 +71,7 @@ export default function DashboardScreen() {
 
   return (
     <>
-      <View style={styles.container}>
+      <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
         <View style={styles.row}>
           <View style={styles.pair}>
             <TouchableOpacity
@@ -77,7 +86,7 @@ export default function DashboardScreen() {
             >
               <Image source={callImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>Calls</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Calls</Text>}
           </View>
 
           <View style={styles.pair}>
@@ -93,7 +102,7 @@ export default function DashboardScreen() {
             >
               <Image source={noteImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>Notes</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Notes</Text>}
           </View>
 
           <View style={styles.pair}>
@@ -107,7 +116,7 @@ export default function DashboardScreen() {
             >
               <Image source={popImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>Pop-Bys</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Pop-Bys</Text>}
           </View>
         </View>
 
@@ -125,9 +134,9 @@ export default function DashboardScreen() {
             >
               <Image source={pacImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>Priority</Text>
-            <Text style={styles.names}>Action</Text>
-            <Text style={styles.names}>Center</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Priority</Text>}
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Action</Text>}
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Center</Text>}
           </View>
 
           <View style={styles.pair}>
@@ -141,7 +150,7 @@ export default function DashboardScreen() {
             >
               <Image source={relImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>Relationships</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Relationships</Text>}
           </View>
           <View style={styles.pair}>
             <TouchableOpacity
@@ -154,7 +163,7 @@ export default function DashboardScreen() {
             >
               <Image source={goalsImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>Goals</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Goals</Text>}
           </View>
         </View>
 
@@ -170,7 +179,7 @@ export default function DashboardScreen() {
             >
               <Image source={transImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>Transactions</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Transactions</Text>}
           </View>
           <View style={styles.pair}>
             <TouchableOpacity
@@ -183,7 +192,7 @@ export default function DashboardScreen() {
             >
               <Image source={todoImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>To-Do's</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>To-Do's</Text>}
           </View>
 
           <View style={styles.pair}>
@@ -197,7 +206,7 @@ export default function DashboardScreen() {
             >
               <Image source={calendarImage} style={styles.logo} />
             </TouchableOpacity>
-            <Text style={styles.names}>Calendar</Text>
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Calendar</Text>}
           </View>
         </View>
       </View>
@@ -206,7 +215,11 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  containerDark: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  containerLight: {
     flex: 1,
     backgroundColor: 'white',
   },
@@ -221,14 +234,18 @@ const styles = StyleSheet.create({
     padding: 8,
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: 'white',
   },
   logo: {
     width: 48,
     height: 48,
     marginBottom: 5,
   },
-  names: {
+  namesDark: {
+    height: 18,
+    color: 'white',
+    textAlign: 'center',
+  },
+  namesLight: {
     height: 18,
     color: 'black',
     textAlign: 'center',
