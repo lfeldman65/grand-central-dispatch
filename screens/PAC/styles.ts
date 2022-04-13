@@ -1,11 +1,24 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
+  containerDark: {
+    backgroundColor: 'black',
+    height: '100%',
+  },
+  containerLight: {
     backgroundColor: 'white',
     height: '100%',
   },
-  personName: {
+  personNameDark: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 7,
+    marginTop: 5,
+    fontWeight: '500',
+  },
+  personNameLight: {
     color: 'black',
     fontSize: 18,
     textAlign: 'left',
@@ -15,21 +28,21 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
   },
   phoneNumber: {
-    color: '#1C6597',
+    color: '#1398F5',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 5,
   },
   popByButtons: {
-    color: '#1C6597',
+    color: '#1398F5',
     fontSize: 15,
     textAlign: 'right',
     marginRight: 10,
     marginBottom: 5,
   },
   saveToMapButton: {
-    color: '#1C6597',
+    color: '#1398F5',
     fontSize: 15,
     textAlign: 'right',
     marginRight: 10,
@@ -45,20 +58,40 @@ export const styles = StyleSheet.create({
   phoneRow: {
     width: 210,
   },
-  otherText: {
+  otherTextDark: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 7,
+  },
+  otherTextLight: {
     color: 'black',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 7,
   },
-  streetText: {
+  streetTextDark: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 10,
+  },
+  streetTextLight: {
     color: 'black',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
   },
-  cityStateZipText: {
+  cityStateZipTextDark: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 7,
+  },
+  cityStateZipTextLight: {
     color: 'black',
     fontSize: 15,
     textAlign: 'left',
@@ -115,6 +148,21 @@ export const styles = StyleSheet.create({
     fontSize: 16,
   },
   row: {
+    // delete
+    paddingTop: 10,
+    backgroundColor: 'white',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+  },
+  rowDark: {
+    paddingTop: 10,
+    backgroundColor: 'black',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+  },
+  rowLight: {
     paddingTop: 10,
     backgroundColor: 'white',
     borderColor: 'lightgray',
@@ -182,5 +230,13 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     width: 90,
     backgroundColor: '#ff8e3c',
+  },
+  hackDark: {
+    height: 100,
+    backgroundColor: 'black',
+  },
+  hackLight: {
+    height: 100,
+    backgroundColor: 'white',
   },
 });

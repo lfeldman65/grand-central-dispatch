@@ -15,6 +15,7 @@ import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
+import { storage } from '../../utils/storage';
 
 type TabType = 'calls' | 'notes' | 'popby';
 
@@ -31,6 +32,7 @@ export default function PACScreen(props: PACScreenProps) {
   const [modalCallsVisible, setModalCallsVisible] = useState(false);
   const [modalNotesVisible, setModalNotesVisible] = useState(false);
   const [modalPopVisible, setModalPopVisible] = useState(false);
+  const [lightOrDark, setIsLightOrDark] = useState('');
 
   const [data, setData] = useState<PACDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -91,11 +93,21 @@ export default function PACScreen(props: PACScreenProps) {
       .catch((error) => console.error('failure ' + error));
   }
 
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
+  }
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
   });
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
 
   useEffect(() => {
     fetchData(tabSelected);
@@ -110,7 +122,7 @@ export default function PACScreen(props: PACScreenProps) {
   // }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
       <View style={globalStyles.tabButtonRow}>
         <Text style={tabSelected == 'calls' ? globalStyles.selected : globalStyles.unselected} onPress={callsPressed}>
           Calls

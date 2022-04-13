@@ -14,7 +14,7 @@ import MenuIcon from '../../components/MenuIcon';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 
-export default function PopByScreen() {
+export default function PopBysScreen() {
   let deviceWidth = Dimensions.get('window').width;
 
   const navigation = useNavigation();

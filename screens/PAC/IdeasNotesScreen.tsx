@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-const closeButton = require('../../images/button_close_black.png');
+import { storage } from '../../utils/storage';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { styles } from './stylesIdeas';
+
+const closeDark = require('../../images/button_close_white.png');
+const closeLight = require('../../images/button_close_black.png');
 
 export default function IdeasNotesScreen(props: any) {
   const { setModalNotesVisible } = props;
@@ -9,9 +14,21 @@ export default function IdeasNotesScreen(props: any) {
   const [section1Selected, setSection1Selected] = useState(false);
   const [section2Selected, setSection2Selected] = useState(false);
   const [section3Selected, setSection3Selected] = useState(false);
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
 
   function CancelPressed() {
     setModalNotesVisible(false);
+  }
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
   }
 
   function handleSectionTap(sectionIndex: number) {
@@ -27,12 +44,12 @@ export default function IdeasNotesScreen(props: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={CancelPressed}>
-          <Image source={closeButton} style={styles.closeX} />
+          <Image source={lightOrDark == 'dark' ? closeDark : closeLight} style={styles.closeX} />
         </TouchableOpacity>
-        <Text style={styles.pageTitle}>Personal Note Ideas</Text>
+        <Text style={lightOrDark == 'dark' ? styles.pageTitleDark : styles.pageTitleLight}>Personal Note Ideas</Text>
         <TouchableOpacity>
           <Text style={styles.blankButton}></Text>
         </TouchableOpacity>
@@ -42,48 +59,86 @@ export default function IdeasNotesScreen(props: any) {
         <TouchableOpacity onPress={() => handleSectionTap(0)}>
           <Text style={styles.sectionTitleText}>Ideas to Get You Started: Following a Phone Call</Text>
         </TouchableOpacity>
-        {section0Selected && <Text style={styles.sectionHeaderText}>Following a Phone Call</Text>}
         {section0Selected && (
-          <Text style={styles.contentText}>
+          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>
+            Following a Phone Call
+          </Text>
+        )}
+        {section0Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
             It was wonderful talking with you today. I appreciate you keeping me in mind if you know of anyone who is
             interested in looking into the opportunities we have for buyers in this market...
           </Text>
         )}
-        {section0Selected && <Text style={styles.sectionHeaderText}>Leaving a Message</Text>}
-        {section0Selected && <Text style={styles.contentText}>I tried calling you today, but missed you...</Text>}
+        {section0Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>
+            Leaving a Message
+          </Text>
+        )}
+        {section0Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
+            I tried calling you today, but missed you...
+          </Text>
+        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(1)}>
           <Text style={styles.sectionTitleText}>Ideas to Get You Started: Reconnecting</Text>
         </TouchableOpacity>
-        {section1Selected && <Text style={styles.sectionHeaderText}>Option 1</Text>}
         {section1Selected && (
-          <Text style={styles.contentText}>
+          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>Option 1</Text>
+        )}
+        {section1Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
             I found myself thinking of you today, so I thought I would write a quick note...
           </Text>
         )}
-        {section1Selected && <Text style={styles.sectionHeaderText}>Option 2</Text>}
         {section1Selected && (
-          <Text style={styles.contentText}>
+          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>Option 2</Text>
+        )}
+        {section1Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
             I was going through my files and realized it's been way too long since...
           </Text>
         )}
-        {section1Selected && <Text style={styles.sectionHeaderText}>Option 3</Text>}
-        {section1Selected && <Text style={styles.contentText}>How is your new home working out?</Text>}
+        {section1Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>Option 3</Text>
+        )}
+        {section1Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
+            How is your new home working out?
+          </Text>
+        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
           <Text style={styles.sectionTitleText}>Ideas to Get You Started: Nice to Meet You</Text>
         </TouchableOpacity>
-        {section2Selected && <Text style={styles.sectionHeaderText}>Nice to Meet You</Text>}
         {section2Selected && (
-          <Text style={styles.contentText}>
+          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>
+            Nice to Meet You
+          </Text>
+        )}
+        {section2Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
             A brief note to let you know it was a real pleasure to meet you today...
           </Text>
         )}
-        {section2Selected && <Text style={styles.sectionHeaderText}>Thank You Npte</Text>}
-        {section2Selected && <Text style={styles.contentText}>Thank you for the great service today!</Text>}
-        {section2Selected && <Text style={styles.sectionHeaderText}>Thanks for a Referral</Text>}
         {section2Selected && (
-          <Text style={styles.contentText}>
+          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>
+            Thank You Npte
+          </Text>
+        )}
+        {section2Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
+            Thank you for the great service today!
+          </Text>
+        )}
+        {section2Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>
+            Thanks for a Referral
+          </Text>
+        )}
+        {section2Selected && (
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
             Thank you for your referral to [Bob and Linda]! I'll take excellent care of them. Your trust and support are
             greatly appreciated...
           </Text>
@@ -93,7 +148,7 @@ export default function IdeasNotesScreen(props: any) {
           <Text style={styles.sectionTitleText}>Ideas to Get You Started: Thanks for a Referral</Text>
         </TouchableOpacity>
         {section3Selected && (
-          <Text style={styles.contentText}>
+          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
             Thank you for your referral to [Bob and Linda]! I'll take excellent care of them. Your trust and support are
             greatly appreciated...
           </Text>
@@ -102,62 +157,3 @@ export default function IdeasNotesScreen(props: any) {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 30,
-    backgroundColor: 'white',
-    width: '95%',
-    height: '95%',
-    alignSelf: 'center',
-  },
-  mainContent: {
-    alignSelf: 'flex-start',
-  },
-  topRow: {
-    flexDirection: 'row',
-    padding: 10,
-    justifyContent: 'space-between',
-    marginTop: 10,
-  },
-  closeX: {
-    marginTop: 4,
-    width: 15,
-    height: 15,
-    marginLeft: '10%',
-  },
-  pageTitle: {
-    color: 'black',
-    fontSize: 20,
-  },
-  blankButton: {
-    // Helps placement of X and title
-    marginRight: '15%',
-  },
-  sectionTitleText: {
-    color: '#02ABF7',
-    fontSize: 14,
-    marginTop: 10,
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-    marginLeft: 20,
-    marginBottom: 10,
-  },
-  sectionHeaderText: {
-    color: 'black',
-    fontSize: 16,
-    marginLeft: 20,
-    marginTop: 10,
-    marginBottom: 5,
-    marginRight: 20,
-    fontWeight: '500',
-  },
-  contentText: {
-    color: 'black',
-    fontSize: 14,
-    marginLeft: 20,
-    marginTop: 10,
-    marginBottom: 10,
-    marginRight: 20,
-  },
-});

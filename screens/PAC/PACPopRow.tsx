@@ -3,8 +3,9 @@ import { useState, useEffect } from 'react';
 import { styles } from './styles';
 import { saveAsFavorite } from './api';
 import openMap from 'react-native-open-maps';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { PACDataProps } from './interfaces';
+import { storage } from '../../utils/storage';
 
 interface PACRowProps {
   data: PACDataProps;
@@ -13,8 +14,19 @@ interface PACRowProps {
 
 export default function PACPopRow(props: PACRowProps) {
   const [saveShown, setSaveShown] = useState(!props.data.isFavorite);
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
 
-  // const [data, setData] = useState<SaveAsFavoriteProps[]>([]);
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
+  }
+
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState({ data: [] });
 
@@ -103,7 +115,7 @@ export default function PACPopRow(props: PACRowProps) {
 
   function handlePopPressed() {
     console.log('pop');
-    navigation.navigate('Pop-Bys');
+    navigation.navigate('PopBysScreen');
   }
 
   function saveAsFavoriteAPI() {
@@ -123,9 +135,11 @@ export default function PACPopRow(props: PACRowProps) {
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={styles.row}>
+      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.popbyRow}>
-          <Text style={styles.personName}>{props.data.contactName}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+            {props.data.contactName}
+          </Text>
           {props.data.street1 != null && (
             <TouchableOpacity style={styles.popByButtons} onPress={() => handleDirectionsPressed()}>
               <Text style={styles.popByButtons}>{'Directions'}</Text>
@@ -134,7 +148,9 @@ export default function PACPopRow(props: PACRowProps) {
         </View>
 
         <View style={styles.popbyRow}>
-          <Text style={styles.otherText}>{'Ranking: ' + props.data.ranking}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
+            {'Ranking: ' + props.data.ranking}
+          </Text>
           {props.data.street1 && (
             <TouchableOpacity style={styles.popByButtons} onPress={() => handleSavePressed()}>
               <Text style={saveShown ? styles.saveToMapButton : styles.savedButton}>{titleForSaveButton()}</Text>
@@ -143,7 +159,9 @@ export default function PACPopRow(props: PACRowProps) {
         </View>
 
         <View style={styles.popbyRow}>
-          <Text style={styles.otherText}>{'Last Pop-By: ' + props.data.lastPopByDate}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
+            {'Last Pop-By: ' + props.data.lastPopByDate}
+          </Text>
           {props.data.street1 && (
             <TouchableOpacity style={styles.popByButtons} onPress={() => handlePopPressed()}>
               <Text style={styles.popByButtons}>{'Pop-By Map'}</Text>
@@ -151,10 +169,20 @@ export default function PACPopRow(props: PACRowProps) {
           )}
         </View>
 
-        {props.data.street1 != null && <Text style={styles.streetText}>{props.data.street1}</Text>}
-        {props.data.street2 != null && <Text style={styles.streetText}>{props.data.street2}</Text>}
+        {props.data.street1 != null && (
+          <Text style={lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
+            {props.data.street1}
+          </Text>
+        )}
+        {props.data.street2 != null && (
+          <Text style={lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
+            {props.data.street2}
+          </Text>
+        )}
         {props.data.city != null && (
-          <Text style={styles.cityStateZipText}>{props.data.city + ' ' + props.data.state + ' ' + props.data.zip}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.cityStateZipTextDark : styles.cityStateZipTextLight}>
+            {props.data.city + ' ' + props.data.state + ' ' + props.data.zip}
+          </Text>
         )}
         {props.data.mobilePhone != null && (
           <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.mobilePhone)}>
