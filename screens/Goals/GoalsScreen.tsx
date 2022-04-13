@@ -1,41 +1,47 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import { isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
 import { getGoalData } from './api';
+import { storage } from '../../utils/storage';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
 
-//import globalStyles from '../../utils/globalStyles';
+import globalStyles from '../../globalStyles';
 
 export default function GoalsScreen() {
   const navigation = useNavigation<any>();
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
   const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
 
   function winTheDayPressed() {
-    console.log('win the day pressed');
     analytics.event(new Event('Goals', 'Win the Day Pressed'));
     setWinTheDaySelected(true);
   }
 
   function winTheWeekPressed() {
-    console.log('win the week pressed');
     analytics.event(new Event('Goals', 'Win the Week Pressed'));
     setWinTheDaySelected(false);
   }
 
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
+  }
+
   function styleForProgress(goalData: GoalDataProps) {
     var barColor = '#1398f5';
-
     var barWidth = 75 * barPercentage(goalData) + '%';
     if (winTheDaySelected) {
       barColor = '#55bf43';
@@ -53,7 +59,11 @@ export default function GoalsScreen() {
   function styleForGoalTitle(index: number) {
     var textColor = 'black';
     if (index < 4) {
-      textColor = '#1C6597';
+      textColor = '#1398f5'; // link blue
+    } else {
+      if (lightOrDark == 'dark') {
+        textColor = 'white';
+      }
     }
     return {
       width: 200,
@@ -64,14 +74,13 @@ export default function GoalsScreen() {
   }
 
   function activityCount(goalData: GoalDataProps) {
-    if (!isNullOrEmpty(goalData.goal)) {
+    if (isNullOrEmpty(goalData.goal)) {
       return 0;
     }
     if (winTheDaySelected) {
       return goalData.achievedToday;
     }
-    // console.log(goalData.achievedThisWeek);
-    return goalData.achievedToday;
+    return goalData.achievedThisWeek;
   }
 
   function barPercentage(goalData: GoalDataProps) {
@@ -194,6 +203,10 @@ export default function GoalsScreen() {
   });
 
   useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
+  useEffect(() => {
     fetchGoals();
   }, []);
 
@@ -205,12 +218,18 @@ export default function GoalsScreen() {
     );
   } else {
     return (
-      <View style={styles.container}>
-        <View style={styles.tabButtonRow}>
-          <Text style={winTheDaySelected == true ? styles.selected : styles.unselected} onPress={winTheDayPressed}>
+      <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
+        <View style={globalStyles.tabButtonRow}>
+          <Text
+            style={winTheDaySelected == true ? globalStyles.selected : globalStyles.unselected}
+            onPress={winTheDayPressed}
+          >
             Win the Day
           </Text>
-          <Text style={winTheDaySelected == false ? styles.selected : styles.unselected} onPress={winTheWeekPressed}>
+          <Text
+            style={winTheDaySelected == false ? globalStyles.selected : globalStyles.unselected}
+            onPress={winTheWeekPressed}
+          >
             Win the Week
           </Text>
         </View>
@@ -235,7 +254,9 @@ export default function GoalsScreen() {
                       }
                       style={styles.trophy}
                     />
-                    <Text style={styles.goalTarget}>{goalTargetDisplay(item.goal)}</Text>
+                    <Text style={lightOrDark == 'dark' ? styles.goalTargetDark : styles.goalTargetLight}>
+                      {goalTargetDisplay(item.goal)}
+                    </Text>
                   </View>
                   <View style={styles.progress}>
                     <View style={styleForProgress(item)}></View>
@@ -243,7 +264,7 @@ export default function GoalsScreen() {
                 </View>
               )
           )}
-          <View style={styles.hack}></View>
+          <View style={lightOrDark == 'dark' ? styles.hackDark : styles.hackLight}></View>
         </ScrollView>
 
         {/* {<TouchableOpacity onPress={fetchGoals}>
@@ -255,42 +276,23 @@ export default function GoalsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  containerDark: {
+    backgroundColor: 'black',
+  },
+  containerLight: {
     backgroundColor: 'white',
   },
-  hack: {
+  hackDark: {
+    height: 100,
+    backgroundColor: 'black',
+  },
+  hackLight: {
     height: 100,
     backgroundColor: 'white',
   },
-  tabButtonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    height: 40,
-    alignItems: 'center',
-  },
-  unselected: {
-    color: 'lightgray',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#09334a',
-    flex: 1,
-    paddingTop: 10,
-  },
-  selected: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#04121b',
-    flex: 1,
-    paddingTop: 10,
-    borderColor: 'lightblue',
-    borderWidth: 2,
-  },
   goalTitle: {
     paddingRight: 30,
-    color: '#1C6597',
+    color: '#1398f5',
     fontSize: 16,
     textAlign: 'right',
     padding: 10,
@@ -306,11 +308,19 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginBottom: 10,
   },
-  goalTarget: {
+  goalTargetDark: {
+    width: 20,
+    height: 32,
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'right',
+    marginRight: 20,
+  },
+  goalTargetLight: {
     width: 20,
     height: 32,
     color: 'black',
-    fontSize: 18,
+    fontSize: 16,
     textAlign: 'right',
     marginRight: 20,
   },

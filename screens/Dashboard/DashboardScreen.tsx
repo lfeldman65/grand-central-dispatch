@@ -38,11 +38,6 @@ export default function DashboardScreen() {
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
-    if (dOrlight == 'dark') {
-      //  isDarkMode = true;
-    } else {
-      //   isDarkMode = false;
-    }
     setIsLightOrDark(dOrlight ?? 'light');
     console.log('larryA: ' + dOrlight);
   }
