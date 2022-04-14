@@ -137,7 +137,7 @@ export default function PACScreen(props: PACScreenProps) {
 
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#000" />
+          <ActivityIndicator size="large" color="#AAA" />
         </View>
       ) : (
         <React.Fragment>

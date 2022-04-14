@@ -160,7 +160,7 @@ export default function PACDetailScreen(props: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.containerLight}>
       <View style={stylesDetail.topContainer}>
         <Text style={stylesDetail.personName}>{contactName()}</Text>
 

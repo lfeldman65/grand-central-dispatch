@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
+import { storage } from '../../utils/storage';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function PACCompleteScreen(props: any) {
   const { onSave, setModalVisible, contactName } = props;
   const [note, onNoteChange] = useState('');
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
 
   function SavePressed() {
     // setModalVisible(false);
@@ -12,6 +16,16 @@ export default function PACCompleteScreen(props: any) {
   }
   function CancelPressed() {
     setModalVisible(false);
+  }
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
   }
 
   return (
@@ -31,9 +45,9 @@ export default function PACCompleteScreen(props: any) {
       <View style={styles.mainContent}>
         <Text style={styles.notesText}>Notes</Text>
 
-        <View style={styles.inputView}>
+        <View style={lightOrDark == 'dark' ? styles.inputViewDark : styles.inputViewLight}>
           <TextInput
-            style={styles.textInput}
+            style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -85,7 +99,17 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 20,
   },
-  inputView: {
+  inputViewDark: {
+    marginTop: 10,
+    backgroundColor: 'black',
+    width: '90%',
+    height: '50%',
+    marginBottom: 2,
+    paddingLeft: 10,
+    fontSize: 29,
+    alignItems: 'flex-start',
+  },
+  inputViewLight: {
     marginTop: 10,
     backgroundColor: 'white',
     width: '90%',
@@ -95,7 +119,12 @@ const styles = StyleSheet.create({
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  textInput: {
+  textInputDark: {
+    paddingTop: 5,
+    fontSize: 18,
+    color: 'white',
+  },
+  textInputLight: {
     paddingTop: 5,
     fontSize: 18,
     color: 'black',
