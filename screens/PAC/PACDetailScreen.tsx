@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Modal } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import PacComplete from './PACCompleteScreen';
@@ -23,11 +22,23 @@ export default function PACDetailScreen(props: any) {
   const [data, setData] = useState<ContactDetailDataProps>();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
 
   function postponePressed() {
     analytics.event(new Event('PAC Detail', 'Postpone', '0'));
     // postponeActionOld();
     postponeAction(contactId, type);
+  }
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
   }
 
   function lastDate() {
@@ -160,8 +171,8 @@ export default function PACDetailScreen(props: any) {
   }
 
   return (
-    <View style={styles.containerLight}>
-      <View style={stylesDetail.topContainer}>
+    <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
+      <View style={lightOrDark == 'dark' ? stylesDetail.topContainerDark : stylesDetail.topContainerLight}>
         <Text style={stylesDetail.personName}>{contactName()}</Text>
 
         {!isNullOrEmpty(data?.mobile) && <Text style={stylesDetail.sectionTitle}>{'Mobile Phone'}</Text>}
@@ -182,20 +193,32 @@ export default function PACDetailScreen(props: any) {
           )}
         </View>
 
-        {!isNullOrEmpty(data?.address.street) && <Text style={stylesDetail.standardText}>{data?.address.street}</Text>}
+        {!isNullOrEmpty(data?.address.street) && (
+          <Text style={lightOrDark == 'dark' ? stylesDetail.cityStateZipTextDark : stylesDetail.cityStateZipTextLight}>
+            {data?.address.street}
+          </Text>
+        )}
         {!isNullOrEmpty(data?.address.street2) && (
-          <Text style={stylesDetail.standardText}>{data?.address.street2}</Text>
+          <Text style={lightOrDark == 'dark' ? stylesDetail.standardTextDark : stylesDetail.standardTextLight}>
+            {data?.address.street2}
+          </Text>
         )}
         {!isNullOrEmpty(cityStateZip(data?.address)) && (
-          <Text style={stylesDetail.cityStateZipText}>{cityStateZip(data?.address)}</Text>
+          <Text style={lightOrDark == 'dark' ? stylesDetail.cityStateZipTextDark : stylesDetail.cityStateZipTextLight}>
+            {cityStateZip(data?.address)}
+          </Text>
         )}
 
         <Text style={stylesDetail.sectionTitle}>Notes</Text>
-        <Text style={stylesDetail.standardText}>{'Ranking: ' + ranking}</Text>
-        <Text style={stylesDetail.standardText}>{lastDate()}</Text>
+        <Text style={lightOrDark == 'dark' ? stylesDetail.standardTextDark : stylesDetail.standardTextLight}>
+          {'Ranking: ' + ranking}
+        </Text>
+        <Text style={lightOrDark == 'dark' ? stylesDetail.standardTextDark : stylesDetail.standardTextLight}>
+          {lastDate()}
+        </Text>
       </View>
 
-      <View style={stylesDetail.bottomContainer}>
+      <View style={lightOrDark == 'dark' ? stylesDetail.bottomContainerDark : stylesDetail.bottomContainerLight}>
         <TouchableOpacity onPress={completePressed}>
           <Text style={stylesDetail.completeText}>Complete</Text>
         </TouchableOpacity>
@@ -222,14 +245,18 @@ export default function PACDetailScreen(props: any) {
 }
 
 const stylesDetail = StyleSheet.create({
-  topContainer: {
+  topContainerDark: {
+    height: 0.75 * deviceHeight,
+    backgroundColor: 'black',
+  },
+  topContainerLight: {
     height: 0.75 * deviceHeight,
     backgroundColor: 'white',
   },
   personName: {
     marginTop: 20,
     marginLeft: 20,
-    color: '#1C6597',
+    color: '#1398F5',
     fontSize: 18,
     textAlign: 'left',
     marginBottom: 30,
@@ -241,17 +268,34 @@ const stylesDetail = StyleSheet.create({
     textAlign: 'left',
     marginBottom: 5,
   },
-  bottomContainer: {
+  bottomContainerDark: {
+    backgroundColor: 'black',
+  },
+  bottomContainerLight: {
     backgroundColor: 'white',
   },
-  standardText: {
+  standardTextDark: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 20,
+    marginBottom: 5,
+  },
+  standardTextLight: {
     color: 'black',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 20,
     marginBottom: 5,
   },
-  cityStateZipText: {
+  cityStateZipTextDark: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 20,
+    marginBottom: 20,
+  },
+  cityStateZipTextLight: {
     color: 'black',
     fontSize: 15,
     textAlign: 'left',
@@ -259,7 +303,7 @@ const stylesDetail = StyleSheet.create({
     marginBottom: 20,
   },
   phoneNumber: {
-    color: '#1C6597',
+    color: '#1398F5',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 20,
@@ -279,12 +323,5 @@ const stylesDetail = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     marginBottom: 20,
-  },
-  notes: {
-    width: 200,
-    color: '#1A6295',
-    textAlign: 'left',
-    marginLeft: 10,
-    fontSize: 16,
   },
 });
