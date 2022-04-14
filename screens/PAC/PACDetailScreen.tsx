@@ -246,11 +246,11 @@ export default function PACDetailScreen(props: any) {
 
 const stylesDetail = StyleSheet.create({
   topContainerDark: {
-    height: 0.75 * deviceHeight,
+    height: 0.7 * deviceHeight,
     backgroundColor: 'black',
   },
   topContainerLight: {
-    height: 0.75 * deviceHeight,
+    height: 0.7 * deviceHeight,
     backgroundColor: 'white',
   },
   personName: {
