@@ -239,4 +239,19 @@ export const styles = StyleSheet.create({
     height: 100,
     backgroundColor: 'white',
   },
+  postponeButton: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignContent: 'center',
+    color: 'white',
+    fontSize: 18,
+  },
+  postponeButtonTouch: {
+    height: '100%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignContent: 'center',
+    color: 'white',
+    fontSize: 18,
+  },
 });

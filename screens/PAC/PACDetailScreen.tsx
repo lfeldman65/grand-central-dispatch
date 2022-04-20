@@ -4,13 +4,14 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import PacComplete from './PACCompleteScreen';
-import { postponePAC, completePAC, getPACDetails } from './api';
+import { completePAC, getPACDetails } from './api';
 import openMap from 'react-native-open-maps';
 import { styles } from './styles';
 import { storage } from '../../utils/storage';
 import { isNullOrEmpty } from '../../utils/general';
 import { AddressProps, ContactDetailDataProps } from './interfaces';
 import { add } from 'react-native-reanimated';
+import { completeAction, postponeAction } from './postponeAndComplete';
 
 let deviceHeight = Dimensions.get('window').height;
 
@@ -27,8 +28,7 @@ export default function PACDetailScreen(props: any) {
 
   function postponePressed() {
     analytics.event(new Event('PAC Detail', 'Postpone', '0'));
-    // postponeActionOld();
-    postponeAction(contactId, type);
+    postponeEvent(contactId, type);
   }
 
   useEffect(() => {
@@ -38,7 +38,6 @@ export default function PACDetailScreen(props: any) {
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
 
   function lastDate() {
@@ -60,10 +59,7 @@ export default function PACDetailScreen(props: any) {
   }
 
   function saveComplete(note: string) {
-    // console.log('Note ', note);
-    //   completeActionOld(note);
-    completeAction(contactId, type, note);
-    //  completeAction();
+    completeEvent(contactId, type, note);
   }
 
   function handleDirectionsPressed(address?: AddressProps) {
@@ -106,35 +102,34 @@ export default function PACDetailScreen(props: any) {
     return data?.firstName + ' ' + data?.lastName;
   }
 
-  function completeAction(contactId: string, type: string, note: string) {
+  function completeEvent(contactId: string, type: string, note: string) {
     setIsLoading(true);
-    console.log('contactId: ' + contactId);
-    console.log('type: ' + type);
-    console.log('note: ' + note);
-    completePAC(contactId, type, note)
-      .then((res) => {
-        console.log(res);
-        if (res.status == 'error') {
-          console.error(res.error);
-        }
-        setIsLoading(false);
-        navigation.goBack();
-      })
-      .catch((error) => console.error('failure ' + error));
+    completeAction(contactId, type, note, completeSuccess, completeFailure);
   }
 
-  function postponeAction(contactId: string, type: string) {
+  function postponeEvent(contactId: string, type: string) {
     setIsLoading(true);
-    postponePAC(contactId, type)
-      .then((res) => {
-        console.log(res);
-        if (res.status == 'error') {
-          console.error(res.error);
-        }
-        setIsLoading(false);
-        navigation.goBack();
-      })
-      .catch((error) => console.error('failure ' + error));
+    postponeAction(contactId, type, postponeSuccess, postponeFailure);
+  }
+
+  function postponeSuccess() {
+    setIsLoading(false);
+    navigation.goBack();
+  }
+
+  function postponeFailure() {
+    setIsLoading(false);
+    console.log('postpone failure');
+  }
+
+  function completeSuccess() {
+    setIsLoading(false);
+    navigation.goBack();
+  }
+
+  function completeFailure() {
+    setIsLoading(false);
+    console.log('complete failure');
   }
 
   function fetchPacDetailData(id: string) {
@@ -246,11 +241,11 @@ export default function PACDetailScreen(props: any) {
 
 const stylesDetail = StyleSheet.create({
   topContainerDark: {
-    height: 0.7 * deviceHeight,
+    height: 0.75 * deviceHeight,
     backgroundColor: 'black',
   },
   topContainerLight: {
-    height: 0.7 * deviceHeight,
+    height: 0.75 * deviceHeight,
     backgroundColor: 'white',
   },
   personName: {

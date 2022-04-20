@@ -3,7 +3,6 @@ import { Modal, Text, View, TouchableOpacity, ScrollView, ActivityIndicator } fr
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { Event } from 'expo-analytics';
-// import Swipeable from 'react-native-swipeable-row';
 import PACCallsRow from './PACCallsRow';
 import PACNotesRow from './PACNotesRow';
 import PACPopRow from './PACPopRow';
@@ -96,7 +95,6 @@ export default function PACScreen(props: PACScreenProps) {
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
 
   useEffect(() => {
@@ -145,13 +143,28 @@ export default function PACScreen(props: PACScreenProps) {
             {data.map((item, index) => (
               <View key={index}>
                 {tabSelected == 'calls' ? (
-                  <PACCallsRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                  <PACCallsRow
+                    key={index}
+                    data={item}
+                    onPress={() => handleRowPress(index)}
+                    refresh={() => callsPressed()}
+                  />
                 ) : null}
                 {tabSelected == 'notes' ? (
-                  <PACNotesRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                  <PACNotesRow
+                    key={index}
+                    data={item}
+                    onPress={() => handleRowPress(index)}
+                    refresh={() => notesPressed()}
+                  />
                 ) : null}
                 {tabSelected == 'popby' ? (
-                  <PACPopRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                  <PACPopRow
+                    key={index}
+                    data={item}
+                    onPress={() => handleRowPress(index)}
+                    refresh={() => popPressed()}
+                  />
                 ) : null}
               </View>
             ))}
