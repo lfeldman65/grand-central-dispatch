@@ -59,7 +59,7 @@ export default function RecentActivityRow(props: RecentActivityRowProps) {
         </View>
         <View style={styles.textBox}>
           <Text style={styles.nameText}>{props.data.Name}</Text>
-          <Text style={styles.regText}>{' ' + props.data.ActivityDate}</Text>
+          <Text style={styles.regText}>{props.data.ActivityDate}</Text>
           <Text style={styles.regText}>{props.data.Notes}</Text>
         </View>
         <View style={styles.chevronBox}>
