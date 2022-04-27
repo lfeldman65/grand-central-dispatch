@@ -8,11 +8,12 @@ import {
   Dimensions,
   Modal,
   ScrollView,
+  TextInput,
   ActivityIndicator,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Button from '../../components/Button';
 
@@ -25,26 +26,45 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
 import ToDoRow from './ToDoRow';
 
-type FilterOptions = 'all' | 'calls' | 'notes' | 'popbys' | 'referrals' | 'other';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+const chevron = require('../../images/chevron_blue.png');
+
+//type FilterOptions = 'all' | 'calls' | 'notes' | 'popbys' | 'referrals' | 'other';
 
 // interface RolodexScreenProps {
 //   route: RouteProp<any>;
 // }
 
 //export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
-export default function RecentActivityScreenScreen() {
+export default function ToDosScreen() {
   let deviceWidth = Dimensions.get('window').width;
+
+  const filters = {
+    All: 'all',
+    Today: '0',
+    Week: '7',
+    Month: '30',
+    Overdue: 'overdue',
+    Completed: 'completed',
+  };
 
   // const [tabSelected, setTabSelected] = useState(props.route.params?.defaultTab ?? 'A-Z');
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
-  const [filterSetting, setFilterSetting] = useState<FilterOptions>('all');
+  const [filterSetting, setFilterSetting] = useState('all');
+
   const [dataActivity, setdataActivity] = useState<ToDoDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const actionSheetRef = useRef<ActionSheet>(null);
+
+  const Sheets = {
+    filterSheet: 'filter_sheet_id',
+  };
+
   const handleRowPress = (index: number) => {
-    console.log('rolodex row press');
-    analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    console.log('to do row press');
+    analytics.event(new Event('To-Do', 'Go To Details', 'Press', 0));
 
     // navigation.navigate('RelationshipDetailScreen', {});
     // navigation.navigate('RelationshipDetailScreen', {
@@ -58,20 +78,41 @@ export default function RecentActivityScreenScreen() {
   }, []);
 
   useEffect(() => {
-    filterPressed();
-    console.log(filterSetting);
+    fetchData();
   }, [filterSetting]);
 
-  // useEffect(() => {
-  //   showFilterTitle();
-  // }, []);
-
-  //useEffect(() => {}); // this will run on every rendeer
+  //useEffect(() => {}); // this will run on every render
 
   function filterPressed() {
-    analytics.event(new Event('Manage Relationships', 'Filter', filterSetting, 0));
+    analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));
+    SheetManager.show(Sheets.filterSheet);
+  }
+
+  function prettyFilter(uglyFilter: string) {
+    if (uglyFilter == 'all') {
+      return 'All';
+    }
+    if (uglyFilter == '0') {
+      return 'Today';
+    }
+    if (uglyFilter == '7') {
+      return 'Week';
+    }
+    if (uglyFilter == '30') {
+      return 'Month';
+    }
+    if (uglyFilter == 'overdue') {
+      return 'Overdue';
+    }
+    if (uglyFilter == 'completed') {
+      return 'Completed';
+    }
+    return 'Error';
+  }
+
+  function fetchData() {
     setIsLoading(true);
-    getToDoData()
+    getToDoData(filterSetting)
       .then((res) => {
         if (res.status == 'error') {
           console.error(res.error);
@@ -83,9 +124,9 @@ export default function RecentActivityScreenScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function saveComplete() {
-    console.log('Save Complete');
-  }
+  // function saveComplete() {
+  //   console.log('Save Complete');
+  // }
 
   return (
     <View style={styles.container}>
@@ -95,24 +136,70 @@ export default function RecentActivityScreenScreen() {
         </View>
       ) : (
         <React.Fragment>
-          <View style={styles.filterButton}>
+          <View style={styles.filterRow}>
+            <Text style={styles.blankButton}></Text>
             <TouchableOpacity onPress={filterPressed}>
-              <Text style={styles.filterText}>Change Type</Text>
+              <Text style={styles.filterText}>{prettyFilter(filterSetting)}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={filterPressed}>
+              <Image source={chevron} style={styles.chevron} />
             </TouchableOpacity>
           </View>
 
           <ScrollView>
             <View>
               {dataActivity.map((item, index) => (
-                <ToDoRow
-                  //   filterFromAbove={filterSetting}
-                  key={index}
-                  data={item}
-                  onPress={() => handleRowPress(index)}
-                />
+                <ToDoRow key={index} data={item} onPress={() => handleRowPress(index)} />
               ))}
             </View>
           </ScrollView>
+          <ActionSheet
+            initialOffsetFromBottom={10}
+            onBeforeShow={(data) => console.log('action sheet')}
+            id={Sheets.filterSheet}
+            ref={actionSheetRef}
+            statusBarTranslucent
+            bounceOnOpen={true}
+            drawUnderStatusBar={true}
+            bounciness={4}
+            gestureEnabled={true}
+            bottomOffset={40}
+            defaultOverlayOpacity={0.3}
+          >
+            <View
+              style={{
+                paddingHorizontal: 12,
+              }}
+            >
+              <ScrollView
+                nestedScrollEnabled
+                onMomentumScrollEnd={() => {
+                  actionSheetRef.current?.handleChildScrollEnd();
+                }}
+                style={styles.scrollview}
+              >
+                <View>
+                  {Object.entries(filters).map(([key, value]) => (
+                    <TouchableOpacity
+                      key={key}
+                      onPress={() => {
+                        SheetManager.hide(Sheets.filterSheet, null);
+                        setFilterSetting(value);
+                        // fetchData();
+                      }}
+                      style={styles.listItemCell}
+                    >
+                      {/*  you can style the text in listItem */}
+                      <Text style={styles.listItem}>{key}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                {/*  Add a Small Footer at Bottom */}
+                <View style={styles.footer} />
+              </ScrollView>
+            </View>
+          </ActionSheet>
         </React.Fragment>
       )}
     </View>
@@ -124,11 +211,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
+  filterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 40,
+  },
+  blankButton: {
+    // Helps placement of title and chevron
+    marginLeft: '10%',
+  },
   chevron: {
     marginRight: 20,
-    marginTop: 5,
-    height: 15,
-    width: 27,
+    marginTop: 15,
+    height: 12,
+    width: 20,
   },
   filterButton: {
     height: 40,
@@ -136,11 +232,42 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 1,
     backgroundColor: 'white',
-    padding: 8,
   },
   filterText: {
     flexDirection: 'row',
     fontSize: 16,
     color: '#1C6597',
+    marginTop: 10,
+  },
+  filter: {
+    flexDirection: 'row',
+    fontSize: 16,
+    color: '#1C6597',
+  },
+  listItemCell: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  listItem: {
+    flex: 1,
+    marginVertical: 15,
+    borderRadius: 5,
+    fontSize: 20,
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+  scrollview: {
+    width: '100%',
+    padding: 12,
+  },
+  footer: {
+    height: 50,
+  },
+  btnLeft: {
+    width: 30,
+    height: 30,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 100,
   },
 });
