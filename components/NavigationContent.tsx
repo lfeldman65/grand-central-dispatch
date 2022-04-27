@@ -29,7 +29,7 @@ function CustomDrawerContent(props: any) {
   });
 
   const handleMenuExpand = (type: string) => {
-    if (type === 'relationships') {
+    if (type === 'Rolodex') {
       setExpanded({ ...expanded, relationships: !expanded.relationships });
     }
     if (type === 'transactions') {
@@ -88,7 +88,7 @@ function CustomDrawerContent(props: any) {
             <Text style={styles.menuItemText}>Priority Action Center</Text>
           </View>
         </TouchableOpacity>
-        <TouchableWithoutFeedback onPress={() => handleMenuExpand('relationships')}>
+        <TouchableWithoutFeedback onPress={() => handleMenuExpand('Rolodex')}>
           <View style={styles.menuItem}>
             <Image source={relIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Relationships</Text>
@@ -103,7 +103,7 @@ function CustomDrawerContent(props: any) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.relationships}>
-          <TouchableOpacity onPress={() => pressed('manageRelationships')}>
+          <TouchableOpacity onPress={() => pressed('Rolodex')}>
             <View style={styles.menuItem}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Manage Relationships</Text>

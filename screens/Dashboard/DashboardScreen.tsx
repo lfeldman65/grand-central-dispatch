@@ -138,8 +138,8 @@ export default function DashboardScreen() {
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
-                  screen: 'manageRelationships', // what?
-                  label: 'Relationships', // what?
+                  screen: 'Rolodex',
+                  label: 'Relationships',
                 })
               }
             >

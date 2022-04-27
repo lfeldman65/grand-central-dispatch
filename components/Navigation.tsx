@@ -9,7 +9,7 @@ import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import GoalsScreen from '../screens/Goals/GoalsScreen';
 import PACScreen from '../screens/PAC/PACScreen';
 import PACDetailScreen from '../screens/PAC/PACDetailScreen';
-import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
+//import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
 import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
 import TransactionsScreen from '../screens/Transactions/TransactionsSection';
 import PopBysScreen from '../screens/PopBys/PopBysScreen';
@@ -19,6 +19,8 @@ import PodcastScreen from '../screens/Podcasts/PodcastsScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
 
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
+import RelationshipDetailsScreen from '../screens/Relationships/RelationshipDetailsScreen';
+
 import RecentContactActivityScreen from '../screens/Relationships/RecentActivityScreen';
 import VideoHistoryScreen from '../screens/Relationships/VideoHistoryScreen';
 
@@ -79,6 +81,38 @@ export const PACStackNavigator = () => {
   );
 };
 
+export const RelStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="manageRelationships"
+        component={ManageRelationshipsScreen}
+        options={{
+          title: 'Priority Action Center',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="Rel2"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const HomeStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -118,6 +152,15 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="Rolodex"
+        component={RelStackNavigator}
+        options={{
+          headerBackVisible: false,
+          headerShown: false,
+        }}
+      />
+
+      {/* <Stack.Screen
         name="relationships"
         component={RelationshipsScreen}
         options={{
@@ -141,7 +184,7 @@ export const HomeStackNavigator = () => {
           },
           headerBackVisible: false,
         }}
-      />
+      /> */}
 
       <Stack.Screen
         name="recentcontactactivity"

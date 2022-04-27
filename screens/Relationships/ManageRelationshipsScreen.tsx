@@ -46,16 +46,12 @@ export default function ManageRelationshipsScreen() {
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]); // A-Z and Ranking tabs
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // branch.
 
   const handleRowPress = (index: number) => {
     console.log('rolodex row press');
     analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
-
-    // navigation.navigate('RelationshipDetailScreen', {});
-    // navigation.navigate('RelationshipDetailScreen', {
-    //   //  contactId: data[index]['contactId'],
-    // });
+    navigation.navigate('Rel2', {});
   };
   useEffect(() => {
     navigation.setOptions({
@@ -73,7 +69,7 @@ export default function ManageRelationshipsScreen() {
   }, [isFocused]);
 
   useEffect(() => {
-    navigation.setOptions({ title: 'Add Relationship' });
+    navigation.setOptions({ title: 'Relationships' });
     fetchRolodexPressed('a-z');
     console.log('a-z');
   }, [isFilterRel]);
