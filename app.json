@@ -2,7 +2,7 @@
   "expo": {
     "name": "Referral Maker",
     "slug": "referralMaker",
-    "version": "3.4.0.1",
+    "version": "3.4.1",
     "orientation": "portrait",
     "icon": "./images/icon.png",
     "splash": {
@@ -16,7 +16,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.referralmaker.referralmaker"
+      "bundleIdentifier": "com.referralmaker.referralmaker",
+      "buildNumber": "10"
     },
     "android": {
       "adaptiveIcon": {
