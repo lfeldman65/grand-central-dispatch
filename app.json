@@ -16,8 +16,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.referralmaker.referralmaker",
-      "buildNumber": "10"
+      "bundleIdentifier": "com.referralmaker.referralmaker"
     },
     "android": {
       "adaptiveIcon": {
