@@ -4,6 +4,7 @@ import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Event } from 'expo-analytics';
+import * as Sentry from 'sentry-expo';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -32,9 +33,15 @@ interface DashboardNavigationProps {
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
-  // var isDarkMode = false;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
+
+  function SentryTest() {
+    console.log('sentry test');
+    Sentry.Native.nativeCrash();
+    throw new Error('My first Sentry error!');
+    Sentry.Native.captureException(new Error('Oops!'));
+  }
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
@@ -53,6 +60,7 @@ export default function DashboardScreen() {
   }, [isFocused]);
 
   const handleNavigation = (props: DashboardNavigationProps) => {
+    // SentryTest();
     if (props.parentScreen) {
       analytics.event(new Event('Dashboard', props.label + ' Pressed', '0'));
       navigation.navigate(props.parentScreen, {

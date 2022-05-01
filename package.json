@@ -11,13 +11,19 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-native-firebase/app": "^14.8.1",
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.1",
+    "@sentry/react-native": "^3.4.1",
     "expo": "~44.0.0",
     "expo-analytics": "^1.0.18",
+    "expo-application": "~4.0.1",
+    "expo-constants": "~13.0.1",
+    "expo-device": "~4.1.0",
     "expo-sms": "^10.1.1",
     "expo-status-bar": "~1.2.0",
+    "expo-updates": "~0.11.7",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
@@ -29,7 +35,8 @@
     "react-native-open-maps": "^0.4.0",
     "react-native-reanimated": "~2.3.1",
     "react-native-swipeable-row": "^0.8.1",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "sentry-expo": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
