@@ -17,13 +17,13 @@ import MenuIcon from '../../components/menuIcon';
 import { useState, useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import { styles } from './styles';
+import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { RectButton } from 'react-native-gesture-handler';
 import { PACDataProps } from './interfaces';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { postponePAC, completePAC } from './api';
 import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
 

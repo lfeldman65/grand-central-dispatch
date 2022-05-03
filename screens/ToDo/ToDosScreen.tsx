@@ -15,30 +15,18 @@ import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import Button from '../../components/Button';
-
+import { storage } from '../../utils/storage';
 import { getToDoData } from './api';
 import { ToDoDataProps } from './interfaces';
-
 import { analytics } from '../../utils/analytics';
 import React from 'react';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
 import ToDoRow from './ToDoRow';
+import globalStyles from '../../globalStyles';
 
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 const chevron = require('../../images/chevron_blue.png');
 
-//type FilterOptions = 'all' | 'calls' | 'notes' | 'popbys' | 'referrals' | 'other';
-
-// interface RolodexScreenProps {
-//   route: RouteProp<any>;
-// }
-
-//export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
 export default function ToDosScreen() {
-  let deviceWidth = Dimensions.get('window').width;
-
   const filters = {
     All: 'all',
     Today: '0',
@@ -52,15 +40,25 @@ export default function ToDosScreen() {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const [filterSetting, setFilterSetting] = useState('all');
-
   const [dataActivity, setdataActivity] = useState<ToDoDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lightOrDark, setIsLightOrDark] = useState('');
 
   const actionSheetRef = useRef<ActionSheet>(null);
 
   const Sheets = {
     filterSheet: 'filter_sheet_id',
   };
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
+  }
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
 
   const handleRowPress = (index: number) => {
     console.log('to do row press');
@@ -129,20 +127,20 @@ export default function ToDosScreen() {
   // }
 
   return (
-    <View style={styles.container}>
+    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#000" />
         </View>
       ) : (
         <React.Fragment>
-          <View style={styles.filterRow}>
-            <Text style={styles.blankButton}></Text>
+          <View style={globalStyles.filterRow}>
+            <Text style={globalStyles.blankButton}></Text>
             <TouchableOpacity onPress={filterPressed}>
-              <Text style={styles.filterText}>{prettyFilter(filterSetting)}</Text>
+              <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={filterPressed}>
-              <Image source={chevron} style={styles.chevron} />
+              <Image source={chevron} style={globalStyles.chevronFilter} />
             </TouchableOpacity>
           </View>
 
@@ -207,43 +205,6 @@ export default function ToDosScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    height: '100%',
-  },
-  filterRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 40,
-  },
-  blankButton: {
-    // Helps placement of title and chevron
-    marginLeft: '10%',
-  },
-  chevron: {
-    marginRight: 20,
-    marginTop: 15,
-    height: 12,
-    width: 20,
-  },
-  filterButton: {
-    height: 40,
-    alignItems: 'center',
-    borderColor: 'lightgray',
-    borderWidth: 1,
-    backgroundColor: 'white',
-  },
-  filterText: {
-    flexDirection: 'row',
-    fontSize: 16,
-    color: '#1C6597',
-    marginTop: 10,
-  },
-  filter: {
-    flexDirection: 'row',
-    fontSize: 16,
-    color: '#1C6597',
-  },
   listItemCell: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -263,11 +224,5 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 50,
-  },
-  btnLeft: {
-    width: 30,
-    height: 30,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 100,
   },
 });

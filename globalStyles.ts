@@ -1,24 +1,19 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  containerDark: {
+    backgroundColor: 'black',
+    height: '100%',
+  },
+  containerLight: {
+    backgroundColor: 'white',
+    height: '100%',
+  },
   tabButtonRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     height: 40,
     alignItems: 'center',
-  },
-  filterButton: {
-    height: 40,
-    alignItems: 'center',
-    borderColor: 'lightgray',
-    borderWidth: 1,
-    backgroundColor: 'white',
-    padding: 8,
-  },
-  filterText: {
-    flexDirection: 'row',
-    fontSize: 18,
-    color: '#1C6597',
   },
   unselected: {
     color: 'lightgray',
@@ -40,6 +35,33 @@ export default StyleSheet.create({
     borderColor: 'lightblue',
     borderWidth: 2,
   },
+
+  // filters for To-Do's, Rolodex, etc
+  filterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 40,
+    borderColor: 'lightgray',
+    borderWidth: 1,
+  },
+  blankButton: {
+    // Helps placement of title and chevron
+    marginLeft: '10%',
+  },
+  filterText: {
+    flexDirection: 'row',
+    fontSize: 18,
+    color: '#1398f5',
+    marginTop: 10,
+  },
+  chevronFilter: {
+    marginRight: 20,
+    marginTop: 15,
+    height: 12,
+    width: 20,
+  },
+
+  //
   addButton: {
     marginTop: 5,
     backgroundColor: '#1A6295',

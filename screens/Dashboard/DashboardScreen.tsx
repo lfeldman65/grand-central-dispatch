@@ -5,6 +5,7 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Event } from 'expo-analytics';
 import * as Sentry from 'sentry-expo';
+import globalStyles from '../../globalStyles';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -74,7 +75,7 @@ export default function DashboardScreen() {
 
   return (
     <>
-      <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={styles.row}>
           <View style={styles.pair}>
             <TouchableOpacity
@@ -218,14 +219,6 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  containerDark: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
-  containerLight: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
   row: {
     flexDirection: 'row',
     alignContent: 'center',

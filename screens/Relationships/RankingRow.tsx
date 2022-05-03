@@ -1,8 +1,12 @@
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { styles } from './styles';
 import { RolodexDataProps } from './interfaces';
+import { useState, useEffect } from 'react';
+import { storage } from '../../utils/storage';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
-const rankA = require('../Relationships/images/rankAPlus.png');
+const rankA = require('../Relationships/images/rankA.png');
 const rankB = require('../Relationships/images/rankB.png');
 const rankC = require('../Relationships/images/rankC.png');
 
@@ -28,13 +32,25 @@ function displayName(first: string, last: string, type: string, employer: string
 
 export default function RankingRow(props: AtoZRowProps) {
   const { relFromAbove } = props;
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
+
   return (
     <TouchableOpacity onPress={props.onPress}>
       {props.data.contactTypeID == relFromAbove && (
-        <View style={styles.row}>
+        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
           {relFromAbove == 'Rel' && (
-            <Text style={styles.personName}>
+            <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
               {displayName(
                 props.data.firstName,
                 props.data.lastName,
@@ -45,7 +61,7 @@ export default function RankingRow(props: AtoZRowProps) {
             </Text>
           )}
           {relFromAbove == 'Biz' && (
-            <Text style={styles.personName}>
+            <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
               {displayName(
                 props.data.firstName,
                 props.data.lastName,

@@ -5,7 +5,16 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
-  personName: {
+  personNameDark: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 7,
+    marginTop: 5,
+    fontWeight: '500',
+  },
+  personNameLight: {
     color: 'black',
     fontSize: 18,
     textAlign: 'left',
@@ -14,7 +23,6 @@ export const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: '500',
   },
-
   otherText: {
     color: 'black',
     fontSize: 15,
@@ -22,7 +30,6 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 7,
   },
-
   bottomContainer: {
     backgroundColor: '#1A6295',
     height: 60,
@@ -44,7 +51,15 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     justifyContent: 'center',
   },
-  row: {
+  rowDark: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    backgroundColor: 'black',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+  },
+  rowLight: {
     flexDirection: 'row',
     paddingTop: 10,
     backgroundColor: 'white',
@@ -59,60 +74,18 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 5,
   },
-  tabButtonRow: {
+  groupRowDark: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 40,
-    alignItems: 'center',
-  },
-  unselected: {
-    color: 'lightgray',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#09334a',
-    flex: 1,
     paddingTop: 10,
-  },
-  selected: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#04121b',
-    flex: 1,
-    paddingTop: 10,
-    borderColor: 'lightblue',
-    borderWidth: 2,
-  },
-  progress: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-  },
-  notes: {
-    width: 200,
-    color: '#1A6295',
-    textAlign: 'left',
-    marginLeft: 10,
-    fontSize: 16,
-  },
-  leftSwipeItem: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    backgroundColor: 'black',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+    paddingLeft: 10,
     paddingRight: 20,
   },
-  rightSwipeItem: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingLeft: 20,
-  },
-  groupRow: {
+  groupRowLight: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: 10,
@@ -125,7 +98,6 @@ export const styles = StyleSheet.create({
   },
   chevron: {
     marginTop: 5,
-    backgroundColor: 'white',
     height: 20,
     width: 12,
   },
