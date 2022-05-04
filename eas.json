@@ -10,7 +10,8 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {},
+    "release": { "ios": { "cocoapods": "1.11.3" } }
   },
   "submit": {
     "production": {
