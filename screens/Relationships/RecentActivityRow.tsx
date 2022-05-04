@@ -17,6 +17,9 @@ import { Event } from 'expo-analytics';
 //import styles from './styles';
 import { analytics } from '../../utils/analytics';
 import { RecentActivityDataProps } from './interfaces';
+import { storage } from '../../utils/storage';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+
 const callImage = require('../Relationships/images/recentCall.png');
 const noteImage = require('../Relationships/images/recentNote.png');
 const otherImage = require('../Relationships/images/recentOther.png');
@@ -49,17 +52,33 @@ function prettyType(uglyType: string) {
 }
 
 export default function RecentActivityRow(props: RecentActivityRowProps) {
+  const isFocused = useIsFocused();
+  const [lightOrDark, setIsLightOrDark] = useState('');
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
+  }
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={styles.row}>
+      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.imageBox}>
           <Image source={chooseImage(props.data.ActivityType)} style={styles.recentImage} />
-          <Text style={styles.activityText}>{prettyType(props.data.ActivityType)}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.activityTextDark : styles.activityTextLight}>
+            {prettyType(props.data.ActivityType)}
+          </Text>
         </View>
-        <View style={styles.textBox}>
-          <Text style={styles.nameText}>{props.data.Name}</Text>
-          <Text style={styles.regText}>{props.data.ActivityDate}</Text>
-          <Text style={styles.regText}>{props.data.Notes}</Text>
+        <View style={lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
+          <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>{props.data.Name}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+            {props.data.ActivityDate}
+          </Text>
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.Notes}</Text>
         </View>
         <View style={styles.chevronBox}>
           <Image source={chevron} style={styles.chevron} />
@@ -70,19 +89,28 @@ export default function RecentActivityRow(props: RecentActivityRowProps) {
 }
 
 const styles = StyleSheet.create({
-  row: {
+  rowDark: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    backgroundColor: 'black',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+    height: 'auto',
+  },
+  rowLight: {
     flexDirection: 'row',
     paddingTop: 10,
     backgroundColor: 'white',
     borderColor: 'lightgray',
     borderWidth: 0.5,
     paddingBottom: 10,
+    height: 'auto',
   },
   imageBox: {
     flexDirection: 'column',
     width: 70,
     height: 50,
-    backgroundColor: 'white',
     alignItems: 'center',
     paddingTop: 10,
   },
@@ -93,7 +121,15 @@ const styles = StyleSheet.create({
     marginRight: 5,
     alignItems: 'center',
   },
-  activityText: {
+  activityTextDark: {
+    color: 'white',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 2,
+    marginTop: 5,
+  },
+  activityTextLight: {
     color: 'black',
     fontSize: 14,
     textAlign: 'left',
@@ -101,7 +137,15 @@ const styles = StyleSheet.create({
     marginBottom: 2,
     marginTop: 5,
   },
-  textBox: {
+  textBoxDark: {
+    flexDirection: 'column',
+    height: 75,
+    backgroundColor: 'black',
+    width: '70%',
+    marginLeft: 5,
+    textAlign: 'left',
+  },
+  textBoxLight: {
     flexDirection: 'column',
     height: 75,
     backgroundColor: 'white',
@@ -109,7 +153,16 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     textAlign: 'left',
   },
-  nameText: {
+  nameTextDark: {
+    color: 'white',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 1,
+    marginBottom: 1,
+    marginTop: 5,
+    fontWeight: '500',
+  },
+  nameTextLight: {
     color: 'black',
     fontSize: 14,
     textAlign: 'left',
@@ -118,7 +171,15 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: '500',
   },
-  regText: {
+  regTextDark: {
+    color: 'white',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 1,
+    marginBottom: 1,
+    marginTop: 5,
+  },
+  regTextLight: {
     color: 'black',
     fontSize: 14,
     textAlign: 'left',
@@ -129,13 +190,11 @@ const styles = StyleSheet.create({
   chevronBox: {
     justifyContent: 'space-between',
     paddingTop: 10,
-    backgroundColor: 'white',
     paddingBottom: 10,
     paddingLeft: 10,
     paddingRight: 20,
   },
   chevron: {
-    backgroundColor: 'white',
     height: 20,
     width: 12,
     marginTop: 15,

@@ -16,17 +16,17 @@ import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native
 import { useEffect, useRef } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import Button from '../../components/Button';
-
 import { getRecentActivityData } from './api';
 import { RecentActivityDataProps } from './interfaces';
-
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
 import RecentActivityRow from './RecentActivityRow';
-
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+import { storage } from '../../utils/storage';
+import globalStyles from '../../globalStyles';
+
 const chevron = require('../../images/chevron_blue.png');
 
 //type FilterOptions = 'all' | 'calls' | 'notes' | 'popbys' | 'referrals' | 'other';
@@ -55,8 +55,15 @@ export default function RecentActivityScreenScreen() {
 
   const [dataActivity, setdataActivity] = useState<RecentActivityDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lightOrDark, setIsLightOrDark] = useState('');
 
   const actionSheetRef = useRef<ActionSheet>(null);
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
+  }
 
   const Sheets = {
     filterSheet: 'filter_sheet_id',
@@ -80,6 +87,10 @@ export default function RecentActivityScreenScreen() {
   useEffect(() => {
     fetchData();
   }, [filterSetting]);
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
 
   //useEffect(() => {}); // this will run on every render
 
@@ -126,20 +137,20 @@ export default function RecentActivityScreenScreen() {
   // }
 
   return (
-    <View style={styles.container}>
+    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#AAA" />
         </View>
       ) : (
         <React.Fragment>
-          <View style={styles.filterRow}>
-            <Text style={styles.blankButton}></Text>
+          <View style={globalStyles.filterRow}>
+            <Text style={globalStyles.blankButton}></Text>
             <TouchableOpacity onPress={filterPressed}>
-              <Text style={styles.filterText}>{prettyFilter(filterSetting)}</Text>
+              <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={filterPressed}>
-              <Image source={chevron} style={styles.chevron} />
+              <Image source={chevron} style={globalStyles.chevronFilter} />
             </TouchableOpacity>
           </View>
 
