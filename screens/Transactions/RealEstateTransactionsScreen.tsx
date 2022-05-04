@@ -13,6 +13,7 @@ import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
+import { storage } from '../../utils/storage';
 
 type TabType = 'potential' | 'active' | 'pending' | 'closed';
 
@@ -29,7 +30,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   const [modalCallsVisible, setModalCallsVisible] = useState(false);
   const [modalNotesVisible, setModalNotesVisible] = useState(false);
   const [modalPopVisible, setModalPopVisible] = useState(false);
-
+  const [lightOrDark, setIsLightOrDark] = useState('');
   const [data, setData] = useState<TransactionDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -96,6 +97,15 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   }
 
   useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
@@ -114,7 +124,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   // }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       <View style={globalStyles.tabButtonRow}>
         <Text
           style={tabSelected == 'potential' ? globalStyles.selected : globalStyles.unselected}
@@ -138,7 +148,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
 
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#000" />
+          <ActivityIndicator size="large" color="#AAA" />
         </View>
       ) : (
         <React.Fragment>
@@ -150,8 +160,8 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
             ))}
           </ScrollView>
           <TouchableOpacity style={styles.bottomContainer} onPress={() => handleAddPressed()}>
-            <View style={styles.ideasButton}>
-              <Text style={styles.ideasText}>{'Add Transaction'}</Text>
+            <View style={styles.addButton}>
+              <Text style={styles.addText}>{'Add Transaction'}</Text>
             </View>
           </TouchableOpacity>
           {modalCallsVisible && (

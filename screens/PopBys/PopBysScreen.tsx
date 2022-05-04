@@ -94,7 +94,7 @@ export default function PopBysScreen() {
         console.log(result);
         setData(result);
         if (result.status == 'error') {
-          alert(result.error);
+          //  alert(result.error);
           setIsLoading(false);
         } else {
           setIsLoading(false);
@@ -102,12 +102,12 @@ export default function PopBysScreen() {
           //  alert(result.status);
         }
       })
-      .catch((error) => alert('failure ' + error));
+      .catch((error) => console.log('failure ' + error));
   }
 
   return isLoading ? (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#000" />
+      <ActivityIndicator size="large" color="#AAA" />
     </View>
   ) : (
     <>

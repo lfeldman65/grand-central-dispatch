@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Event } from 'expo-analytics';
 import * as Sentry from 'sentry-expo';
 import globalStyles from '../../globalStyles';
+import { analytics } from '../../utils/analytics';
+import { storage } from '../../utils/storage';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -16,9 +17,6 @@ const goalsImage = require('../Dashboard/images/quickGoals.png');
 const transImage = require('../Dashboard/images/quickTrans.png');
 const todoImage = require('../Dashboard/images/quickToDo.png');
 const calendarImage = require('../Dashboard/images/quickCalendar.png');
-
-import { analytics } from '../../utils/analytics';
-import { storage } from '../../utils/storage';
 
 //const analytics = new Analytics('UA-65596113-1');
 /*analytics.hit(new PageHit('Home'))

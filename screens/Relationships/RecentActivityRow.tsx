@@ -8,7 +8,6 @@ import {
   Dimensions,
   Linking,
   ScrollView,
-  ActivityIndicator,
   TouchableHighlight,
 } from 'react-native';
 import MenuIcon from '../../components/menuIcon';

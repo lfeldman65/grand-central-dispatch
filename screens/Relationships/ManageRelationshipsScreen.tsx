@@ -79,8 +79,8 @@ export default function ManageRelationshipsScreen() {
 
   useEffect(() => {
     navigation.setOptions({ title: 'Relationships' });
-    fetchRolodexPressed('a-z');
-    console.log('a-z');
+    fetchRolodexPressed(tabSelected);
+    console.log(tabSelected);
   }, [isFilterRel]);
 
   useEffect(() => {
@@ -181,7 +181,7 @@ export default function ManageRelationshipsScreen() {
 
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#000" />
+          <ActivityIndicator size="large" color="#AAA" />
         </View>
       ) : (
         <React.Fragment>

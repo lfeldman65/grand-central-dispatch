@@ -8,16 +8,16 @@ import {
   Dimensions,
   Linking,
   ScrollView,
-  ActivityIndicator,
   TouchableHighlight,
 } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
-//import Swipeable from 'react-native-swipeable-row';
 //import styles from './styles';
 import { analytics } from '../../utils/analytics';
 import { ToDoDataProps } from './interfaces';
+import { storage } from '../../utils/storage';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 const bullsEye = require('../ToDo/images/campaign.png');
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -35,18 +35,33 @@ function prettyDate(uglyDate: string) {
 }
 
 export default function ToDoRow(props: ToDoRowProps) {
+  const isFocused = useIsFocused();
+  const [lightOrDark, setIsLightOrDark] = useState('');
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+    console.log('larryA: ' + dOrlight);
+  }
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={styles.row}>
+      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.imageBox}>
           {props.data.isCampaign && <Image source={bullsEye} style={styles.bullsEyeImage} />}
         </View>
-        <View style={styles.textBox}>
-          <Text style={styles.titleText}>{props.data.title}</Text>
-          <Text style={styles.regText}>{props.data.notes}</Text>
+        <View style={lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
+          <Text style={lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>{props.data.title}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.notes}</Text>
         </View>
-        <View style={styles.dateView}>
-          <Text style={styles.regText}>{prettyDate(props.data.dueDate)}</Text>
+        <View style={lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+            {prettyDate(props.data.dueDate)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -54,7 +69,16 @@ export default function ToDoRow(props: ToDoRowProps) {
 }
 
 const styles = StyleSheet.create({
-  row: {
+  rowDark: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    backgroundColor: 'black',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+    height: 'auto',
+  },
+  rowLight: {
     flexDirection: 'row',
     paddingTop: 10,
     backgroundColor: 'white',
@@ -66,7 +90,6 @@ const styles = StyleSheet.create({
   imageBox: {
     width: 30,
     height: 30,
-    backgroundColor: 'white',
     alignItems: 'center',
     paddingTop: 25,
     marginLeft: 7,
@@ -75,17 +98,16 @@ const styles = StyleSheet.create({
   bullsEyeImage: {
     height: 30,
     width: 30,
-    //  marginLeft: 15,
   },
-  activityText: {
-    color: 'black',
-    fontSize: 14,
+  textBoxDark: {
+    flexDirection: 'column',
+    height: 75,
+    backgroundColor: 'black',
+    width: '62%',
+    marginLeft: 5,
     textAlign: 'left',
-    marginLeft: 10,
-    marginBottom: 2,
-    marginTop: 5,
   },
-  textBox: {
+  textBoxLight: {
     flexDirection: 'column',
     height: 75,
     backgroundColor: 'white',
@@ -93,7 +115,15 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     textAlign: 'left',
   },
-  titleText: {
+  titleTextDark: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'left',
+    marginLeft: 1,
+    marginBottom: 1,
+    fontWeight: '500',
+  },
+  titleTextLight: {
     color: 'black',
     fontSize: 16,
     textAlign: 'left',
@@ -101,7 +131,15 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     fontWeight: '500',
   },
-  regText: {
+  regTextDark: {
+    color: 'white',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 1,
+    marginBottom: 1,
+    marginTop: 3,
+  },
+  regTextLight: {
     color: 'black',
     fontSize: 14,
     textAlign: 'left',
@@ -109,7 +147,12 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     marginTop: 3,
   },
-  dateView: {
+  dateViewDark: {
+    justifyContent: 'space-between',
+    marginTop: -4,
+    backgroundColor: 'black',
+  },
+  dateViewLight: {
     justifyContent: 'space-between',
     marginTop: -4,
     backgroundColor: 'white',

@@ -5,7 +5,16 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
-  personName: {
+  personNameDark: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 7,
+    marginTop: 5,
+    fontWeight: '500',
+  },
+  personNameLight: {
     color: 'black',
     fontSize: 18,
     textAlign: 'left',
@@ -14,51 +23,14 @@ export const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: '500',
   },
-  phoneNumber: {
-    color: '#1C6597',
-    fontSize: 15,
-    textAlign: 'left',
-    marginLeft: 10,
-    marginBottom: 5,
-  },
-  popByButtons: {
-    color: '#1C6597',
-    fontSize: 15,
-    textAlign: 'right',
-    marginRight: 10,
-    marginBottom: 5,
-  },
-  saveToMapButton: {
-    color: '#02ABF7',
-    fontSize: 15,
-    textAlign: 'right',
-    marginRight: 10,
-    marginTop: -3,
-  },
-  savedButton: {
-    color: 'gray',
-    fontSize: 15,
-    textAlign: 'right',
-    marginRight: 10,
-    marginTop: -3,
-  },
-  phoneRow: {
-    width: 210,
-  },
-  otherText: {
-    color: 'black',
+  otherTextDark: {
+    color: 'white',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 7,
   },
-  streetText: {
-    color: 'black',
-    fontSize: 15,
-    textAlign: 'left',
-    marginLeft: 10,
-  },
-  cityStateZipText: {
+  otherTextLight: {
     color: 'black',
     fontSize: 15,
     textAlign: 'left',
@@ -69,7 +41,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#1A6295',
     height: 60,
   },
-  ideasButton: {
+  addButton: {
     marginTop: 5,
     backgroundColor: '#1A6295',
     paddingTop: 10,
@@ -80,7 +52,7 @@ export const styles = StyleSheet.create({
     width: '95%',
     alignSelf: 'center',
   },
-  ideasText: {
+  addText: {
     textAlign: 'center',
     color: 'white',
     fontSize: 20,
@@ -114,60 +86,19 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
   },
-  row: {
+  rowDark: {
+    paddingTop: 10,
+    backgroundColor: 'black',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+  },
+  rowLight: {
     paddingTop: 10,
     backgroundColor: 'white',
     borderColor: 'lightgray',
     borderWidth: 0.5,
     paddingBottom: 10,
-  },
-  tabButtonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 40,
-    alignItems: 'center',
-  },
-  popbyRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    padding: 1,
-    justifyContent: 'space-between',
-  },
-  unselected: {
-    color: 'lightgray',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#09334a',
-    flex: 1,
-    paddingTop: 10,
-  },
-  selected: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#04121b',
-    flex: 1,
-    paddingTop: 10,
-    borderColor: 'lightblue',
-    borderWidth: 2,
-  },
-  progress: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-  },
-  notes: {
-    width: 200,
-    color: '#1A6295',
-    textAlign: 'left',
-    marginLeft: 10,
-    fontSize: 16,
   },
   leftSwipeItem: {
     justifyContent: 'center',
@@ -182,5 +113,28 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     width: 90,
     backgroundColor: '#ff8e3c',
+  },
+  transactionRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 1,
+    justifyContent: 'space-between',
+    color: 'black',
+  },
+  transactionDateDark: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 7,
+    marginRight: 10,
+  },
+  transactionDateLight: {
+    color: 'black',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 7,
+    marginRight: 10,
   },
 });
