@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import AddRelScreen from './AddRelationshipScreen';
@@ -28,13 +28,7 @@ const chevron = require('../../images/chevron_blue.png');
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 
-// interface RolodexScreenProps {
-//   route: RouteProp<any>;
-// }
-
-//export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
 export default function ManageRelationshipsScreen() {
-  // const [tabSelected, setTabSelected] = useState(props.route.params?.defaultTab ?? 'A-Z');
   const [tabSelected, setTabSelected] = useState<TabType>('a-z');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -56,7 +50,10 @@ export default function ManageRelationshipsScreen() {
   const handleRowPress = (index: number) => {
     console.log('rolodex row press');
     analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
-    navigation.navigate('Rel2', {});
+    navigation.navigate('RelDetails', {
+      //  contactId: '123A',
+      contactId: dataRolodex[index]['id'],
+    });
   };
   useEffect(() => {
     navigation.setOptions({
@@ -138,6 +135,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setDataRolodex(res.data);
+          console.log(res.data);
         }
         setIsLoading(false);
       })

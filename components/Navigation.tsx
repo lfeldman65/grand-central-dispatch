@@ -98,7 +98,7 @@ export const RelStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Rel2"
+        name="RelDetails"
         component={RelationshipDetailsScreen}
         options={{
           title: 'Details',
