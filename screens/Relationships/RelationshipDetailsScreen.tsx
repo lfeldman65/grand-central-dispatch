@@ -4,6 +4,8 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
+import { getRelDetails } from './api';
+import { RelDetailsProps } from './interfaces';
 
 const messageImg = require('../Relationships/images/relMessage.png');
 const callImg = require('../Relationships/images/relCall.png');
@@ -16,12 +18,20 @@ const transImg = require('../Relationships/images/relTransaction.png');
 const apptImg = require('../Relationships/images/relAppt.png');
 const ideasImg = require('../Relationships/images/relIdeas.png');
 
-export default function RelationshipDetailsScreen(props: any) {
+interface RelDetailsLocalProps {
+  data: RelDetailsProps;
+  route: any;
+  onPress(): void;
+  refresh(): void;
+}
+export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const { route } = props;
   const { contactId } = route.params;
   const navigation = useNavigation();
   const [lightOrDark, setIsLightOrDark] = useState('');
+  const [dataDetails, setDataDetails] = useState<RelDetailsProps[]>([]);
   const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(true);
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
@@ -33,8 +43,28 @@ export default function RelationshipDetailsScreen(props: any) {
     getDarkOrLightMode();
   }, [isFocused]);
 
+  useEffect(() => {
+    navigation.setOptions({ title: 'Relationships' });
+    fetchRelDetails();
+  }, [isFocused]);
+
   function HandleButtonPress() {
     console.log('button pressed');
+  }
+
+  function fetchRelDetails() {
+    setIsLoading(true);
+    getRelDetails(contactId)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setDataDetails(res.data);
+          console.log(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   return (

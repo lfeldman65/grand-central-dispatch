@@ -15,6 +15,23 @@ export interface RolodexDataResponse {
   status: string;
 }
 
+// Contact Details in Postman
+
+export interface RelDetailsProps {
+  id: string;
+  firstName: string;
+  lastName: string;
+  ranking: string;
+  contactTypeID: string;
+  employerName: string;
+}
+
+export interface RelDetailsResponse {
+  data: RelDetailsProps;
+  error: string;
+  status: string;
+}
+
 // Groups in Postman
 
 export interface GroupsDataProps {

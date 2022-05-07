@@ -51,7 +51,6 @@ export default function ManageRelationshipsScreen() {
     console.log('rolodex row press');
     analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
     navigation.navigate('RelDetails', {
-      //  contactId: '123A',
       contactId: dataRolodex[index]['id'],
     });
   };
@@ -135,7 +134,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setDataRolodex(res.data);
-          console.log(res.data);
+          //  console.log(res.data);
         }
         setIsLoading(false);
       })
