@@ -6,10 +6,15 @@ import {
   AddContactDataResponse,
   RecentActivityDataResponse,
   VideoHistoryDataResponse,
+  ToDoAndApptResponse,
 } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
   return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=100`);
+} // back tick (`) only necessary for string interpolation
+
+export function getToDos(guid: string): Promise<ToDoAndApptResponse> {
+  return http.get(`GetContactCalendarTodos/${guid}`);
 } // back tick (`) only necessary for string interpolation
 
 export function getRelDetails(guid: string): Promise<RelDetailsResponse> {

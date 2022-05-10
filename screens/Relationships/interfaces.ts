@@ -14,6 +14,23 @@ export interface RolodexDataResponse {
   status: string;
 }
 
+// Contact Events in Postman
+
+export interface ToDoAndApptProps {
+  EventID: string;
+  EventType: string;
+  Title: string;
+  DateToUse: string;
+  IsAllDay: boolean;
+  IsToDo: boolean;
+}
+
+export interface ToDoAndApptResponse {
+  data: ToDoAndApptProps[];
+  error: string;
+  status: string;
+}
+
 // Contact Details in Postman
 
 export interface RelDetailsProps {
@@ -25,15 +42,23 @@ export interface RelDetailsProps {
   referral: string;
   isPastReferral: string;
   ranking: string;
+  qualified: string;
   mobile: string;
   homePhone: string;
   officePhone: string;
   email: string;
   website: string;
+  address: RelDetailsAddress;
   notes: string;
-  personalAndFamily: RelDetailsPersonal;
   contactTypeID: string;
-  employerName: string;
+  personalAndFamily: RelDetailsPersonal;
+  businessAndCareer: RelDetailsBiz;
+  interestsAndFavorites: RelDetailsInterests;
+  bombBombAPIKey: string;
+  hasBombBombPermission: boolean;
+  historyNotes: string;
+  groupsNotes: string;
+  transactionNotes: string;
 }
 
 export interface RelDetailsPersonal {
@@ -43,6 +68,25 @@ export interface RelDetailsPersonal {
   personalNotes: string;
 }
 
+export interface RelDetailsAddress {
+  street: string;
+  street2: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  isFavorite: string;
+}
+
+export interface RelDetailsBiz {
+  occupation: string;
+  employerName: string;
+  careerNotes: string;
+}
+
+export interface RelDetailsInterests {
+  notes: string;
+}
 export interface RelDetailsResponse {
   data: RelDetailsProps;
   error: string;
