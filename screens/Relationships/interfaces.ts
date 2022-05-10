@@ -1,5 +1,4 @@
 // AZ Contacts in Postman
-
 export interface RolodexDataProps {
   id: string;
   firstName: string;
@@ -10,7 +9,7 @@ export interface RolodexDataProps {
 }
 
 export interface RolodexDataResponse {
-  data: RolodexDataProps[];
+  data: RolodexDataProps;
   error: string;
   status: string;
 }
@@ -19,11 +18,29 @@ export interface RolodexDataResponse {
 
 export interface RelDetailsProps {
   id: string;
+  userID: string;
+  contactID: number;
   firstName: string;
   lastName: string;
+  referral: string;
+  isPastReferral: string;
   ranking: string;
+  mobile: string;
+  homePhone: string;
+  officePhone: string;
+  email: string;
+  website: string;
+  notes: string;
+  personalAndFamily: RelDetailsPersonal;
   contactTypeID: string;
   employerName: string;
+}
+
+export interface RelDetailsPersonal {
+  birthday: string;
+  weddingAnniversary: string;
+  childrensNames: string;
+  personalNotes: string;
 }
 
 export interface RelDetailsResponse {

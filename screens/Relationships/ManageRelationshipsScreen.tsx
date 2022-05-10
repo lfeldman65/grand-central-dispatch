@@ -52,6 +52,8 @@ export default function ManageRelationshipsScreen() {
     analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
     navigation.navigate('RelDetails', {
       contactId: dataRolodex[index]['id'],
+      firstName: dataRolodex[index]['firstName'],
+      lastName: dataRolodex[index]['lastName'],
     });
   };
   useEffect(() => {
