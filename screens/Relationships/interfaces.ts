@@ -9,7 +9,7 @@ export interface RolodexDataProps {
 }
 
 export interface RolodexDataResponse {
-  data: RolodexDataProps;
+  data: RolodexDataProps[];
   error: string;
   status: string;
 }
