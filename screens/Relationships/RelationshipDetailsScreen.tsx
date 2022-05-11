@@ -24,6 +24,7 @@ const apptImg = require('../Relationships/images/relAppt.png');
 const ideasImg = require('../Relationships/images/relIdeas.png');
 
 interface RelDetailsLocalProps {
+  // branch.
   data: RelDetailsProps;
   route: any;
   onPress(): void;
