@@ -12,3 +12,15 @@ export interface TransactionDataResponse {
   error: string;
   status: string;
 }
+
+// ? in Postman
+export interface TxChangeStatusProps {
+  idDeal: number;
+  newStatus: string;
+}
+
+export interface TxChangeStatusResponse {
+  data: TxChangeStatusProps;
+  error: string;
+  status: string;
+}

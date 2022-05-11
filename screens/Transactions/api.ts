@@ -1,8 +1,12 @@
 import { http } from '../../utils/http';
-import { TransactionDataResponse } from './interfaces';
+import { TransactionDataResponse, TxChangeStatusResponse } from './interfaces';
 
 export function getTransactionData(status: string, type: string): Promise<TransactionDataResponse> {
   return http.get(`deals?filter=${status}&lastItem=0&batchSize=100&dealType=${type}`);
 } // back tick (`) only necessary for string interpolation
 
-//return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=100`);
+export function changeTxStatus(id: number, newStatus: string): Promise<TxChangeStatusResponse> {
+  return http.post('dealChangeStatus', {
+    body: { id, newStatus },
+  });
+}
