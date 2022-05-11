@@ -100,10 +100,10 @@ export default function PACPopRow(props: PACRowProps) {
   function handleDirectionsPressed() {
     //   openMap({ latitude: 33.1175, longitude: -117.0722, zoom: 10 });
     //   openMap({ query: '7743 Royal Park Dr. Lewis Center OH 43035' });
-    openMap({ query: CompleteAddress() });
+    openMap({ query: completeAddress() });
   }
 
-  function CompleteAddress() {
+  function completeAddress() {
     var addressString = '';
     if (props.data.street1 != null) {
       addressString = addressString + ' ' + props.data.street1;
@@ -118,7 +118,7 @@ export default function PACPopRow(props: PACRowProps) {
       addressString = addressString + ' ' + props.data.state;
     }
     if (props.data.zip != null) {
-      addressString = addressString + ' ' + props.data.street2;
+      addressString = addressString + ' ' + props.data.zip;
     }
     return addressString;
   }

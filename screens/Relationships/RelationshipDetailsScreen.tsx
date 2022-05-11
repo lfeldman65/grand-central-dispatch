@@ -1,12 +1,16 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
 import { getRelDetails, getToDos } from './api';
 import { RelDetailsProps, ToDoAndApptProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
+import { isNullOrEmpty } from '../../utils/general';
+import { formatDate } from '../../utils/general';
+
+import openMap from 'react-native-open-maps';
 
 const messageImg = require('../Relationships/images/relMessage.png');
 const callImg = require('../Relationships/images/relCall.png');
@@ -41,6 +45,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [showGroups, setShowGroups] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
   const [showBiz, setShowBiz] = useState(false);
+  const [groupArray, setGroupArray] = useState();
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
@@ -54,36 +59,36 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   useEffect(() => {
     navigation.setOptions({ title: 'Relationships' });
-    FetchRelDetails();
+    fetchRelDetails();
   }, [isFocused]);
 
   useEffect(() => {
-    FetchToDos();
+    fetchToDos();
   }, [isFocused]);
 
   useEffect(() => {
     //contact name will be initially be blank, when data is received
     //render happens again and will run everything in this function again
-    navigation.setOptions({ title: FullName() });
+    navigation.setOptions({ title: fullName() });
   }); // this will run on every render
 
-  function HandleButtonPress() {
+  function handleButtonPress() {
     console.log('button pressed');
   }
 
-  function FullName() {
+  function fullName() {
     var newFirst = '';
     var newLast = '';
-    if (firstName != null) {
+    if (!isNullOrEmpty(firstName)) {
       newFirst = firstName;
     }
-    if (lastName != null) {
+    if (!isNullOrEmpty(lastName)) {
       newLast = lastName;
     }
     return newFirst + ' ' + newLast;
   }
 
-  function HandleSectionTap(sectionIndex: number) {
+  function handleSectionTap(sectionIndex: number) {
     if (sectionIndex == 0) {
       setShowPersonal(!showPersonal);
     }
@@ -107,19 +112,37 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     }
   }
 
-  function PrettyDate(uglyDate: string) {
-    var dateOnly = uglyDate.substring(0, 10);
-    var dateParts = dateOnly.split('-');
-    console.log(dateParts[0]);
-    var year = dateParts[0].substring(2, 4);
-    return dateParts[1] + '/' + dateParts[2] + '/' + year;
-  }
-
-  function DeletePressed() {
+  function deletePressed() {
     console.log('delete pressed');
   }
 
-  function FetchRelDetails() {
+  function handleDirectionsPressed() {
+    // openMap({ latitude: 33.1175, longitude: -117.0722, zoom: 10 });
+    //   openMap({ query: '7743 Royal Park Dr. Lewis Center OH 43035' });
+    openMap({ query: completeAddress() });
+  }
+
+  function completeAddress() {
+    var addressString = '';
+    if (dataDetails?.address.street != null) {
+      addressString = dataDetails?.address.street;
+    }
+    if (dataDetails?.address.street2 != null) {
+      addressString = addressString + ' ' + dataDetails?.address.street2;
+    }
+    if (dataDetails?.address.city != null) {
+      addressString = addressString + ' ' + dataDetails?.address.city;
+    }
+    if (dataDetails?.address.state != null) {
+      addressString = addressString + ' ' + dataDetails?.address.state;
+    }
+    if (dataDetails?.address.zip != null) {
+      addressString = addressString + ' ' + dataDetails?.address.zip;
+    }
+    return addressString;
+  }
+
+  function fetchRelDetails() {
     setIsLoading(true);
     getRelDetails(contactId)
       .then((res) => {
@@ -134,7 +157,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function FetchToDos() {
+  function fetchToDos() {
     setIsLoading(true);
     getToDos(contactId)
       .then((res) => {
@@ -149,20 +172,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function FormatToDos(date: string, title: string) {
-    if (date == null || date == '') {
-      return '';
-    }
-    if (title == null || title == '') {
-      return '';
-    }
-    return date + ': ' + title;
-  }
-
-  function CityStateZip(city: string, state: string, zip: string) {
+  function cityStateZip(city?: string, state?: string, zip?: string) {
     var addressString = '';
     if (city != null) {
-      addressString = addressString + ' ' + city;
+      addressString = city;
     }
     if (state != null) {
       addressString = addressString + ' ' + state;
@@ -177,35 +190,35 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       <View style={styles.row}>
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={messageImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Message</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={callImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Call</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={videoImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Video</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={emailImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Email</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={mapImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Map</Text>}
@@ -218,88 +231,114 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{dataDetails?.ranking}</Text>
         </View>
 
-        {dataDetails?.mobile != null && <Text style={styles.subTitle}>Mobile Phone Number</Text>}
-        {dataDetails?.mobile != null && <Text style={styles.phoneAndEmail}>{dataDetails?.mobile}</Text>}
+        {!isNullOrEmpty(dataDetails?.mobile) && <Text style={styles.subTitle}>Mobile Phone Number</Text>}
+        {!isNullOrEmpty(dataDetails?.mobile) && <Text style={styles.phoneAndEmail}>{dataDetails?.mobile}</Text>}
 
-        {dataDetails?.homePhone != '' && <Text style={styles.subTitle}>Home Phone Number</Text>}
-        {dataDetails?.homePhone != null && <Text style={styles.phoneAndEmail}>{dataDetails?.homePhone}</Text>}
+        {!isNullOrEmpty(dataDetails?.homePhone) && <Text style={styles.subTitle}>Home Phone Number</Text>}
+        {!isNullOrEmpty(dataDetails?.homePhone) && <Text style={styles.phoneAndEmail}>{dataDetails?.homePhone}</Text>}
 
-        {dataDetails?.officePhone != '' && <Text style={styles.subTitle}>Office Phone Number</Text>}
-        {dataDetails?.officePhone != null && <Text style={styles.phoneAndEmail}>{dataDetails?.officePhone}</Text>}
+        {!isNullOrEmpty(dataDetails?.officePhone) && <Text style={styles.subTitle}>Office Phone Number</Text>}
+        {!isNullOrEmpty(dataDetails?.officePhone) && (
+          <Text style={styles.phoneAndEmail}>{dataDetails?.officePhone}</Text>
+        )}
 
-        {dataDetails?.email != '' && <Text style={styles.subTitle}>Email</Text>}
-        {dataDetails?.email != null && <Text style={styles.phoneAndEmail}>{dataDetails?.email}</Text>}
+        {!isNullOrEmpty(dataDetails?.email) && <Text style={styles.subTitle}>Email</Text>}
+        {!isNullOrEmpty(dataDetails?.email) && <Text style={styles.phoneAndEmail}>{dataDetails?.email}</Text>}
 
-        {dataDetails?.website != '' && <Text style={styles.subTitle}>Website</Text>}
-        {dataDetails?.website != null && <Text style={styles.phoneAndEmail}>{dataDetails?.website}</Text>}
+        {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.subTitle}>Website</Text>}
+        {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.phoneAndEmail}>{dataDetails?.website}</Text>}
 
-        {dataDetails?.address.street != '' && <Text style={styles.subTitle}>Location</Text>}
-        {dataDetails?.address.street != '' && (
+        {!isNullOrEmpty(dataDetails?.address.street) && (
+          <View style={styles.row}>
+            <Text style={styles.subTitle}>Location</Text>
+
+            <TouchableOpacity style={styles.popByButtons} onPress={() => handleDirectionsPressed()}>
+              <Text style={styles.popByButtons}>{'Directions'}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {!isNullOrEmpty(dataDetails?.address.street) && (
           <Text style={lightOrDark == 'dark' ? styles.addressDark : styles.addressLight}>
             {dataDetails?.address.street}
           </Text>
         )}
-        {dataDetails?.address.street2 != '' && (
+        {!isNullOrEmpty(dataDetails?.address.street2) && (
           <Text style={lightOrDark == 'dark' ? styles.addressDark : styles.addressLight}>
             {dataDetails?.address.street2}
           </Text>
         )}
-        {dataDetails?.address.city != '' && dataDetails?.address.state != '' && dataDetails?.address.zip != '' && (
-          <Text style={lightOrDark == 'dark' ? styles.addressDark : styles.addressLight}>
-            {dataDetails?.address.city + ', ' + dataDetails?.address.state + ' ' + dataDetails?.address.zip}
-          </Text>
-        )}
+        {!isNullOrEmpty(dataDetails?.address.city) &&
+          !isNullOrEmpty(dataDetails?.address.state) &&
+          !isNullOrEmpty(dataDetails?.address.zip) && (
+            <Text style={lightOrDark == 'dark' ? styles.addressDark : styles.addressLight}>
+              {/* {dataDetails?.address.city + ', ' + dataDetails?.address.state + ' ' + dataDetails?.address.zip} */}
+              {cityStateZip(dataDetails?.address.city, dataDetails?.address.state, dataDetails?.address.zip)}
+            </Text>
+          )}
 
         <Text></Text>
 
-        <TouchableOpacity onPress={() => HandleSectionTap(0)}>
+        <TouchableOpacity onPress={() => handleSectionTap(0)}>
           <Text style={styles.sectionText}>
             {showPersonal ? 'Hide Personal and Family' : 'Show Personal and Family'}
           </Text>
         </TouchableOpacity>
-        {showPersonal && <Text style={styles.subTitle}>Birthday</Text>}
-        {showPersonal && (
+        {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.birthday) && (
+          <Text style={styles.subTitle}>Birthday</Text>
+        )}
+        {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.birthday) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {dataDetails?.personalAndFamily.birthday}
+            {formatDate(dataDetails?.personalAndFamily.birthday)}
           </Text>
         )}
-        {showPersonal && <Text style={styles.subTitle}>Wedding Anniversary</Text>}
-        {showPersonal && (
+        {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary) && (
+          <Text style={styles.subTitle}>Wedding Anniversary</Text>
+        )}
+        {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {dataDetails?.personalAndFamily.weddingAnniversary}
+            {formatDate(dataDetails?.personalAndFamily.weddingAnniversary)}
           </Text>
         )}
-        {showPersonal && <Text style={styles.subTitle}>Children's Names</Text>}
-        {showPersonal && (
+        {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.childrensNames) && (
+          <Text style={styles.subTitle}>Children's Names</Text>
+        )}
+        {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.childrensNames) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.personalAndFamily.childrensNames}
           </Text>
         )}
-        {showPersonal && <Text style={styles.subTitle}>Notes</Text>}
-        {showPersonal && (
+        {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.personalNotes) && (
+          <Text style={styles.subTitle}>Notes</Text>
+        )}
+        {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.personalNotes) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.personalAndFamily.personalNotes}
           </Text>
         )}
 
-        <TouchableOpacity onPress={() => HandleSectionTap(1)}>
+        <TouchableOpacity onPress={() => handleSectionTap(1)}>
           <Text style={styles.sectionText}>{showActivity ? 'Hide Activity History' : 'Show Activity History'}</Text>
         </TouchableOpacity>
         {showActivity && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{dataDetails?.historyNotes}</Text>
         )}
-        <TouchableOpacity onPress={() => HandleSectionTap(2)}>
+        <TouchableOpacity onPress={() => handleSectionTap(2)}>
           <Text style={styles.sectionText}>
             {showToDos ? 'Hide To-Dos and Appointments' : 'Show To-Dos and Appointments'}
           </Text>
         </TouchableOpacity>
         {showToDos && dataToDos != null && (
-          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {FormatToDos(dataToDos[0].DateToUse, dataToDos[0].Title)}
-          </Text>
+          <React.Fragment>
+            {dataToDos.map((item, index) => (
+              <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                {item.DateToUse}: {item.Title}
+              </Text>
+            ))}
+          </React.Fragment>
         )}
 
-        <TouchableOpacity onPress={() => HandleSectionTap(3)}>
+        <TouchableOpacity onPress={() => handleSectionTap(3)}>
           <Text style={styles.sectionText}>{showTransactions ? 'Hide Transactions' : 'Show Transactions'}</Text>
         </TouchableOpacity>
         {showTransactions && dataDetails?.transactionNotes != null && (
@@ -308,14 +347,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </Text>
         )}
 
-        <TouchableOpacity onPress={() => HandleSectionTap(4)}>
+        <TouchableOpacity onPress={() => handleSectionTap(4)}>
           <Text style={styles.sectionText}>{showGroups ? 'Hide Groups' : 'Show Groups'}</Text>
         </TouchableOpacity>
         {showGroups && dataDetails?.groupsNotes != null && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{dataDetails?.groupsNotes}</Text>
         )}
 
-        <TouchableOpacity onPress={() => HandleSectionTap(5)}>
+        <TouchableOpacity onPress={() => handleSectionTap(5)}>
           <Text style={styles.sectionText}>
             {showInterests ? 'Hide Interests and Favorites' : 'Show Interests and Favorites'}
           </Text>
@@ -326,7 +365,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </Text>
         )}
 
-        <TouchableOpacity onPress={() => HandleSectionTap(6)}>
+        <TouchableOpacity onPress={() => handleSectionTap(6)}>
           <Text style={styles.sectionText}>{showBiz ? 'Hide Business and Career' : 'Show Business and Career'}</Text>
         </TouchableOpacity>
         {showBiz && <Text style={styles.subTitle}>Employer Name</Text>}
@@ -347,14 +386,16 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             {dataDetails?.businessAndCareer.careerNotes}
           </Text>
         )}
-        <TouchableOpacity onPress={DeletePressed}>
+        <TouchableOpacity onPress={deletePressed}>
           <Text style={styles.deleteText}>Delete</Text>
         </TouchableOpacity>
+
+        <Text></Text>
       </ScrollView>
 
       <View style={styles.row}>
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={activityImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -365,7 +406,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={toDoImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -376,25 +417,25 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={transImg} style={styles.logo} />
           </TouchableOpacity>
           {
             <Text style={lightOrDark == 'dark' ? styles.bottomButtonTextDark : styles.bottomButtonTextLight}>
-              Transactn
+              Transaction
             </Text>
           }
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={apptImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.bottomButtonTextDark : styles.bottomButtonTextLight}>Appt</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => HandleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={ideasImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -415,16 +456,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   rankRowDark: {
-    height: '8%',
+    height: 60,
     backgroundColor: 'black',
     marginBottom: 5,
     paddingTop: 5,
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
   },
   rankRowLight: {
-    height: '8%',
+    height: 60,
     backgroundColor: 'white',
     marginBottom: 5,
     paddingTop: 5,
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
   },
   directionsRow: {
     display: 'flex',
@@ -435,7 +480,7 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 14,
     color: 'gray',
-    marginLeft: 20,
+    marginLeft: 15,
     marginBottom: 10,
   },
   scrollViewDark: {
@@ -448,7 +493,7 @@ const styles = StyleSheet.create({
   },
   phoneAndEmail: {
     color: '#02ABF7',
-    marginLeft: 20,
+    marginLeft: 15,
     marginBottom: 10,
   },
   pair: {
@@ -464,55 +509,63 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   topButtonTextDark: {
-    height: 18,
+    height: 16,
     color: 'white',
     textAlign: 'center',
+    fontSize: 12,
   },
   topButtonTextLight: {
-    height: 18,
+    height: 16,
     color: '#016497',
     textAlign: 'center',
+    fontSize: 12,
   },
   bottomButtonTextDark: {
-    height: 18,
     color: 'white',
     textAlign: 'center',
+    fontSize: 12,
   },
   bottomButtonTextLight: {
-    height: 18,
-    width: 50,
     color: '#013273',
     textAlign: 'center',
+    fontSize: 12,
   },
   namesDark: {
     color: 'white',
     textAlign: 'left',
-    marginLeft: 20,
+    marginLeft: 15,
     marginBottom: 10,
   },
   namesLight: {
     color: 'black',
     textAlign: 'left',
-    marginLeft: 20,
+    marginLeft: 15,
     marginBottom: 10,
+  },
+  popByButtons: {
+    color: '#1398F5',
+    fontSize: 15,
+    textAlign: 'right',
+    marginRight: 10,
+    marginBottom: 5,
   },
   addressDark: {
     color: 'white',
     textAlign: 'left',
-    marginLeft: 20,
+    marginLeft: 15,
     marginBottom: 2,
   },
   addressLight: {
     color: 'black',
     textAlign: 'left',
-    marginLeft: 20,
+    marginLeft: 15,
     marginBottom: 2,
   },
   sectionText: {
     fontSize: 16,
     color: '#02ABF7',
     textAlign: 'left',
-    marginLeft: 20,
+    marginLeft: 15,
     marginBottom: 20,
   },
   deleteText: {
