@@ -27,11 +27,13 @@ export default function GoalsScreen() {
   function winTheDayPressed() {
     analytics.event(new Event('Goals', 'Win the Day Pressed'));
     setWinTheDaySelected(true);
+    fetchGoals();
   }
 
   function winTheWeekPressed() {
     analytics.event(new Event('Goals', 'Win the Week Pressed'));
     setWinTheDaySelected(false);
+    fetchGoals();
   }
 
   async function getDarkOrLightMode() {
@@ -66,9 +68,9 @@ export default function GoalsScreen() {
       }
     }
     return {
-      width: 200,
+      width: 225,
       color: textColor,
-      fontSize: 16,
+      fontSize: 15,
       marginLeft: 10,
     };
   }

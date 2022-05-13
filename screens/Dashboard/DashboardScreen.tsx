@@ -235,13 +235,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   namesDark: {
-    height: 18,
     color: 'white',
     textAlign: 'center',
+    fontSize: 11,
   },
   namesLight: {
-    height: 18,
     color: 'black',
     textAlign: 'center',
+    fontSize: 12,
   },
 });

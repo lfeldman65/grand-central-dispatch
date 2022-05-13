@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
 
 const eyeClosed = require('../Login/images/eyeClosed.png');
 const eyeOpen = require('../Login/images/eyeOpen.png');
@@ -30,9 +30,9 @@ export default function LoginScreen() {
     //   .event(new Event('Login', 'Forgot Password Button Pressed', 0))
     //   .then(() => console.log('button success'))
     //   .catch((e) => console.log(e.message));
-    // Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
+    Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
 
-    setShowPW(!showPW);
+    //  setShowPW(!showPW);
   }
   async function populateCredentialsIfRemembered() {
     const userNameFromStorage = await storage.getItem('userName');
@@ -172,10 +172,10 @@ const styles = StyleSheet.create({
     //alignItems: 'center',
   },
   logo: {
-    width: 173,
-    height: 242,
+    width: 150,
+    height: 210,
     marginBottom: 20,
-    marginTop: 40,
+    marginTop: 20,
   },
   usernameView: {
     backgroundColor: '#002341',
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     marginRight: 1,
   },
   forgotText: {
-    marginTop: 18,
+    marginTop: 14,
     color: '#37C0FF',
     fontSize: 14,
     textAlign: 'right',
