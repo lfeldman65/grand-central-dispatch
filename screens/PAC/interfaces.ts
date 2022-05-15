@@ -28,7 +28,7 @@ export interface PACDataResponse {
 // PAC Postpone in Postman
 
 export interface PACPostponeProps {
-  contactId: string;
+  message: string;
 }
 
 export interface PACPostponeResponse {
@@ -40,7 +40,7 @@ export interface PACPostponeResponse {
 // Track Action in Postman
 
 export interface PACCompleteProps {
-  contactId: string;
+  message: string;
 }
 
 export interface PACCompleteResponse {
