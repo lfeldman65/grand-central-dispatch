@@ -241,11 +241,11 @@ export default function PACDetailScreen(props: any) {
 
 const stylesDetail = StyleSheet.create({
   topContainerDark: {
-    height: 0.75 * deviceHeight,
+    height: 0.72 * deviceHeight,
     backgroundColor: 'black',
   },
   topContainerLight: {
-    height: 0.75 * deviceHeight,
+    height: 0.72 * deviceHeight,
     backgroundColor: 'white',
   },
   personName: {
@@ -305,18 +305,15 @@ const stylesDetail = StyleSheet.create({
     width: 180,
     marginBottom: 15,
   },
-  postponeText: {
-    color: '#F99055',
-    marginLeft: 10,
-    textAlign: 'center',
-    fontSize: 20,
-  },
   completeText: {
-    marginTop: 20,
     color: 'green',
-    marginLeft: 10,
     textAlign: 'center',
     fontSize: 20,
     marginBottom: 20,
+  },
+  postponeText: {
+    color: '#F99055',
+    textAlign: 'center',
+    fontSize: 20,
   },
 });

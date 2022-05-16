@@ -116,8 +116,9 @@ export const styles = StyleSheet.create({
   ideasText: {
     textAlign: 'center',
     color: 'white',
-    fontSize: 20,
-    justifyContent: 'center',
+    fontSize: 18,
+    // justifyContent: 'center',
+    marginBottom: 12,
   },
   complete: {
     width: 200,
