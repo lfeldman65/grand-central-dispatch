@@ -16,8 +16,10 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 let deviceWidth = Dimensions.get('window').width;
 
 export default function LoginScreen() {
-  const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
-  const [password, setPassword] = useState('success');
+  //  const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
+  //  const [password, setPassword] = useState('success');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberChecked, setRememberCheck] = useState(false);
   const [showPW, setShowPW] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +68,7 @@ export default function LoginScreen() {
   }
 
   useEffect(() => {
-    //  populateCredentialsIfRemembered();
+    populateCredentialsIfRemembered();
   }, [isFocused]);
 
   function HandleLoginPress() {

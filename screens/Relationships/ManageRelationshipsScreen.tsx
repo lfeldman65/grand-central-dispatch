@@ -186,12 +186,8 @@ export default function ManageRelationshipsScreen() {
         <React.Fragment>
           {tabSelected != 'groups' && (
             <View style={globalStyles.filterRow}>
-              <Text style={globalStyles.blankButton}></Text>
               <TouchableOpacity onPress={filterPressed}>
                 <Text style={globalStyles.filterText}>{isFilterRel ? 'Show Businesses' : 'Show Relationships'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={filterPressed}>
-                <Image source={chevron} style={globalStyles.chevronFilter} />
               </TouchableOpacity>
             </View>
           )}

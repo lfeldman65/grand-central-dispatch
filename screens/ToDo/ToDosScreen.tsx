@@ -135,12 +135,8 @@ export default function ToDosScreen() {
       ) : (
         <React.Fragment>
           <View style={globalStyles.filterRow}>
-            <Text style={globalStyles.blankButton}></Text>
             <TouchableOpacity onPress={filterPressed}>
               <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={filterPressed}>
-              <Image source={chevron} style={globalStyles.chevronFilter} />
             </TouchableOpacity>
           </View>
 

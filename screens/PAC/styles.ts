@@ -229,7 +229,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 0,
     alignContent: 'center',
-    width: 100,
+    width: 120,
     backgroundColor: '#56BE42',
   },
   hackDark: {

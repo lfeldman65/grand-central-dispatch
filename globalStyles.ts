@@ -18,7 +18,7 @@ export default StyleSheet.create({
   unselected: {
     color: 'lightgray',
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 15,
     height: '100%',
     backgroundColor: '#09334a',
     flex: 1,
@@ -27,7 +27,7 @@ export default StyleSheet.create({
   selected: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 15,
     height: '100%',
     backgroundColor: '#04121b',
     flex: 1,
@@ -39,7 +39,7 @@ export default StyleSheet.create({
   // filters for To-Do's, Rolodex, etc
   filterRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     height: 40,
     borderColor: 'lightgray',
     borderWidth: 1,
@@ -52,7 +52,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     fontSize: 18,
     color: '#1398f5',
-    marginTop: 10,
+    marginTop: 9,
   },
   chevronFilter: {
     marginRight: 20,
