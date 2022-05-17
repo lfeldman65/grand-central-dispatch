@@ -86,9 +86,9 @@ export default function PACCallsRow(props: PACCallsRowProps) {
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
-  const handlePhonePressed = (number: string) => {
-    console.log(number);
-  };
+  function handlePhonePressed(phoneNumber: string) {
+    Linking.openURL(`tel:${phoneNumber}`);
+  }
 
   const renderRightActions = () => {
     return (
