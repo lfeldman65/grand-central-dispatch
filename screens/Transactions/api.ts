@@ -5,8 +5,10 @@ export function getTransactionData(status: string, type: string): Promise<Transa
   return http.get(`deals?filter=${status}&lastItem=0&batchSize=100&dealType=${type}`);
 } // back tick (`) only necessary for string interpolation
 
-export function changeTxStatus(id: number, newStatus: string): Promise<TxChangeStatusResponse> {
+export function changeTxStatus(idDeal: number, newStatus: string): Promise<TxChangeStatusResponse> {
+  console.log(idDeal);
+  console.log(newStatus);
   return http.post('dealChangeStatus', {
-    body: { id, newStatus },
+    body: { idDeal, newStatus },
   });
 }

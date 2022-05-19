@@ -100,19 +100,12 @@ export const styles = StyleSheet.create({
     borderWidth: 0.5,
     paddingBottom: 10,
   },
-  leftSwipeItem: {
-    justifyContent: 'center',
-    margin: 0,
-    alignContent: 'center',
-    width: 90,
-    backgroundColor: '#388e3c',
-  },
   rightSwipeItem: {
     justifyContent: 'center',
     margin: 0,
     alignContent: 'center',
-    width: 90,
-    backgroundColor: '#ff8e3c',
+    width: 150,
+    backgroundColor: '#34ABF7',
   },
   transactionRow: {
     display: 'flex',

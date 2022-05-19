@@ -1,5 +1,10 @@
 // Transactions in Postman
 
+export interface TransactionDataResponse {
+  data: TransactionDataProps[];
+  error: string;
+  status: string;
+}
 export interface TransactionDataProps {
   id: number;
   contactName: string;
@@ -7,20 +12,12 @@ export interface TransactionDataProps {
   closingDate: string;
 }
 
-export interface TransactionDataResponse {
-  data: TransactionDataProps[];
-  error: string;
-  status: string;
-}
-
-// ? in Postman
-export interface TxChangeStatusProps {
-  idDeal: number;
-  newStatus: string;
-}
-
+// Change Transaction Status in Postman
 export interface TxChangeStatusResponse {
   data: TxChangeStatusProps;
   error: string;
   status: string;
+}
+export interface TxChangeStatusProps {
+  message: string;
 }
