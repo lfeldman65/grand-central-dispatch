@@ -198,13 +198,13 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
                   key={index}
                   data={item}
                   onPress={() => handleRowPress(index)}
-                  refresh={() => potentialPressed()}
+                  refresh={() => tabPressed('potential')}
                   onChangeStatus={() => changeStatusPressed(item.id)}
                 />
               </View>
             ))}
           </ScrollView>
-          <TouchableOpacity style={styles.bottomContainer} onPress={() => filterPressed()}>
+          <TouchableOpacity style={styles.bottomContainer} onPress={() => handleAddPressed()}>
             <View style={styles.addButton}>
               <Text style={styles.addText}>{'Add Transaction'}</Text>
             </View>
