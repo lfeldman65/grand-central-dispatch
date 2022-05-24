@@ -161,7 +161,7 @@ export default function AddRelationshipScreen(props: any) {
           <View style={styles.mainContent}>
             <TouchableOpacity onPress={ReferralPressed}>
               <View style={styles.inputView}>
-                <TextInput placeholder="+ Add" style={styles.nameLabel}>
+                <TextInput placeholder="Select one" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
                   {referral == null ? '' : referral.firstName}
                 </TextInput>
               </View>

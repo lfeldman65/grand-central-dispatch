@@ -142,7 +142,6 @@ export interface AddContactDataResponse {
 
 // Recent Activity in Postman
 
-  [x: string]: string;
 export interface RecentActivityDataProps {
   ContactId: string;
   ActivityType: string;
