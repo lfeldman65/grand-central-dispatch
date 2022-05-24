@@ -31,8 +31,16 @@ export function addNewContact(
   firstName: string,
   lastName: string,
   contactTypeID: string,
-  employerName: string
+  employerName: string,
+  referredByName: string = '',
+  referredByID: string = ''
 ): Promise<AddContactDataResponse> {
+  console.log(referredByName);
+  console.log(referredByID);
+  var isReferral = false;
+  if (referredByID != '') {
+    isReferral = true;
+  }
   return http.post('contacts', {
     body: [
       {
@@ -43,6 +51,11 @@ export function addNewContact(
           occupation: '',
           employerName: employerName,
           careerNotes: '',
+        },
+        referral: isReferral,
+        referredBy: {
+          name: referredByName,
+          id: referredByID,
         },
       },
     ],

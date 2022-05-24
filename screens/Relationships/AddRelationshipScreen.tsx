@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Modal } from 'react-native';
 const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useIsFocused } from '@react-navigation/native';
 import { addNewContact } from './api';
+import SelRefScreen from './SelectReferralScreen';
+import { RolodexDataProps } from './interfaces';
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -14,8 +16,19 @@ export default function AddRelationshipScreen(props: any) {
   const [firstName, setFirstName] = useState(' ');
   const [lastName, setLastName] = useState(' ');
   const [company, setCompany] = useState(' ');
+  const [referral, setReferral] = useState<RolodexDataProps>();
+  const [referralModalVisible, setReferralModalVisible] = useState(false);
 
   const isFocused = useIsFocused();
+
+  useEffect(() => {
+    //  populateCredentialsIfRemembered();
+  }, [isFocused]);
+
+  function ReferralPressed() {
+    console.log('referral pressed');
+    setReferralModalVisible(true);
+  }
 
   function SavePressed() {
     //   analytics.event(new Event('Login', 'Login Button', 'Pressed', 0));
@@ -28,7 +41,14 @@ export default function AddRelationshipScreen(props: any) {
       return;
     }
     console.log(company);
-    addNewContact(firstName, lastName, bizChecked ? 'Biz' : 'Rel', company)
+    addNewContact(
+      firstName,
+      lastName,
+      bizChecked ? 'Biz' : 'Rel',
+      company,
+      referral == null ? '' : referral.firstName,
+      referral == null ? '' : referral.id
+    )
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
@@ -135,6 +155,34 @@ export default function AddRelationshipScreen(props: any) {
             setReferralChecked(!referralChecked);
           }}
         />
+
+        {referralChecked && <Text style={styles.nameTitle}>Referral</Text>}
+        {referralChecked && (
+          <View style={styles.mainContent}>
+            <TouchableOpacity onPress={ReferralPressed}>
+              <View style={styles.inputView}>
+                <TextInput style={styles.nameTitle}>{referral == null ? '' : referral.firstName}</TextInput>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {referralModalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={referralModalVisible}
+            onRequestClose={() => {
+              setReferralModalVisible(!referralModalVisible);
+            }}
+          >
+            <SelRefScreen
+              title={'Select Referral'}
+              setReferral={setReferral}
+              setModalVisible={setReferralModalVisible}
+            />
+          </Modal>
+        )}
       </View>
     </View>
   );
