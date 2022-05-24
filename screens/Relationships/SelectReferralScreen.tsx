@@ -171,7 +171,7 @@ const styles2 = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    padding: 10,
+    paddingBottom: 10,
     justifyContent: 'space-between',
     marginTop: 40,
   },
@@ -183,7 +183,7 @@ const styles2 = StyleSheet.create({
   backArrow: {
     width: 17,
     height: 14,
-    marginLeft: 5,
+    marginLeft: 7,
     marginTop: 2,
   },
   searchGlass: {
