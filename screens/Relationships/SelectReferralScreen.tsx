@@ -190,7 +190,6 @@ const styles2 = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 10,
-    alpha: 10,
   },
   nameLabel: {
     color: 'white',

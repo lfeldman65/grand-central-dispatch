@@ -161,7 +161,12 @@ export default function AddRelationshipScreen(props: any) {
           <View style={styles.mainContent}>
             <TouchableOpacity onPress={referralPressed}>
               <View style={styles.inputView}>
-                <TextInput placeholder="Select one" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+                <TextInput
+                  editable={false}
+                  placeholder="Select one"
+                  placeholderTextColor="#AFB9C2"
+                  style={styles.nameLabel}
+                >
                   {referral == null ? '' : referral.firstName}
                 </TextInput>
               </View>
@@ -240,7 +245,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FFFFFF',
     width: 300,
-    placeholderText: '+ Add',
   },
   checkBox: {
     marginTop: 12,
