@@ -3,15 +3,16 @@ import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions 
 const closeButton = require('../../images/button_close_white.png');
 import { useIsFocused } from '@react-navigation/native';
 import { addNewContact } from './api';
-import { RolodexDataProps } from './interfaces';
+import { AddContactDataProps, AddContactDataResponse, RolodexDataProps } from './interfaces';
 
 let deviceWidth = Dimensions.get('window').width;
 
 export default function AddNewReferral(props: any) {
-  const { setModalVisible, title } = props;
-  const [firstName, setFirstName] = useState(' ');
-  const [lastName, setLastName] = useState(' ');
-  const [referral, setReferral] = useState<RolodexDataProps>();
+  const { setModalVisible, setReferral } = props;
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [contact, setContact] = useState<AddContactDataResponse>();
+  //const [referralLocal, setReferralLocal] = useState<RolodexDataProps>();
   //  const [referralModalVisible, setReferralModalVisible] = useState(false);
 
   const isFocused = useIsFocused();
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
   },
   nameSection: {
     //  backgroundColor: 'red',
-    height: '205%',
+    height: '195%',
   },
   nameTitle: {
     color: 'white',

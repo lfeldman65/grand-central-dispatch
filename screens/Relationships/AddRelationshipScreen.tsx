@@ -13,8 +13,8 @@ export default function AddRelationshipScreen(props: any) {
   const { setModalVisible, title } = props;
   const [bizChecked, setBizCheck] = useState(false);
   const [referralChecked, setReferralChecked] = useState(false);
-  const [firstName, setFirstName] = useState(' ');
-  const [lastName, setLastName] = useState(' ');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [company, setCompany] = useState(' ');
   const [referral, setReferral] = useState<RolodexDataProps>();
   const [referralModalVisible, setReferralModalVisible] = useState(false);
@@ -36,7 +36,7 @@ export default function AddRelationshipScreen(props: any) {
       console.error('Please enter a First Name and/or Last Name');
       return;
     }
-    if (bizChecked && company == ' ') {
+    if (bizChecked && company == '') {
       console.error('Please enter a Company Name');
       return;
     }
@@ -130,8 +130,8 @@ export default function AddRelationshipScreen(props: any) {
       <View style={styles.mainContent}>
         <View style={styles.inputView}>
           <TextInput
-            style={styles.textInput}
             placeholder="+ Add"
+            style={styles.textInput}
             placeholderTextColor="#AFB9C2"
             textAlign="left"
             onChangeText={(text) => setLastName(text)}
@@ -161,7 +161,9 @@ export default function AddRelationshipScreen(props: any) {
           <View style={styles.mainContent}>
             <TouchableOpacity onPress={ReferralPressed}>
               <View style={styles.inputView}>
-                <TextInput style={styles.nameTitle}>{referral == null ? '' : referral.firstName}</TextInput>
+                <TextInput placeholder="+ Add" style={styles.nameTitle}>
+                  {referral == null ? '' : referral.firstName}
+                </TextInput>
               </View>
             </TouchableOpacity>
           </View>
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 30,
   },
   closeX: {
     width: 15,
@@ -238,6 +240,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FFFFFF',
     width: 300,
+    placeholderText: '+ Add',
   },
   checkBox: {
     marginTop: 12,

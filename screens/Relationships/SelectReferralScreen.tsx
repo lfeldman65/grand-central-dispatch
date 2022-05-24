@@ -160,7 +160,7 @@ export default function SelectReferralScreen(props: any) {
             )}
             {tabSelected == 'Add New' && (
               <View>
-                <AddNewRef></AddNewRef>
+                <AddNewRef setReferral={props.setReferral} setModalVisible={props.setModalVisible}></AddNewRef>
               </View>
             )}
           </ScrollView>
@@ -180,7 +180,7 @@ const styles2 = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 40,
   },
   closeButtonView: {
     marginTop: 10,
