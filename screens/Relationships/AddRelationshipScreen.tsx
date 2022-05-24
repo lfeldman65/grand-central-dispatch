@@ -25,7 +25,7 @@ export default function AddRelationshipScreen(props: any) {
     //  populateCredentialsIfRemembered();
   }, [isFocused]);
 
-  function ReferralPressed() {
+  function referralPressed() {
     console.log('referral pressed');
     setReferralModalVisible(true);
   }
@@ -159,7 +159,7 @@ export default function AddRelationshipScreen(props: any) {
         {referralChecked && <Text style={styles.nameTitle}>Referral</Text>}
         {referralChecked && (
           <View style={styles.mainContent}>
-            <TouchableOpacity onPress={ReferralPressed}>
+            <TouchableOpacity onPress={referralPressed}>
               <View style={styles.inputView}>
                 <TextInput placeholder="Select one" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
                   {referral == null ? '' : referral.firstName}

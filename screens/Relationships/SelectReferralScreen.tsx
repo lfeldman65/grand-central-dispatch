@@ -109,13 +109,12 @@ export default function SelectReferralScreen(props: any) {
     fetchRolodexPressed('alpha');
   }, [isFocused]);
 
-  // useEffect(() => {
-  //   if (route?.params?.contactToRemoveId) {
-  //     const filteredData = data.filter((item) => item.contactId != route?.params?.contactToRemoveId);
-  //     console.log(`filteredData: ${filteredData}`);
-  //     setData(filteredData);
-  //   }
-  // }, []);
+  function picGlassImage() {
+    if (tabSelected == 'Search Existing') {
+      return searchGlass;
+    }
+    return;
+  }
 
   return (
     <View style={styles2.container}>
@@ -125,7 +124,10 @@ export default function SelectReferralScreen(props: any) {
         </TouchableOpacity>
         <Text style={styles2.nameLabel}>{title}</Text>
         <TouchableOpacity onPress={searchPressed}>
-          <Image source={searchGlass} style={styles2.searchGlass} />
+          <Image
+            source={searchGlass}
+            style={tabSelected == 'Search Existing' ? styles2.searchGlass : styles2.searchGlassHidden}
+          />
         </TouchableOpacity>
       </View>
 
@@ -197,6 +199,13 @@ const styles2 = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 10,
+    alpha: 10,
+  },
+  searchGlassHidden: {
+    width: 0,
+    height: 0,
+    marginRight: 10,
+    alpha: 10,
   },
   nameLabel: {
     color: 'white',
