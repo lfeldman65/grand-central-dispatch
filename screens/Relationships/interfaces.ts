@@ -132,6 +132,7 @@ export interface AddContactDataProps {
   firstName: string;
   lastName: string;
   contactTypeID: string;
+  id: string;
 }
 
 export interface AddContactDataResponse {
