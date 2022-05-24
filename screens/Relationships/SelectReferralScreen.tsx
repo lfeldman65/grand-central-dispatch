@@ -17,6 +17,7 @@ import AddNewRef from './AddNewReferral';
 
 const backArrow = require('../../images/white_arrow_left.png');
 const searchGlass = require('../../images/whiteSearch.png');
+const searchBlank = require('../../images/blankSearch.png'); // Preserves horizontal alignment of title bar
 
 type TabType = 'Search Existing' | 'Add New';
 
@@ -109,13 +110,6 @@ export default function SelectReferralScreen(props: any) {
     fetchRolodexPressed('alpha');
   }, [isFocused]);
 
-  function picGlassImage() {
-    if (tabSelected == 'Search Existing') {
-      return searchGlass;
-    }
-    return;
-  }
-
   return (
     <View style={styles2.container}>
       <View style={styles2.topRow}>
@@ -124,10 +118,7 @@ export default function SelectReferralScreen(props: any) {
         </TouchableOpacity>
         <Text style={styles2.nameLabel}>{title}</Text>
         <TouchableOpacity onPress={searchPressed}>
-          <Image
-            source={searchGlass}
-            style={tabSelected == 'Search Existing' ? styles2.searchGlass : styles2.searchGlassHidden}
-          />
+          <Image source={tabSelected == 'Search Existing' ? searchGlass : searchBlank} style={styles2.searchGlass} />
         </TouchableOpacity>
       </View>
 
@@ -198,12 +189,6 @@ const styles2 = StyleSheet.create({
   searchGlass: {
     width: 20,
     height: 20,
-    marginRight: 10,
-    alpha: 10,
-  },
-  searchGlassHidden: {
-    width: 0,
-    height: 0,
     marginRight: 10,
     alpha: 10,
   },
