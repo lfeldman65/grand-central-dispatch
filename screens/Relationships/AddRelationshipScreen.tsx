@@ -15,7 +15,7 @@ export default function AddRelationshipScreen(props: any) {
   const [referralChecked, setReferralChecked] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [company, setCompany] = useState(' ');
+  const [company, setCompany] = useState('');
   const [referral, setReferral] = useState<RolodexDataProps>();
   const [referralModalVisible, setReferralModalVisible] = useState(false);
 
@@ -161,7 +161,7 @@ export default function AddRelationshipScreen(props: any) {
           <View style={styles.mainContent}>
             <TouchableOpacity onPress={ReferralPressed}>
               <View style={styles.inputView}>
-                <TextInput placeholder="+ Add" style={styles.nameTitle}>
+                <TextInput placeholder="+ Add" style={styles.nameLabel}>
                   {referral == null ? '' : referral.firstName}
                 </TextInput>
               </View>
