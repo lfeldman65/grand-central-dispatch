@@ -44,7 +44,6 @@ export default function ManageRelationshipsScreen() {
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
 
   const handleRowPress = (index: number) => {

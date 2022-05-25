@@ -10,7 +10,7 @@ import {
 } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
-  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=100`);
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=500`);
 } // back tick (`) only necessary for string interpolation
 
 export function getToDos(guid: string): Promise<ToDoAndApptResponse> {

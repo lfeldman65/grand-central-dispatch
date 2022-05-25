@@ -78,6 +78,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function fullName() {
+    if (dataDetails?.contactTypeID == 'Biz') {
+      return dataDetails.businessAndCareer.employerName;
+    }
     var newFirst = '';
     var newLast = '';
     if (!isNullOrEmpty(firstName)) {
@@ -321,9 +324,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <TouchableOpacity onPress={() => handleSectionTap(1)}>
           <Text style={styles.sectionText}>{showActivity ? 'Hide Activity History' : 'Show Activity History'}</Text>
         </TouchableOpacity>
-        {showActivity && (
+
+        {showActivity && dataDetails?.historyNotes != null && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{dataDetails?.historyNotes}</Text>
         )}
+
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
           <Text style={styles.sectionText}>
             {showToDos ? 'Hide To-Dos and Appointments' : 'Show To-Dos and Appointments'}
@@ -360,11 +365,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             {showInterests ? 'Hide Interests and Favorites' : 'Show Interests and Favorites'}
           </Text>
         </TouchableOpacity>
-        {showInterests && dataDetails?.interestsAndFavorites.notes != null && (
-          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {dataDetails?.interestsAndFavorites.notes}
-          </Text>
-        )}
+
+        {showInterests &&
+          dataDetails?.interestsAndFavorites.notes != '' &&
+          dataDetails?.interestsAndFavorites.notes != null && (
+            <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
+              {dataDetails?.interestsAndFavorites.notes}
+            </Text>
+          )}
 
         <TouchableOpacity onPress={() => handleSectionTap(6)}>
           <Text style={styles.sectionText}>{showBiz ? 'Hide Business and Career' : 'Show Business and Career'}</Text>
