@@ -9,6 +9,7 @@ const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
 const rankB = require('../Relationships/images/rankB.png');
 const rankC = require('../Relationships/images/rankC.png');
+const rankD = require('../Relationships/images/rankD.png');
 
 interface AtoZRowProps {
   data: RolodexDataProps;
@@ -20,7 +21,8 @@ function chooseImage(rank: string) {
   if (rank == 'A+') return rankAPlus;
   if (rank == 'A') return rankA;
   if (rank == 'B') return rankB;
-  return rankC;
+  if (rank == 'C') return rankC;
+  return rankD;
 }
 
 function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {

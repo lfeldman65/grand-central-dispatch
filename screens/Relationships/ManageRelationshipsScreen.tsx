@@ -53,6 +53,8 @@ export default function ManageRelationshipsScreen() {
       contactId: dataRolodex[index]['id'],
       firstName: dataRolodex[index]['firstName'],
       lastName: dataRolodex[index]['lastName'],
+      rankFromAbove: dataRolodex[index]['ranking'],
+      qualFromAbove: dataRolodex[index]['qualified'],
     });
   };
   useEffect(() => {

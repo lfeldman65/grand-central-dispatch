@@ -9,8 +9,23 @@ import { RelDetailsProps, ToDoAndApptProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
 import { formatDate } from '../../utils/general';
-
 import openMap from 'react-native-open-maps';
+const chevron = require('../../images/chevron_blue_right.png');
+//const suitcase = require('../Relationships/images/iconSuitcase.png');
+
+const aPlusSel = require('../Relationships/images/aPlusSel.png');
+const aPlusReg = require('../Relationships/images/aPlusReg.png');
+const aSel = require('../Relationships/images/aSel.png');
+const aReg = require('../Relationships/images/aReg.png');
+const bSel = require('../Relationships/images/bSel.png');
+const bReg = require('../Relationships/images/bReg.png');
+const cSel = require('../Relationships/images/cSel.png');
+const cReg = require('../Relationships/images/cReg.png');
+const dSel = require('../Relationships/images/dSel.png');
+const dReg = require('../Relationships/images/dReg.png');
+
+const qualChecked = require('../Relationships/images/qualChecked.png');
+const qualUnchecked = require('../Relationships/images/qualUnchecked.png');
 
 const messageImg = require('../Relationships/images/relMessage.png');
 const callImg = require('../Relationships/images/relCall.png');
@@ -24,7 +39,6 @@ const apptImg = require('../Relationships/images/relAppt.png');
 const ideasImg = require('../Relationships/images/relIdeas.png');
 
 interface RelDetailsLocalProps {
-  // branch.
   data: RelDetailsProps;
   route: any;
   onPress(): void;
@@ -32,9 +46,11 @@ interface RelDetailsLocalProps {
 }
 export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const { route } = props;
-  const { contactId, firstName, lastName } = route.params;
+  const { contactId, firstName, lastName, rankFromAbove, qualFromAbove } = route.params;
   const navigation = useNavigation();
   const [lightOrDark, setIsLightOrDark] = useState('');
+  const [theRank, setTheRank] = useState(rankFromAbove);
+  const [isQual, setIsQual] = useState(qualFromAbove);
   const [dataDetails, setDataDetails] = useState<RelDetailsProps>();
   const [dataToDos, setDataToDos] = useState<ToDoAndApptProps[]>([]);
   const isFocused = useIsFocused();
@@ -46,12 +62,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [showGroups, setShowGroups] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
   const [showBiz, setShowBiz] = useState(false);
-  const [groupArray, setGroupArray] = useState();
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
 
   useEffect(() => {
@@ -59,7 +73,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }, [isFocused]);
 
   useEffect(() => {
-    navigation.setOptions({ title: 'Relationships' });
     fetchRelDetails();
   }, [isFocused]);
 
@@ -75,6 +88,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleButtonPress() {
     console.log('button pressed');
+  }
+
+  function handleReferralPressed() {
+    console.log('referral pressed');
+  }
+
+  function handleSpousePressed() {
+    console.log('spouse pressed');
   }
 
   function fullName() {
@@ -161,6 +182,50 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       .catch((error) => console.error('failure ' + error));
   }
 
+  function getRankButtonImage(rank: string) {
+    if (rank == 'A+') {
+      if (theRank == 'A+') {
+        return aPlusSel;
+      }
+      return aPlusReg;
+    }
+    if (rank == 'A') {
+      if (theRank == 'A') {
+        return aSel;
+      }
+      return aReg;
+    }
+    if (rank == 'B') {
+      if (theRank == 'B') {
+        return bSel;
+      }
+      return bReg;
+    }
+    if (rank == 'C') {
+      if (theRank == 'C') {
+        return cSel;
+      }
+      return cReg;
+    }
+    if (rank == 'D') {
+      if (theRank == 'D') {
+        return dSel;
+      }
+      return dReg;
+    }
+  }
+
+  function handleRankPress(rank: string) {
+    console.log('rank1: ' + rank);
+    //  if(theRank == 'A+')
+    setTheRank(rank);
+  }
+
+  function handleQualPress() {
+    console.log('qual');
+    setIsQual(!isQual);
+  }
+
   function fetchToDos() {
     setIsLoading(true);
     getToDos(contactId)
@@ -169,7 +234,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           console.error(res.error);
         } else {
           setDataToDos(res.data);
-          console.log(res.data);
+          //  console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -192,7 +257,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      <View style={styles.row}>
+      <View style={styles.topAndBottomRows}>
         <View style={styles.pair}>
           <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={messageImg} style={styles.logo} />
@@ -230,9 +295,37 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       </View>
 
       <ScrollView style={lightOrDark == 'dark' ? styles.scrollViewDark : styles.scrollViewLight}>
-        <View style={lightOrDark == 'dark' ? styles.rankRowDark : styles.rankRowLight}>
+        <View style={styles.rankTitleRow}>
           <Text style={styles.subTitle}>Ranking</Text>
-          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{dataDetails?.ranking}</Text>
+          <Text style={styles.subTitle}>Qualified</Text>
+        </View>
+
+        <View style={styles.rankAndQualRow}>
+          <View style={lightOrDark == 'dark' ? styles.rankSection : styles.rankSection}>
+            <TouchableOpacity onPress={() => handleRankPress('A+')}>
+              <Image source={theRank == 'A+' ? aPlusSel : aPlusReg} style={styles.rankButton} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleRankPress('A')}>
+              <Image source={getRankButtonImage('A')} style={styles.rankButton} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleRankPress('B')}>
+              <Image source={getRankButtonImage('B')} style={styles.rankButton} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleRankPress('C')}>
+              <Image source={getRankButtonImage('C')} style={styles.rankButton} />
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => handleRankPress('D')}>
+              <Image source={getRankButtonImage('D')} style={styles.rankButton} />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity onPress={() => handleQualPress()}>
+            <Image source={isQual ? qualChecked : qualUnchecked} style={styles.qualButton} />
+          </TouchableOpacity>
         </View>
 
         {!isNullOrEmpty(dataDetails?.mobile) && <Text style={styles.subTitle}>Mobile Phone Number</Text>}
@@ -252,8 +345,27 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.subTitle}>Website</Text>}
         {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.phoneAndEmail}>{dataDetails?.website}</Text>}
 
+        {/* <Text style={styles.bookMark}>Bookmark</Text> */}
+
+        {!isNullOrEmpty(dataDetails?.spouse.id) && <Text style={styles.subTitle}>Spouse</Text>}
+        {!isNullOrEmpty(dataDetails?.spouse.id) && (
+          <TouchableOpacity onPress={() => handleSpousePressed()}>
+            <View style={styles.referralAndSpouseRow}>
+              <View style={styles.referralAndSpouseText}>
+                <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
+                  {dataDetails?.spouse.name}
+                </Text>
+              </View>
+
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+
         {!isNullOrEmpty(dataDetails?.address.street) && (
-          <View style={styles.row}>
+          <View style={styles.topAndBottomRows}>
             <Text style={styles.subTitle}>Location</Text>
 
             <TouchableOpacity style={styles.popByButtons} onPress={() => handleDirectionsPressed()}>
@@ -276,12 +388,32 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           !isNullOrEmpty(dataDetails?.address.state) &&
           !isNullOrEmpty(dataDetails?.address.zip) && (
             <Text style={lightOrDark == 'dark' ? styles.addressDark : styles.addressLight}>
-              {/* {dataDetails?.address.city + ', ' + dataDetails?.address.state + ' ' + dataDetails?.address.zip} */}
               {cityStateZip(dataDetails?.address.city, dataDetails?.address.state, dataDetails?.address.zip)}
             </Text>
           )}
 
         <Text></Text>
+        {!isNullOrEmpty(dataDetails?.notes) && <Text style={styles.subTitle}>Notes</Text>}
+        {!isNullOrEmpty(dataDetails?.notes) && (
+          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{dataDetails?.notes}</Text>
+        )}
+
+        {!isNullOrEmpty(dataDetails?.referredBy.id) && <Text style={styles.subTitle}>Referred By</Text>}
+        {!isNullOrEmpty(dataDetails?.referredBy.id) && (
+          <TouchableOpacity onPress={() => handleReferralPressed()}>
+            <View style={styles.referralAndSpouseRow}>
+              <View style={styles.referralAndSpouseText}>
+                <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
+                  {dataDetails?.referredBy.name}
+                </Text>
+              </View>
+
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(0)}>
           <Text style={styles.sectionText}>
@@ -325,10 +457,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           <Text style={styles.sectionText}>{showActivity ? 'Hide Activity History' : 'Show Activity History'}</Text>
         </TouchableOpacity>
 
-        {showActivity && dataDetails?.historyNotes != null && (
-          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{dataDetails?.historyNotes}</Text>
-        )}
-
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
           <Text style={styles.sectionText}>
             {showToDos ? 'Hide To-Dos and Appointments' : 'Show To-Dos and Appointments'}
@@ -347,38 +475,29 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <TouchableOpacity onPress={() => handleSectionTap(3)}>
           <Text style={styles.sectionText}>{showTransactions ? 'Hide Transactions' : 'Show Transactions'}</Text>
         </TouchableOpacity>
-        {showTransactions && dataDetails?.transactionNotes != null && (
-          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {dataDetails?.transactionNotes}
-          </Text>
-        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(4)}>
           <Text style={styles.sectionText}>{showGroups ? 'Hide Groups' : 'Show Groups'}</Text>
         </TouchableOpacity>
-        {showGroups && dataDetails?.groupsNotes != null && (
-          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{dataDetails?.groupsNotes}</Text>
-        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(5)}>
           <Text style={styles.sectionText}>
             {showInterests ? 'Hide Interests and Favorites' : 'Show Interests and Favorites'}
           </Text>
         </TouchableOpacity>
-
-        {showInterests &&
-          dataDetails?.interestsAndFavorites.notes != '' &&
-          dataDetails?.interestsAndFavorites.notes != null && (
-            <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-              {dataDetails?.interestsAndFavorites.notes}
-            </Text>
-          )}
+        {showInterests && !isNullOrEmpty(dataDetails?.interestsAndFavorites.notes) && (
+          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
+            {dataDetails?.interestsAndFavorites.notes}
+          </Text>
+        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(6)}>
           <Text style={styles.sectionText}>{showBiz ? 'Hide Business and Career' : 'Show Business and Career'}</Text>
         </TouchableOpacity>
-        {showBiz && <Text style={styles.subTitle}>Employer Name</Text>}
-        {showBiz && (
+        {showBiz && dataDetails?.businessAndCareer != null && !isNullOrEmpty(dataDetails?.businessAndCareer) && (
+          <Text style={styles.subTitle}>Employer Name</Text>
+        )}
+        {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.employerName) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.businessAndCareer.employerName}
           </Text>
@@ -402,7 +521,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <Text></Text>
       </ScrollView>
 
-      <View style={styles.row}>
+      <View style={styles.topAndBottomRows}>
         <View style={styles.pair}>
           <TouchableOpacity onPress={() => handleButtonPress()}>
             <Image source={activityImg} style={styles.logo} />
@@ -459,26 +578,55 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 }
 
 const styles = StyleSheet.create({
-  row: {
+  bookMark: {
+    fontSize: 18,
+    color: 'orange',
+    marginLeft: 15,
+    marginBottom: 10,
+  },
+  referralAndSpouseRow: {
+    flexDirection: 'row',
+    height: 30,
+  },
+  topAndBottomRows: {
     flexDirection: 'row',
     alignContent: 'center',
     justifyContent: 'space-between',
   },
-  rankRowDark: {
-    height: 60,
-    backgroundColor: 'black',
+  rankTitleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 35,
     marginBottom: 5,
     paddingTop: 5,
+    paddingRight: 20,
+  },
+  rankAndQualRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 35,
+    marginBottom: 5,
+    paddingTop: 5,
+    paddingRight: 20,
     borderBottomColor: 'gray',
     borderBottomWidth: 1,
   },
-  rankRowLight: {
-    height: 60,
-    backgroundColor: 'white',
-    marginBottom: 5,
-    paddingTop: 5,
-    borderBottomColor: 'gray',
-    borderBottomWidth: 1,
+  rankSection: {
+    flexDirection: 'row',
+    height: 35,
+  },
+  rankButton: {
+    width: 25,
+    height: 25,
+    marginTop: -10,
+    marginLeft: 12,
+  },
+  qualButton: {
+    width: 25,
+    height: 25,
+    marginTop: -10,
+    marginLeft: 12,
   },
   directionsRow: {
     display: 'flex',
@@ -539,14 +687,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
   },
-  namesDark: {
-    color: 'white',
+  namesLight: {
+    color: 'black',
     textAlign: 'left',
     marginLeft: 15,
     marginBottom: 10,
   },
-  namesLight: {
-    color: 'black',
+  namesDark: {
+    color: 'white',
     textAlign: 'left',
     marginLeft: 15,
     marginBottom: 10,
@@ -575,11 +723,23 @@ const styles = StyleSheet.create({
     color: '#02ABF7',
     textAlign: 'left',
     marginLeft: 15,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   deleteText: {
     color: 'red',
     textAlign: 'center',
     fontSize: 20,
+  },
+  chevronBox: {
+    alignContent: 'flex-end',
+  },
+  chevron: {
+    height: 18,
+    width: 10,
+  },
+  referralAndSpouseText: {
+    height: 25,
+    width: '92%',
+    textAlign: 'left',
   },
 });

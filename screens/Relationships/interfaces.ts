@@ -6,6 +6,7 @@ export interface RolodexDataProps {
   ranking: string;
   contactTypeID: string;
   employerName: string;
+  qualified: boolean;
 }
 
 export interface RolodexDataResponse {
@@ -41,12 +42,14 @@ export interface RelDetailsProps {
   lastName: string;
   referral: string;
   isPastReferral: string;
+  referredBy: RelDetailsReferredBy;
   ranking: string;
   qualified: string;
   mobile: string;
   homePhone: string;
   officePhone: string;
   email: string;
+  spouse: RelDetailsSpouse;
   website: string;
   address: RelDetailsAddress;
   notes: string;
@@ -56,9 +59,41 @@ export interface RelDetailsProps {
   interestsAndFavorites: RelDetailsInterests;
   bombBombAPIKey: string;
   hasBombBombPermission: boolean;
-  historyNotes: string;
-  groupsNotes: string;
+  historyNotes: RelDetailsHistory[];
+  groupsNotes: RelDetailsGroups[];
   transactionNotes: string;
+  transactions: RelDetailsTransactions[];
+}
+
+export interface RelDetailsHistory {
+  activityDateTime: string;
+  activityType: string;
+  subject: string;
+  notes: string;
+}
+
+export interface RelDetailsTransactions {
+  dealId: number;
+  transactionName: string;
+  transactionStatus: string;
+  closingPrice: number;
+  closingDate: string;
+  transactionType: string;
+}
+
+export interface RelDetailsGroups {
+  groupId: string;
+  groupName: string;
+}
+
+export interface RelDetailsReferredBy {
+  name: string;
+  id: string;
+}
+
+export interface RelDetailsSpouse {
+  name: string;
+  id: string;
 }
 
 export interface RelDetailsPersonal {
@@ -132,7 +167,6 @@ export interface AddContactDataProps {
   firstName: string;
   lastName: string;
   contactTypeID: string;
-  id: string;
 }
 
 export interface AddContactDataResponse {

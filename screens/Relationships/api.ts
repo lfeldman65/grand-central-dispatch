@@ -18,7 +18,7 @@ export function getToDos(guid: string): Promise<ToDoAndApptResponse> {
 } // back tick (`) only necessary for string interpolation
 
 export function getRelDetails(guid: string): Promise<RelDetailsResponse> {
-  return http.get(`contacts/${guid}`);
+  return http.get(`contactsRN/${guid}`);
 } // back tick (`) only necessary for string interpolation
 
 export function getGroupsData(): Promise<GroupsDataResponse> {
