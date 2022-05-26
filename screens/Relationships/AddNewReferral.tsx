@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameSection: {
-    height: '195%',
+    height: '80%', // android (80% is the best i can do and it's off) ios: 195%
   },
   nameTitle: {
     color: 'white',
