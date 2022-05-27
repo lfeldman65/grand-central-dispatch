@@ -456,6 +456,15 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <TouchableOpacity onPress={() => handleSectionTap(1)}>
           <Text style={styles.sectionText}>{showActivity ? 'Hide Activity History' : 'Show Activity History'}</Text>
         </TouchableOpacity>
+        {showActivity && !isNullOrEmpty(dataDetails?.historyNotes) && (
+          <React.Fragment>
+            {dataDetails?.historyNotes.map((item, index) => (
+              <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                {item.activityDateTime}: {item.activityType} - {item.subject}
+              </Text>
+            ))}
+          </React.Fragment>
+        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
           <Text style={styles.sectionText}>
@@ -475,10 +484,35 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <TouchableOpacity onPress={() => handleSectionTap(3)}>
           <Text style={styles.sectionText}>{showTransactions ? 'Hide Transactions' : 'Show Transactions'}</Text>
         </TouchableOpacity>
+        <React.Fragment>
+          {showTransactions &&
+            dataDetails?.transactions != null &&
+            dataDetails?.transactions.map((item, index) => (
+              <>
+                <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                  {item.transactionType}
+                </Text>
+                <React.Fragment>
+                  <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                    {item.closingDate}: {item.transactionStatus} {item.transactionName} (${item.closingPrice})
+                  </Text>
+                </React.Fragment>
+              </>
+            ))}
+        </React.Fragment>
 
         <TouchableOpacity onPress={() => handleSectionTap(4)}>
           <Text style={styles.sectionText}>{showGroups ? 'Hide Groups' : 'Show Groups'}</Text>
         </TouchableOpacity>
+        <React.Fragment>
+          {showGroups &&
+            dataDetails?.groupsNotes != null &&
+            dataDetails?.groupsNotes.map((item, index) => (
+              <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                {item.groupName}
+              </Text>
+            ))}
+        </React.Fragment>
 
         <TouchableOpacity onPress={() => handleSectionTap(5)}>
           <Text style={styles.sectionText}>
@@ -494,22 +528,28 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <TouchableOpacity onPress={() => handleSectionTap(6)}>
           <Text style={styles.sectionText}>{showBiz ? 'Hide Business and Career' : 'Show Business and Career'}</Text>
         </TouchableOpacity>
-        {showBiz && dataDetails?.businessAndCareer != null && !isNullOrEmpty(dataDetails?.businessAndCareer) && (
-          <Text style={styles.subTitle}>Employer Name</Text>
-        )}
+        {showBiz &&
+          dataDetails?.businessAndCareer != null &&
+          !isNullOrEmpty(dataDetails?.businessAndCareer.employerName) && (
+            <Text style={styles.subTitle}>Employer Name</Text>
+          )}
         {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.employerName) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.businessAndCareer.employerName}
           </Text>
         )}
-        {showBiz && <Text style={styles.subTitle}>Occupation</Text>}
-        {showBiz && (
+        {showBiz &&
+          dataDetails?.businessAndCareer != null &&
+          !isNullOrEmpty(dataDetails?.businessAndCareer.occupation) && <Text style={styles.subTitle}>Occupation</Text>}
+        {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.occupation) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.businessAndCareer.occupation}
           </Text>
         )}
-        {showBiz && <Text style={styles.subTitle}>Career Notes</Text>}
-        {showBiz && (
+        {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.careerNotes) && (
+          <Text style={styles.subTitle}>Career Notes</Text>
+        )}
+        {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.careerNotes) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.businessAndCareer.careerNotes}
           </Text>
