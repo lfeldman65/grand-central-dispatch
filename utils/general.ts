@@ -1,5 +1,8 @@
 export function isNullOrEmpty(value: any) {
-  return !value;
+  console.log('function +' + value);
+  if (value == null) return true;
+  if (value == '') return true;
+  return false;
 }
 
 export function formatDate(datetime?: string) {

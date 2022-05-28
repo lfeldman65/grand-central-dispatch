@@ -98,6 +98,48 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     console.log('spouse pressed');
   }
 
+  function showSection0() {
+    if (!isNullOrEmpty(dataDetails?.personalAndFamily.birthday)) return true;
+    if (!isNullOrEmpty(dataDetails?.personalAndFamily.childrensNames)) return true;
+    if (!isNullOrEmpty(dataDetails?.personalAndFamily.personalNotes)) return true;
+    if (!isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary)) return true;
+    return false;
+  }
+
+  function showSection1() {
+    if (!isNullOrEmpty(dataDetails?.historyNotes)) return true;
+    return false;
+  }
+
+  function showSection2() {
+    if (!isNullOrEmpty(dataToDos)) return true;
+    return false;
+  }
+
+  function showSection3() {
+    if (!isNullOrEmpty(dataDetails?.transactions)) return true;
+    return false;
+  }
+
+  function showSection4() {
+    if (!isNullOrEmpty(dataDetails?.groupsNotes)) return true;
+    return false;
+  }
+
+  function showSection5() {
+    if (!isNullOrEmpty(dataDetails?.interestsAndFavorites.notes)) {
+      return true;
+    }
+    return false;
+  }
+
+  function showSection6() {
+    if (!isNullOrEmpty(dataDetails?.businessAndCareer.careerNotes)) return true;
+    if (!isNullOrEmpty(dataDetails?.businessAndCareer.employerName)) return true;
+    if (!isNullOrEmpty(dataDetails?.businessAndCareer.occupation)) return true;
+    return false;
+  }
+
   function fullName() {
     if (dataDetails?.contactTypeID == 'Biz') {
       return dataDetails.businessAndCareer.employerName;
@@ -416,9 +458,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
 
         <TouchableOpacity onPress={() => handleSectionTap(0)}>
-          <Text style={styles.sectionText}>
-            {showPersonal ? 'Hide Personal and Family' : 'Show Personal and Family'}
-          </Text>
+          {showSection0() && (
+            <Text style={styles.sectionText}>
+              {showPersonal ? 'Hide Personal and Family' : 'Show Personal and Family'}
+            </Text>
+          )}
         </TouchableOpacity>
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.birthday) && (
           <Text style={styles.subTitle}>Birthday</Text>
@@ -454,9 +498,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
 
         <TouchableOpacity onPress={() => handleSectionTap(1)}>
-          <Text style={styles.sectionText}>{showActivity ? 'Hide Activity History' : 'Show Activity History'}</Text>
+          {showSection1() && (
+            <Text style={styles.sectionText}>{showActivity ? 'Hide Activity History' : 'Show Activity History'}</Text>
+          )}
         </TouchableOpacity>
-        {showActivity && !isNullOrEmpty(dataDetails?.historyNotes) && (
+        {showActivity && showSection1() && (
           <React.Fragment>
             {dataDetails?.historyNotes.map((item, index) => (
               <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
@@ -467,11 +513,13 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
 
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
-          <Text style={styles.sectionText}>
-            {showToDos ? 'Hide To-Dos and Appointments' : 'Show To-Dos and Appointments'}
-          </Text>
+          {showSection2() && (
+            <Text style={styles.sectionText}>
+              {showToDos ? 'Hide To-Dos and Appointments' : 'Show To-Dos and Appointments'}
+            </Text>
+          )}
         </TouchableOpacity>
-        {showToDos && dataToDos != null && (
+        {showToDos && showSection2() && (
           <React.Fragment>
             {dataToDos.map((item, index) => (
               <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
@@ -482,11 +530,13 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
 
         <TouchableOpacity onPress={() => handleSectionTap(3)}>
-          <Text style={styles.sectionText}>{showTransactions ? 'Hide Transactions' : 'Show Transactions'}</Text>
+          {showSection3() && (
+            <Text style={styles.sectionText}>{showTransactions ? 'Hide Transactions' : 'Show Transactions'}</Text>
+          )}
         </TouchableOpacity>
         <React.Fragment>
           {showTransactions &&
-            dataDetails?.transactions != null &&
+            showSection3() &&
             dataDetails?.transactions.map((item, index) => (
               <>
                 <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
@@ -502,11 +552,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </React.Fragment>
 
         <TouchableOpacity onPress={() => handleSectionTap(4)}>
-          <Text style={styles.sectionText}>{showGroups ? 'Hide Groups' : 'Show Groups'}</Text>
+          {showSection4() && <Text style={styles.sectionText}>{showGroups ? 'Hide Groups' : 'Show Groups'}</Text>}
         </TouchableOpacity>
         <React.Fragment>
           {showGroups &&
-            dataDetails?.groupsNotes != null &&
+            showSection4() &&
             dataDetails?.groupsNotes.map((item, index) => (
               <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
                 {item.groupName}
@@ -515,9 +565,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </React.Fragment>
 
         <TouchableOpacity onPress={() => handleSectionTap(5)}>
-          <Text style={styles.sectionText}>
-            {showInterests ? 'Hide Interests and Favorites' : 'Show Interests and Favorites'}
-          </Text>
+          {showSection5() && (
+            <Text style={styles.sectionText}>
+              {showInterests ? 'Hide Interests and Favorites' : 'Show Interests and Favorites'}
+            </Text>
+          )}
         </TouchableOpacity>
         {showInterests && !isNullOrEmpty(dataDetails?.interestsAndFavorites.notes) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
@@ -526,20 +578,18 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
 
         <TouchableOpacity onPress={() => handleSectionTap(6)}>
-          <Text style={styles.sectionText}>{showBiz ? 'Hide Business and Career' : 'Show Business and Career'}</Text>
-        </TouchableOpacity>
-        {showBiz &&
-          dataDetails?.businessAndCareer != null &&
-          !isNullOrEmpty(dataDetails?.businessAndCareer.employerName) && (
-            <Text style={styles.subTitle}>Employer Name</Text>
+          {showSection6() && (
+            <Text style={styles.sectionText}>{showBiz ? 'Hide Business and Career' : 'Show Business and Career'}</Text>
           )}
-        {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.employerName) && (
+        </TouchableOpacity>
+        {showBiz && showSection6() && <Text style={styles.subTitle}>Employer Name</Text>}
+        {showBiz && showSection6() && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.businessAndCareer.employerName}
           </Text>
         )}
         {showBiz &&
-          dataDetails?.businessAndCareer != null &&
+          !isNullOrEmpty(dataDetails?.businessAndCareer) &&
           !isNullOrEmpty(dataDetails?.businessAndCareer.occupation) && <Text style={styles.subTitle}>Occupation</Text>}
         {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.occupation) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>

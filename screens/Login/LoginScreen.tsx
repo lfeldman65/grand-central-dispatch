@@ -16,10 +16,10 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 let deviceWidth = Dimensions.get('window').width;
 
 export default function LoginScreen() {
-  //  const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
-  //  const [password, setPassword] = useState('success');
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
+  const [password, setPassword] = useState('success');
+  //  const [userName, setUserName] = useState('');
+  // const [password, setPassword] = useState('');
   const [rememberChecked, setRememberCheck] = useState(false);
   const [showPW, setShowPW] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,7 +72,7 @@ export default function LoginScreen() {
   }, [isFocused]);
 
   function HandleLoginPress() {
-    //  setIsLoading(true);
+    setIsLoading(true);
     console.log(userName);
     console.log(password);
     analytics
@@ -94,7 +94,7 @@ export default function LoginScreen() {
           saveCredentials(res.data.token);
           navigation.navigate('Home');
         }
-        //   setIsLoading(false);
+        setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
