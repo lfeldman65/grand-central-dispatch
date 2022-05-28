@@ -236,7 +236,7 @@ export default function GoalsScreen() {
           </Text>
         </View>
 
-        <Text style={styles.goalTitle}>Goal</Text>
+        <Text style={lightOrDark == 'dark' ? styles.goalTitleDark : styles.goalTitleLight}>Goal</Text>
 
         <ScrollView>
           {goalList.map(
@@ -292,9 +292,18 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: 'white',
   },
-  goalTitle: {
+  goalTitleDark: {
     paddingRight: 30,
-    color: '#1398f5',
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'right',
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  goalTitleLight: {
+    paddingRight: 30,
+    color: 'black',
     fontSize: 16,
     textAlign: 'right',
     padding: 10,
