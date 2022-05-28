@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking, Alert } from 'react-native';
 
 const eyeClosed = require('../Login/images/eyeClosed.png');
 const eyeOpen = require('../Login/images/eyeOpen.png');
@@ -33,9 +33,12 @@ export default function LoginScreen() {
     //   .then(() => console.log('button success'))
     //   .catch((e) => console.log(e.message));
     Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
-
-    //  setShowPW(!showPW);
   }
+
+  function handleAlert(message: string) {
+    Alert.alert(message);
+  }
+
   async function populateCredentialsIfRemembered() {
     const userNameFromStorage = await storage.getItem('userName');
     const pwFromStorage = await storage.getItem('password');
@@ -81,14 +84,14 @@ export default function LoginScreen() {
       .catch((e) => console.log(e.message));
 
     if (userName == '' || password == '') {
-      console.error('Please enter a Username and Password');
+      handleAlert('Please enter a Username and Password');
       return;
     }
     loginToApp(userName, password)
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
-          console.error(res.error);
+          handleAlert(res.error);
         } else {
           console.log(res);
           saveCredentials(res.data.token);
