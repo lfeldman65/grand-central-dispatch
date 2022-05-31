@@ -159,7 +159,7 @@ export default function ManageRelationshipsScreen() {
   }
 
   function saveComplete() {
-    console.log('Save Complete');
+    fetchRolodexPressed('alpha');
   }
 
   return (

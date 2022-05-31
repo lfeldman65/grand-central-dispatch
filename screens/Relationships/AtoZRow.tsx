@@ -39,7 +39,6 @@ export default function AtoZRow(props: AtoZRowProps) {
 
   useEffect(() => {
     getDarkOrLightMode();
-    console.log(relFromAbove);
   }, [isFocused]);
 
   async function getDarkOrLightMode() {
@@ -52,28 +51,15 @@ export default function AtoZRow(props: AtoZRowProps) {
       {props.data.contactTypeID == relFromAbove && (
         <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
-          {relFromAbove == 'Rel' && (
-            <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
-              {displayName(
-                props.data.firstName,
-                props.data.lastName,
-                props.data.contactTypeID,
-                props.data.employerName,
-                true
-              )}
-            </Text>
-          )}
-          {relFromAbove == 'Biz' && (
-            <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
-              {displayName(
-                props.data.firstName,
-                props.data.lastName,
-                props.data.contactTypeID,
-                props.data.employerName,
-                true
-              )}
-            </Text>
-          )}
+          <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+            {displayName(
+              props.data.firstName,
+              props.data.lastName,
+              props.data.contactTypeID,
+              props.data.employerName,
+              true
+            )}
+          </Text>
         </View>
       )}
     </TouchableOpacity>

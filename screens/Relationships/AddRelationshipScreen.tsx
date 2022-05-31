@@ -10,7 +10,7 @@ import { RolodexDataProps } from './interfaces';
 let deviceWidth = Dimensions.get('window').width;
 
 export default function AddRelationshipScreen(props: any) {
-  const { setModalVisible, title } = props;
+  const { setModalVisible, title, onSave } = props;
   const [bizChecked, setBizCheck] = useState(false);
   const [referralChecked, setReferralChecked] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -56,6 +56,7 @@ export default function AddRelationshipScreen(props: any) {
         } else {
           console.log(res);
           setModalVisible(false);
+          onSave();
         }
         //   setIsLoading(false);
       })
