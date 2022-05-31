@@ -152,6 +152,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (!isNullOrEmpty(lastName)) {
       newLast = lastName;
     }
+    console.log();
     return newFirst + ' ' + newLast;
   }
 
