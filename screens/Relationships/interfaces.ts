@@ -164,6 +164,7 @@ export interface RecentActivityDataResponse {
 // Add Contact in Postman
 
 export interface AddContactDataProps {
+  id: string;
   firstName: string;
   lastName: string;
   contactTypeID: string;

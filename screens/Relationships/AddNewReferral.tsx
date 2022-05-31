@@ -43,6 +43,7 @@ export default function AddNewReferral(props: any) {
             ranking: '',
             contactTypeID: '',
             employerName: '',
+            qualified: false,
           };
 
           setReferral(dp);
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameSection: {
-    height: '80%', // android (80% is the best i can do and it's off) ios: 195%
+    height: '80%', // android (80% is the best i can do and it's still off) ios: 195%
   },
   nameTitle: {
     color: 'white',

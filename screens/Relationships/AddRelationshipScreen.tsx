@@ -167,7 +167,7 @@ export default function AddRelationshipScreen(props: any) {
                   placeholderTextColor="#AFB9C2"
                   style={styles.nameLabel}
                 >
-                  {referral == null ? '' : referral.firstName}
+                  {referral == null ? '' : referral.firstName + ' ' + referral.lastName}
                 </TextInput>
               </View>
             </TouchableOpacity>

@@ -71,7 +71,7 @@ export default function LoginScreen() {
   }
 
   useEffect(() => {
-    populateCredentialsIfRemembered();
+    // populateCredentialsIfRemembered();
   }, [isFocused]);
 
   function HandleLoginPress() {
