@@ -133,6 +133,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     return false;
   }
 
+  function handleSavePoPByPressed() {
+    console.log('Save Pop-By Pressed');
+  }
+
   function showSection6() {
     if (!isNullOrEmpty(dataDetails?.businessAndCareer.careerNotes)) return true;
     if (!isNullOrEmpty(dataDetails?.businessAndCareer.employerName)) return true;
@@ -371,6 +375,20 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </TouchableOpacity>
         </View>
 
+        <Text></Text>
+
+        <Text style={styles.subTitle}>Pop-By</Text>
+        <TouchableOpacity onPress={() => handleSavePoPByPressed()}>
+          <Text style={styles.phoneAndEmail}>Save</Text>
+        </TouchableOpacity>
+
+        {dataDetails?.contactTypeID == 'Biz' && <Text style={styles.subTitle}>Primary Contact</Text>}
+        {dataDetails?.contactTypeID == 'Biz' && (
+          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
+            {dataDetails?.firstName + ' ' + dataDetails?.lastName}
+          </Text>
+        )}
+
         {!isNullOrEmpty(dataDetails?.mobile) && <Text style={styles.subTitle}>Mobile Phone Number</Text>}
         {!isNullOrEmpty(dataDetails?.mobile) && <Text style={styles.phoneAndEmail}>{dataDetails?.mobile}</Text>}
 
@@ -583,7 +601,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             <Text style={styles.sectionText}>{showBiz ? 'Hide Business and Career' : 'Show Business and Career'}</Text>
           )}
         </TouchableOpacity>
-        {showBiz && showSection6() && <Text style={styles.subTitle}>Employer Name</Text>}
+        {showBiz && showSection6() && (
+          <Text style={styles.subTitle}>{dataDetails?.contactTypeID == 'Biz' ? 'Company Name' : 'Employer Name'}</Text>
+        )}
         {showBiz && showSection6() && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.businessAndCareer.employerName}
@@ -591,14 +611,18 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
         {showBiz &&
           !isNullOrEmpty(dataDetails?.businessAndCareer) &&
-          !isNullOrEmpty(dataDetails?.businessAndCareer.occupation) && <Text style={styles.subTitle}>Occupation</Text>}
+          !isNullOrEmpty(dataDetails?.businessAndCareer.occupation) && (
+            <Text style={styles.subTitle}>
+              {dataDetails?.contactTypeID == 'Biz' ? 'Services Provided' : 'Occupation'}
+            </Text>
+          )}
         {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.occupation) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.businessAndCareer.occupation}
           </Text>
         )}
         {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.careerNotes) && (
-          <Text style={styles.subTitle}>Career Notes</Text>
+          <Text style={styles.subTitle}>{dataDetails?.contactTypeID == 'Biz' ? 'Business Notes' : 'Career Notes'}</Text>
         )}
         {showBiz && !isNullOrEmpty(dataDetails?.businessAndCareer.careerNotes) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
