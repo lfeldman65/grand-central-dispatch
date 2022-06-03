@@ -5,6 +5,8 @@ import { storage } from '../../utils/storage';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { prettyDate } from '../../utils/general';
+
 import { changeTxStatus } from './api';
 
 interface TransactionRowProps {
@@ -18,14 +20,6 @@ export default function TransactionRow(props: TransactionRowProps) {
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
-
-  function prettyDate(uglyDate: string) {
-    var dateOnly = uglyDate.substring(0, 10);
-    var dateParts = dateOnly.split('-');
-    // console.log(dateParts[0]);
-    var year = dateParts[0];
-    return dateParts[1] + '/' + dateParts[2] + '/' + year;
-  }
 
   useEffect(() => {
     getDarkOrLightMode();

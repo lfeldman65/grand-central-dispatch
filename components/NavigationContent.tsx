@@ -137,19 +137,19 @@ function CustomDrawerContent(props: any) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.transactions}>
-          <TouchableOpacity onPress={() => pressed('realEstateTransactions')}>
+          <TouchableOpacity onPress={() => pressed('RETransactionsMenu')}>
             <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Real Estate Transactions</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressed('LenderTransactionsScreen')}>
+          <TouchableOpacity onPress={() => pressed('LenderTransactionsMenu')}>
             <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Lender Transactions</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressed('OtherTransactions')}>
+          <TouchableOpacity onPress={() => pressed('OtherTransactionsMenu')}>
             <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Other Transactions</Text>

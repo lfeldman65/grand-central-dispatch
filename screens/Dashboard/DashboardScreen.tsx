@@ -174,7 +174,7 @@ export default function DashboardScreen() {
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
-                  screen: 'realEstateTransactions',
+                  screen: 'RETransactionsMenu',
                   label: 'Transactions',
                 })
               }

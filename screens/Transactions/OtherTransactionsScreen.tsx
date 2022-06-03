@@ -48,15 +48,11 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
   const [currentId, setCurrentId] = useState(0);
 
   const handleRowPress = (index: number) => {
-    analytics.event(new Event('Transactions', 'Row Pressed'));
-    // navigation.navigate('PACDetail', {
-    //   contactId: data[index]['contactId'],
-    //   type: data[index]['type'],
-    //   ranking: data[index]['ranking'],
-    //   lastCallDate: data[index]['lastCallDate'],
-    //   lastNoteDate: data[index]['lastNoteDate'],
-    //   lastPopByDate: data[index]['lastPopByDate'],
-    // });
+    //  analytics.event(new Event('Real Estate Transactions', 'Row Pressed'));
+    console.log(data[index].id);
+    navigation.navigate('OtherTxDetails', {
+      dealID: data[index].id,
+    });
   };
 
   const handleAddPressed = () => {

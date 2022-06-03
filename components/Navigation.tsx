@@ -28,6 +28,8 @@ import RealEstateTransactionsScreen from '../screens/Transactions/RealEstateTran
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
 
+import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
+
 export type RootStackParamList = {
   [x: string]: any;
 };
@@ -36,8 +38,103 @@ import NavigationContent from './NavigationContent';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
 
+export const RealTxStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="realEstateTransactions"
+        component={RealEstateTransactionsScreen}
+        options={{
+          title: 'Real Estate Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="RealEstateTxDetails"
+        component={TransactionDetailsRE}
+        options={{
+          title: 'Transaction Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export const LenderTxStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="LenderTransactions"
+        component={LenderTransactionsScreen}
+        options={{
+          title: 'Lender Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="LenderTxDetails"
+        component={TransactionDetailsRE}
+        options={{
+          title: 'Transaction Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export const OtherTxStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="OtherTransactions"
+        component={OtherTransactionsScreen}
+        options={{
+          title: 'Other Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="OtherTxDetails"
+        component={TransactionDetailsRE}
+        options={{
+          title: 'Transaction Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const PACStackNavigator = () => {
-  // branch.
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -161,31 +258,14 @@ export const HomeStackNavigator = () => {
         }}
       />
 
-      {/* <Stack.Screen
-        name="relationships"
-        component={RelationshipsScreen}
+      <Stack.Screen
+        name="Transactions"
+        component={TransactionsScreen}
         options={{
-          title: 'Relationships',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
+          headerShown: false,
         }}
       />
-
-      <Stack.Screen
-        name="manageRelationships"
-        component={ManageRelationshipsScreen}
-        options={{
-          title: 'Manage Relationships',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: false,
-        }}
-      /> */}
 
       <Stack.Screen
         name="recentcontactactivity"
@@ -214,54 +294,29 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Transactions"
-        component={TransactionsScreen}
+        name="RETransactionsMenu" // must match Dashboard
+        component={RealTxStackNavigator}
         options={{
-          title: 'Transactions',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
+          headerShown: false,
         }}
       />
 
       <Stack.Screen
-        name="realEstateTransactions"
-        component={RealEstateTransactionsScreen}
+        name="LenderTransactionsMenu"
+        component={LenderTxStackNavigator}
         options={{
-          title: 'Real Estate Transactions',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
+          headerShown: false,
         }}
       />
 
       <Stack.Screen
-        name="LenderTransactionsScreen"
-        component={LenderTransactionsScreen}
+        name="OtherTransactionsMenu"
+        component={OtherTxStackNavigator}
         options={{
-          title: 'Lender Transactions',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
-        }}
-      />
-
-      <Stack.Screen
-        name="OtherTransactions"
-        component={OtherTransactionsScreen}
-        options={{
-          title: 'Other Transactions',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: false,
+          headerShown: false,
         }}
       />
 

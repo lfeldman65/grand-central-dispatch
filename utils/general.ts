@@ -1,5 +1,4 @@
 export function isNullOrEmpty(value: any) {
-  console.log('function +' + value);
   if (value == null) return true;
   if (value == '') return true;
   return false;
@@ -25,4 +24,11 @@ export function formatDateTime(datetime?: string) {
     minute: '2-digit',
   });
   return `${month}/${day}/${year} ${time}`;
+}
+
+export function prettyDate(uglyDate: string) {
+  var dateOnly = uglyDate.substring(0, 10);
+  var dateParts = dateOnly.split('-');
+  var year = dateParts[0];
+  return dateParts[1] + '/' + dateParts[2] + '/' + year;
 }
