@@ -98,6 +98,22 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     console.log('spouse pressed');
   }
 
+  function handleHistoryPressed(notes: string) {
+    console.log(notes);
+  }
+
+  function handleToDoPressed(thisEventID: string) {
+    console.log(thisEventID);
+  }
+
+  function handleTransactionPressed(thisTransactionID: number) {
+    console.log(thisTransactionID);
+  }
+
+  function handleGroupPressed(thisGroupID: string) {
+    console.log(thisGroupID);
+  }
+
   function showSection0() {
     if (!isNullOrEmpty(dataDetails?.personalAndFamily.birthday)) return true;
     if (!isNullOrEmpty(dataDetails?.personalAndFamily.childrensNames)) return true;
@@ -406,8 +422,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.subTitle}>Website</Text>}
         {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.phoneAndEmail}>{dataDetails?.website}</Text>}
 
-        {/* <Text style={styles.bookMark}>Bookmark</Text> */}
-
         {!isNullOrEmpty(dataDetails?.spouse.id) && <Text style={styles.subTitle}>Spouse</Text>}
         {!isNullOrEmpty(dataDetails?.spouse.id) && (
           <TouchableOpacity onPress={() => handleSpousePressed()}>
@@ -524,9 +538,21 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {showActivity && showSection1() && (
           <React.Fragment>
             {dataDetails?.historyNotes.map((item, index) => (
-              <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
-                {item.activityDateTime}: {item.activityType} - {item.subject}
-              </Text>
+              <TouchableOpacity onPress={() => handleHistoryPressed(dataDetails?.historyNotes[index].notes)}>
+                <View style={styles.referralAndSpouseRow}>
+                  <View style={styles.referralAndSpouseText}>
+                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                      {item.activityDateTime}: {item.activityType} - {item.subject}
+                    </Text>
+                  </View>
+
+                  {!isNullOrEmpty(dataDetails?.historyNotes[index].notes) && (
+                    <View style={styles.chevronBox}>
+                      <Image source={chevron} style={styles.chevron} />
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
             ))}
           </React.Fragment>
         )}
@@ -538,12 +564,25 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             </Text>
           )}
         </TouchableOpacity>
+
         {showToDos && showSection2() && (
           <React.Fragment>
             {dataToDos.map((item, index) => (
-              <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
-                {item.DateToUse}: {item.Title}
-              </Text>
+              <TouchableOpacity onPress={() => handleToDoPressed(item.EventID)}>
+                <View style={styles.referralAndSpouseRow}>
+                  <View style={styles.referralAndSpouseText}>
+                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                      {item.DateToUse}: {item.Title}
+                    </Text>
+                  </View>
+
+                  {!isNullOrEmpty(item.EventID) && (
+                    <View style={styles.chevronBox}>
+                      <Image source={chevron} style={styles.chevron} />
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
             ))}
           </React.Fragment>
         )}
@@ -553,35 +592,61 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             <Text style={styles.sectionText}>{showTransactions ? 'Hide Transactions' : 'Show Transactions'}</Text>
           )}
         </TouchableOpacity>
-        <React.Fragment>
-          {showTransactions &&
-            showSection3() &&
-            dataDetails?.transactions.map((item, index) => (
-              <>
-                <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
-                  {item.transactionType}
-                </Text>
-                <React.Fragment>
-                  <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
-                    {item.closingDate}: {item.transactionStatus} {item.transactionName} (${item.closingPrice})
-                  </Text>
-                </React.Fragment>
-              </>
+
+        {/* { <Text style={styles.bookMark}>Bookmark</Text>} */}
+
+        {showTransactions && showSection3() && (
+          <React.Fragment>
+            {dataDetails?.transactions.map((item, index) => (
+              <TouchableOpacity onPress={() => handleTransactionPressed(item.dealId)}>
+                <View style={styles.referralAndSpouseRow}>
+                  <View style={styles.referralAndSpouseText}>
+                    <React.Fragment>
+                      <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                        {item.transactionType}
+                      </Text>
+                      <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                        {item.closingDate}: {item.transactionStatus} {item.transactionName} (${item.closingPrice})
+                      </Text>
+                    </React.Fragment>
+                  </View>
+
+                  {!isNullOrEmpty(item.dealId) && (
+                    <View style={styles.chevronBox}>
+                      <Image source={chevron} style={styles.chevron} />
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
             ))}
-        </React.Fragment>
+          </React.Fragment>
+        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(4)}>
           {showSection4() && <Text style={styles.sectionText}>{showGroups ? 'Hide Groups' : 'Show Groups'}</Text>}
         </TouchableOpacity>
-        <React.Fragment>
-          {showGroups &&
-            showSection4() &&
-            dataDetails?.groupsNotes.map((item, index) => (
-              <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
-                {item.groupName}
-              </Text>
+
+        {showGroups && showSection4() && (
+          <React.Fragment>
+            {dataDetails?.groupsNotes.map((item, index) => (
+              <TouchableOpacity onPress={() => handleGroupPressed(item.groupId)}>
+                <View style={styles.referralAndSpouseRow}>
+                  <View style={styles.referralAndSpouseText}>
+                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                      {item.groupName}
+                    </Text>
+                  </View>
+
+                  {!isNullOrEmpty(item.groupId) && (
+                    <View style={styles.chevronBox}>
+                      <Image source={chevron} style={styles.chevron} />
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
             ))}
-        </React.Fragment>
+          </React.Fragment>
+        )}
 
         <TouchableOpacity onPress={() => handleSectionTap(5)}>
           {showSection5() && (
@@ -700,8 +765,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   referralAndSpouseRow: {
+    paddingTop: 10,
+    paddingBottom: 10,
     flexDirection: 'row',
-    height: 30,
+  },
+  referralAndSpouseText: {
+    width: '92%',
+    paddingRight: 10,
   },
   topAndBottomRows: {
     flexDirection: 'row',
@@ -847,14 +917,11 @@ const styles = StyleSheet.create({
   },
   chevronBox: {
     alignContent: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chevron: {
     height: 18,
     width: 10,
-  },
-  referralAndSpouseText: {
-    height: 25,
-    width: '92%',
-    textAlign: 'left',
   },
 });
