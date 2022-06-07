@@ -35,10 +35,6 @@ export default function LoginScreen() {
     Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
   }
 
-  function handleAlert(message: string) {
-    Alert.alert(message);
-  }
-
   async function populateCredentialsIfRemembered() {
     const userNameFromStorage = await storage.getItem('userName');
     const pwFromStorage = await storage.getItem('password');
@@ -84,14 +80,14 @@ export default function LoginScreen() {
       .catch((e) => console.log(e.message));
 
     if (userName == '' || password == '') {
-      handleAlert('Please enter a Username and Password');
+      Alert.alert('Please enter a Username and Password');
       return;
     }
     loginToApp(userName, password)
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
-          handleAlert(res.error);
+          Alert.alert(res.error);
         } else {
           console.log(res);
           saveCredentials(res.data.token);

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
@@ -99,7 +99,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleHistoryPressed(notes: string) {
-    console.log(notes);
+    if (notes != '') Alert.alert(notes);
   }
 
   function handleToDoPressed(thisEventID: string) {
@@ -425,7 +425,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {!isNullOrEmpty(dataDetails?.spouse.id) && <Text style={styles.subTitle}>Spouse</Text>}
         {!isNullOrEmpty(dataDetails?.spouse.id) && (
           <TouchableOpacity onPress={() => handleSpousePressed()}>
-            <View style={styles.referralAndSpouseRow}>
+            <View style={styles.textAndChevronRow}>
               <View style={styles.referralAndSpouseText}>
                 <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
                   {dataDetails?.spouse.name}
@@ -476,7 +476,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {!isNullOrEmpty(dataDetails?.referredBy.id) && <Text style={styles.subTitle}>Referred By</Text>}
         {!isNullOrEmpty(dataDetails?.referredBy.id) && (
           <TouchableOpacity onPress={() => handleReferralPressed()}>
-            <View style={styles.referralAndSpouseRow}>
+            <View style={styles.textAndChevronRow}>
               <View style={styles.referralAndSpouseText}>
                 <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
                   {dataDetails?.referredBy.name}
@@ -539,7 +539,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           <React.Fragment>
             {dataDetails?.historyNotes.map((item, index) => (
               <TouchableOpacity onPress={() => handleHistoryPressed(dataDetails?.historyNotes[index].notes)}>
-                <View style={styles.referralAndSpouseRow}>
+                <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
                       {item.activityDateTime}: {item.activityType} - {item.subject}
@@ -569,7 +569,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           <React.Fragment>
             {dataToDos.map((item, index) => (
               <TouchableOpacity onPress={() => handleToDoPressed(item.EventID)}>
-                <View style={styles.referralAndSpouseRow}>
+                <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
                       {item.DateToUse}: {item.Title}
@@ -599,7 +599,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           <React.Fragment>
             {dataDetails?.transactions.map((item, index) => (
               <TouchableOpacity onPress={() => handleTransactionPressed(item.dealId)}>
-                <View style={styles.referralAndSpouseRow}>
+                <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <React.Fragment>
                       <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
@@ -630,7 +630,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           <React.Fragment>
             {dataDetails?.groupsNotes.map((item, index) => (
               <TouchableOpacity onPress={() => handleGroupPressed(item.groupId)}>
-                <View style={styles.referralAndSpouseRow}>
+                <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
                       {item.groupName}
@@ -764,7 +764,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginBottom: 10,
   },
-  referralAndSpouseRow: {
+  textAndChevronRow: {
     paddingTop: 10,
     paddingBottom: 10,
     flexDirection: 'row',
