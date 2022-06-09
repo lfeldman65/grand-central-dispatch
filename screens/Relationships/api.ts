@@ -7,6 +7,7 @@ import {
   RecentActivityDataResponse,
   VideoHistoryDataResponse,
   ToDoAndApptResponse,
+  ContactDeleteDataResponse,
 } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
@@ -69,4 +70,8 @@ export function getRecentActivityData(type: string): Promise<RecentActivityDataR
 export function getVideoSummaryData(): Promise<VideoHistoryDataResponse> {
   console.log('yep');
   return http.get('videossummary');
+}
+
+export function deleteRelationship(guid: string): Promise<ContactDeleteDataResponse> {
+  return http.delete(`contacts/${guid}`);
 }

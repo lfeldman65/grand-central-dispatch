@@ -4,7 +4,7 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
-import { getRelDetails, getToDos } from './api';
+import { getRelDetails, getToDos, deleteRelationship } from './api';
 import { RelDetailsProps, ToDoAndApptProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
@@ -202,6 +202,38 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function deletePressed() {
     console.log('delete pressed');
+    Alert.alert(
+      'Delete ' + dataDetails?.firstName + ' ' + dataDetails?.lastName,
+      '',
+      [
+        {
+          text: 'Delete',
+          onPress: () => deletePressedContinue(),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  function deletePressedContinue() {
+    console.log('delete pressed');
+    setIsLoading(true);
+    deleteRelationship(contactId)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log(res.data);
+          navigation.goBack();
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   function handleDirectionsPressed() {
@@ -632,9 +664,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
               <TouchableOpacity onPress={() => handleGroupPressed(item.groupId)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
-                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
-                      {item.groupName}
-                    </Text>
+                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{item.groupName}</Text>
                   </View>
 
                   {!isNullOrEmpty(item.groupId) && (

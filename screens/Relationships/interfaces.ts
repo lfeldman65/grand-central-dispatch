@@ -207,3 +207,15 @@ export interface VideoHistoryDataResponse {
   error: string;
   status: string;
 }
+
+// Contact Delete in Postman
+
+export interface ContactDeleteProps {
+  message: string;
+}
+
+export interface ContactDeleteDataResponse {
+  data: ContactDeleteProps;
+  error: string;
+  status: string;
+}
