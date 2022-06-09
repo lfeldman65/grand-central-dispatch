@@ -59,9 +59,9 @@ export default function TransactionDetailsRE(props: any) {
 
   function handleBuyerPressed() {
     navigation.navigate('RelDetails', {
-      contactId: '941ba37c-ccca-4809-a6fe-2e173801f3c8',
-      firstName: '!Matt',
-      lastName: 'Pag1111',
+      contactId: data?.contacts[0].userID,
+      firstName: data?.contacts[0].contactName,
+      lastName: '',
     });
   }
 
