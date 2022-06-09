@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import globalStyles from '../../globalStyles';
@@ -35,10 +35,34 @@ export default function TransactionDetailsRE(props: any) {
 
   function deletePressed() {
     console.log('delete pressed');
+    Alert.alert(
+      'Are you sure you want to delete this Transaction?',
+      '',
+      [
+        {
+          text: 'Delete',
+          onPress: () => deletePressedContinue(),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  function deletePressedContinue() {
     deleteTrans(dealID);
   }
+
   function handleBuyerPressed() {
-    console.log('buyer');
+    navigation.navigate('RelDetails', {
+      contactId: '941ba37c-ccca-4809-a6fe-2e173801f3c8',
+      firstName: '!Matt',
+      lastName: 'Pag1111',
+    });
   }
 
   function formatDollarOrPercent(amount: string, type: string) {
@@ -81,7 +105,143 @@ export default function TransactionDetailsRE(props: any) {
   }
 
   return (
-    <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}></ScrollView>
+    <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+      <Text style={styles.header}>{'Transaction Type'}</Text>
+      <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.transactionType}</Text>
+      <Text style={styles.header}>{'Status'}</Text>
+      <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.status}</Text>
+
+      {!isNullOrEmpty(data?.contacts[0].userID) && <Text style={styles.header}>Buyer</Text>}
+      {true && (
+        <TouchableOpacity onPress={() => handleBuyerPressed()}>
+          <View style={styles.referralAndSpouseRow}>
+            <View style={styles.referralAndSpouseText}>
+              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+                {data?.contacts[0].contactName}
+              </Text>
+            </View>
+
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {!isNullOrEmpty(data?.contacts[0].leadSource) && <Text style={styles.header}>{'Lead Source'}</Text>}
+      {!isNullOrEmpty(data?.contacts[0].leadSource) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
+      )}
+
+      {data?.address.street == 'TBD' && <Text style={styles.header}>{'Address'}</Text>}
+      {data?.address.street == 'TBD' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
+      )}
+
+      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 1'}</Text>}
+      {data?.address.street != 'TBD' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
+      )}
+
+      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 2'}</Text>}
+      {data?.address.street != 'TBD' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street2}</Text>
+      )}
+
+      {data?.address.street != 'TBD' && <Text style={styles.header}>{'City'}</Text>}
+      {data?.address.street != 'TBD' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.city}</Text>
+      )}
+
+      {data?.address.street != 'TBD' && <Text style={styles.header}>{'State / Province'}</Text>}
+      {data?.address.street != 'TBD' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.state}</Text>
+      )}
+
+      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
+      {data?.address.street != 'TBD' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.zip}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.probabilityToClose) && <Text style={styles.header}>{'Probability to Close'}</Text>}
+      {!isNullOrEmpty(data?.probabilityToClose) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.probabilityToClose}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Closing Price (Projected)'}</Text>}
+      {!isNullOrEmpty(data?.projectedAmount) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{'$' + data?.projectedAmount}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.closingDate) && <Text style={styles.header}>{'Closing Date (Projected)'}</Text>}
+      {!isNullOrEmpty(data?.closingDate) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.closingDate!)}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.buyerCommission) && <Text style={styles.header}>{"Buyer's Commission"}</Text>}
+      {!isNullOrEmpty(data?.buyerCommission) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+          {formatDollarOrPercent(data?.buyerCommission!, data?.buyerCommissionType!)}
+        </Text>
+      )}
+
+      {!isNullOrEmpty(data?.grossCommision) && <Text style={styles.header}>{'Additional Income'}</Text>}
+      {!isNullOrEmpty(data?.grossCommision) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+          {formatDollarOrPercent(data?.grossCommision!, 'dollar')}
+        </Text>
+      )}
+
+      {!isNullOrEmpty(data?.grossCommision) && (
+        <View style={styles.boxRow}>
+          <Text style={styles.largeHeader}>My Gross Commission</Text>
+          <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
+            {formatDollarOrPercent(data?.grossCommision!, 'dollar')}
+          </Text>
+        </View>
+      )}
+
+      {!isNullOrEmpty(data?.miscBeforeSplitFees) && <Text style={styles.header}>{'Misc Before-Split Fees'}</Text>}
+      {!isNullOrEmpty(data?.miscBeforeSplitFees) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+          {formatDollarOrPercent(data?.miscBeforeSplitFees!, data?.miscBeforeSplitFeesType!)}
+        </Text>
+      )}
+
+      {!isNullOrEmpty(data?.commissionPortion) && <Text style={styles.header}>{'My Portion of the Broker Split'}</Text>}
+      {!isNullOrEmpty(data?.commissionPortion) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+          {formatDollarOrPercent(data?.commissionPortion!, data?.commissionPortionType!)}
+        </Text>
+      )}
+
+      {!isNullOrEmpty(data?.miscAfterSplitFees) && <Text style={styles.header}>{'Misc After-Split Fees'}</Text>}
+      {!isNullOrEmpty(data?.miscAfterSplitFees) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+          {formatDollarOrPercent(data?.miscAfterSplitFees!, data?.miscAfterSplitFeesType!)}
+        </Text>
+      )}
+
+      <View style={styles.boxRow}>
+        <Text style={styles.largeHeader}>{"Income After Broker's Split and Fees"}</Text>
+        <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
+          {formatDollarOrPercent(data?.incomeAfterSplitFees!, 'dollar')}
+        </Text>
+      </View>
+
+      {!isNullOrEmpty(data?.notes) && <Text style={styles.header}>{'Notes'}</Text>}
+      {!isNullOrEmpty(data?.notes) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.notes}</Text>
+      )}
+
+      <Text></Text>
+
+      <TouchableOpacity onPress={deletePressed}>
+        <Text style={styles.deleteText}>Delete</Text>
+      </TouchableOpacity>
+
+      <Text></Text>
+    </ScrollView>
   );
 }
 
@@ -118,10 +278,11 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   boxTextLight: {
-    paddingTop: 5,
+    paddingTop: 10,
     marginLeft: 20,
     fontSize: 18,
     color: 'black',
+    paddingRight: 10,
   },
   chevronBox: {
     alignContent: 'flex-end',

@@ -203,7 +203,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   function deletePressed() {
     console.log('delete pressed');
     Alert.alert(
-      'Delete ' + dataDetails?.firstName + ' ' + dataDetails?.lastName,
+      'Delete ' + dataDetails?.firstName + ' ' + dataDetails?.lastName + '?',
       '',
       [
         {
