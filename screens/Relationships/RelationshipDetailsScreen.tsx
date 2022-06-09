@@ -541,7 +541,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
               <TouchableOpacity onPress={() => handleHistoryPressed(dataDetails?.historyNotes[index].notes)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
-                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
                       {item.activityDateTime}: {item.activityType} - {item.subject}
                     </Text>
                   </View>
@@ -571,7 +571,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
               <TouchableOpacity onPress={() => handleToDoPressed(item.EventID)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
-                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                    <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
                       {item.DateToUse}: {item.Title}
                     </Text>
                   </View>
@@ -602,10 +602,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <React.Fragment>
-                      <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                      <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
                         {item.transactionType}
                       </Text>
-                      <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight} key={index}>
+                      <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
                         {item.closingDate}: {item.transactionStatus} {item.transactionName} (${item.closingPrice})
                       </Text>
                     </React.Fragment>
