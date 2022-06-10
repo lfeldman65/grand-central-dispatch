@@ -247,9 +247,6 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
                     </TouchableOpacity>
                   ))}
                 </View>
-
-                {/*  Add a Small Footer at Bottom */}
-                <View style={styles2.footer} />
               </ScrollView>
             </View>
           </ActionSheet>
@@ -276,8 +273,5 @@ const styles2 = StyleSheet.create({
   scrollview: {
     width: '100%',
     padding: 12,
-  },
-  footer: {
-    height: 50,
   },
 });
