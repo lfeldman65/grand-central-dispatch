@@ -398,7 +398,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <View style={styles.rankAndQualRow}>
           <View style={lightOrDark == 'dark' ? styles.rankSection : styles.rankSection}>
             <TouchableOpacity onPress={() => handleRankPress('A+')}>
-              <Image source={theRank == 'A+' ? aPlusSel : aPlusReg} style={styles.rankButton} />
+              <Image source={getRankButtonImage('A+')} style={styles.rankButton} />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => handleRankPress('A')}>
