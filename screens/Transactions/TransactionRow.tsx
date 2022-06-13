@@ -40,23 +40,6 @@ export default function TransactionRow(props: TransactionRowProps) {
     //continueTxChangeStatus(dealId, newStatus, changeStatusSuccess, changeStatusFailure);
   }
 
-  // function continueTxChangeStatus(dealId: number, type: string, onSuccess: any, onFailure: any) {
-  //   changeTxStatus(dealId, type)
-  //     .then((res) => {
-  //       console.log(res);
-  //       if (res.status == 'error') {
-  //         console.error(res.error);
-  //         onFailure();
-  //       } else {
-  //         onSuccess();
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       onFailure();
-  //       console.log('complete error' + error);
-  //     });
-  // }
-
   function changeStatusSuccess() {
     console.log('changeStatusSuccess');
     setIsLoading(false);

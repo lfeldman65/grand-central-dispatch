@@ -46,11 +46,11 @@ interface RelDetailsLocalProps {
 }
 export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const { route } = props;
-  const { contactId, firstName, lastName, rankFromAbove, qualFromAbove } = route.params;
+  const { contactId, firstName, lastName } = route.params;
   const navigation = useNavigation();
   const [lightOrDark, setIsLightOrDark] = useState('');
-  const [theRank, setTheRank] = useState(rankFromAbove);
-  const [isQual, setIsQual] = useState(qualFromAbove);
+  const [theRank, setTheRank] = useState('D');
+  const [isQual, setIsQual] = useState('False');
   const [dataDetails, setDataDetails] = useState<RelDetailsProps>();
   const [dataToDos, setDataToDos] = useState<ToDoAndApptProps[]>([]);
   const isFocused = useIsFocused();
@@ -172,7 +172,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (!isNullOrEmpty(lastName)) {
       newLast = lastName;
     }
-    console.log();
     return newFirst + ' ' + newLast;
   }
 
@@ -201,7 +200,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function deletePressed() {
-    console.log('delete pressed');
     Alert.alert(
       'Delete ' + dataDetails?.firstName + ' ' + dataDetails?.lastName + '?',
       '',
@@ -228,7 +226,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res.data);
+          //  console.log(res.data);
           navigation.goBack();
         }
         setIsLoading(false);
@@ -270,7 +268,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           console.error(res.error);
         } else {
           setDataDetails(res.data);
-          console.log(res.data);
+          setTheRank(res.data.ranking);
+          setIsQual(res.data.qualified);
+          console.log(res.data.ranking);
         }
         setIsLoading(false);
       })
@@ -419,7 +419,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </View>
 
           <TouchableOpacity onPress={() => handleQualPress()}>
-            <Image source={isQual ? qualChecked : qualUnchecked} style={styles.qualButton} />
+            <Image source={isQual == 'True' ? qualChecked : qualUnchecked} style={styles.qualButton} />
           </TouchableOpacity>
         </View>
 

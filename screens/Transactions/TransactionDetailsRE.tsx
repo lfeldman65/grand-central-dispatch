@@ -34,7 +34,6 @@ export default function TransactionDetailsRE(props: any) {
   }
 
   function deletePressed() {
-    console.log('delete pressed');
     Alert.alert(
       'Are you sure you want to delete this Transaction?',
       '',
@@ -62,6 +61,8 @@ export default function TransactionDetailsRE(props: any) {
       contactId: data?.contacts[0].userID,
       firstName: data?.contacts[0].contactName,
       lastName: '',
+      //   rankFromAbove: 'C',
+      //   qualFromAbove: true,
     });
   }
 
@@ -97,7 +98,7 @@ export default function TransactionDetailsRE(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          console.log(res);
+          //   console.log(res);
         }
         setIsLoading(false);
       })
@@ -178,7 +179,18 @@ export default function TransactionDetailsRE(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.closingDate!)}</Text>
       )}
 
-      {!isNullOrEmpty(data?.buyerCommission) && <Text style={styles.header}>{"Buyer's Commission"}</Text>}
+      {!isNullOrEmpty(data?.sellerCommission) && data?.sellerCommission != '0' && (
+        <Text style={styles.header}>{"Seller's Commission"}</Text>
+      )}
+      {!isNullOrEmpty(data?.sellerCommission) && data?.sellerCommission != '0' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+          {formatDollarOrPercent(data?.sellerCommission!, data?.sellerCommissionType!)}
+        </Text>
+      )}
+
+      {!isNullOrEmpty(data?.buyerCommission) && data?.buyerCommission != '0' && (
+        <Text style={styles.header}>{"Buyer's Commission"}</Text>
+      )}
       {!isNullOrEmpty(data?.buyerCommission) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
           {formatDollarOrPercent(data?.buyerCommission!, data?.buyerCommissionType!)}
