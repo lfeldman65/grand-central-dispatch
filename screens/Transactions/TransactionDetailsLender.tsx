@@ -11,7 +11,7 @@ import { Navigation } from 'react-native-feather';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
-export default function TransactionDetailsRE(props: any) {
+export default function TransactionDetailsLender(props: any) {
   const { route } = props;
   const { dealID } = route.params;
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -51,14 +51,11 @@ export default function TransactionDetailsRE(props: any) {
       { cancelable: false }
     );
   }
-
   function handleBuyerPressed() {
     navigation.navigate('RelDetails', {
       contactId: data?.contacts[0].userID,
       firstName: data?.contacts[0].contactName,
       lastName: '',
-      //   rankFromAbove: 'C',
-      //   qualFromAbove: true,
     });
   }
 
@@ -94,7 +91,7 @@ export default function TransactionDetailsRE(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          //   console.log(res);
+          console.log(res);
         }
         setIsLoading(false);
       })
@@ -175,18 +172,28 @@ export default function TransactionDetailsRE(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.closingDate!)}</Text>
       )}
 
-      {!isNullOrEmpty(data?.sellerCommission) && data?.sellerCommission != '0' && (
-        <Text style={styles.header}>{"Seller's Commission"}</Text>
+      {!isNullOrEmpty(data?.interestRate) && <Text style={styles.header}>{'Interest Rate'}</Text>}
+      {!isNullOrEmpty(data?.interestRate) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+          {formatDollarOrPercent(data?.interestRate!, 'percent')}
+        </Text>
       )}
-      {!isNullOrEmpty(data?.sellerCommission) && data?.sellerCommission != '0' && (
+
+      {!isNullOrEmpty(data?.loanType) && <Text style={styles.header}>{'Loan Type'}</Text>}
+      {!isNullOrEmpty(data?.loanType) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+          {data?.rateType + ' ' + data?.loanType}
+        </Text>
+      )}
+
+      {!isNullOrEmpty(data?.sellerCommission) && <Text style={styles.header}>{"Seller's Commission"}</Text>}
+      {!isNullOrEmpty(data?.sellerCommission) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
           {formatDollarOrPercent(data?.sellerCommission!, data?.sellerCommissionType!)}
         </Text>
       )}
 
-      {!isNullOrEmpty(data?.buyerCommission) && data?.buyerCommission != '0' && (
-        <Text style={styles.header}>{"Buyer's Commission"}</Text>
-      )}
+      {!isNullOrEmpty(data?.buyerCommission) && <Text style={styles.header}>{"Buyer's Commission"}</Text>}
       {!isNullOrEmpty(data?.buyerCommission) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
           {formatDollarOrPercent(data?.buyerCommission!, data?.buyerCommissionType!)}
