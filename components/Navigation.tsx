@@ -30,6 +30,7 @@ import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsSc
 
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import TransactionDetailsLender from '../screens/Transactions/TransactionDetailsLender';
+import TransactionDetailsOther from '../screens/Transactions/TransactionDetailsOther';
 
 export type RootStackParamList = {
   [x: string]: any;
@@ -147,9 +148,22 @@ export const OtherTxStackNavigator = () => {
 
       <Stack.Screen
         name="OtherTxDetails"
-        component={TransactionDetailsRE}
+        component={TransactionDetailsOther}
         options={{
           title: 'Transaction Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
