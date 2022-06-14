@@ -7,7 +7,7 @@ import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
 import { isNullOrEmpty } from '../../utils/general';
 import { prettyDate } from '../../utils/general';
-import { Navigation } from 'react-native-feather';
+// import { Navigation } from 'react-native-feather';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -51,7 +51,7 @@ export default function TransactionDetailsLender(props: any) {
       { cancelable: false }
     );
   }
-  function handleBuyerPressed() {
+  function handlePersonPressed(index: number) {
     navigation.navigate('RelDetails', {
       contactId: data?.contacts[0].userID,
       firstName: data?.contacts[0].contactName,
@@ -106,21 +106,21 @@ export default function TransactionDetailsLender(props: any) {
       <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.status}</Text>
 
       {!isNullOrEmpty(data?.contacts[0].userID) && <Text style={styles.header}>Buyer</Text>}
-      {true && (
-        <TouchableOpacity onPress={() => handleBuyerPressed()}>
+      {data?.contacts.map((item, index) => (
+        <TouchableOpacity onPress={() => handlePersonPressed(index)}>
           <View style={styles.referralAndSpouseRow}>
             <View style={styles.referralAndSpouseText}>
-              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-                {data?.contacts[0].contactName}
-              </Text>
+              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{item.contactName}</Text>
             </View>
 
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
+            {!isNullOrEmpty(data?.contacts[index].userID) && (
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            )}
           </View>
         </TouchableOpacity>
-      )}
+      ))}
 
       {!isNullOrEmpty(data?.contacts[0].leadSource) && <Text style={styles.header}>{'Lead Source'}</Text>}
       {!isNullOrEmpty(data?.contacts[0].leadSource) && (

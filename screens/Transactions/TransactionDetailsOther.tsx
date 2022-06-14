@@ -7,7 +7,7 @@ import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
 import { isNullOrEmpty } from '../../utils/general';
 import { prettyDate } from '../../utils/general';
-import { Navigation } from 'react-native-feather';
+//import { Navigation } from 'react-native-feather';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -51,10 +51,10 @@ export default function TransactionDetailsOther(props: any) {
       { cancelable: false }
     );
   }
-  function handleBuyerPressed() {
+  function handlePersonPressed(index: number) {
     navigation.navigate('RelDetails', {
-      contactId: data?.contacts[0].userID,
-      firstName: data?.contacts[0].contactName,
+      contactId: data?.contacts[index].userID,
+      firstName: data?.contacts[index].contactName,
       lastName: '',
     });
   }
@@ -102,25 +102,29 @@ export default function TransactionDetailsOther(props: any) {
     <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       <Text style={styles.header}>{'Transaction Type'}</Text>
       <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.transactionType}</Text>
+
+      {!isNullOrEmpty(data?.title) && <Text style={styles.header}>{'Transaction Title'}</Text>}
+      <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.title}</Text>
+
       <Text style={styles.header}>{'Status'}</Text>
       <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.status}</Text>
 
-      {!isNullOrEmpty(data?.contacts[0].userID) && <Text style={styles.header}>Buyer</Text>}
-      {true && (
-        <TouchableOpacity onPress={() => handleBuyerPressed()}>
-          <View style={styles.referralAndSpouseRow}>
+      {!isNullOrEmpty(data?.contacts[0].userID) && <Text style={styles.header}>{"Who's Involved"}</Text>}
+      {data?.contacts.map((item, index) => (
+        <TouchableOpacity onPress={() => handlePersonPressed(index)}>
+          <View style={styles.textAndChevronRow}>
             <View style={styles.referralAndSpouseText}>
-              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-                {data?.contacts[0].contactName}
-              </Text>
+              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{item.contactName}</Text>
             </View>
 
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
+            {!isNullOrEmpty(data?.contacts[index].userID) && (
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            )}
           </View>
         </TouchableOpacity>
-      )}
+      ))}
 
       {!isNullOrEmpty(data?.contacts[0].leadSource) && <Text style={styles.header}>{'Lead Source'}</Text>}
       {!isNullOrEmpty(data?.contacts[0].leadSource) && (
@@ -328,5 +332,10 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     fontSize: 20,
+  },
+  textAndChevronRow: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    flexDirection: 'row',
   },
 });
