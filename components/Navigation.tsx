@@ -68,6 +68,19 @@ export const ToDoStackNavigator = () => {
           headerBackVisible: true,
         }}
       />
+
+      <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
     </Stack.Navigator>
   );
 };

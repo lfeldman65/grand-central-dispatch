@@ -53,8 +53,8 @@ export default function TransactionDetailsLender(props: any) {
   }
   function handlePersonPressed(index: number) {
     navigation.navigate('RelDetails', {
-      contactId: data?.contacts[0].userID,
-      firstName: data?.contacts[0].contactName,
+      contactId: data?.contacts[index].userID,
+      firstName: data?.contacts[index].contactName,
       lastName: '',
     });
   }

@@ -42,8 +42,13 @@ export default function ToDoDetails(props: any) {
     openMap({ query: data?.location });
   }
 
-  function handleAttendeePressed(attendeeID: string) {
-    console.log('attendee pressed: ' + attendeeID);
+  function handleAttendeePressed(index: number) {
+    console.log('attendee pressed: ' + index);
+    navigation.navigate('RelDetails', {
+      contactId: data?.attendees[index].id,
+      firstName: data?.attendees[index].name,
+      lastName: '',
+    });
   }
 
   function fetchData() {
@@ -99,7 +104,7 @@ export default function ToDoDetails(props: any) {
 
         {!isNullOrEmpty(data?.attendees) &&
           data?.attendees.map((item, index) => (
-            <TouchableOpacity onPress={() => handleAttendeePressed(item.id)}>
+            <TouchableOpacity onPress={() => handleAttendeePressed(index)}>
               <Text style={styles.link}>{item.name}</Text>
             </TouchableOpacity>
           ))}
