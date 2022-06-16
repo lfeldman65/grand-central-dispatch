@@ -1,16 +1,5 @@
 import { Fragment, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  ScrollView,
-  TextInput,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert, ActivityIndicator, Modal } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
@@ -22,6 +11,8 @@ import { analytics } from '../../utils/analytics';
 import React from 'react';
 import ToDoRow from './ToDoRow';
 import globalStyles from '../../globalStyles';
+
+// import AddToDo from './AddToDoScreen';
 
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 const chevron = require('../../images/chevron_blue.png');
@@ -43,6 +34,7 @@ export default function ToDosScreen() {
   const [dataActivity, setdataActivity] = useState<ToDoDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   const actionSheetRef = useRef<ActionSheet>(null);
 
@@ -53,7 +45,6 @@ export default function ToDosScreen() {
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
 
   useEffect(() => {
@@ -62,13 +53,13 @@ export default function ToDosScreen() {
 
   const handleRowPress = (index: number) => {
     console.log('to do row press');
-    analytics.event(new Event('To-Do', 'Go To Details', 'Press', 0));
+    //  analytics.event(new Event('To-Do', 'Go To Details', 'Press', 0));
 
-    // navigation.navigate('RelationshipDetailScreen', {});
-    // navigation.navigate('RelationshipDetailScreen', {
-    //   //  contactId: data[index]['contactId'],
-    // });
+    navigation.navigate('toDoDetails', {
+      toDoID: dataActivity[index].id,
+    });
   };
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
@@ -79,7 +70,17 @@ export default function ToDosScreen() {
     fetchData();
   }, [filterSetting]);
 
+  useEffect(() => {
+    fetchData();
+  }, [isFocused]);
+
   //useEffect(() => {}); // this will run on every render
+
+  function addNewToDoPressed() {
+    //  analytics.event(new Event('To-Do', 'Add To-Do', 'Pressed', 0));
+    console.log('Add To-Do Pressed');
+    setModalVisible(true);
+  }
 
   function filterPressed() {
     analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));
@@ -108,6 +109,11 @@ export default function ToDosScreen() {
     return 'Error';
   }
 
+  function saveComplete() {
+    // fetchRolodexPressed('alpha');
+    console.log('save complete');
+  }
+
   function fetchData() {
     setIsLoading(true);
     getToDoData(filterSetting)
@@ -121,10 +127,6 @@ export default function ToDosScreen() {
       })
       .catch((error) => console.error('failure ' + error));
   }
-
-  // function saveComplete() {
-  //   console.log('Save Complete');
-  // }
 
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
@@ -147,6 +149,13 @@ export default function ToDosScreen() {
               ))}
             </View>
           </ScrollView>
+
+          <TouchableOpacity style={styles.bottomContainer} onPress={() => addNewToDoPressed()}>
+            <View style={styles.ideasButton}>
+              <Text style={styles.ideasText}>{'Add New To-Do'}</Text>
+            </View>
+          </TouchableOpacity>
+
           <ActionSheet
             initialOffsetFromBottom={10}
             onBeforeShow={(data) => console.log('action sheet')}
@@ -183,14 +192,12 @@ export default function ToDosScreen() {
                       }}
                       style={styles.listItemCell}
                     >
-                      {/*  you can style the text in listItem */}
                       <Text style={styles.listItem}>{key}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
 
                 {/*  Add a Small Footer at Bottom */}
-                <View style={styles.footer} />
               </ScrollView>
             </View>
           </ActionSheet>
@@ -220,5 +227,27 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 50,
+  },
+  bottomContainer: {
+    backgroundColor: '#1A6295',
+    height: 60,
+  },
+  ideasButton: {
+    marginTop: 5,
+    backgroundColor: '#1A6295',
+    paddingTop: 10,
+    borderColor: 'white',
+    borderWidth: 2,
+    borderRadius: 10,
+    height: 50,
+    width: '95%',
+    alignSelf: 'center',
+  },
+  ideasText: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 18,
+    // justifyContent: 'center',
+    marginBottom: 12,
   },
 });

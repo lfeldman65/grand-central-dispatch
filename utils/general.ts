@@ -27,8 +27,10 @@ export function formatDateTime(datetime?: string) {
 }
 
 export function prettyDate(uglyDate: string) {
+  if (uglyDate == null) return ' ';
+  if (uglyDate == '') return ' ';
   var dateOnly = uglyDate.substring(0, 10);
   var dateParts = dateOnly.split('-');
-  var year = dateParts[0];
+  var year = dateParts[0].substring(2, 4);
   return dateParts[1] + '/' + dateParts[2] + '/' + year;
 }

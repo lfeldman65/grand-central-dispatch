@@ -18,6 +18,7 @@ import { analytics } from '../../utils/analytics';
 import { ToDoDataProps } from './interfaces';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { prettyDate } from '../../utils/general';
 const bullsEye = require('../ToDo/images/campaign.png');
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -26,13 +27,13 @@ interface ToDoRowProps {
   onPress(): void;
 }
 
-function prettyDate(uglyDate: string) {
-  var dateOnly = uglyDate.substring(0, 10);
-  var dateParts = dateOnly.split('-');
-  console.log(dateParts[0]);
-  var year = dateParts[0].substring(2, 4);
-  return 'Due: ' + dateParts[1] + '/' + dateParts[2] + '/' + year;
-}
+// function prettyDate(uglyDate: string) {
+//   var dateOnly = uglyDate.substring(0, 10);
+//   var dateParts = dateOnly.split('-');
+//   console.log(dateParts[0]);
+//   var year = dateParts[0].substring(2, 4);
+//   return 'Due: ' + dateParts[1] + '/' + dateParts[2] + '/' + year;
+// }
 
 export default function ToDoRow(props: ToDoRowProps) {
   const isFocused = useIsFocused();
@@ -41,7 +42,6 @@ export default function ToDoRow(props: ToDoRowProps) {
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function ToDoRow(props: ToDoRowProps) {
         </View>
         <View style={lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
           <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-            {prettyDate(props.data.dueDate)}
+            {'Due: ' + prettyDate(props.data.dueDate)}
           </Text>
         </View>
       </View>

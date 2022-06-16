@@ -14,6 +14,8 @@ import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
 import TransactionsScreen from '../screens/Transactions/TransactionsSection';
 import PopBysScreen from '../screens/PopBys/PopBysScreen';
 import ToDoScreen from '../screens/ToDo/ToDosScreen';
+import ToDoDetails from '../screens/ToDo/ToDoDetails';
+
 import CalendarScreen from '../screens/Calendar/CalendarScreen';
 import PodcastScreen from '../screens/Podcasts/PodcastsScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
@@ -29,8 +31,6 @@ import LenderTransactionsScreen from '../screens/Transactions/LenderTransactions
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
 
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
-import TransactionDetailsLender from '../screens/Transactions/TransactionDetailsLender';
-import TransactionDetailsOther from '../screens/Transactions/TransactionDetailsOther';
 
 export type RootStackParamList = {
   [x: string]: any;
@@ -40,11 +40,43 @@ import NavigationContent from './NavigationContent';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
 
+export const ToDoStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="toDoScreen"
+        component={ToDoScreen}
+        options={{
+          title: 'To-Do',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="toDoDetails"
+        component={ToDoDetails}
+        options={{
+          title: 'To Do Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const RealTxStackNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="realEstateTransactions"
+        name="RealEstateTransactions"
         component={RealEstateTransactionsScreen}
         options={{
           title: 'Real Estate Transactions',
@@ -61,19 +93,6 @@ export const RealTxStackNavigator = () => {
         component={TransactionDetailsRE}
         options={{
           title: 'Transaction Details',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: true,
-        }}
-      />
-
-      <Stack.Screen
-        name="RelDetails"
-        component={RelationshipDetailsScreen}
-        options={{
-          title: 'Details',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
@@ -103,22 +122,9 @@ export const LenderTxStackNavigator = () => {
 
       <Stack.Screen
         name="LenderTxDetails"
-        component={TransactionDetailsLender}
+        component={TransactionDetailsRE}
         options={{
           title: 'Transaction Details',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: true,
-        }}
-      />
-
-      <Stack.Screen
-        name="RelDetails"
-        component={RelationshipDetailsScreen}
-        options={{
-          title: 'Details',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
@@ -148,22 +154,9 @@ export const OtherTxStackNavigator = () => {
 
       <Stack.Screen
         name="OtherTxDetails"
-        component={TransactionDetailsOther}
+        component={TransactionDetailsRE}
         options={{
           title: 'Transaction Details',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: true,
-        }}
-      />
-
-      <Stack.Screen
-        name="RelDetails"
-        component={RelationshipDetailsScreen}
-        options={{
-          title: 'Details',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
@@ -376,14 +369,10 @@ export const HomeStackNavigator = () => {
 
       <Stack.Screen
         name="To-Do"
-        component={ToDoScreen}
+        component={ToDoStackNavigator}
         options={{
-          title: 'To Do',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
+          headerShown: false,
         }}
       />
 
