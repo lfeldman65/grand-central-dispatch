@@ -35,6 +35,38 @@ export default function ToDoDetails(props: any) {
 
   function deletePressed() {
     console.log('delete pressed');
+    Alert.alert(
+      'Are you sure you want to delete this To-Do?',
+      '',
+      [
+        {
+          text: 'Delete',
+          onPress: () => deletePressedContinue(),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  function deletePressedContinue() {
+    console.log('delete pressed');
+    setIsLoading(true);
+    deleteToDo(toDoID)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log(res.data);
+          navigation.goBack();
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   function handleDirectionsPressed() {
@@ -67,7 +99,21 @@ export default function ToDoDetails(props: any) {
   }
 
   function markComplete() {
-    console.log('mark complete or close');
+    if (data?.isCampaign) {
+      navigation.goBack();
+      return;
+    }
+    setIsLoading(true);
+    markCompleteToDo(toDoID)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          navigation.goBack();
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   return (
