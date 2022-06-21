@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Button } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
@@ -64,21 +64,30 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [showBiz, setShowBiz] = useState(false);
 
   async function getDarkOrLightMode() {
+    console.log('getDarkOrLight');
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <Button color="#fff" onPress={() => console.log('Edit pressed')} title="Edit" />,
+    });
+  }, [navigation]);
+
   useEffect(() => {
     getDarkOrLightMode();
-  }, [isFocused]);
-
-  useEffect(() => {
     fetchRelDetails();
-  }, [isFocused]);
-
-  useEffect(() => {
     fetchToDos();
   }, [isFocused]);
+
+  // useEffect(() => {
+  //   fetchRelDetails();
+  // }, [isFocused]);
+
+  // useEffect(() => {
+  //   fetchToDos();
+  // }, [isFocused]);
 
   useEffect(() => {
     //contact name will be initially be blank, when data is received
@@ -317,8 +326,18 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleQualPress() {
-    console.log('qual');
-    setIsQual(!isQual);
+    console.log(isQual);
+    setIsQual(isQual == 'False' ? 'True' : 'False');
+
+    // if (isQual == 'False') {
+    //   console.log('here false');
+    //   setIsQual('True');
+    // } else {
+    //   console.log('here true');
+
+    //   setIsQual('False');
+    // }
+    console.log(isQual);
   }
 
   function fetchToDos() {
