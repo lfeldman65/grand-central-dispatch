@@ -43,7 +43,7 @@ export interface ToDoDetailsDataProps {
 export interface RecurrenceProps {
   untilType: string;
   untilDate: string;
-  untilTimes: string;
+  untilTimes: number;
   frequencyType: string;
   weeklyMonday: boolean;
   weeklyTuesday: boolean;
@@ -93,4 +93,21 @@ export interface ToDoDeleteDataResponse {
 
 export interface ToDoDeleteProps {
   message: string;
+}
+
+// Add New To Do in Postman
+
+export interface AddToDoDataProps {
+  title: string;
+  dueDate: string;
+  priority: boolean;
+  location: string;
+  notes: string;
+  recurrence: RecurrenceProps;
+}
+
+export interface AddToDoDataResponse {
+  data: AddToDoDataProps[];
+  error: string;
+  status: string;
 }

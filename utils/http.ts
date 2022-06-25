@@ -33,6 +33,7 @@ export async function httpBase(endpoint: string, { body, ...customConfig }: Http
   }
   return fetch(`${apiBaseUrl}/${endpoint}`, config).then(async (response) => {
     if (response.ok) {
+      console.log('response is ok');
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.indexOf('application/json') !== -1) {
         return await response.json();
@@ -40,8 +41,8 @@ export async function httpBase(endpoint: string, { body, ...customConfig }: Http
         return await response.text();
       }
     } else {
-      const errorResponse = await response;
-      return Promise.reject(errorResponse);
+      //const errorResponse = await response;
+      return Promise.reject('Status code: ' + response.status);
     }
   });
 }
