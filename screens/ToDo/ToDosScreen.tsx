@@ -12,7 +12,7 @@ import React from 'react';
 import ToDoRow from './ToDoRow';
 import globalStyles from '../../globalStyles';
 
-// import AddToDo from './AddToDoScreen';
+import AddToDo from './AddToDoScreen';
 
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 const chevron = require('../../images/chevron_blue.png');
@@ -112,6 +112,7 @@ export default function ToDosScreen() {
   function saveComplete() {
     // fetchRolodexPressed('alpha');
     console.log('save complete');
+    fetchData();
   }
 
   function fetchData() {
@@ -156,6 +157,18 @@ export default function ToDosScreen() {
             </View>
           </TouchableOpacity>
 
+          {modalVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <AddToDo title={'New To-Do'} onSave={saveComplete} setModalVisible={setModalVisible} />
+            </Modal>
+          )}
           <ActionSheet
             initialOffsetFromBottom={10}
             onBeforeShow={(data) => console.log('action sheet')}
