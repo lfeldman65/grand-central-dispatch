@@ -23,11 +23,11 @@ export default function ToDoDetails(props: any) {
   const [lightOrDark, setIsLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => <Button color="#fff" onPress={() => setModalVisible(true)} title="Edit" />,
-    });
-  }, [navigation]);
+  // React.useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => <Button color="#000" onPress={() => setModalVisible(true)} title="Edit" />,
+  //   });
+  // }, [navigation]);
 
   useEffect(() => {
     fetchData();
