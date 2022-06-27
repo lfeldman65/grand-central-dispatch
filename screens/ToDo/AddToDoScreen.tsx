@@ -31,6 +31,8 @@ export default function AddToDoScreen(props: any) {
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
   const [frequencyType, setFrequencyType] = useState('Never');
+  const [reminder, setReminder] = useState('None');
+
   const [priority, setPriority] = useState(false);
 
   const isFocused = useIsFocused();
@@ -102,6 +104,105 @@ export default function AddToDoScreen(props: any) {
               textAlign="left"
               onChangeText={(text) => setTitle(text)}
               defaultValue={toDoTitle}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>Date</Text>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              //   onChangeText={(text) => setDate(text)}
+              defaultValue={date.toDateString()}
+            />
+          </View>
+        </View>
+
+        <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+          size={25}
+          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+          fillColor="#37C0FF"
+          unfillColor="#004F89"
+          iconStyle={{ borderColor: 'white' }}
+          text="High Priority"
+          textContainerStyle={{ marginLeft: 10 }}
+          style={styles.checkBox}
+          onPress={(isChecked: boolean) => {
+            console.log(isChecked);
+            setPriority(!priority);
+          }}
+        />
+
+        <Text style={styles.nameTitle}>Recurrence</Text>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              //   onChangeText={(text) => setFirstName(text)}
+              defaultValue={frequencyType}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>Reminder</Text>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              //     onChangeText={(text) => setFirstName(text)}
+              defaultValue={reminder}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>Location</Text>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setLocation(text)}
+              defaultValue={location}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>Attendees</Text>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              //   onChangeText={(text) => setFirstName(text)}
+              //   defaultValue={firstName}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>Notes</Text>
+        <View style={styles.mainContent}>
+          <View style={lightOrDark == 'dark' ? styles.inputViewDark : styles.inputViewLight}>
+            <TextInput
+              style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
+              placeholder="Type Here"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              //   value={note}
+              onChangeText={(text) => setNotes(text)}
             />
           </View>
         </View>

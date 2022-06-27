@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Modal, Button, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getToDoDetails, markCompleteToDo, deleteToDo } from './api';
@@ -8,6 +8,8 @@ import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import { prettyDate, isNullOrEmpty } from '../../utils/general';
 import openMap from 'react-native-open-maps';
+import * as React from 'react';
+import EditToDo from './EditToDoScreen';
 
 let deviceHeight = Dimensions.get('window').height;
 
@@ -19,6 +21,13 @@ export default function ToDoDetails(props: any) {
   const [data, setdata] = useState<ToDoDetailsDataProps>();
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <Button color="#fff" onPress={() => setModalVisible(true)} title="Edit" />,
+    });
+  }, [navigation]);
 
   useEffect(() => {
     fetchData();
@@ -74,13 +83,13 @@ export default function ToDoDetails(props: any) {
     openMap({ query: data?.location });
   }
 
-  function handleAttendeePressed(index: number) {
-    console.log('attendee pressed: ' + index);
-    navigation.navigate('RelDetails', {
-      contactId: data?.attendees[index].id,
-      firstName: data?.attendees[index].name,
-      lastName: '',
-    });
+  function handleAttendeePressed(attendeeID: string) {
+    console.log('attendee pressed: ' + attendeeID);
+  }
+
+  function saveComplete() {
+    console.log('save complete');
+    //  fetchData();
   }
 
   function fetchData() {
@@ -91,7 +100,7 @@ export default function ToDoDetails(props: any) {
           console.error(res.error);
         } else {
           setdata(res.data);
-          //  console.log(res.data);
+          console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -150,20 +159,13 @@ export default function ToDoDetails(props: any) {
 
         {!isNullOrEmpty(data?.attendees) &&
           data?.attendees.map((item, index) => (
-            <TouchableOpacity onPress={() => handleAttendeePressed(index)}>
+            <TouchableOpacity onPress={() => handleAttendeePressed(item.id)}>
               <Text style={styles.link}>{item.name}</Text>
             </TouchableOpacity>
           ))}
       </View>
 
       <View style={lightOrDark == 'dark' ? styles.bottomContainerDark : styles.bottomContainerLight}>
-        {data?.isCampaign && (
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-            This To-Do is part of a marketing campaign
-          </Text>
-        )}
-        {data?.isCampaign && <Text></Text>}
-
         <TouchableOpacity onPress={markComplete}>
           <Text style={styles.completeText}>{data?.isCampaign ? 'Close' : 'Mark as Complete'}</Text>
         </TouchableOpacity>
@@ -171,26 +173,36 @@ export default function ToDoDetails(props: any) {
           <Text style={styles.deleteText}>Delete</Text>
         </TouchableOpacity>
       </View>
+      {modalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <EditToDo title={'Edit To-Do'} onSave={saveComplete} setModalVisible={setModalVisible} />
+        </Modal>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   topContainerDark: {
-    height: 0.72 * deviceHeight,
+    height: 0.78 * deviceHeight,
     backgroundColor: 'black',
   },
   topContainerLight: {
-    height: 0.72 * deviceHeight,
+    height: 0.78 * deviceHeight,
     backgroundColor: 'white',
   },
   bottomContainerDark: {
     backgroundColor: 'black',
-    alignSelf: 'center',
   },
   bottomContainerLight: {
     backgroundColor: 'white',
-    alignSelf: 'center',
   },
   dividingLine: {
     backgroundColor: 'lightgray',
@@ -272,6 +284,11 @@ const styles = StyleSheet.create({
   deleteText: {
     color: 'red',
     textAlign: 'center',
+    fontSize: 20,
+  },
+  editText: {
+    color: 'red',
+    //  textAlign: 'center',
     fontSize: 20,
   },
   completeText: {
