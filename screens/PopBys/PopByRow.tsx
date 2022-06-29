@@ -1,4 +1,4 @@
-import { Text, View, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { Text, View, Image, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
 import { PopByRadiusDataProps, PopByFavoriteDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
@@ -77,6 +77,10 @@ export default function PopByRow(props: PopBysRowProps) {
     }
   }
 
+  function handlePhonePressed(phoneNumber: string) {
+    Linking.openURL(`tel:${phoneNumber}`);
+  }
+
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
@@ -87,6 +91,23 @@ export default function PopByRow(props: PopBysRowProps) {
           <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
             {props.data.firstName + ' ' + props.data.lastName}
           </Text>
+          <Text style={styles.phoneText} onPress={() => handlePhonePressed(props.data.mobile)}>
+            {props.data.mobile}
+          </Text>
+          <View style={styles.buttonRow}>
+            <Text style={styles.buttonText} onPress={() => handleDirectionsPressed()}>
+              Directions
+            </Text>
+            <Text style={isFavorite == 'True' ? styles.savedText : styles.saveText} onPress={() => handleSavePressed()}>
+              {isFavorite == 'True' ? 'Saved' : 'Save'}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.chevronBox}>
+          <Text style={lightOrDark == 'dark' ? styles.distanceTextDark : styles.distanceTextLight}>
+            {props.data.distance + ' ' + 'miles   '}
+          </Text>
+          <Image source={chevron} style={styles.chevron} />
         </View>
       </View>
     </TouchableOpacity>
