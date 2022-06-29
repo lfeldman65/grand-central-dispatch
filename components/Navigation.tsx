@@ -9,27 +9,21 @@ import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import GoalsScreen from '../screens/Goals/GoalsScreen';
 import PACScreen from '../screens/PAC/PACScreen';
 import PACDetailScreen from '../screens/PAC/PACDetailScreen';
-//import RelationshipsScreen from '../screens/Relationships/RelationshipsScreen';
-import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
+//import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
 import TransactionsScreen from '../screens/Transactions/TransactionsSection';
 import PopBysScreen from '../screens/PopBys/PopBysScreen';
 import ToDoScreen from '../screens/ToDo/ToDosScreen';
 import ToDoDetails from '../screens/ToDo/ToDoDetails';
-
 import CalendarScreen from '../screens/Calendar/CalendarScreen';
 import PodcastScreen from '../screens/Podcasts/PodcastsScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
-
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
 import RelationshipDetailsScreen from '../screens/Relationships/RelationshipDetailsScreen';
-
 import RecentContactActivityScreen from '../screens/Relationships/RecentActivityScreen';
 import VideoHistoryScreen from '../screens/Relationships/VideoHistoryScreen';
-
 import RealEstateTransactionsScreen from '../screens/Transactions/RealEstateTransactionsScreen';
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
-
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 
 export type RootStackParamList = {
@@ -39,6 +33,38 @@ export type RootStackParamList = {
 import NavigationContent from './NavigationContent';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
+
+export const PopByStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="PopBysScreen1"
+        component={PopBysScreen}
+        options={{
+          title: 'Pop-By',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 export const ToDoStackNavigator = () => {
   return (
@@ -210,7 +236,7 @@ export const PACStackNavigator = () => {
         }}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="PACCompleteScreen"
         component={PACCompleteScreen}
         options={{
@@ -221,7 +247,7 @@ export const PACStackNavigator = () => {
           },
           headerBackVisible: true,
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };
@@ -369,14 +395,10 @@ export const HomeStackNavigator = () => {
 
       <Stack.Screen
         name="PopBysScreen"
-        component={PopBysScreen}
+        component={PopByStackNavigator}
         options={{
-          title: 'Pop-By',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
+          headerShown: false,
         }}
       />
 
