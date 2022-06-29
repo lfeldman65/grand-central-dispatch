@@ -4,14 +4,13 @@ import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 const closeButton = require('../../images/button_close_white.png');
 
-export default function PACCompleteScreen(props: any) {
+export default function PopCompleteScreen(props: any) {
   const { onSave, setModalVisible, contactName } = props;
   const [note, onNoteChange] = useState('');
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
   function SavePressed() {
-    // setModalVisible(false);
     onSave(note);
   }
   function CancelPressed() {
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 40,
   },
   closeX: {
     width: 15,

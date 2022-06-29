@@ -3,222 +3,209 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
   Dimensions,
-  Linking,
+  Modal,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
+import { Event } from 'expo-analytics';
+import PopByRow from './PopByRow';
+import PopByRowSaved from './PopByRowSaved';
+import { getPopByRadiusData } from './api';
+import { PopByRadiusDataProps } from './interfaces';
+import globalStyles from '../../globalStyles';
+import { analytics } from '../../utils/analytics';
+import React from 'react';
+import { storage } from '../../utils/storage';
+import PopComplete from './PopCompleteScreen';
 
-export default function PopBysScreen() {
-  let deviceWidth = Dimensions.get('window').width;
+const chevron = require('../../images/chevron_blue.png');
 
+type TabType = 'Near Me' | 'Priority' | 'Saved'; // nearby, priority and favorites in API
+
+export default function ManageRelationshipsScreen() {
+  const [tabSelected, setTabSelected] = useState<TabType>('Near Me');
   const navigation = useNavigation();
-  const [nearSelected, setNearSelected] = useState(true);
-  const [prioritySelected, setPrioritySelected] = useState(false);
-  const [savedSelected, setSavedSelected] = useState(false);
+  const isFocused = useIsFocused();
+  const [isFilterRel, setIsFilterRel] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [data, setData] = useState<PopByRadiusDataProps[]>([]);
 
-  const [data, setData] = useState({ data: [] });
   const [isLoading, setIsLoading] = useState(true);
+  const [lightOrDark, setIsLightOrDark] = useState('');
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  const handleRowPress = (index: number) => {
+    console.log('rolodex row press');
+    //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    navigation.navigate('RelDetails', {
+      contactId: data[index]['id'],
+      firstName: data[index]['firstName'],
+      lastName: data[index]['lastName'],
+      rankFromAbove: data[index]['ranking'],
+      //  qualFromAbove: dataRolodex[index]['qualified'],
+    });
+  };
 
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      tab: tabSelected,
     });
-  });
-
-  useEffect(() => {
-    //take this out if you don't want to simulate delay
-    setTimeout(() => {
-      fetchPressed();
-    }, 2000);
   }, []);
 
+  useEffect(() => {
+    getDarkOrLightMode();
+    if (tabSelected == 'Near Me') {
+      fetchPopBys('nearby');
+    } else if (tabSelected == 'Priority') {
+      fetchPopBys('priority');
+    } else {
+      fetchPopBys('favorites');
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    navigation.setOptions({ title: 'Pop-By' });
+    //  fetchPopBys(tabSelected);
+    console.log(tabSelected);
+  }, [isFilterRel]);
+
+  useEffect(() => {
+    showFilterTitle();
+  }, [isFilterRel]);
+
+  //  useEffect(() => {}); // this will run on every render
+
+  function showFilterTitle() {
+    if (isFilterRel) {
+      return 'Rel';
+    }
+    return 'Biz';
+  }
+
   function nearPressed() {
-    console.log('near pressed');
-    setNearSelected(true);
-    setPrioritySelected(false);
-    setSavedSelected(false);
+    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
+    setTabSelected('Near Me');
+    fetchPopBys('Near Me');
   }
 
   function priorityPressed() {
-    console.log('priority pressed');
-    setNearSelected(false);
-    setPrioritySelected(true);
-    setSavedSelected(false);
+    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
+    setTabSelected('Priority');
+    fetchPopBys('Priority');
   }
 
   function savedPressed() {
-    console.log('saved pressed');
-    setNearSelected(false);
-    setPrioritySelected(false);
-    setSavedSelected(true);
+    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
+    setTabSelected('Saved');
+    fetchPopBys('Saved');
   }
 
-  function sanityCheck() {
-    if (data == null) {
-      return false;
+  function filterPressed() {
+    console.log('filter');
+    //  analytics.event(new Event('Manage Relationships', 'Filter', 'Press', 0));
+    if (isFilterRel) {
+      setIsFilterRel(false);
+    } else {
+      setIsFilterRel(true);
+      showFilterTitle();
     }
-
-    if (data['data'] == null) {
-      return false;
-    }
-
-    if (data['data'].length == 0) {
-      return false;
-    }
-    return true;
   }
 
-  function fetchPressed() {
-    console.log('Fetch Press');
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', 'YWNzOmh0dHBzOi8vcmVmZXJyYWxtYWtlci1jYWNoZS5hY2Nlc3Njb250cm9sLndpbmRvd');
-    myHeaders.append('SessionToken', '56B6DEC45D864875820ECB094377E191');
-    myHeaders.append('Cookie', 'ASP.NET_SessionId=m4eeiuwkwetxz2uzcjqj2x1a');
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      //  redirect: 'follow',
-    };
-
-    fetch('https://www.referralmaker.com/services/mobileapi/priorityActions?type=call', requestOptions)
-      .then((response) => response.json()) //this line converts it to JSON
-      .then((result) => {
-        //then we can treat it as a JSON object
-        console.log(result);
-        setData(result);
-        if (result.status == 'error') {
-          //  alert(result.error);
-          setIsLoading(false);
+  function fetchPopBys(type: string) {
+    setIsLoading(true);
+    getPopByRadiusData(type)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
         } else {
-          setIsLoading(false);
-          //  navigation.navigate('Home');
-          //  alert(result.status);
+          setData(res.data);
+          //  console.log(res.data);
         }
+        setIsLoading(false);
       })
-      .catch((error) => console.log('failure ' + error));
+      .catch((error) => console.error('failure ' + error));
   }
 
-  return isLoading ? (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#AAA" />
-    </View>
-  ) : (
-    <>
-      <View style={styles.container}>
-        {/* <View style={styles.tabButtonRow}>
-          <Text style={nearSelected == true ? styles.selected : styles.unselected} onPress={nearPressed}>
-            Near Me
-          </Text>
-          <Text style={prioritySelected == true ? styles.selected : styles.unselected} onPress={priorityPressed}>
-            Priority
-          </Text>
-          <Text style={savedSelected == true ? styles.selected : styles.unselected} onPress={savedPressed}>
-            Saved
-          </Text>
-        </View> */}
+  // function saveComplete() {
+  //   fetchPopBys('alpha');
+  // }
+
+  return (
+    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+      <View style={globalStyles.tabButtonRow}>
+        <Text style={tabSelected == 'Near Me' ? globalStyles.selected : globalStyles.unselected} onPress={nearPressed}>
+          Near Me
+        </Text>
+        <Text
+          style={tabSelected == 'Priority' ? globalStyles.selected : globalStyles.unselected}
+          onPress={priorityPressed}
+        >
+          Priority
+        </Text>
+        <Text style={tabSelected == 'Saved' ? globalStyles.selected : globalStyles.unselected} onPress={savedPressed}>
+          Saved
+        </Text>
       </View>
 
-      {/* <View style={styles.bottom}></View> */}
-    </>
+      <View style={styles.mapView}></View>
+
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#AAA" />
+        </View>
+      ) : (
+        <React.Fragment>
+          <ScrollView>
+            {tabSelected == 'Near Me' && (
+              <View>
+                {data.map((item, index) => (
+                  <PopByRow relFromAbove={'Near Me'} key={index} data={item} onPress={() => handleRowPress(index)} />
+                ))}
+              </View>
+            )}
+            {tabSelected == 'Priority' && (
+              <View>
+                {data.map((item, index) => (
+                  <PopByRow relFromAbove={'Priority'} key={index} data={item} onPress={() => handleRowPress(index)} />
+                ))}
+              </View>
+            )}
+            {tabSelected == 'Saved' && (
+              <View>
+                {data.map((item, index) => (
+                  <PopByRowSaved
+                    relFromAbove={'Saved'}
+                    key={index}
+                    data={item}
+                    onPress={() => handleRowPress(index)}
+                    refresh={() => savedPressed()}
+                  />
+                ))}
+              </View>
+            )}
+          </ScrollView>
+        </React.Fragment>
+      )}
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 7,
-    backgroundColor: 'white',
-  },
-  bottom: {
-    flex: 1,
-    backgroundColor: 'red',
-    height: 100,
-  },
-  hack: {
-    height: 100,
-    backgroundColor: 'white',
-  },
-  tabButtonRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    height: 40,
-    alignItems: 'center',
-  },
-  unselected: {
-    color: 'lightgray',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#09334a',
-    flex: 1,
+export const styles = StyleSheet.create({
+  mapView: {
     paddingTop: 10,
-  },
-  selected: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 16,
-    height: '100%',
-    backgroundColor: '#04121b',
-    flex: 1,
-    paddingTop: 10,
-    borderColor: 'lightblue',
-    borderWidth: 2,
-  },
-  goalTitle: {
-    paddingRight: 30,
-    color: '#1A6295',
-    fontSize: 18,
-    textAlign: 'right',
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: 16,
-  },
-  progress: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-  },
-  goalName: {
-    width: 200,
-    color: '#1A6295',
-    fontSize: 20,
-    textAlign: 'left',
-    marginLeft: 10,
-    fontSize: 16,
-  },
-  goalNum: {
-    width: 20,
-    height: 32,
-    color: 'black',
-    fontSize: 18,
-    textAlign: 'right',
-    marginRight: 20,
-  },
-  grayRectangle: {
-    height: 25,
-    width: '75%',
-    backgroundColor: 'lightgray',
-    marginRight: 10,
-    borderRadius: 5,
-  },
-  trophy: {
-    width: 35,
-    height: 35,
-    paddingBottom: 10,
-  },
-  trackText: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'black',
+    height: '50%',
+    width: '100%',
   },
 });

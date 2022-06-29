@@ -44,7 +44,7 @@ export interface PACCompleteProps {
 }
 
 export interface PACCompleteResponse {
-  data: PACCompleteProps[];
+  data: PACCompleteProps;
   error: string;
   status: string;
 }
