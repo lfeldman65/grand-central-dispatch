@@ -90,6 +90,7 @@ export default function PopByRowSaved(props: PopBysRowProps) {
 
   function handleCompletePressed() {
     console.log('handle complete pressed');
+    setModalVisible(true);
   }
 
   function completeAction(contactId: string, type: string, note: string, onSuccess: any, onFailure: any) {
@@ -116,7 +117,7 @@ export default function PopByRowSaved(props: PopBysRowProps) {
       '',
       [
         {
-          text: 'Delete',
+          text: 'Remove',
           onPress: () => removePressedContinue(),
         },
         {
@@ -131,7 +132,8 @@ export default function PopByRowSaved(props: PopBysRowProps) {
 
   function removePressedContinue() {
     console.log('remove continued');
-    //  removePop(props.data.id);
+    removePop(props.data.id);
+    props.refresh();
   }
 
   return (
@@ -144,7 +146,37 @@ export default function PopByRowSaved(props: PopBysRowProps) {
           <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
             {props.data.firstName + ' ' + props.data.lastName}
           </Text>
+          <Text style={styles.phoneText}>{props.data.mobile}</Text>
+          <View style={styles.buttonRow}>
+            <Text style={styles.directionsAndCompleteText} onPress={() => handleDirectionsPressed()}>
+              Directions
+            </Text>
+            <Text style={styles.directionsAndCompleteText} onPress={() => handleCompletePressed()}>
+              Complete
+            </Text>
+            <Text style={styles.removeText} onPress={() => handleRemovePressed()}>
+              Remove
+            </Text>
+          </View>
         </View>
+        <View style={styles.chevronBox}>
+          <Text style={lightOrDark == 'dark' ? styles.distanceTextDark : styles.distanceTextLight}>
+            {props.data.distance + ' ' + 'miles   '}
+          </Text>
+          <Image source={chevron} style={styles.chevron} />
+        </View>
+        {modalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <PopComplete contactName={'Complete Pop-By'} onSave={completePressed} setModalVisible={setModalVisible} />
+          </Modal>
+        )}
       </View>
     </TouchableOpacity>
   );
