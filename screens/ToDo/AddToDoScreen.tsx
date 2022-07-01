@@ -28,12 +28,14 @@ export default function AddToDoScreen(props: any) {
   const [lightOrDark, setIsLightOrDark] = useState('');
   const [toDoTitle, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
+  const [priority, setPriority] = useState(false);
+  const [recurrence, setRecurrence] = useState('Never');
+  const [untilType, setUntilType] = useState('Times');
+  const [untilTimes, setUntilTimes] = useState('');
+  const [reminder, setReminder] = useState('None');
+  const [howRemind, setHowRemind] = useState('Text');
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
-  const [frequencyType, setFrequencyType] = useState('Never');
-  const [reminder, setReminder] = useState('None');
-
-  const [priority, setPriority] = useState(false);
 
   const isFocused = useIsFocused();
 
@@ -60,7 +62,7 @@ export default function AddToDoScreen(props: any) {
 
     //  new Date().toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
 
-    addNewToDo(toDoTitle, date.toISOString(), priority, location, frequencyType, notes)
+    addNewToDo(toDoTitle, date.toISOString(), priority, location, recurrence, notes)
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
@@ -145,11 +147,37 @@ export default function AddToDoScreen(props: any) {
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
-              //   onChangeText={(text) => setFirstName(text)}
-              defaultValue={frequencyType}
+              onChangeText={(text) => setRecurrence(text)}
+              defaultValue={recurrence}
             />
           </View>
         </View>
+
+        {recurrence != 'Never' && (
+          <View style={styles.recurrenceRow}>
+            <View style={styles.untilView}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                textAlign="left"
+                onChangeText={(text) => setUntilType(text)}
+                defaultValue={untilType}
+              />
+            </View>
+
+            <View style={styles.untilView}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                textAlign="left"
+                onChangeText={(text) => setUntilType(text)}
+                defaultValue={untilTimes}
+              />
+            </View>
+          </View>
+        )}
 
         <Text style={styles.nameTitle}>Reminder</Text>
         <View style={styles.mainContent}>
@@ -159,11 +187,50 @@ export default function AddToDoScreen(props: any) {
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
-              //     onChangeText={(text) => setFirstName(text)}
+              onChangeText={(text) => setReminder(text)}
               defaultValue={reminder}
             />
           </View>
         </View>
+
+        {reminder != 'None' && (
+          <View style={{ flexDirection: 'row', marginLeft: 0 }}>
+            <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+              size={25}
+              textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+              fillColor="#37C0FF"
+              //   isChecked={reminderText}
+              unfillColor="#004F89"
+              iconStyle={{ borderColor: 'white' }}
+              text="Text"
+              textContainerStyle={{ marginLeft: 10 }}
+              style={styles.checkBox}
+              onPress={(isChecked: boolean) => {
+                console.log(isChecked);
+                if (!isChecked) {
+                  setHowRemind('Email');
+                }
+              }}
+            />
+
+            <Text style={{ width: 20 }}></Text>
+
+            <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+              size={25}
+              textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+              fillColor="#37C0FF"
+              unfillColor="#004F89"
+              iconStyle={{ borderColor: 'white' }}
+              text="Email"
+              textContainerStyle={{ marginLeft: 10 }}
+              style={styles.checkBox}
+              onPress={(isChecked: boolean) => {
+                console.log(isChecked);
+                setHowRemind('Text');
+              }}
+            />
+          </View>
+        )}
 
         <Text style={styles.nameTitle}>Location</Text>
         <View style={styles.mainContent}>
@@ -202,7 +269,7 @@ export default function AddToDoScreen(props: any) {
               placeholderTextColor="#AFB9C2"
               textAlign="left"
               //   value={note}
-              onChangeText={(text) => setNotes(text)}
+              //   onChangeText={onNoteChange}
             />
           </View>
         </View>
@@ -229,7 +296,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 40,
+  },
+  recurrenceRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
   closeX: {
     width: 15,
@@ -256,6 +328,16 @@ const styles = StyleSheet.create({
   inputView: {
     backgroundColor: '#002341',
     width: 0.9 * deviceWidth,
+    height: 50,
+    marginBottom: 20,
+    alignItems: 'baseline',
+    justifyContent: 'center',
+    paddingLeft: 10,
+    fontSize: 29,
+  },
+  untilView: {
+    backgroundColor: '#002341',
+    width: '42%',
     height: 50,
     marginBottom: 20,
     alignItems: 'baseline',
