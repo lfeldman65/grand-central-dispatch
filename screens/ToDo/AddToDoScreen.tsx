@@ -262,7 +262,7 @@ export default function AddToDoScreen(props: any) {
 
         <Text style={styles.nameTitle}>Notes</Text>
         <View style={styles.mainContent}>
-          <View style={lightOrDark == 'dark' ? styles.inputViewDark : styles.inputViewLight}>
+          <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
             <TextInput
               style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
               placeholder="Type Here"
@@ -345,16 +345,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 29,
   },
-  notesView: {
-    backgroundColor: 'white',
-    width: 0.9 * deviceWidth,
-    height: 50,
-    marginBottom: 20,
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    fontSize: 29,
-  },
   textInput: {
     fontSize: 18,
     color: '#FFFFFF',
@@ -365,7 +355,7 @@ const styles = StyleSheet.create({
     left: 0.055 * deviceWidth,
     marginBottom: 25,
   },
-  inputViewDark: {
+  notesViewDark: {
     marginTop: 10,
     backgroundColor: 'black',
     width: '90%',
@@ -375,7 +365,7 @@ const styles = StyleSheet.create({
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  inputViewLight: {
+  notesViewLight: {
     marginTop: 10,
     backgroundColor: 'white',
     width: '90%',
