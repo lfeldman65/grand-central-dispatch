@@ -85,6 +85,13 @@ export default function ToDoDetails(props: any) {
 
   function handleAttendeePressed(attendeeID: string) {
     console.log('attendee pressed: ' + attendeeID);
+    navigation.navigate('RelDetails', {
+      contactId: data?.attendees[0].id,
+      firstName: data?.attendees[0].name,
+      lastName: '',
+      //  rankFromAbove: dataRolodex[index]['ranking'],
+      //  qualFromAbove: dataRolodex[index]['qualified'],
+    });
   }
 
   function saveComplete() {

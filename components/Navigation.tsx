@@ -284,6 +284,38 @@ export const RelStackNavigator = () => {
   );
 };
 
+export const RecentActivityStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="RecentContactActivityScreen"
+        component={RecentContactActivityScreen}
+        options={{
+          title: 'Recent Contact Activity',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const HomeStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -332,8 +364,8 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="Transactions"
-        component={TransactionsScreen}
+        name="RecentActivity"
+        component={RecentActivityStackNavigator}
         options={{
           headerBackVisible: false,
           headerShown: false,
@@ -341,15 +373,11 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="recentcontactactivity"
-        component={RecentContactActivityScreen}
+        name="Transactions"
+        component={TransactionsScreen}
         options={{
-          title: 'Recent Contact Activity',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
+          headerShown: false,
         }}
       />
 

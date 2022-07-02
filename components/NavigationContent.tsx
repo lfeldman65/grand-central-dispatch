@@ -109,7 +109,7 @@ function CustomDrawerContent(props: any) {
               <Text style={styles.menuItemText}>Manage Relationships</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressed('recentcontactactivity')}>
+          <TouchableOpacity onPress={() => pressed('RecentActivity')}>
             <View style={styles.menuItem}>
               <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
               <Text style={styles.menuItemText}>Recent Contact Activity</Text>

@@ -72,6 +72,13 @@ export default function RecentActivityScreenScreen() {
   const handleRowPress = (index: number) => {
     console.log('rolodex row press');
     analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    navigation.navigate('RelDetails', {
+      contactId: dataActivity[index].ContactId,
+      firstName: dataActivity[index].Name,
+      lastName: '',
+      //  rankFromAbove: dataRolodex[index]['ranking'],
+      //  qualFromAbove: dataRolodex[index]['qualified'],
+    });
 
     // navigation.navigate('RelationshipDetailScreen', {});
     // navigation.navigate('RelationshipDetailScreen', {
