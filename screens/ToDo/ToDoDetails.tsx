@@ -173,6 +173,7 @@ export default function ToDoDetails(props: any) {
       </View>
 
       <View style={lightOrDark == 'dark' ? styles.bottomContainerDark : styles.bottomContainerLight}>
+        <Text style={styles.campaignText}>{data?.isCampaign ? 'This To-Do is part of a marketing campaign' : ''}</Text>
         <TouchableOpacity onPress={markComplete}>
           <Text style={styles.completeText}>{data?.isCampaign ? 'Close' : 'Mark as Complete'}</Text>
         </TouchableOpacity>
@@ -198,12 +199,17 @@ export default function ToDoDetails(props: any) {
 
 const styles = StyleSheet.create({
   topContainerDark: {
-    height: 0.78 * deviceHeight,
+    height: '82%',
     backgroundColor: 'black',
   },
   topContainerLight: {
-    height: 0.78 * deviceHeight,
+    height: '82%',
     backgroundColor: 'white',
+  },
+  campaignText: {
+    color: 'gray',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   bottomContainerDark: {
     backgroundColor: 'black',
