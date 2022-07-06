@@ -107,7 +107,24 @@ export interface AddToDoDataProps {
 }
 
 export interface AddToDoDataResponse {
-  data: AddToDoDataProps[];
+  data: AddToDoDataProps;
+  error: string;
+  status: string;
+}
+
+// AZ Contacts in Postman
+export interface RolodexDataProps {
+  id: string;
+  firstName: string;
+  lastName: string;
+  ranking: string;
+  contactTypeID: string;
+  employerName: string;
+  qualified: boolean;
+}
+
+export interface RolodexDataResponse {
+  data: RolodexDataProps[];
   error: string;
   status: string;
 }

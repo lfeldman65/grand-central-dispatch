@@ -6,6 +6,7 @@ import {
   ToDoMarkCompleteDataResponse,
   ToDoDeleteDataResponse,
   AddToDoDataResponse,
+  RolodexDataResponse,
 } from './interfaces';
 
 export function getToDoData(type: string): Promise<ToDoDataResponse> {
@@ -47,3 +48,7 @@ export function addNewToDo(
     },
   });
 }
+
+export function getRolodexData(type: string): Promise<RolodexDataResponse> {
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=250`);
+} // back tick (`) only necessary for string interpolation
