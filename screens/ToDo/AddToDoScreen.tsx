@@ -268,8 +268,8 @@ export default function AddToDoScreen(props: any) {
               placeholder="Type Here"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
-              //   value={note}
-              //   onChangeText={onNoteChange}
+              value={notes}
+              onChangeText={(text) => setNotes(text)}
             />
           </View>
         </View>
