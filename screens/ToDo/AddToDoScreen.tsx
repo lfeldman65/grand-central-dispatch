@@ -211,7 +211,7 @@ export default function AddToDoScreen(props: any) {
     }
   }
 
-  function SavePressed() {
+  function savePressed() {
     //  analytics.event(new Event('Relationships', 'Save Button', 'Pressed', 0));
     console.log(date.toDateString());
     console.log(date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }));
@@ -225,7 +225,29 @@ export default function AddToDoScreen(props: any) {
 
     //  new Date().toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
 
-    addNewToDo(toDoTitle, date.toISOString(), priority, location, recurrence, notes)
+    addNewToDo(
+      toDoTitle,
+      date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+      priority,
+      location,
+      notes,
+      untilType,
+      endDate.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+      untilVal,
+      recurrence,
+      monday,
+      tuesday,
+      wednesday,
+      thursday,
+      friday,
+      saturday,
+      sunday,
+      2,
+      2,
+      2,
+      0,
+      0
+    )
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
@@ -295,20 +317,20 @@ export default function AddToDoScreen(props: any) {
     setSaturday(!saturday);
   }
 
-  function CancelPressed() {
+  function cancelPressed() {
     setModalVisible(false);
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <TouchableOpacity onPress={CancelPressed}>
+        <TouchableOpacity onPress={cancelPressed}>
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
 
         <Text style={styles.nameLabel}>{title}</Text>
 
-        <TouchableOpacity onPress={SavePressed}>
+        <TouchableOpacity onPress={savePressed}>
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -337,6 +359,7 @@ export default function AddToDoScreen(props: any) {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric',
+                  hour: 'numeric',
                 })}
               </Text>
             </View>
@@ -489,10 +512,11 @@ export default function AddToDoScreen(props: any) {
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
-                  {date.toLocaleDateString('en-us', {
+                  {endDate.toLocaleDateString('en-us', {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
+                    hour: 'numeric',
                   })}
                 </Text>
               </View>
