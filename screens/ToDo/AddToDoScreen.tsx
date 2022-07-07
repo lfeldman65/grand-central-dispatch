@@ -225,7 +225,29 @@ export default function AddToDoScreen(props: any) {
 
     //  new Date().toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
 
-    addNewToDo(toDoTitle, date.toISOString(), priority, location, recurrence, notes)
+    addNewToDo(
+      toDoTitle,
+      date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+      priority,
+      location,
+      notes,
+      untilType,
+      endDate.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+      untilVal,
+      recurrence,
+      monday,
+      tuesday,
+      wednesday,
+      thursday,
+      friday,
+      saturday,
+      sunday,
+      2,
+      2,
+      2,
+      0,
+      0
+    )
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
@@ -337,6 +359,7 @@ export default function AddToDoScreen(props: any) {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric',
+                  hour: 'numeric',
                 })}
               </Text>
             </View>
@@ -493,6 +516,7 @@ export default function AddToDoScreen(props: any) {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
+                    hour: 'numeric',
                   })}
                 </Text>
               </View>

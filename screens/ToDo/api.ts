@@ -30,8 +30,23 @@ export function addNewToDo(
   dueDate: string,
   priority: boolean,
   location: string,
+  notes: string,
+  untilType: string,
+  untilDate: string,
+  untilTimes: string,
   frequencyType: string,
-  notes: string
+  weeklyMonday: boolean,
+  weeklyTueday: boolean,
+  weeklyWednesday: boolean,
+  weeklyThursday: boolean,
+  weeklyFriday: boolean,
+  weeklySaturday: boolean,
+  weeklySunday: boolean,
+  weeklyEveryNWeeks: number,
+  monthlyEveryNMonths: number,
+  monthlyWeekNumber: number,
+  yearlyWeekNumber: number,
+  yearlyEveryNYears: number
 ): Promise<AddToDoDataResponse> {
   console.log('add new to do: ' + title);
   return http.post('todos', {
@@ -43,7 +58,22 @@ export function addNewToDo(
       location: location,
       notes: notes,
       recurrence: {
+        untilType: untilType,
+        untilDate: untilDate,
+        untilTimes: untilTimes,
         frequencyType: frequencyType,
+        weeklyMonday: weeklyMonday,
+        weeklyTueday: weeklyTueday,
+        weeklyWednesday: weeklyWednesday,
+        weeklyThursday: weeklyThursday,
+        weeklyFriday: weeklyFriday,
+        weeklySaturday: weeklySaturday,
+        weeklySunday: weeklySunday,
+        weeklyEveryNWeeks: weeklyEveryNWeeks,
+        monthlyEveryNMonths: monthlyEveryNMonths,
+        monthlyWeekNumber: monthlyWeekNumber,
+        yearlyWeekNumber: yearlyWeekNumber,
+        yearlyEveryNYears: yearlyEveryNYears,
       },
     },
   });
