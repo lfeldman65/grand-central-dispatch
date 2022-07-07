@@ -61,13 +61,13 @@ export default function AtoZRow(props: AtoZRowProps) {
             true
           )}
         </Text>
-        {/* <View style={styles.checkView}>
+        <View style={styles.checkView}>
           <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
             size={25}
             textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
             fillColor="#37C0FF"
             unfillColor="white"
-            iconStyle={{ borderColor: 'white' }}
+            iconStyle={{ borderColor: 'black' }}
             text=""
             textContainerStyle={{ marginLeft: 10 }}
             style={styles.checkBox}
@@ -76,7 +76,7 @@ export default function AtoZRow(props: AtoZRowProps) {
               setSelected(!isChecked);
             }}
           />
-        </View> */}
+        </View>
       </View>
     </TouchableOpacity>
   );
