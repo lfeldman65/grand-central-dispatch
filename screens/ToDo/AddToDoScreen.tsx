@@ -20,8 +20,10 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import DatePicker from 'react-native-date-picker';
+//import DatePicker from 'react-native-date-picker';
 import Attendees from '../ToDo/AttendeesScreen';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { inlineStyles } from 'react-native-svg';
 
 //import { RolodexDataProps } from './interfaces';
 
@@ -32,6 +34,7 @@ export default function AddToDoScreen(props: any) {
   const [lightOrDark, setIsLightOrDark] = useState('');
   const [toDoTitle, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [priority, setPriority] = useState(false);
   const [recurrence, setRecurrence] = useState('Never');
   const [frequency, setFrequency] = useState('Every Week');
@@ -49,9 +52,11 @@ export default function AddToDoScreen(props: any) {
   const [thursday, setThursday] = useState(false);
   const [friday, setFriday] = useState(false);
   const [saturday, setSaturday] = useState(false);
-  const [open, setOpen] = useState(false);
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
+  const [mode, setMode] = useState('date');
+  const [showTopDate, setShowTopDate] = useState(false);
+  const [showEndDate, setShowEndDate] = useState(false);
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
 
   var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -113,6 +118,44 @@ export default function AddToDoScreen(props: any) {
   const orderMenu = {
     First: 'First',
     Second: 'Second',
+    Third: 'Third',
+    Fourth: 'Fourth',
+    Last: 'Last',
+  };
+
+  const onDatePickerTopChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setShowTopDate(false);
+    setDate(currentDate);
+  };
+
+  const onDatePickerEndChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setShowEndDate(false);
+    setEndDate(currentDate);
+  };
+
+  const showDateTopMode = (currentMode: any) => {
+    setShowTopDate(true);
+    setMode(currentMode);
+  };
+
+  const showDateEndMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowEndDate(true);
+    setMode(currentMode);
+  };
+
+  const showDateTopPicker = () => {
+    console.log('show date picker top');
+    showDateTopMode('date');
+  };
+
+  const showDateEndPicker = () => {
+    console.log('show date picker end');
+    showDateEndMode('date');
   };
 
   useEffect(() => {
@@ -286,20 +329,31 @@ export default function AddToDoScreen(props: any) {
         </View>
 
         <Text style={styles.nameTitle}>Date</Text>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.textInput}
-              textAlign="left"
-              //   onChangeText={(text) => setDate(text)}
-              defaultValue={date.toLocaleDateString('en-us', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            />
+        <TouchableOpacity onPress={showDateTopPicker}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {date.toLocaleDateString('en-us', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
+
+        {showTopDate && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={'date'}
+            is24Hour={true}
+            onChange={onDatePickerTopChange}
+            display="spinner"
+            textColor="white"
+          />
+        )}
 
         <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
           size={25}
@@ -431,20 +485,31 @@ export default function AddToDoScreen(props: any) {
 
         {recurrence != 'Never' && untilType == 'Until' && <Text style={styles.nameTitle}>End Date</Text>}
         {recurrence != 'Never' && untilType == 'Until' && (
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.textInput}
-                textAlign="left"
-                //   onChangeText={(text) => setDate(text)}
-                defaultValue={date.toLocaleDateString('en-us', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric',
-                })}
-              />
+          <TouchableOpacity onPress={showDateEndPicker}>
+            <View style={styles.mainContent}>
+              <View style={styles.inputView}>
+                <Text style={styles.textInput}>
+                  {date.toLocaleDateString('en-us', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </Text>
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
+        )}
+
+        {showEndDate && (
+          <DateTimePicker
+            testID="dateTimePicker2"
+            value={endDate}
+            mode={'date'}
+            is24Hour={true}
+            onChange={onDatePickerEndChange}
+            display="spinner"
+            textColor="white"
+          />
         )}
 
         <ActionSheet
