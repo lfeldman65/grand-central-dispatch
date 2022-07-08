@@ -24,6 +24,7 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import Attendees from '../ToDo/AttendeesScreen';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { inlineStyles } from 'react-native-svg';
+import { RolodexDataProps } from './interfaces';
 
 //import { RolodexDataProps } from './interfaces';
 
@@ -58,6 +59,8 @@ export default function AddToDoScreen(props: any) {
   const [showTopDate, setShowTopDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
+
+  const [attendees, setAttendees] = useState<RolodexDataProps[]>([]);
 
   var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -179,6 +182,14 @@ export default function AddToDoScreen(props: any) {
   function handleAttendeesPressed() {
     console.log('attendees pressed');
     setModalAttendeesVisible(!modalAttendeesVisible);
+  }
+
+  function handleSelectedAttendees(selected: RolodexDataProps[]) {
+    const array3 = [...attendees, ...selected];
+
+    //you will need to filter out duplicates here
+
+    setAttendees(array3);
   }
 
   function getCurrentDay() {
@@ -883,6 +894,14 @@ export default function AddToDoScreen(props: any) {
         </View>
 
         <Text style={styles.nameTitle}>Attendees</Text>
+        {attendees.map((item, index) => (
+          <View style={styles.mainContent}>
+            <View style={styles.attendeeView}>
+              <Text style={styles.attendeeInput}>{item.firstName}</Text>
+            </View>
+          </View>
+        ))}
+
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <Text style={styles.attendeeInput} onPress={handleAttendeesPressed}>
@@ -914,7 +933,11 @@ export default function AddToDoScreen(props: any) {
               setModalAttendeesVisible(!modalAttendeesVisible);
             }}
           >
-            <Attendees title="Attendees" setModalAttendeesVisible={setModalAttendeesVisible} />
+            <Attendees
+              title="Attendees"
+              setModalAttendeesVisible={setModalAttendeesVisible}
+              setSelectedAttendees={handleSelectedAttendees}
+            />
           </Modal>
         )}
 
@@ -996,6 +1019,17 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 29,
   },
+  attendeeView: {
+    backgroundColor: '#002341',
+    width: '90%',
+    height: 50,
+
+    alignItems: 'baseline',
+    justifyContent: 'center',
+    paddingLeft: 10,
+    fontSize: 29,
+  },
+
   untilView: {
     backgroundColor: '#002341',
     width: '42%',

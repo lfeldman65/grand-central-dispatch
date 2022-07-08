@@ -121,6 +121,7 @@ export interface RolodexDataProps {
   contactTypeID: string;
   employerName: string;
   qualified: boolean;
+  selected: boolean;
 }
 
 export interface RolodexDataResponse {

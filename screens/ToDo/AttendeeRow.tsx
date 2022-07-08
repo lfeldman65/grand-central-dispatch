@@ -37,7 +37,6 @@ export default function AtoZRow(props: AtoZRowProps) {
   const { relFromAbove } = props;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-  const [selected, setSelected] = useState(false);
 
   useEffect(() => {
     getDarkOrLightMode();
@@ -61,22 +60,21 @@ export default function AtoZRow(props: AtoZRowProps) {
             true
           )}
         </Text>
-        {/* <View style={styles.checkView}>
+        <View style={styles.checkView}>
           <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
             size={25}
             textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
             fillColor="#37C0FF"
             unfillColor="white"
-            iconStyle={{ borderColor: 'white' }}
+            iconStyle={{ borderColor: 'black' }}
             text=""
             textContainerStyle={{ marginLeft: 10 }}
-            style={styles.checkBox}
             onPress={(isChecked: boolean) => {
               console.log(isChecked);
-              setSelected(!isChecked);
+              props.data.selected = isChecked;
             }}
           />
-        </View> */}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -87,15 +85,12 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
-  checkBox: {
-    marginTop: 12,
-    left: 0.055 * deviceWidth,
-    marginBottom: 25,
-  },
+
   checkView: {
     marginTop: 12,
-    left: 0.055 * deviceWidth,
-    marginBottom: 25,
+    left: '90%',
+    position: 'absolute',
+    marginBottom: 12,
   },
   personNameDark: {
     color: 'white',
