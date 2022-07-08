@@ -37,7 +37,6 @@ export default function AtoZRow(props: AtoZRowProps) {
   const { relFromAbove } = props;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-  const [selected, setSelected] = useState(false);
 
   useEffect(() => {
     getDarkOrLightMode();
@@ -70,10 +69,10 @@ export default function AtoZRow(props: AtoZRowProps) {
             iconStyle={{ borderColor: 'black' }}
             text=""
             textContainerStyle={{ marginLeft: 10 }}
-            style={styles.checkBox}
+            
             onPress={(isChecked: boolean) => {
               console.log(isChecked);
-              setSelected(!isChecked);
+              props.data.selected = isChecked;
             }}
           />
         </View>
@@ -87,15 +86,12 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
-  checkBox: {
-    marginTop: 12,
-    left: 0.055 * deviceWidth,
-    marginBottom: 25,
-  },
+  
   checkView: {
     marginTop: 12,
-    left: 0.055 * deviceWidth,
-    marginBottom: 25,
+    left: '90%',
+    position:'absolute',
+    marginBottom: 12,
   },
   personNameDark: {
     color: 'white',
