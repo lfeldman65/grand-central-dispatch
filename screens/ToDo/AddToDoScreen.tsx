@@ -25,8 +25,14 @@ import Attendees from '../ToDo/AttendeesScreen';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { inlineStyles } from 'react-native-svg';
 import { RolodexDataProps } from './interfaces';
-
-//import { RolodexDataProps } from './interfaces';
+import { convertFrequency, recurrenceMenu } from './toDoHelpersAndMenus';
+import { orderMenu } from './toDoHelpersAndMenus';
+import { frequencyMonthMenu } from './toDoHelpersAndMenus';
+import { frequencyWeekMenu } from './toDoHelpersAndMenus';
+import { frequencyYearMenu } from './toDoHelpersAndMenus';
+import { untilTypeMenu } from './toDoHelpersAndMenus';
+import { reminderMenu } from './toDoHelpersAndMenus';
+import { convertReminder } from './toDoHelpersAndMenus';
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -36,9 +42,12 @@ export default function AddToDoScreen(props: any) {
   const [toDoTitle, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [toDoAnnualDate, setToDoAnnualDate] = useState(new Date());
   const [priority, setPriority] = useState(false);
   const [recurrence, setRecurrence] = useState('Never');
-  const [frequency, setFrequency] = useState('Every Week');
+  const [weeklyFrequency, setWeeklyFrequency] = useState('Every Week');
+  const [monthlyFrequency, setMonthlyFrequency] = useState('Every Month');
+  const [yearlyFrequency, setYearlyFrequency] = useState('Every Year');
   const [untilType, setUntilType] = useState('Times');
   const [untilVal, setUntilVal] = useState('0');
   const [order, setOrder] = useState('First');
@@ -70,60 +79,8 @@ export default function AddToDoScreen(props: any) {
     reminderSheet: 'filter_sheet_reminder',
     frequencyWeekSheet: 'filter_sheet_frequency_week',
     frequencyMonthSheet: 'filter_sheet_frequency_month',
+    frequencyYearSheet: 'filter_sheet_frequency_year',
     orderMenu: 'filter_sheet_order',
-  };
-
-  const recurrenceMenu = {
-    Never: 'Never',
-    Daily: 'Daily',
-    'Everyday M-F': 'Everyday M-F',
-    'Weekly on': 'Weekly on',
-    'Monthly on the': 'Monthly on the',
-    'Every _ of the month': 'Every _ of the month',
-    Yearly: 'Yearly',
-  };
-
-  const untilTypeMenu = {
-    Times: 'Times',
-    Forever: 'Forever',
-    Until: 'Until',
-  };
-
-  const reminderMenu = {
-    None: 'None',
-    '1 day before': '1 day before',
-    '2 days before': '2 days before',
-    '3 days before': '3 days before',
-    '4 days before': '4 days before',
-    '5 days before': '5 days before',
-    '6 days before': '6 days before',
-    '1 week before': '1 week before',
-  };
-
-  const frequencyWeekMenu = {
-    'Every Week': 'Every Week',
-    'Every 2 Weeks': 'Every 2 Weeks',
-    'Every 3 Weeks': 'Every 3 Weeks',
-    'Every 4 Weeks': 'Every 4 Weeks',
-    'Every 8 Weeks': 'Every 8 Weeks',
-    'Every 12 Weeks': 'Every 12 Weeks',
-  };
-
-  const frequencyMonthMenu = {
-    'Every Month': 'Every Month',
-    'Every 2 Months': 'Every 2 Months',
-    'Every 3 Months': 'Every 3 Months',
-    'Every 4 Months': 'Every 4 Months',
-    'Every 5 Months': 'Every 5 Months',
-    'Every 6 Months': 'Every 6 Months',
-  };
-
-  const orderMenu = {
-    First: 'First',
-    Second: 'Second',
-    Third: 'Third',
-    Fourth: 'Fourth',
-    Last: 'Last',
   };
 
   const onDatePickerTopChange = (event: any, selectedDate: any) => {
@@ -168,9 +125,11 @@ export default function AddToDoScreen(props: any) {
 
   useEffect(() => {
     if (recurrence == 'Weekly on') {
-      setFrequency(frequencyWeekMenu['Every Week']);
+      setWeeklyFrequency(frequencyWeekMenu['Every Week']);
+    } else if (recurrence == 'Month on the') {
+      setMonthlyFrequency(frequencyMonthMenu['Every Month']);
     } else {
-      setFrequency(frequencyMonthMenu['Every Month']);
+      setYearlyFrequency(frequencyYearMenu['Every Year']);
     }
   }, [recurrence]);
 
@@ -185,11 +144,29 @@ export default function AddToDoScreen(props: any) {
   }
 
   function handleSelectedAttendees(selected: RolodexDataProps[]) {
-    const array3 = [...attendees, ...selected];
+    var toBeRemoved = new Array();
+    const combined = [...attendees, ...selected];
+    combined.forEach((item, index) => {
+      console.log('in loop');
+      console.log(attendees);
+      combined.forEach((item2, index2) => {
+        console.log('in 2nd loop');
+        console.log('item id: ' + item.id);
+        console.log('item2 id: ' + item2.id);
+        if (item.id == item2.id && index != index2) combined.splice(index2, 1);
+      });
+    });
 
-    //you will need to filter out duplicates here
+    console.log('to be added: ' + toBeRemoved.length);
+    setAttendees(combined);
+  }
 
-    setAttendees(array3);
+  function deleteAttendee(index: number) {
+    console.log(index);
+    attendees.splice(index, 1);
+    const newAttendees = [...attendees, ...[]];
+    console.log(attendees.length);
+    setAttendees(newAttendees);
   }
 
   function getCurrentDay() {
@@ -235,7 +212,8 @@ export default function AddToDoScreen(props: any) {
     console.log('i am here');
 
     //  new Date().toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
-
+    //  console.log(attendees[0].id);
+    console.log(' i am here ' + convertReminder(reminder));
     addNewToDo(
       toDoTitle,
       date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
@@ -253,11 +231,14 @@ export default function AddToDoScreen(props: any) {
       friday,
       saturday,
       sunday,
-      2,
-      2,
-      2,
-      0,
-      0
+      convertFrequency(weeklyFrequency), // weeklyeverynweeks
+      convertFrequency(monthlyFrequency), // monthlyeverynmonths
+      2, // monthlyweeknumber
+      0, // yearlyweeknumber
+      convertFrequency(yearlyFrequency), // yearlyeverynyears
+      convertReminder(reminder), // reminder days before
+      remindType, //
+      'guid' //   attendees[0].id
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -281,6 +262,11 @@ export default function AddToDoScreen(props: any) {
   function frequencyMonthMenuPressed() {
     console.log('frequency month pressed');
     SheetManager.show(Sheets.frequencyMonthSheet);
+  }
+
+  function frequencYearMenuPressed() {
+    console.log('frequency year pressed');
+    SheetManager.show(Sheets.frequencyYearSheet);
   }
 
   function endMenuPressed() {
@@ -458,12 +444,23 @@ export default function AddToDoScreen(props: any) {
           </View>
         )}
 
+        {recurrence == 'Yearly' && <Text style={styles.nameTitle}>On</Text>}
+        {recurrence == 'Yearly' && (
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {recurrence == recurrenceMenu['Yearly'] ? date.getMonth() + 1 + '/' + date.getDate() : recurrence}
+              </Text>
+            </View>
+          </View>
+        )}
+
         {recurrence == 'Weekly on' && <Text style={styles.nameTitle}>Frequency</Text>}
         {recurrence == 'Weekly on' && (
           <TouchableOpacity onPress={frequencyWeekMenuPressed}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
-                <Text style={styles.textInput}>{frequency}</Text>
+                <Text style={styles.textInput}>{weeklyFrequency}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -474,7 +471,18 @@ export default function AddToDoScreen(props: any) {
           <TouchableOpacity onPress={frequencyMonthMenuPressed}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
-                <Text style={styles.textInput}>{frequency}</Text>
+                <Text style={styles.textInput}>{monthlyFrequency}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+
+        {recurrence == 'Yearly' && <Text style={styles.nameTitle}>Frequency</Text>}
+        {recurrence == 'Yearly' && (
+          <TouchableOpacity onPress={frequencYearMenuPressed}>
+            <View style={styles.mainContent}>
+              <View style={styles.inputView}>
+                <Text style={styles.textInput}>{yearlyFrequency}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -485,7 +493,7 @@ export default function AddToDoScreen(props: any) {
           <TouchableOpacity onPress={frequencyMonthMenuPressed}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
-                <Text style={styles.textInput}>{frequency}</Text>
+                <Text style={styles.textInput}>{monthlyFrequency}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -547,7 +555,7 @@ export default function AddToDoScreen(props: any) {
           />
         )}
 
-        <ActionSheet
+        <ActionSheet // recurrence
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('recurrence sheet')}
           id={Sheets.recurrenceSheet}
@@ -593,9 +601,9 @@ export default function AddToDoScreen(props: any) {
           </View>
         </ActionSheet>
 
-        <ActionSheet
+        <ActionSheet // until type
           initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('until val')}
+          onBeforeShow={(data) => console.log('until type')}
           id={Sheets.untilSheet}
           ref={actionSheetRef}
           statusBarTranslucent
@@ -640,7 +648,7 @@ export default function AddToDoScreen(props: any) {
           </View>
         </ActionSheet>
 
-        <ActionSheet
+        <ActionSheet // reminder
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('reminder')}
           id={Sheets.reminderSheet}
@@ -687,7 +695,7 @@ export default function AddToDoScreen(props: any) {
           </View>
         </ActionSheet>
 
-        <ActionSheet
+        <ActionSheet // monthly
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('frequency month')}
           id={Sheets.frequencyMonthSheet}
@@ -719,7 +727,7 @@ export default function AddToDoScreen(props: any) {
                     onPress={() => {
                       SheetManager.hide(Sheets.frequencyMonthSheet, null);
                       console.log('frequency Month: ' + value);
-                      setFrequency(value);
+                      setMonthlyFrequency(value);
                       // fetchData();
                     }}
                     style={styles.listItemCell}
@@ -734,7 +742,7 @@ export default function AddToDoScreen(props: any) {
           </View>
         </ActionSheet>
 
-        <ActionSheet
+        <ActionSheet // weekly
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('frequency week')}
           id={Sheets.frequencyWeekSheet}
@@ -766,7 +774,7 @@ export default function AddToDoScreen(props: any) {
                     onPress={() => {
                       SheetManager.hide(Sheets.frequencyWeekSheet, null);
                       console.log('frequency Week: ' + value);
-                      setFrequency(value);
+                      setWeeklyFrequency(value);
                       // fetchData();
                     }}
                     style={styles.listItemCell}
@@ -781,7 +789,7 @@ export default function AddToDoScreen(props: any) {
           </View>
         </ActionSheet>
 
-        <ActionSheet
+        <ActionSheet // order
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('order')}
           id={Sheets.orderMenu}
@@ -814,6 +822,53 @@ export default function AddToDoScreen(props: any) {
                       SheetManager.hide(Sheets.orderMenu, null);
                       console.log('order: ' + value);
                       setOrder(value);
+                      // fetchData();
+                    }}
+                    style={styles.listItemCell}
+                  >
+                    <Text style={styles.listItem}>{key}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/*  Add a Small Footer at Bottom */}
+            </ScrollView>
+          </View>
+        </ActionSheet>
+
+        <ActionSheet // yearly
+          initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('frequency yearly')}
+          id={Sheets.frequencyYearSheet}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.3}
+        >
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.filterView}
+            >
+              <View>
+                {Object.entries(frequencyYearMenu).map(([key, value]) => (
+                  <TouchableOpacity
+                    key={key}
+                    onPress={() => {
+                      SheetManager.hide(Sheets.frequencyYearSheet, null);
+                      console.log('frequency monthly: ' + value);
+                      setYearlyFrequency(value);
                       // fetchData();
                     }}
                     style={styles.listItemCell}
@@ -898,13 +953,16 @@ export default function AddToDoScreen(props: any) {
           <View style={styles.mainContent}>
             <View style={styles.attendeeView}>
               <Text style={styles.attendeeInput}>{item.firstName}</Text>
+              <TouchableOpacity onPress={() => deleteAttendee(index)}>
+                <Image source={closeButton} style={styles.deleteAttendeeX} />
+              </TouchableOpacity>
             </View>
           </View>
         ))}
 
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.attendeeInput} onPress={handleAttendeesPressed}>
+            <Text style={styles.addAttendee} onPress={handleAttendeesPressed}>
               + Add
             </Text>
           </View>
@@ -1019,17 +1077,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 29,
   },
-  attendeeView: {
-    backgroundColor: '#002341',
-    width: '90%',
-    height: 50,
-
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    fontSize: 29,
-  },
-
   untilView: {
     backgroundColor: '#002341',
     width: '42%',
@@ -1048,7 +1095,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
-
   weekView: {
     backgroundColor: '#002341',
     width: '90%',
@@ -1074,10 +1120,30 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     width: 300,
   },
+  attendeeView: {
+    backgroundColor: '#002341',
+    width: '90%',
+    height: 50,
+    alignItems: 'baseline',
+    justifyContent: 'flex-start',
+    fontSize: 29,
+    flexDirection: 'row',
+  },
   attendeeInput: {
     fontSize: 18,
     color: 'silver',
+    marginTop: 10,
+    paddingLeft: 10,
+    width: '92%',
+  },
+  addAttendee: {
+    fontSize: 18,
+    color: 'silver',
     width: 300,
+  },
+  deleteAttendeeX: {
+    width: 10,
+    height: 10,
   },
   checkBox: {
     marginTop: 12,

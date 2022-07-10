@@ -66,7 +66,7 @@ export default function AtoZRow(props: AtoZRowProps) {
             textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
             fillColor="#37C0FF"
             unfillColor="white"
-            iconStyle={{ borderColor: 'black' }}
+            iconStyle={{ borderColor: 'gray' }}
             text=""
             textContainerStyle={{ marginLeft: 10 }}
             onPress={(isChecked: boolean) => {
@@ -85,7 +85,6 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
-
   checkView: {
     marginTop: 12,
     left: '90%',

@@ -104,6 +104,17 @@ export interface AddToDoDataProps {
   location: string;
   notes: string;
   recurrence: RecurrenceProps;
+  reminder: AddToDoReminder;
+  attendees: AddToDoAttendees;
+}
+
+export interface AddToDoReminder {
+  daysBefore: number;
+  type: string;
+}
+
+export interface AddToDoAttendees {
+  attendeeID: string;
 }
 
 export interface AddToDoDataResponse {

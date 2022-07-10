@@ -30,11 +30,8 @@ export default function ToDoDetails(props: any) {
   // }, [navigation]);
 
   useEffect(() => {
-    fetchData();
-  }, [isFocused]);
-
-  useEffect(() => {
     getDarkOrLightMode();
+    fetchData();
   }, [isFocused]);
 
   async function getDarkOrLightMode() {

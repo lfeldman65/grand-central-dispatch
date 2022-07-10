@@ -46,7 +46,10 @@ export function addNewToDo(
   monthlyEveryNMonths: number,
   monthlyWeekNumber: number,
   yearlyWeekNumber: number,
-  yearlyEveryNYears: number
+  yearlyEveryNYears: number,
+  daysBefore: number,
+  type: string,
+  attendeeID: string
 ): Promise<AddToDoDataResponse> {
   console.log('add new to do: ' + title);
   return http.post('todos', {
@@ -74,6 +77,13 @@ export function addNewToDo(
         monthlyWeekNumber: monthlyWeekNumber,
         yearlyWeekNumber: yearlyWeekNumber,
         yearlyEveryNYears: yearlyEveryNYears,
+      },
+      reminder: {
+        daysBefore: daysBefore,
+        type: type,
+      },
+      attendees: {
+        attendeeID: attendeeID,
       },
     },
   });

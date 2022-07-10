@@ -18,21 +18,27 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 
 const closeButton = require('../../images/button_close_white.png');
 const backArrow = require('../../images/white_arrow_left.png');
+const searchGlass = require('../../images/whiteSearch.png');
 
 export default function AttendeeScreen(props: any) {
-  const { title, setModalAttendeesVisible, setSelectedAttendees } = props;
+  const { onSave, title, setModalAttendeesVisible, contactName } = props;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
+  const [search, setSearch] = useState('');
 
   const handleRowPress = (index: number) => {
     console.log('row pressed');
   };
 
+  function closePressed() {
+    console.log('close');
+    setSearch('');
+  }
+
   function savePressed() {
     setModalAttendeesVisible(false);
-    setSelectedAttendees(dataRolodex.filter((item) => item.selected));
     //  onSave(note);
   }
   function cancelPressed() {
@@ -71,13 +77,30 @@ export default function AttendeeScreen(props: any) {
     <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={backArrow} style={styles.closeX} />
+          <Image source={backArrow} style={styles.backArrow} />
         </TouchableOpacity>
 
-        <Text style={styles.nameLabel}>{title}</Text>
+        <Text style={styles.nameLabel}>{'               ' + title}</Text>
 
         <TouchableOpacity onPress={savePressed}>
           <Text style={styles.saveButton}>Save</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.searchView}>
+        <Image source={searchGlass} style={styles.magGlass} />
+
+        <TextInput
+          style={styles.textInput}
+          placeholder="Search By Name or Address"
+          placeholderTextColor="#AFB9C2"
+          textAlign="left"
+          defaultValue={search}
+          onChangeText={(text) => setSearch(text)}
+        />
+
+        <TouchableOpacity onPress={closePressed}>
+          <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
       </View>
 
@@ -107,6 +130,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  searchView: {
+    backgroundColor: '#002341',
+    height: 40,
+    marginLeft: '1%',
+    marginRight: '1%',
+    justifyContent: 'space-evenly',
+    paddingLeft: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 7,
+    flexDirection: 'row',
+  },
+  textInput: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    width: 300,
+  },
   topRow: {
     flexDirection: 'row',
     padding: 10,
@@ -116,11 +156,25 @@ const styles = StyleSheet.create({
   closeX: {
     width: 15,
     height: 15,
-    marginLeft: '10%',
+    marginRight: -10,
+    marginTop: 12,
+  },
+  backArrow: {
+    width: 18,
+    height: 18,
+    marginRight: -10,
+    marginTop: 1,
+  },
+  magGlass: {
+    width: 20,
+    height: 20,
+    marginLeft: -20,
+    marginTop: 8,
   },
   nameLabel: {
     color: 'white',
     fontSize: 18,
+    marginLeft: '30',
   },
   saveButton: {
     color: 'white',
