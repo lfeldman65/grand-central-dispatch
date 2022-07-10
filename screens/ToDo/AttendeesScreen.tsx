@@ -21,7 +21,7 @@ const backArrow = require('../../images/white_arrow_left.png');
 const searchGlass = require('../../images/whiteSearch.png');
 
 export default function AttendeeScreen(props: any) {
-  const { onSave, title, setModalAttendeesVisible, contactName } = props;
+  const { title, setModalAttendeesVisible, setSelectedAttendees } = props;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
@@ -39,7 +39,7 @@ export default function AttendeeScreen(props: any) {
 
   function savePressed() {
     setModalAttendeesVisible(false);
-    //  onSave(note);
+    setSelectedAttendees(dataRolodex.filter((item) => item.selected));
   }
   function cancelPressed() {
     setModalAttendeesVisible(false);
