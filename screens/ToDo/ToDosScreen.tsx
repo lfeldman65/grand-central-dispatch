@@ -47,10 +47,6 @@ export default function ToDosScreen() {
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
   const handleRowPress = (index: number) => {
     console.log('to do row press');
     //  analytics.event(new Event('To-Do', 'Go To Details', 'Press', 0));
@@ -71,6 +67,7 @@ export default function ToDosScreen() {
   }, [filterSetting]);
 
   useEffect(() => {
+    getDarkOrLightMode();
     fetchData();
   }, [isFocused]);
 

@@ -40,6 +40,7 @@ export default function AtoZRow(props: AtoZRowProps) {
 
   useEffect(() => {
     getDarkOrLightMode();
+    console.log('relFromAbove: ' + relFromAbove);
   }, [isFocused]);
 
   async function getDarkOrLightMode() {

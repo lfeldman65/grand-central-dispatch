@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { getRolodexData } from './api';
+import { getRolodexData, getRolodexSearch } from './api';
 import { RolodexDataProps } from './interfaces';
 import AttendeeRow from './AttendeeRow';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
@@ -32,8 +32,7 @@ export default function AttendeeScreen(props: any) {
     console.log('row pressed');
   };
 
-  function closePressed() {
-    console.log('close');
+  function clearSearchPressed() {
     setSearch('');
   }
 
@@ -50,12 +49,36 @@ export default function AttendeeScreen(props: any) {
   }, [isFocused]);
 
   useEffect(() => {
+    console.log('search: ' + search);
+    if (search != '') {
+      fetchRolodexSearch(search);
+    } else {
+      fetchRolodexPressed('alpha');
+    }
+  }, [search]);
+
+  useEffect(() => {
     fetchRolodexPressed('alpha');
   }, [isFocused]);
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  function fetchRolodexSearch(type: string) {
+    setIsLoading(true);
+    getRolodexSearch(type)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setDataRolodex(res.data);
+          //  console.log(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   function fetchRolodexPressed(type: string) {
@@ -99,7 +122,7 @@ export default function AttendeeScreen(props: any) {
           onChangeText={(text) => setSearch(text)}
         />
 
-        <TouchableOpacity onPress={closePressed}>
+        <TouchableOpacity onPress={clearSearchPressed}>
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
       </View>
@@ -112,7 +135,7 @@ export default function AttendeeScreen(props: any) {
         <ScrollView>
           <View>
             {dataRolodex.map((item, index) => (
-              <AttendeeRow relFromAbove={'Rel'} key={index} data={item} onPress={() => handleRowPress(index)} />
+              <AttendeeRow relFromAbove={search} key={index} data={item} onPress={() => handleRowPress(index)} />
             ))}
           </View>
         </ScrollView>
