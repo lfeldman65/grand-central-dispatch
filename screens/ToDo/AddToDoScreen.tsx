@@ -25,14 +25,20 @@ import Attendees from '../ToDo/AttendeesScreen';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { inlineStyles } from 'react-native-svg';
 import { RolodexDataProps } from './interfaces';
-import { convertFrequency, recurrenceMenu } from './toDoHelpersAndMenus';
+import {
+  convertFrequency,
+  convertReminder,
+  recurrenceMenu,
+  convertMonthlyWeekNumber,
+  convertOrder,
+  convertYearlyWeekNumber,
+} from './toDoHelpersAndMenus';
 import { orderMenu } from './toDoHelpersAndMenus';
 import { frequencyMonthMenu } from './toDoHelpersAndMenus';
 import { frequencyWeekMenu } from './toDoHelpersAndMenus';
 import { frequencyYearMenu } from './toDoHelpersAndMenus';
 import { untilTypeMenu } from './toDoHelpersAndMenus';
 import { reminderMenu } from './toDoHelpersAndMenus';
-import { convertReminder } from './toDoHelpersAndMenus';
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -147,6 +153,7 @@ export default function AddToDoScreen(props: any) {
     var toBeRemoved = new Array();
     const combined = [...attendees, ...selected];
     combined.forEach((item, index) => {
+      // remove duplicates
       console.log('in loop');
       console.log(attendees);
       combined.forEach((item2, index2) => {
@@ -233,10 +240,10 @@ export default function AddToDoScreen(props: any) {
       sunday,
       convertFrequency(weeklyFrequency), // weeklyeverynweeks
       convertFrequency(monthlyFrequency), // monthlyeverynmonths
-      2, // monthlyweeknumber
-      0, // yearlyweeknumber
+      convertMonthlyWeekNumber('1'),
+      convertYearlyWeekNumber('2'),
       convertFrequency(yearlyFrequency), // yearlyeverynyears
-      convertReminder(reminder), // reminder days before
+      convertReminder(reminder),
       remindType, //
       'guid' //   attendees[0].id
     )

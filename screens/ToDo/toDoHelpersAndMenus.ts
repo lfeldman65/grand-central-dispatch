@@ -169,3 +169,23 @@ export function convertOrder(element: string) {
   }
   return 0;
 }
+
+export function convertMonthlyWeekNumber(element: string) {
+  if (element == null) {
+    return 0;
+  }
+  if (element == '') {
+    return 0;
+  }
+  return 2;
+}
+
+export function convertYearlyWeekNumber(element: string) {
+  if (element == null) {
+    return 0;
+  }
+  if (element == '') {
+    return 0;
+  }
+  return 2;
+}

@@ -11,11 +11,14 @@ import { analytics } from '../../utils/analytics';
 import React from 'react';
 import ToDoRow from './ToDoRow';
 import globalStyles from '../../globalStyles';
-
 import AddToDo from './AddToDoScreen';
-
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 const chevron = require('../../images/chevron_blue.png');
+
+// AddNewToDoPressed
+// Invoke AddToDo, pass in title (string) onSave (function) setModalVisible (function)
+// AddToDoScreen receives props as const (setModalVisible, title, onSave) = props
+// ToDosScreen executes the function
 
 export default function ToDosScreen() {
   const filters = {
@@ -57,16 +60,13 @@ export default function ToDosScreen() {
   };
 
   useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => <MenuIcon />,
-    });
-  }, []);
-
-  useEffect(() => {
     fetchData();
   }, [filterSetting]);
 
   useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <MenuIcon />,
+    });
     getDarkOrLightMode();
     fetchData();
   }, [isFocused]);
