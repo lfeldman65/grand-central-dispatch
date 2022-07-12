@@ -23,6 +23,7 @@ import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { storage } from '../../utils/storage';
 import PopComplete from './PopCompleteScreen';
+import MapView from 'react-native-maps';
 
 const chevron = require('../../images/chevron_blue.png');
 
@@ -158,7 +159,17 @@ export default function ManageRelationshipsScreen() {
         </Text>
       </View>
 
-      <View style={styles.mapView}></View>
+      <View style={styles.mapView}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: 33.1175,
+            longitude: -117.25,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      </View>
 
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -203,9 +214,11 @@ export default function ManageRelationshipsScreen() {
 
 export const styles = StyleSheet.create({
   mapView: {
-    paddingTop: 10,
-    backgroundColor: 'black',
     height: '50%',
     width: '100%',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
   },
 });
