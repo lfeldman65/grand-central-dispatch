@@ -20,11 +20,10 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-//import DatePicker from 'react-native-date-picker';
 import Attendees from '../ToDo/AttendeesScreen';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { inlineStyles } from 'react-native-svg';
-import { RolodexDataProps } from './interfaces';
+import { RolodexDataProps, AttendeesProps } from './interfaces';
 import {
   convertFrequency,
   convertReminder,
@@ -39,8 +38,6 @@ import { frequencyWeekMenu } from './toDoHelpersAndMenus';
 import { frequencyYearMenu } from './toDoHelpersAndMenus';
 import { untilTypeMenu } from './toDoHelpersAndMenus';
 import { reminderMenu } from './toDoHelpersAndMenus';
-
-let deviceWidth = Dimensions.get('window').width;
 
 export default function AddToDoScreen(props: any) {
   const { setModalVisible, title, onSave } = props;
@@ -70,7 +67,7 @@ export default function AddToDoScreen(props: any) {
   const [saturday, setSaturday] = useState(false);
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
-  const [mode, setMode] = useState('date');
+  //const [mode, setMode] = useState('date');
   const [showTopDate, setShowTopDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
@@ -104,14 +101,13 @@ export default function AddToDoScreen(props: any) {
   };
 
   const showDateTopMode = (currentMode: any) => {
+    console.log(currentMode);
     setShowTopDate(true);
-    setMode(currentMode);
   };
 
   const showDateEndMode = (currentMode: any) => {
     console.log(currentMode);
     setShowEndDate(true);
-    setMode(currentMode);
   };
 
   const showDateTopPicker = () => {
@@ -218,6 +214,15 @@ export default function AddToDoScreen(props: any) {
     }
     console.log('i am here');
 
+    var newAttendees = new Array();
+    attendees.forEach((item, index) => {
+      var attendeeProps: AttendeesProps = {
+        id: item.id,
+        name: item.firstName,
+      };
+      newAttendees.push(attendeeProps);
+    });
+
     //  new Date().toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
     //  console.log(attendees[0].id);
     console.log(' i am here ' + convertReminder(reminder));
@@ -244,8 +249,8 @@ export default function AddToDoScreen(props: any) {
       convertYearlyWeekNumber('2'),
       convertFrequency(yearlyFrequency), // yearlyeverynyears
       convertReminder(reminder),
-      remindType, //
-      'guid' //   attendees[0].id
+      remindType,
+      newAttendees
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -590,7 +595,7 @@ export default function AddToDoScreen(props: any) {
               <View>
                 {Object.entries(recurrenceMenu).map(([key, value]) => (
                   <TouchableOpacity
-                    key={key}
+                    //    key={key}
                     onPress={() => {
                       SheetManager.hide(Sheets.recurrenceSheet, null);
                       console.log('filter: ' + value);
@@ -636,7 +641,7 @@ export default function AddToDoScreen(props: any) {
               <View>
                 {Object.entries(untilTypeMenu).map(([key, value]) => (
                   <TouchableOpacity
-                    key={key}
+                    //  key={key}
                     onPress={() => {
                       SheetManager.hide(Sheets.untilSheet, null);
                       console.log('filter: ' + value);
@@ -683,7 +688,7 @@ export default function AddToDoScreen(props: any) {
               <View>
                 {Object.entries(reminderMenu).map(([key, value]) => (
                   <TouchableOpacity
-                    key={key}
+                    //  key={key}
                     onPress={() => {
                       SheetManager.hide(Sheets.reminderSheet, null);
                       console.log('reminder: ' + value);
@@ -730,7 +735,7 @@ export default function AddToDoScreen(props: any) {
               <View>
                 {Object.entries(frequencyMonthMenu).map(([key, value]) => (
                   <TouchableOpacity
-                    key={key}
+                    //  key={key}
                     onPress={() => {
                       SheetManager.hide(Sheets.frequencyMonthSheet, null);
                       console.log('frequency Month: ' + value);
@@ -777,7 +782,7 @@ export default function AddToDoScreen(props: any) {
               <View>
                 {Object.entries(frequencyWeekMenu).map(([key, value]) => (
                   <TouchableOpacity
-                    key={key}
+                    //  key={key}
                     onPress={() => {
                       SheetManager.hide(Sheets.frequencyWeekSheet, null);
                       console.log('frequency Week: ' + value);
@@ -824,7 +829,7 @@ export default function AddToDoScreen(props: any) {
               <View>
                 {Object.entries(orderMenu).map(([key, value]) => (
                   <TouchableOpacity
-                    key={key}
+                    //  key={key}
                     onPress={() => {
                       SheetManager.hide(Sheets.orderMenu, null);
                       console.log('order: ' + value);
@@ -871,7 +876,7 @@ export default function AddToDoScreen(props: any) {
               <View>
                 {Object.entries(frequencyYearMenu).map(([key, value]) => (
                   <TouchableOpacity
-                    key={key}
+                    //  key={key}
                     onPress={() => {
                       SheetManager.hide(Sheets.frequencyYearSheet, null);
                       console.log('frequency monthly: ' + value);
@@ -988,6 +993,7 @@ export default function AddToDoScreen(props: any) {
             />
           </View>
         </View>
+        <Text></Text>
 
         {modalAttendeesVisible && (
           <Modal
@@ -1154,7 +1160,7 @@ const styles = StyleSheet.create({
   },
   checkBox: {
     marginTop: 12,
-    left: 0.055 * deviceWidth,
+    left: 20,
     marginBottom: 25,
   },
   inputViewDark: {

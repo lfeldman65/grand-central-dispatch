@@ -105,16 +105,12 @@ export interface AddToDoDataProps {
   notes: string;
   recurrence: RecurrenceProps;
   reminder: AddToDoReminder;
-  attendees: AddToDoAttendees;
+  attendees: AttendeesProps;
 }
 
 export interface AddToDoReminder {
   daysBefore: number;
   type: string;
-}
-
-export interface AddToDoAttendees {
-  attendeeID: string;
 }
 
 export interface AddToDoDataResponse {

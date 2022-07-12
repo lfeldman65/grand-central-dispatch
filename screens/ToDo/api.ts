@@ -7,6 +7,7 @@ import {
   ToDoDeleteDataResponse,
   AddToDoDataResponse,
   RolodexDataResponse,
+  AttendeesProps,
 } from './interfaces';
 
 export function getToDoData(type: string): Promise<ToDoDataResponse> {
@@ -49,12 +50,12 @@ export function addNewToDo(
   yearlyEveryNYears: number,
   daysBefore: number,
   type: string,
-  attendeeID: string
+  attendees: AttendeesProps[]
 ): Promise<AddToDoDataResponse> {
   console.log('add new to do: ' + title);
   return http.post('todos', {
     body: {
-      // no bracket since not an arrays
+      // no bracket since not an array
       title: title,
       dueDate: dueDate,
       priority: priority,
@@ -82,9 +83,7 @@ export function addNewToDo(
         daysBefore: daysBefore,
         type: type,
       },
-      attendees: {
-        attendeeID: attendeeID,
-      },
+      attendees: attendees,
     },
   });
 }
