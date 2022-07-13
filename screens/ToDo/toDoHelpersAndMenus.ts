@@ -4,7 +4,7 @@ export const recurrenceMenu = {
   'Everyday M-F': 'Everyday M-F',
   'Weekly on': 'Weekly on',
   'Monthly on the': 'Monthly on the',
-  'Every _ of the month': 'Every _ of the month',
+  'Every _ week of the month': 'Every _ week of the month',
   Yearly: 'Yearly',
 };
 
@@ -59,6 +59,17 @@ export const orderMenu = {
   Fourth: 'Fourth',
   Last: 'Last',
 };
+
+export function convertRecurrence(rec: string) {
+  if (rec == 'Never') return 'never';
+  if (rec == 'Daily') return 'daily';
+  if (rec == 'Everyday M-F') return 'everyweekday';
+  if (rec == 'Weekly on') return 'weeklyon';
+  if (rec == 'Monthly on the') return 'monthlyon';
+  if (rec == 'Every _ week of the month') return 'everyxweekofmonth';
+  if (rec == 'Yearly') return 'yearlyon';
+  return 'never';
+}
 
 export function convertFrequency(timeString: string) {
   console.log('time string: ' + timeString);
@@ -156,6 +167,7 @@ export function convertOrder(element: string) {
     return 1;
   }
   if (element == 'Second') {
+    console.log('daniel');
     return 2;
   }
   if (element == 'Third') {
@@ -168,16 +180,6 @@ export function convertOrder(element: string) {
     return 5;
   }
   return 0;
-}
-
-export function convertMonthlyWeekNumber(element: string) {
-  if (element == null) {
-    return 0;
-  }
-  if (element == '') {
-    return 0;
-  }
-  return 2;
 }
 
 export function convertYearlyWeekNumber(element: string) {

@@ -28,9 +28,9 @@ import {
   convertFrequency,
   convertReminder,
   recurrenceMenu,
-  convertMonthlyWeekNumber,
   convertOrder,
   convertYearlyWeekNumber,
+  convertRecurrence,
 } from './toDoHelpersAndMenus';
 import { orderMenu } from './toDoHelpersAndMenus';
 import { frequencyMonthMenu } from './toDoHelpersAndMenus';
@@ -55,7 +55,7 @@ export default function AddToDoScreen(props: any) {
   const [untilVal, setUntilVal] = useState('0');
   const [order, setOrder] = useState('First');
   const [reminder, setReminder] = useState('None');
-  const [remindType, setRemindType] = useState('Text');
+  const [remindType, setRemindType] = useState('none');
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
   const [sunday, setSunday] = useState(false);
@@ -119,6 +119,20 @@ export default function AddToDoScreen(props: any) {
     console.log('show date picker end');
     showDateEndMode('date');
   };
+
+  function handleRecurrenceChange() {
+    if (reminder == 'None') {
+      setRemindType('none');
+    } else {
+      if (reminder != 'text' && reminder != 'email') {
+        setRemindType('text');
+      }
+    }
+  }
+
+  useEffect(() => {
+    handleRecurrenceChange();
+  }, [reminder]);
 
   useEffect(() => {
     getDarkOrLightMode();
@@ -221,11 +235,15 @@ export default function AddToDoScreen(props: any) {
         name: item.firstName,
       };
       newAttendees.push(attendeeProps);
-    });
+    }); // branch.
 
     //  new Date().toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
     //  console.log(attendees[0].id);
     console.log(' i am here ' + convertReminder(reminder));
+    console.log('order: ' + order);
+    console.log('until type: ' + untilType);
+    console.log('until val: ' + untilVal);
+
     addNewToDo(
       toDoTitle,
       date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
@@ -235,7 +253,7 @@ export default function AddToDoScreen(props: any) {
       untilType,
       endDate.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
       untilVal,
-      recurrence,
+      convertRecurrence(recurrence),
       monday,
       tuesday,
       wednesday,
@@ -245,7 +263,7 @@ export default function AddToDoScreen(props: any) {
       sunday,
       convertFrequency(weeklyFrequency), // weeklyeverynweeks
       convertFrequency(monthlyFrequency), // monthlyeverynmonths
-      convertMonthlyWeekNumber('1'),
+      convertOrder(order),
       convertYearlyWeekNumber('2'),
       convertFrequency(yearlyFrequency), // yearlyeverynyears
       convertReminder(reminder),
@@ -413,13 +431,15 @@ export default function AddToDoScreen(props: any) {
           </View>
         </TouchableOpacity>
 
-        {recurrence == recurrenceMenu['Every _ of the month'] && <Text style={styles.nameTitle}>Order</Text>}
-        {recurrence == recurrenceMenu['Every _ of the month'] && (
+        {recurrence == recurrenceMenu['Every _ week of the month'] && <Text style={styles.nameTitle}>Order</Text>}
+        {recurrence == recurrenceMenu['Every _ week of the month'] && (
           <TouchableOpacity onPress={orderMenuPressed}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
-                  {recurrence == recurrenceMenu['Every _ of the month'] ? order + ' ' + days[date.getDay()] : order}
+                  {recurrence == recurrenceMenu['Every _ week of the month']
+                    ? order + ' ' + days[date.getDay()]
+                    : order}
                 </Text>
               </View>
             </View>
@@ -914,7 +934,7 @@ export default function AddToDoScreen(props: any) {
               size={25}
               textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
               fillColor="#37C0FF"
-              isChecked={remindType == 'Text'} // default
+              isChecked={remindType == 'text'} // default
               unfillColor="#004F89"
               iconStyle={{ borderColor: 'white' }}
               text="Text"
@@ -922,7 +942,7 @@ export default function AddToDoScreen(props: any) {
               style={styles.checkBox}
               disableBuiltInState={true}
               onPress={(isChecked: boolean) => {
-                setRemindType('Text');
+                setRemindType('text');
               }}
             />
 
@@ -933,14 +953,14 @@ export default function AddToDoScreen(props: any) {
               textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
               fillColor="#37C0FF"
               unfillColor="#004F89"
-              isChecked={remindType == 'Email'} // default
+              isChecked={remindType == 'email'} // default
               iconStyle={{ borderColor: 'white' }}
               text="Email"
               textContainerStyle={{ marginLeft: 10 }}
               style={styles.checkBox}
               disableBuiltInState={true}
               onPress={(isChecked: boolean) => {
-                setRemindType('Email');
+                setRemindType('email');
               }}
             />
           </View>
