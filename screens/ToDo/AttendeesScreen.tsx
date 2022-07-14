@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
   searchView: {
     backgroundColor: '#002341',
     height: 40,
-    marginLeft: '1%',
-    marginRight: '1%',
+    marginLeft: 5,
+    marginRight: 5,
     justifyContent: 'space-evenly',
     paddingLeft: 10,
     borderWidth: 1,
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   nameLabel: {
     color: 'white',
     fontSize: 18,
-    marginLeft: '30',
+    marginLeft: 30,
   },
   saveButton: {
     color: 'white',
