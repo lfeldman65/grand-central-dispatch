@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../constants/analytics';
 import { storage } from '../../utils/storage';
+import Constants from 'expo-constants';
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
@@ -57,6 +58,8 @@ export default function SettingsScreen() {
     <View style={isDarkMode ? styles.dark : styles.light}>
       <TouchableOpacity onPress={signOutPressed}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={isDarkMode ? styles.darkButtonText : styles.lightButtonText}>{Constants.manifest?.version}</Text>
+
           <Text style={isDarkMode ? styles.darkButtonText : styles.lightButtonText}>Sign Out</Text>
         </View>
       </TouchableOpacity>
