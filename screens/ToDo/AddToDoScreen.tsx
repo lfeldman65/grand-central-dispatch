@@ -222,6 +222,13 @@ export default function AddToDoScreen(props: any) {
     console.log(date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }));
     console.log(date.toISOString());
 
+    console.log('times: ' + untilType);
+    if (untilType == 'Times') {
+      if (untilVal == '0') {
+        Alert.alert('The number of times must be greater than 0');
+        return;
+      }
+    }
     if (toDoTitle == '') {
       Alert.alert('Please enter a Title');
       return;
@@ -552,6 +559,7 @@ export default function AddToDoScreen(props: any) {
                 textAlign="left"
                 onChangeText={(text) => setUntilVal(text)}
                 defaultValue={untilVal}
+                keyboardType="number-pad"
               />
             </View>
           </View>
