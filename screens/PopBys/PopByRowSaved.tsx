@@ -203,7 +203,7 @@ export const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 30,
+    paddingTop: 50,
     width: '15%',
   },
   rankingCircle: {
@@ -287,7 +287,7 @@ export const styles = StyleSheet.create({
   },
   chevronBox: {
     flexDirection: 'row',
-    paddingTop: 20,
+    paddingTop: 30,
     paddingBottom: 10,
     paddingLeft: 10,
     paddingRight: 15,
