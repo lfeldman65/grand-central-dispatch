@@ -10,7 +10,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
 import { analytics } from '../../utils/analytics';
-import { loginToApp } from './api';
+import { loginToApp, getProfileData } from './api';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 let deviceWidth = Dimensions.get('window').width;
@@ -55,6 +55,25 @@ export default function LoginScreen() {
     setShowPW(!showPW);
   }
 
+  function fetchProfile() {
+    setIsLoading(true);
+    getProfileData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log(res.data);
+          if (res.data.hasBombBombPermission) {
+            storage.setItem('hasBombBomb', 'true');
+          } else {
+            storage.setItem('hasBombBomb', 'false');
+          }
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
   function saveCredentials(myToken: string) {
     storage.setItem('sessionToken', myToken);
     if (rememberChecked) {
@@ -70,7 +89,7 @@ export default function LoginScreen() {
     // populateCredentialsIfRemembered();
   }, [isFocused]);
 
-  function HandleLoginPress() {
+  async function HandleLoginPress() {
     setIsLoading(true);
     console.log(userName);
     console.log(password);
@@ -91,6 +110,7 @@ export default function LoginScreen() {
         } else {
           console.log(res);
           saveCredentials(res.data.token);
+          fetchProfile();
           navigation.navigate('Home');
         }
         setIsLoading(false);

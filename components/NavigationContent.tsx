@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedba
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
 import { Analytics, PageHit, Event } from 'expo-analytics';
+import { storage } from '../utils/storage';
 
 // Hamburger Menu test
 const rmLogo = require('../images/logoWide.png');
@@ -27,15 +28,22 @@ function CustomDrawerContent(props: any) {
     relationships: false,
     transactions: false,
   });
+  const [hasBombBomb, setHasBombBomb] = useState(false);
 
-  const handleMenuExpand = (type: string) => {
+  async function handleMenuExpand(type: string) {
+    var hasBombBombString = await storage.getItem('hasBombBomb');
+    if (hasBombBombString == 'true') {
+      setHasBombBomb(true);
+    } else {
+      setHasBombBomb(false);
+    }
     if (type === 'Rolodex') {
       setExpanded({ ...expanded, relationships: !expanded.relationships });
     }
     if (type === 'transactions') {
       setExpanded({ ...expanded, transactions: !expanded.transactions });
     }
-  };
+  }
 
   const trackPressed = (screenName: string) => {
     console.log(screenName);
@@ -115,12 +123,14 @@ function CustomDrawerContent(props: any) {
               <Text style={styles.menuItemText}>Recent Contact Activity</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressed('videoHistory')}>
-            <View style={styles.menuItem}>
-              <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
-              <Text style={styles.menuItemText}>Video History</Text>
-            </View>
-          </TouchableOpacity>
+          {hasBombBomb && (
+            <TouchableOpacity onPress={() => pressed('videoHistory')}>
+              <View style={styles.menuItem}>
+                <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
+                <Text style={styles.menuItemText}>Video History</Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </Collapsible>
         <TouchableWithoutFeedback onPress={() => handleMenuExpand('transactions')}>
           <View style={styles.menuItem}>

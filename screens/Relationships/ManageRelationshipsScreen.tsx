@@ -57,18 +57,13 @@ export default function ManageRelationshipsScreen() {
       //  qualFromAbove: dataRolodex[index]['qualified'],
     });
   };
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-  }, []);
-
-  useEffect(() => {
     getDarkOrLightMode();
-  }, [isFocused]);
-
-  useEffect(() => {
     if (tabSelected != 'groups') {
       fetchRolodexPressed(tabSelected);
     } else {
@@ -86,7 +81,7 @@ export default function ManageRelationshipsScreen() {
     showFilterTitle();
   }, [isFilterRel]);
 
-  useEffect(() => {}); // this will run on every rendeer
+  // useEffect(() => {}); // this will run on every render
 
   function showFilterTitle() {
     if (isFilterRel) {
