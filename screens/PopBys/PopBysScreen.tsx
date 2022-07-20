@@ -24,8 +24,14 @@ import React from 'react';
 import { storage } from '../../utils/storage';
 import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
 const chevron = require('../../images/chevron_blue.png');
+const pinAPlus = require('./images/mapPinAPlus.png');
+const pinA = require('./images/mapPinA.png');
+const pinB = require('./images/mapPinB.png');
+const pinC = require('./images/mapPinC.png');
+const pinD = require('./images/mapPinD.png');
 
 type TabType = 'Near Me' | 'Priority' | 'Saved'; // nearby, priority and favorites in API
 
@@ -123,6 +129,23 @@ export default function ManageRelationshipsScreen() {
     }
   }
 
+  function getRankPin(ranking: string) {
+    console.log(ranking);
+    if (ranking == 'A+') {
+      return pinAPlus;
+    }
+    if (ranking == 'A') {
+      return pinA;
+    }
+    if (ranking == 'B') {
+      return pinB;
+    }
+    if (ranking == 'C') {
+      return pinC;
+    }
+    return pinD;
+  }
+
   function fetchPopBys(type: string) {
     setIsLoading(true);
     getPopByRadiusData(type)
@@ -131,7 +154,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setData(res.data);
-          //  console.log(res.data);
+          console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -161,14 +184,28 @@ export default function ManageRelationshipsScreen() {
 
       <View style={styles.mapView}>
         <MapView
+          showsUserLocation={true}
           style={styles.map}
-          initialRegion={{
-            latitude: 33.1175,
-            longitude: -117.25,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        />
+          followsUserLocation={true}
+          initialRegion={{ latitude: 33.1175, longitude: -117.25, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
+        >
+          {data.map((person, index) =>
+            person.location?.latitude != null && person.location?.longitude != null ? (
+              <Marker
+                key={index}
+                coordinate={{
+                  latitude: parseFloat(person.location.latitude),
+                  longitude: parseFloat(person.location.longitude),
+                }}
+                image={getRankPin(person.ranking)}
+                title={person.firstName}
+                description={person.lastName}
+              />
+            ) : (
+              <View></View>
+            )
+          )}
+        </MapView>
       </View>
 
       {isLoading ? (
@@ -214,7 +251,7 @@ export default function ManageRelationshipsScreen() {
 
 export const styles = StyleSheet.create({
   mapView: {
-    height: '50%',
+    height: '60%',
     width: '100%',
   },
   map: {

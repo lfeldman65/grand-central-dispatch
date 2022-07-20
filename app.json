@@ -13,13 +13,14 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.referralmaker.referralmaker",
-      "buildNumber": "42"
+      "buildNumber": "42",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to show contacts that are near you."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,8 +31,6 @@
     "web": {
       "favicon": "./images/favicon.png"
     },
-    "plugins": [
-      "sentry-expo"
-    ]
+    "plugins": ["sentry-expo"]
   }
 }
