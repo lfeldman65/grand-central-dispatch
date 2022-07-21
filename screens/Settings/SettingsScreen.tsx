@@ -141,7 +141,32 @@ export default function SettingsScreen() {
           </Text>
         </View>
       </View>
-      <ScrollView></ScrollView>
+      <ScrollView>
+        <Text style={styles.headerRow}>Set Up</Text>
+
+        <Text style={styles.headerRow}>Display and Features</Text>
+
+        <TouchableOpacity onPress={lightOrDarkPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBoxSupp}>
+              <Text style={styles.activityText}>Light or Dark Mode</Text>
+            </View>
+            <Text style={styles.suppText}>{isDarkMode ? 'Dark' : 'Light'}</Text>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <Text style={styles.headerRow}>Buffini and Company</Text>
+      </ScrollView>
+      <View style={styles.bottomView}>
+        <TouchableOpacity style={styles.bottomContainer} onPress={signOutPressed}>
+          <View style={styles.signOutButton}>
+            <Text style={styles.signOutText}>{'Sign Out'}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
