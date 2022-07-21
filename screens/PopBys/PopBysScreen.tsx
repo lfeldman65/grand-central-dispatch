@@ -9,6 +9,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Image,
+  PermissionsAndroid,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
@@ -198,8 +199,8 @@ export default function ManageRelationshipsScreen() {
                   longitude: parseFloat(person.location.longitude),
                 }}
                 image={getRankPin(person.ranking)}
-                title={person.firstName}
-                description={person.lastName}
+                title={person.firstName + ' ' + person.lastName}
+                description={person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'}
               />
             ) : (
               <View></View>
