@@ -91,8 +91,11 @@ export default function PopByRow(props: PopBysRowProps) {
           <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
             {props.data.firstName + ' ' + props.data.lastName}
           </Text>
-          <Text style={styles.phoneText} onPress={() => handlePhonePressed(props.data.mobile)}>
-            {props.data.mobile}
+          <Text
+            style={props.data.mobile == '' ? styles.noPhoneText : styles.phoneText}
+            onPress={() => handlePhonePressed(props.data.mobile)}
+          >
+            {props.data.mobile == '' ? 'No phone' : props.data.mobile}
           </Text>
           <View style={styles.buttonRow}>
             <Text style={styles.buttonText} onPress={() => handleDirectionsPressed()}>
@@ -162,50 +165,63 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'left',
-    marginTop: 5,
     fontWeight: '500',
   },
   nameTextLight: {
     color: 'black',
     fontSize: 18,
     textAlign: 'left',
-    marginTop: 5,
     fontWeight: '500',
   },
   distanceTextDark: {
     color: 'white',
     fontSize: 16,
-    marginTop: 15,
+    marginTop: 9,
   },
   distanceTextLight: {
     color: 'black',
     fontSize: 16,
-    marginTop: 15,
+    marginTop: 9,
   },
   phoneText: {
     color: '#1398F5',
     fontSize: 18,
     textAlign: 'left',
     marginBottom: 10,
-    marginTop: 10,
+    marginTop: 15,
+  },
+  noPhoneText: {
+    color: 'gray',
+    fontSize: 18,
+    textAlign: 'left',
+    marginBottom: 10,
+    marginTop: 15,
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginBottom: 20,
+    justifyContent: 'flex-start',
+    marginTop: 7,
   },
   buttonText: {
     color: '#1398F5',
     fontSize: 18,
     textAlign: 'left',
+    marginRight: 20,
   },
   saveText: {
     color: '#1398F5',
     fontSize: 18,
     textAlign: 'left',
+    marginRight: 20,
   },
   savedText: {
     color: 'gray',
+    fontSize: 18,
+    textAlign: 'left',
+    marginRight: 20,
+  },
+  removeText: {
+    color: 'red',
     fontSize: 18,
     textAlign: 'left',
   },
@@ -220,6 +236,6 @@ export const styles = StyleSheet.create({
   chevron: {
     height: 20,
     width: 12,
-    marginTop: 15,
+    marginTop: 9,
   },
 });

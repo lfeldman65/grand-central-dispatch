@@ -1,4 +1,4 @@
-import { Text, View, Image, TouchableOpacity, StyleSheet, Modal, Alert } from 'react-native';
+import { Text, View, Image, TouchableOpacity, StyleSheet, Modal, Alert, Linking } from 'react-native';
 import { PopByRadiusDataProps, PopByFavoriteDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
@@ -136,6 +136,10 @@ export default function PopByRowSaved(props: PopBysRowProps) {
     props.refresh();
   }
 
+  function handlePhonePressed(phoneNumber: string) {
+    Linking.openURL(`tel:${phoneNumber}`);
+  }
+
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
@@ -146,7 +150,12 @@ export default function PopByRowSaved(props: PopBysRowProps) {
           <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
             {props.data.firstName + ' ' + props.data.lastName}
           </Text>
-          <Text style={styles.phoneText}>{props.data.mobile}</Text>
+          <Text
+            style={props.data.mobile == '' ? styles.noPhoneText : styles.phoneText}
+            onPress={() => handlePhonePressed(props.data.mobile)}
+          >
+            {props.data.mobile == '' ? 'No phone' : props.data.mobile}
+          </Text>
           <View style={styles.buttonRow}>
             <Text style={styles.directionsAndCompleteText} onPress={() => handleDirectionsPressed()}>
               Directions
@@ -230,37 +239,42 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'left',
-    marginTop: 5,
     fontWeight: '500',
   },
   nameTextLight: {
     color: 'black',
     fontSize: 18,
     textAlign: 'left',
-    marginTop: 5,
     fontWeight: '500',
   },
   distanceTextDark: {
     color: 'white',
     fontSize: 16,
-    marginTop: 15,
+    marginTop: 9,
   },
   distanceTextLight: {
     color: 'black',
     fontSize: 16,
-    marginTop: 15,
+    marginTop: 9,
   },
   phoneText: {
     color: '#1398F5',
     fontSize: 18,
     textAlign: 'left',
     marginBottom: 10,
-    marginTop: 10,
+    marginTop: 15,
+  },
+  noPhoneText: {
+    color: 'gray',
+    fontSize: 18,
+    textAlign: 'left',
+    marginBottom: 10,
+    marginTop: 15,
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginBottom: 20,
+    justifyContent: 'flex-start',
+    marginTop: 7,
   },
   directionsAndCompleteText: {
     color: '#1398F5',
@@ -296,6 +310,6 @@ export const styles = StyleSheet.create({
   chevron: {
     height: 20,
     width: 12,
-    marginTop: 15,
+    marginTop: 9,
   },
 });
