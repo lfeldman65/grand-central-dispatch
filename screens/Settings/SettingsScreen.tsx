@@ -143,8 +143,77 @@ export default function SettingsScreen() {
       </View>
       <ScrollView>
         <Text style={styles.headerRow}>Set Up</Text>
+        <TouchableOpacity onPress={profilePressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Set Up Profile</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={businessGoalsPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Set Your Business Goals</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={importPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Import Relationships</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={sortPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Sort Relationships</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
 
         <Text style={styles.headerRow}>Display and Features</Text>
+
+        <TouchableOpacity onPress={landingPagePressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBoxSupp}>
+              <Text style={styles.activityText}>Landing Page</Text>
+            </View>
+            <Text style={styles.suppText}>Dashboard</Text>
+
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={displayAZPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBoxSupp}>
+              <Text style={styles.activityText}>Display Relationships A - Z</Text>
+            </View>
+            <Text style={styles.suppText}>First Last</Text>
+
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={lightOrDarkPressed}>
           <View style={styles.pressableRow}>
@@ -158,7 +227,73 @@ export default function SettingsScreen() {
           </View>
         </TouchableOpacity>
 
+        <TouchableOpacity onPress={notificationsPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Notifications</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={tutorialPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Tutorial</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
         <Text style={styles.headerRow}>Buffini and Company</Text>
+
+        <TouchableOpacity onPress={aboutUsPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>About Us</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={ratePressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Rate in App Store</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={privacyPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Privacy Policy</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={termsPressed}>
+          <View style={styles.pressableRow}>
+            <View style={styles.textBox}>
+              <Text style={styles.activityText}>Terms of Service</Text>
+            </View>
+            <View style={styles.chevronBox}>
+              <Image source={chevron} style={styles.chevron} />
+            </View>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
       <View style={styles.bottomView}>
         <TouchableOpacity style={styles.bottomContainer} onPress={signOutPressed}>
@@ -166,6 +301,14 @@ export default function SettingsScreen() {
             <Text style={styles.signOutText}>{'Sign Out'}</Text>
           </View>
         </TouchableOpacity>
+        <Text style={styles.versionText}>{'Version ' + Constants.manifest?.version} </Text>
+        <Text style={styles.copyrightText}>
+          {'@ ' +
+            date.toLocaleDateString('en-us', {
+              year: 'numeric',
+            }) +
+            ' Buffini and Company'}
+        </Text>
       </View>
     </View>
   );
