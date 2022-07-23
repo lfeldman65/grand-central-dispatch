@@ -223,7 +223,11 @@ export default function AddToDoScreen(props: any) {
     console.log(date.toISOString());
 
     console.log('times: ' + untilType);
-    if (untilType == 'Times') {
+    if (toDoTitle == '') {
+      Alert.alert('Please enter a Title');
+      return;
+    }
+    if (recurrence != 'Never' && untilType == 'Times') {
       if (untilVal == '0') {
         Alert.alert('The number of times must be greater than 0');
         return;
