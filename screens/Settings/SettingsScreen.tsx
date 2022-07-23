@@ -9,6 +9,7 @@ import { storage } from '../../utils/storage';
 import { getProfileData } from './api';
 import { ProfileProps } from './interfaces';
 import Constants from 'expo-constants';
+
 const chevron = require('../../images/chevron_white_right.png');
 const person = require('../Settings/images/user.png');
 
@@ -16,6 +17,7 @@ export default function SettingsScreen() {
   const navigation = useNavigation();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [profileData, setProfileData] = useState<ProfileProps>();
+  const [userName, setUserName] = useState(' ');
   const [date, setDate] = useState(new Date());
   const isFocused = useIsFocused();
 
@@ -97,6 +99,13 @@ export default function SettingsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
+  async function getUserName() {
+    const userNameFromStorage = await storage.getItem('userName');
+    if (userNameFromStorage != null) {
+      setUserName(userNameFromStorage);
+    }
+  }
+
   async function getDarkOrLightMode() {
     const dOrLight = await storage.getItem('darkOrLight');
     if (dOrLight == 'dark') {
@@ -125,7 +134,8 @@ export default function SettingsScreen() {
       headerLeft: () => <MenuIcon />,
     });
     getDarkOrLightMode();
-    fetchGoals();
+    //  fetchGoals();
+    getUserName();
   }, [isFocused]);
 
   return (
@@ -135,7 +145,9 @@ export default function SettingsScreen() {
           <Image source={person} style={styles.personImage} />
         </View>
         <View style={styles.userNameView}>
-          <Text style={styles.userText}>{profileData != null ? profileData.email : ''}</Text>
+          {/* <Text style={styles.userText}>{profileData != null ? profileData.email : ''}</Text> */}
+          <Text style={styles.userText}>{userName}</Text>
+
           <Text onPress={changePasswordPressed} style={styles.changePasswordText}>
             Change Password
           </Text>
