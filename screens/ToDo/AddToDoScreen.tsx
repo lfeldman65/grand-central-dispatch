@@ -1176,7 +1176,7 @@ const styles = StyleSheet.create({
   },
   attendeeInput: {
     fontSize: 18,
-    color: 'silver',
+    color: 'white',
     marginTop: 10,
     paddingLeft: 10,
     width: '92%',

@@ -89,7 +89,7 @@ export default function AttendeeScreen(props: any) {
           console.error(res.error);
         } else {
           setDataRolodex(res.data);
-          console.log(res.data);
+          //  console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -103,7 +103,7 @@ export default function AttendeeScreen(props: any) {
           <Image source={backArrow} style={styles.backArrow} />
         </TouchableOpacity>
 
-        <Text style={styles.nameLabel}>{'               ' + title}</Text>
+        <Text style={styles.nameLabel}>{'       ' + title}</Text>
 
         <TouchableOpacity onPress={savePressed}>
           <Text style={styles.saveButton}>Save</Text>
