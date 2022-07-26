@@ -14,66 +14,44 @@ import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import { getVideoSummaryData } from './api';
-import { VideoSummaryDataProps } from './interfaces';
+import { getVideoDetails } from './api';
+import { VideoDetailsDataProps } from './interfaces';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
 import RecentActivityRow from './RecentActivityRow';
-import VideoHistoryRow from './VideoHistoryRow';
+import VideoDetailsRow from './VideoDetailsRow';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 
-export default function VideoHistoryScreen() {
+export default function VideoDetailsScreen(props: any) {
+  const { route } = props;
+  const { videoGuid, videoTitle } = route.params;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
-  const [dataVid, setDataVid] = useState<VideoSummaryDataProps[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [dataVid, setDataVid] = useState<VideoDetailsDataProps[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRowPress = (index: number) => {
-    analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
-    console.log('Row Pressed');
-
-    navigation.navigate('VideoDetailsScreen', {
-      videoGuid: dataVid[index].videoGuid,
-      videoTitle: dataVid[index].videoTitle,
-    });
-  };
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => <MenuIcon />,
-    });
-  });
+  const handleRowPress = (index: number) => {
+    //  analytics.event(new Event('Video Details', 'Row', 'Press', 0));
+    console.log('Vid Details Row Pressed');
+  };
 
   useEffect(() => {
-    getDarkOrLightMode();
-    getThatData();
-  }, [isFocused]);
-
-  //useEffect(() => {}); // this will run on every render
-
-  function getThatData() {
-    setIsLoading(true);
-    console.log('yep');
-    getVideoSummaryData()
-      .then((res) => {
-        if (res.status == 'error') {
-          console.error(res.error);
-        } else {
-          setDataVid(res.data);
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => console.error('failure ' + error));
-  }
+    console.log(videoGuid);
+    navigation.setOptions({ title: videoTitle });
+  }, []);
 
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
@@ -86,7 +64,7 @@ export default function VideoHistoryScreen() {
           <ScrollView>
             <View>
               {dataVid.map((item, index) => (
-                <VideoHistoryRow key={index} data={item} onPress={() => handleRowPress(index)} />
+                <VideoDetailsRow key={index} data={item} onPress={() => handleRowPress(index)} />
               ))}
             </View>
           </ScrollView>
@@ -97,6 +75,10 @@ export default function VideoHistoryScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    height: '100%',
+  },
   chevron: {
     marginRight: 20,
     marginTop: 5,

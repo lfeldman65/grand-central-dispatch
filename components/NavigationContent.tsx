@@ -124,7 +124,7 @@ function CustomDrawerContent(props: any) {
             </View>
           </TouchableOpacity>
           {hasBombBomb && (
-            <TouchableOpacity onPress={() => pressed('videoHistory')}>
+            <TouchableOpacity onPress={() => pressed('VideoStack')}>
               <View style={styles.menuItem}>
                 <Image source={relIcon} style={[styles.menuIcon, styles.hidden]} />
                 <Text style={styles.menuItemText}>Video History</Text>

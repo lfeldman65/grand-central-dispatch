@@ -39,7 +39,6 @@ export default function GoalsScreen() {
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
 
   function styleForProgress(goalData: GoalDataProps) {

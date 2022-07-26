@@ -30,7 +30,6 @@ export default function IdeasPopScreen(props: any) {
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
   function handleSectionTap(sectionIndex: number) {
     if (sectionIndex == 0) {

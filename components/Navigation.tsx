@@ -9,7 +9,6 @@ import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import GoalsScreen from '../screens/Goals/GoalsScreen';
 import PACScreen from '../screens/PAC/PACScreen';
 import PACDetailScreen from '../screens/PAC/PACDetailScreen';
-//import PACCompleteScreen from '../screens/PAC/PACCompleteScreen';
 import TransactionsScreen from '../screens/Transactions/TransactionsSection';
 import PopBysScreen from '../screens/PopBys/PopBysScreen';
 import ToDoScreen from '../screens/ToDo/ToDosScreen';
@@ -21,6 +20,7 @@ import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationsh
 import RelationshipDetailsScreen from '../screens/Relationships/RelationshipDetailsScreen';
 import RecentContactActivityScreen from '../screens/Relationships/RecentActivityScreen';
 import VideoHistoryScreen from '../screens/Relationships/VideoHistoryScreen';
+import VideoDetailsScreen from '../screens/Relationships/VideoDetailsScreen';
 import RealEstateTransactionsScreen from '../screens/Transactions/RealEstateTransactionsScreen';
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
@@ -316,6 +316,51 @@ export const RecentActivityStackNavigator = () => {
   );
 };
 
+export const VideoStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="VideoHistoryScreen"
+        component={VideoHistoryScreen}
+        options={{
+          title: 'Video History',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="VideoDetailsScreen"
+        component={VideoDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const HomeStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -366,6 +411,15 @@ export const HomeStackNavigator = () => {
       <Stack.Screen
         name="RecentActivity"
         component={RecentActivityStackNavigator}
+        options={{
+          headerBackVisible: false,
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="VideoStack"
+        component={VideoStackNavigator}
         options={{
           headerBackVisible: false,
           headerShown: false,

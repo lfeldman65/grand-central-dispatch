@@ -62,7 +62,6 @@ export default function RecentActivityScreenScreen() {
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
-    console.log('larryA: ' + dOrlight);
   }
 
   const Sheets = {

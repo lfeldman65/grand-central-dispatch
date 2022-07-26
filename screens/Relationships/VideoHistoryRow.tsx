@@ -13,10 +13,10 @@ import {
 import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
-//import Swipeable from 'react-native-swipeable-row';
-//import styles from './styles';
 import { analytics } from '../../utils/analytics';
 import { VideoSummaryDataProps } from './interfaces';
+import { storage } from '../../utils/storage';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 const chevron = require('../../images/chevron_blue_right.png');
 
 interface VideoHistoryRowProps {
@@ -32,11 +32,25 @@ function makeTextPretty(name: string, count: number) {
 }
 
 export default function VideoHistoryRow(props: VideoHistoryRowProps) {
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={styles.row}>
+      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.textBox}>
-          <Text style={styles.activityText}>{makeTextPretty(props.data.videoTitle, props.data.viewCount)}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.activityTextDark : styles.activityTextLight}>
+            {makeTextPretty(props.data.videoTitle, props.data.viewCount)}
+          </Text>
         </View>
 
         <View style={styles.chevronBox}>
@@ -48,7 +62,16 @@ export default function VideoHistoryRow(props: VideoHistoryRowProps) {
 }
 
 const styles = StyleSheet.create({
-  row: {
+  rowDark: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    backgroundColor: 'black',
+    borderColor: 'lightgray',
+    borderWidth: 0.5,
+    paddingBottom: 10,
+    height: 60,
+  },
+  rowLight: {
     flexDirection: 'row',
     paddingTop: 10,
     backgroundColor: 'white',
@@ -60,12 +83,19 @@ const styles = StyleSheet.create({
   textBox: {
     flexDirection: 'column',
     height: 75,
-    backgroundColor: 'white',
     width: '88%',
     marginLeft: 5,
     textAlign: 'left',
   },
-  activityText: {
+  activityTextDark: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginBottom: 2,
+    marginTop: 14,
+  },
+  activityTextLight: {
     color: 'black',
     fontSize: 16,
     textAlign: 'left',
@@ -75,12 +105,10 @@ const styles = StyleSheet.create({
   },
   chevronBox: {
     paddingTop: 10,
-    backgroundColor: 'white',
     paddingLeft: 10,
     paddingRight: 20,
   },
   chevron: {
-    backgroundColor: 'white',
     height: 20,
     width: 12,
   },
