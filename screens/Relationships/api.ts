@@ -6,6 +6,7 @@ import {
   AddContactDataResponse,
   RecentActivityDataResponse,
   VideoHistoryDataResponse,
+  VideoDetailsDataResponse,
   ToDoAndApptResponse,
   ContactDeleteDataResponse,
 } from './interfaces';
@@ -25,8 +26,6 @@ export function getRelDetails(guid: string): Promise<RelDetailsResponse> {
 export function getGroupsData(): Promise<GroupsDataResponse> {
   return http.get('groups?batchSize=500&lastItem=0');
 }
-
-//contacts/0dbd2d47-5a7a-4b61-b4f6-885876a1ff17
 
 export function addNewContact(
   firstName: string,
@@ -70,6 +69,10 @@ export function getRecentActivityData(type: string): Promise<RecentActivityDataR
 export function getVideoSummaryData(): Promise<VideoHistoryDataResponse> {
   console.log('yep');
   return http.get('videossummary');
+}
+
+export function getVideoDetails(vidGuid: string): Promise<VideoDetailsDataResponse> {
+  return http.get(`videoViews?videoGuid=${vidGuid}`);
 }
 
 export function deleteRelationship(guid: string): Promise<ContactDeleteDataResponse> {

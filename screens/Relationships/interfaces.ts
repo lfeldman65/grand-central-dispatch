@@ -208,6 +208,24 @@ export interface VideoHistoryDataResponse {
   status: string;
 }
 
+// Video Details in Postman
+
+export interface VideoDetailsDataProps {
+  id: string;
+  videoTitle: string;
+  videoGuid: string;
+  contactGuid: string;
+  fullName: string;
+  dateViewed: string;
+  isAnonymous: boolean;
+}
+
+export interface VideoDetailsDataResponse {
+  data: VideoDetailsDataProps[];
+  error: string;
+  status: string;
+}
+
 // Contact Delete in Postman
 
 export interface ContactDeleteProps {

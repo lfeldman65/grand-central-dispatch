@@ -188,7 +188,7 @@ export default function ManageRelationshipsScreen() {
           showsUserLocation={true}
           style={styles.map}
           followsUserLocation={true}
-          initialRegion={{ latitude: 33.1175, longitude: -117.25, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
+          initialRegion={{ latitude: 33.1175, longitude: -117.25, latitudeDelta: 0.11, longitudeDelta: 0.06 }}
         >
           {data.map((person, index) =>
             person.location?.latitude != null && person.location?.longitude != null ? (
