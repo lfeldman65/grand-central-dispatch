@@ -27,9 +27,30 @@ export default function VideoDetailRows(props: VideoDetailsRowProps) {
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
+  function prettyDate(uglyDate: string) {
+    console.log(uglyDate);
+    if (uglyDate == null) return ' ';
+    if (uglyDate == '') return ' ';
+    var dateOnly = uglyDate.substring(0, 10);
+    var dateParts = dateOnly.split('-');
+    var year = dateParts[0].substring(2, 4);
+    return dateParts[1] + '/' + dateParts[2] + '/' + year;
+  }
+
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}></View>
+      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+        <View style={styles.textBox}>
+          <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
+            {props.data.fullName + ' watched this video'}
+          </Text>
+          <Text style={styles.dateText}>{prettyDate(props.data.dateViewed)}</Text>
+        </View>
+
+        <View style={styles.chevronBox}>
+          <Image source={chevron} style={styles.chevron} />
+        </View>
+      </View>
     </TouchableOpacity>
   );
 }

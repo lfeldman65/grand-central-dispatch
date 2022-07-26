@@ -25,6 +25,11 @@ import VideoDetailsRow from './VideoDetailsRow';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 
+// interface RolodexScreenProps {
+//   route: RouteProp<any>;
+// }
+
+//export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
 export default function VideoDetailsScreen(props: any) {
   const { route } = props;
   const { videoGuid, videoTitle } = route.params;
@@ -32,7 +37,7 @@ export default function VideoDetailsScreen(props: any) {
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
   const [dataVid, setDataVid] = useState<VideoDetailsDataProps[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getDarkOrLightMode();
@@ -44,14 +49,38 @@ export default function VideoDetailsScreen(props: any) {
   }
 
   const handleRowPress = (index: number) => {
-    //  analytics.event(new Event('Video Details', 'Row', 'Press', 0));
-    console.log('Vid Details Row Pressed');
+    //  analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
+    console.log('Row Pressed 2');
+
+    // navigation.navigate('RelationshipDetailScreen', {});
+    navigation.navigate('RelDetails', {
+      contactId: dataVid[0].contactGuid,
+      firstName: dataVid[0].fullName,
+      lastName: '',
+    });
   };
 
   useEffect(() => {
+    getThatData();
     console.log(videoGuid);
     navigation.setOptions({ title: videoTitle });
   }, []);
+
+  //useEffect(() => {}); // this will run on every rendeer
+
+  function getThatData() {
+    setIsLoading(true);
+    getVideoDetails(videoGuid)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setDataVid(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
 
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
