@@ -14,12 +14,12 @@ import {
 import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
-//import Swipeable from 'react-native-swipeable-row';
-//import styles from './styles';
 import { analytics } from '../../utils/analytics';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { PodcastDataProps } from './interfaces';
 const logo = require('../Podcasts/images/podcastMini.png');
 //const chevron = require('../../images/chevron_blue_right.png');
+import { storage } from '../../utils/storage';
 
 interface PodcastsRowProps {
   data: PodcastDataProps;
@@ -90,14 +90,28 @@ function pad0IfNeeded(part: string) {
 }
 
 export default function PodcastsRow(props: PodcastsRowProps) {
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const isFocused = useIsFocused();
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
+
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={styles.row}>
+      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.imageBox}>
           <Image source={logo} style={styles.logoImage} />
         </View>
         <View style={styles.textBox}>
-          <Text style={styles.titleText}>{makeTitlePretty(props.data.title)}</Text>
+          <Text style={lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
+            {makeTitlePretty(props.data.title)}
+          </Text>
           <Text style={styles.timeText}>{makeTimePretty(props.data.duration)}</Text>
         </View>
 
@@ -110,7 +124,15 @@ export default function PodcastsRow(props: PodcastsRowProps) {
 }
 
 const styles = StyleSheet.create({
-  row: {
+  rowDark: {
+    flexDirection: 'row',
+    paddingTop: 5,
+    backgroundColor: 'black',
+    borderColor: 'lightgray',
+    borderWidth: 0.25,
+    height: 60,
+  },
+  rowLight: {
     flexDirection: 'row',
     paddingTop: 5,
     backgroundColor: 'white',
@@ -135,7 +157,15 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     textAlign: 'left',
   },
-  titleText: {
+  titleTextDark: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginTop: 5,
+    fontWeight: '500',
+  },
+  titleTextLight: {
     color: 'black',
     fontSize: 16,
     textAlign: 'left',

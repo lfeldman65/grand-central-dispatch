@@ -1,69 +1,49 @@
 import { Fragment, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, View, Dimensions, Modal, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import Button from '../../components/Button';
-
 import { getPodcastData } from './api';
 import { PodcastDataProps } from './interfaces';
-
 import { analytics } from '../../utils/analytics';
 import React from 'react';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
 import PodcastsRow from './PodcastsRow';
+import PodcastPlayer from './PodcastPlayer';
+import { storage } from '../../utils/storage';
+import globalStyles from '../../globalStyles';
 
-// interface RolodexScreenProps {
-//   route: RouteProp<any>;
-// }
-
-//export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
 export default function PodcastsScreen() {
   let deviceWidth = Dimensions.get('window').width;
-
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const [data, setData] = useState<PodcastDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [modalPlayerVisible, setModalPlayerVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  async function getDarkOrLightMode() {
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
 
   const handleRowPress = (index: number) => {
     analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
     console.log('Row Pressed');
-
-    // navigation.navigate('RelationshipDetailScreen', {});
-    // navigation.navigate('RelationshipDetailScreen', {
-    //   //  contactId: data[index]['contactId'],
-    // });
+    setSelectedIndex(index);
+    setModalPlayerVisible(!modalPlayerVisible);
   };
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  }, []);
+    getDarkOrLightMode();
+    getPodcastList();
+  }, [isFocused]);
 
-  useEffect(() => {
-    getThatData();
-  }, []);
-
-  //useEffect(() => {}); // this will run on every rendeer
-
-  function saveComplete() {
-    console.log('Save Complete');
-  }
-
-  function getThatData() {
+  function getPodcastList() {
     setIsLoading(true);
     console.log('yep');
     getPodcastData()
@@ -79,7 +59,7 @@ export default function PodcastsScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#AAA" />
@@ -94,6 +74,18 @@ export default function PodcastsScreen() {
             </View>
           </ScrollView>
         </React.Fragment>
+      )}
+      {modalPlayerVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalPlayerVisible}
+          onRequestClose={() => {
+            setModalPlayerVisible(!modalPlayerVisible);
+          }}
+        >
+          <PodcastPlayer selectedIndex={selectedIndex} dataList={data} setModalPlayerVisible={setModalPlayerVisible} />
+        </Modal>
       )}
     </View>
   );
