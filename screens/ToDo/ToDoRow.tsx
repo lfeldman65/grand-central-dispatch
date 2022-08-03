@@ -27,14 +27,6 @@ interface ToDoRowProps {
   onPress(): void;
 }
 
-// function prettyDate(uglyDate: string) {
-//   var dateOnly = uglyDate.substring(0, 10);
-//   var dateParts = dateOnly.split('-');
-//   console.log(dateParts[0]);
-//   var year = dateParts[0].substring(2, 4);
-//   return 'Due: ' + dateParts[1] + '/' + dateParts[2] + '/' + year;
-// }
-
 export default function ToDoRow(props: ToDoRowProps) {
   const isFocused = useIsFocused();
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -58,10 +50,13 @@ export default function ToDoRow(props: ToDoRowProps) {
           <Text style={lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>{props.data.title}</Text>
           <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.notes}</Text>
         </View>
-        <View style={lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-            {'Due: ' + prettyDate(props.data.dueDate)}
-          </Text>
+        <View style={styles.dateColumn}>
+          <View style={lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
+            <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+              {'Due: ' + prettyDate(props.data.dueDate)}
+            </Text>
+            {props.data.priority && <Text style={styles.priorityText}>High Priority</Text>}
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -86,6 +81,9 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     paddingBottom: 10,
     height: 'auto',
+  },
+  dateColumn: {
+    flexDirection: 'column',
   },
   imageBox: {
     width: 30,
@@ -162,5 +160,10 @@ const styles = StyleSheet.create({
     height: 20,
     width: 12,
     marginTop: 15,
+  },
+  priorityText: {
+    marginTop: 5,
+    color: '#F99055',
+    fontSize: 14,
   },
 });
