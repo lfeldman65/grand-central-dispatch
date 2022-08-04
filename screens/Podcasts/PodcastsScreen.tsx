@@ -22,6 +22,7 @@ export default function PodcastsScreen() {
   const [lightOrDark, setIsLightOrDark] = useState('');
   const [modalPlayerVisible, setModalPlayerVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  //var selectedItem : PodcastDataProps;
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
@@ -42,6 +43,12 @@ export default function PodcastsScreen() {
     getDarkOrLightMode();
     getPodcastList();
   }, [isFocused]);
+
+  //useEffect(() => {}); // this will run on every render
+
+  function saveComplete() {
+    console.log('Save Complete');
+  }
 
   function getPodcastList() {
     setIsLoading(true);
