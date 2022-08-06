@@ -11,7 +11,9 @@ import { printWidth } from '../../prettier.config';
 const backArrow = require('../../images/white_arrow_left.png');
 const logo = require('../Podcasts/images/podcastLarge.png');
 const back = require('../Podcasts/images/audio_back.png');
+const backDisabled = require('../Podcasts/images/audio_pause.png');
 const next = require('../Podcasts/images/audio_next.png');
+const nextDisabled = require('../Podcasts/images/audio_pause.png');
 const play = require('../Podcasts/images/audio_play.png');
 const pause = require('../Podcasts/images/audio_pause.png');
 const speakerOff = require('../Podcasts/images/volumeDown.png');
@@ -44,7 +46,7 @@ export default function PodcastPlayer(props: any) {
   const isFocused = useIsFocused();
 
   function getSeekSliderPosition() {
-    console.log('getSeekSliderPosition');
+    // console.log('getSeekSliderPosition');
     return 0;
   }
 
@@ -102,10 +104,6 @@ export default function PodcastPlayer(props: any) {
     setModalPlayerVisible(false);
   }
 
-  async function backPressed() {
-    console.log('back pressed');
-  }
-
   function onSeekSliderValueChange(value: number) {
     console.log('onSeekSliderValueChange');
   }
@@ -114,8 +112,50 @@ export default function PodcastPlayer(props: any) {
     console.log('onSeekSliderSlidingComplete');
   }
 
+  async function backPressed() {
+    console.log('back pressed current index: ' + currentIndex);
+    if (currentIndex < dataList.length - 1) {
+      setIsLoading(true);
+      if (sound != null) {
+        sound.setOnPlaybackStatusUpdate(null);
+        setPlayerStatus({
+          playbackInstancePosition: null,
+          playbackInstanceDuration: null,
+          shouldPlay: true,
+          isPlaying: false,
+          isBuffering: true,
+          muted: playerStatus.muted,
+          volume: playerStatus.volume,
+        });
+        await sound.unloadAsync();
+      }
+      setPodcastItem(dataList[currentIndex + 1]);
+      setCurrentIndex(currentIndex + 1);
+      playSound();
+    }
+  }
+
   async function nextPressed() {
-    console.log('next pressed');
+    console.log('next pressed current index: ' + currentIndex);
+    if (currentIndex > 0) {
+      setIsLoading(true);
+      if (sound != null) {
+        sound.setOnPlaybackStatusUpdate(null);
+        setPlayerStatus({
+          playbackInstancePosition: null,
+          playbackInstanceDuration: null,
+          shouldPlay: true,
+          isPlaying: false,
+          isBuffering: true,
+          muted: playerStatus.muted,
+          volume: playerStatus.volume,
+        });
+        await sound.unloadAsync();
+      }
+      setPodcastItem(dataList[currentIndex - 1]);
+      setCurrentIndex(currentIndex - 1);
+      playSound();
+    }
   }
 
   async function playPausePressed() {
@@ -188,13 +228,16 @@ export default function PodcastPlayer(props: any) {
 
       <View style={styles.timeContainer}>
         <Text style={styles.startTime}>{getTimeStamp()}</Text>
-        <Text style={styles.buffering}>{playerStatus.isBuffering ? '...Buffering...' : ''}</Text>
+        <Text style={styles.buffering}>{playerStatus.isBuffering ? 'Buffering...' : ''}</Text>
         <Text style={styles.duration}>{getDurationTimeStamp()}</Text>
       </View>
 
       <View style={styles.controlsView}>
         <TouchableOpacity onPress={backPressed}>
-          <Image source={back} style={styles.controlsImage} />
+          <Image
+            source={currentIndex == dataList.length - 1 || playerStatus.isBuffering ? backDisabled : back}
+            style={styles.controlsImage}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={playPausePressed}>
@@ -202,7 +245,10 @@ export default function PodcastPlayer(props: any) {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={nextPressed}>
-          <Image source={next} style={styles.controlsImage} />
+          <Image
+            source={currentIndex == 0 || playerStatus.isBuffering ? nextDisabled : next}
+            style={styles.controlsImage}
+          />
         </TouchableOpacity>
       </View>
 
@@ -241,12 +287,12 @@ export const styles = StyleSheet.create({
     width: 17,
     height: 14,
     marginLeft: 7,
-    marginTop: 18, // alignment varies by device, so need a better way
+    marginTop: 20, // alignment varies by device, so need a better way
   },
   pageTitle: {
     color: 'white',
     fontSize: 16,
-    marginTop: 11, // alignment varies by device, so need a better way
+    marginTop: 16, // alignment varies by device, so need a better way
     textAlign: 'center',
   },
   podcastName: {
