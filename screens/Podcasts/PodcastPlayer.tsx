@@ -11,9 +11,8 @@ import { printWidth } from '../../prettier.config';
 const backArrow = require('../../images/white_arrow_left.png');
 const logo = require('../Podcasts/images/podcastLarge.png');
 const back = require('../Podcasts/images/audio_back.png');
-const backDisabled = require('../Podcasts/images/audio_pause.png');
 const next = require('../Podcasts/images/audio_next.png');
-const nextDisabled = require('../Podcasts/images/audio_pause.png');
+const blank = require('../Podcasts/images/audio_blank.png');
 const play = require('../Podcasts/images/audio_play.png');
 const pause = require('../Podcasts/images/audio_pause.png');
 const speakerOff = require('../Podcasts/images/volumeDown.png');
@@ -235,7 +234,7 @@ export default function PodcastPlayer(props: any) {
       <View style={styles.controlsView}>
         <TouchableOpacity onPress={backPressed}>
           <Image
-            source={currentIndex == dataList.length - 1 || playerStatus.isBuffering ? backDisabled : back}
+            source={currentIndex == dataList.length - 1 || playerStatus.isBuffering ? blank : back}
             style={styles.controlsImage}
           />
         </TouchableOpacity>
@@ -245,10 +244,7 @@ export default function PodcastPlayer(props: any) {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={nextPressed}>
-          <Image
-            source={currentIndex == 0 || playerStatus.isBuffering ? nextDisabled : next}
-            style={styles.controlsImage}
-          />
+          <Image source={currentIndex == 0 || playerStatus.isBuffering ? blank : next} style={styles.controlsImage} />
         </TouchableOpacity>
       </View>
 
