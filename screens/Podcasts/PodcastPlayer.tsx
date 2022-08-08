@@ -13,6 +13,7 @@ const logo = require('../Podcasts/images/podcastLarge.png');
 const back = require('../Podcasts/images/audio_back.png');
 const next = require('../Podcasts/images/audio_next.png');
 const blank = require('../Podcasts/images/audio_blank.png');
+
 const play = require('../Podcasts/images/audio_play.png');
 const pause = require('../Podcasts/images/audio_pause.png');
 const speakerOff = require('../Podcasts/images/volumeDown.png');
@@ -45,7 +46,7 @@ export default function PodcastPlayer(props: any) {
   const isFocused = useIsFocused();
 
   function getSeekSliderPosition() {
-    // console.log('getSeekSliderPosition');
+    console.log('getSeekSliderPosition');
     return 0;
   }
 
@@ -57,7 +58,6 @@ export default function PodcastPlayer(props: any) {
     const seasonArray = seasonUgly.split('S'); // 0: empty, 1: 2
     const seasonOnly = seasonArray[1]; // 2
     const episodeOnly = seasonAndEpiodeArray[1];
-
     return 'Season ' + seasonOnly + ' Episode ' + episodeOnly;
   }
 
@@ -67,15 +67,15 @@ export default function PodcastPlayer(props: any) {
   }
 
   function getTimeStamp() {
-    return 'time stamp';
+    return 'timeStamp';
   }
 
   function onVolumeSliderValueChange(value: any) {
-    console.log('onVolumeSliderChange');
+    console.log(value);
   }
 
   function getDurationTimeStamp() {
-    return 'duration stamp';
+    return 'durationStamp';
   }
 
   function onPlaybackStatusUpdate(status: any) {
@@ -103,16 +103,11 @@ export default function PodcastPlayer(props: any) {
     setModalPlayerVisible(false);
   }
 
-  function onSeekSliderValueChange(value: number) {
-    console.log('onSeekSliderValueChange');
-  }
-
-  async function onSeekSliderSlidingComplete(value: number) {
-    console.log('onSeekSliderSlidingComplete');
-  }
-
   async function backPressed() {
     console.log('back pressed current index: ' + currentIndex);
+    if (playerStatus.isBuffering) {
+      return;
+    }
     if (currentIndex < dataList.length - 1) {
       setIsLoading(true);
       if (sound != null) {
@@ -136,6 +131,9 @@ export default function PodcastPlayer(props: any) {
 
   async function nextPressed() {
     console.log('next pressed current index: ' + currentIndex);
+    if (playerStatus.isBuffering) {
+      return;
+    }
     if (currentIndex > 0) {
       setIsLoading(true);
       if (sound != null) {
@@ -157,8 +155,29 @@ export default function PodcastPlayer(props: any) {
     }
   }
 
+  function onSeekSliderValueChange(value: number) {
+    console.log('valueChange');
+  }
+
+  async function onSeekSliderSlidingComplete(value: number) {
+    console.log('sliderComplete');
+  }
+
+  function playPauseButton() {
+    if (playerStatus.isBuffering) {
+      return blank;
+    }
+    if (playerStatus.isPlaying) {
+      return pause;
+    }
+    return play;
+  }
+
   async function playPausePressed() {
     console.log('play/pause pressed');
+    if (playerStatus.isBuffering) {
+      return;
+    }
     if (sound != null) (await playerStatus.isPlaying) ? sound.pauseAsync() : sound.playAsync();
   }
 
@@ -178,6 +197,8 @@ export default function PodcastPlayer(props: any) {
 
     const { sound } = await Audio.Sound.createAsync(source, initialStatus, onPlaybackStatusUpdate);
     setSound(sound);
+
+    // console.log('Playing Sound');
     setIsLoading(false);
     await sound.playAsync();
   }
@@ -240,7 +261,7 @@ export default function PodcastPlayer(props: any) {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={playPausePressed}>
-          <Image source={playerStatus.isPlaying ? pause : play} style={styles.controlsImage} />
+          <Image source={playPauseButton()} style={styles.controlsImage} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={nextPressed}>
@@ -288,7 +309,7 @@ export const styles = StyleSheet.create({
   pageTitle: {
     color: 'white',
     fontSize: 16,
-    marginTop: 16, // alignment varies by device, so need a better way
+    marginTop: 15, // alignment varies by device, so need a better way
     textAlign: 'center',
   },
   podcastName: {
