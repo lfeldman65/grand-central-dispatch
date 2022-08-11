@@ -46,7 +46,16 @@ export default function PodcastPlayer(props: any) {
   const isFocused = useIsFocused();
 
   function getSeekSliderPosition() {
-    console.log('getSeekSliderPosition');
+    if (
+      sound != null &&
+      playerStatus.playbackInstancePosition != null &&
+      playerStatus.playbackInstanceDuration != null
+    ) {
+      var pos = playerStatus.playbackInstancePosition / playerStatus.playbackInstanceDuration;
+
+      //console.log(pos);
+      return pos;
+    }
     return 0;
   }
 
@@ -58,7 +67,24 @@ export default function PodcastPlayer(props: any) {
     const seasonArray = seasonUgly.split('S'); // 0: empty, 1: 2
     const seasonOnly = seasonArray[1]; // 2
     const episodeOnly = seasonAndEpiodeArray[1];
+    // console.log(seasonArray[1]);
+
     return 'Season ' + seasonOnly + ' Episode ' + episodeOnly;
+  }
+
+  function getMMSSFromMillis(millis: number) {
+    const totalSeconds = millis / 1000;
+    const seconds = Math.floor(totalSeconds % 60);
+    const minutes = Math.floor(totalSeconds / 60);
+
+    const padWithZero = (num: any) => {
+      const string = num.toString();
+      if (num < 10) {
+        return '0' + string;
+      }
+      return string;
+    };
+    return padWithZero(minutes) + ':' + padWithZero(seconds);
   }
 
   function prettyPodcastName(longTitle: string) {
@@ -67,15 +93,31 @@ export default function PodcastPlayer(props: any) {
   }
 
   function getTimeStamp() {
-    return 'timeStamp';
+    if (
+      sound != null &&
+      playerStatus.playbackInstancePosition != null &&
+      playerStatus.playbackInstanceDuration != null
+    ) {
+      return `${getMMSSFromMillis(playerStatus.playbackInstancePosition)}`;
+    }
+    return '';
   }
 
   function onVolumeSliderValueChange(value: any) {
-    console.log(value);
+    if (sound != null) {
+      sound.setVolumeAsync(value);
+    }
   }
 
   function getDurationTimeStamp() {
-    return 'durationStamp';
+    if (
+      sound != null &&
+      playerStatus.playbackInstancePosition != null &&
+      playerStatus.playbackInstanceDuration != null
+    ) {
+      return `${getMMSSFromMillis(playerStatus.playbackInstanceDuration)}`;
+    }
+    return '';
   }
 
   function onPlaybackStatusUpdate(status: any) {
@@ -156,11 +198,38 @@ export default function PodcastPlayer(props: any) {
   }
 
   function onSeekSliderValueChange(value: number) {
-    console.log('valueChange');
+    if (sound != null && !isSeeking) {
+      setIsSeeking(true);
+      setShouldPlayAtEndOfSeek(playerStatus.isPlaying!);
+
+      sound.setOnPlaybackStatusUpdate(null);
+      sound.pauseAsync();
+    }
+
+    setPlayerStatus({
+      playbackInstancePosition: value * playerStatus.playbackInstanceDuration,
+      playbackInstanceDuration: playerStatus.playbackInstanceDuration,
+      shouldPlay: playerStatus.shouldPlay,
+      isPlaying: playerStatus.isPlaying,
+      isBuffering: playerStatus.isBuffering,
+      muted: playerStatus.muted,
+      volume: playerStatus.volume,
+    });
+
+    //playerStatus.playbackInstancePosition = value * playerStatus.playbackInstanceDuration;
   }
 
   async function onSeekSliderSlidingComplete(value: number) {
-    console.log('sliderComplete');
+    if (sound != null) {
+      setIsSeeking(false);
+      const seekPosition = value * playerStatus.playbackInstanceDuration;
+      sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+      if (shouldPlayAtEndOfSeek) {
+        await sound.playFromPositionAsync(seekPosition);
+      } else {
+        await sound.setPositionAsync(seekPosition);
+      }
+    }
   }
 
   function playPauseButton() {
