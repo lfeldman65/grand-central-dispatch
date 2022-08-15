@@ -100,14 +100,6 @@ export default function EditToDoScreen(props: any) {
     setAttendees(attendeeFromParent);
   }
 
-  function deleteAttendee(index: number) {
-    console.log(index);
-    attendeeFromParent.splice(index, 1);
-    const newAttendees = [...attendeeFromParent, ...[]];
-    //  console.log(newAttendees.length);
-    setAttendees(newAttendees);
-  }
-
   function savePressed() {
     console.log('toDoID: ' + todoID);
     console.log('attendeeFromParent: ' + attendeeFromParent);
@@ -200,6 +192,31 @@ export default function EditToDoScreen(props: any) {
             textAlign="left"
             onChangeText={(text) => setNewLocation(text)}
             defaultValue={locationFromParent}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Attendees</Text>
+
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <Text style={styles.addAttendee} onPress={handleAttendeesPressed}>
+            + Add
+          </Text>
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Notes</Text>
+      <View style={styles.mainContent}>
+        <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
+          <TextInput
+            style={lightOrDark == 'dark' ? styles.notesTextDark : styles.notesTextLight}
+            placeholder="Type Here"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            value={newNotes}
+            onChangeText={(text) => setNewNotes(text)}
+            defaultValue={notesFromParent}
           />
         </View>
       </View>
