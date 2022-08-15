@@ -11,7 +11,7 @@ export interface ToDoDataProps {
   title: string;
   notes: string;
   dueDate: string;
-  priority: boolean;
+  priority: string;
   completedDate: string;
   isCampaign: boolean;
 }
@@ -100,7 +100,7 @@ export interface ToDoDeleteProps {
 export interface AddToDoDataProps {
   title: string;
   dueDate: string;
-  priority: boolean;
+  priority: string;
   location: string;
   notes: string;
   recurrence: RecurrenceProps;

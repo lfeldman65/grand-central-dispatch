@@ -11,8 +11,6 @@ import openMap from 'react-native-open-maps';
 import * as React from 'react';
 import EditToDo from './EditToDoScreen';
 
-let deviceHeight = Dimensions.get('window').height;
-
 export default function ToDoDetails(props: any) {
   const navigation = useNavigation();
   const { route } = props;
@@ -23,20 +21,25 @@ export default function ToDoDetails(props: any) {
   const [lightOrDark, setIsLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
-  // React.useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => <Button color="#000" onPress={() => setModalVisible(true)} title="Edit" />,
-  //   });
-  // }, [navigation]);
-
   useEffect(() => {
     getDarkOrLightMode();
     fetchData();
   }, [isFocused]);
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <Button color="#fff" onPress={editPressed} title="Edit" />,
+    });
+  }, [navigation]);
+
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  function editPressed() {
+    console.log('edit pressed');
+    setModalVisible(true);
   }
 
   function deletePressed() {
@@ -93,7 +96,7 @@ export default function ToDoDetails(props: any) {
 
   function saveComplete() {
     console.log('save complete');
-    //  fetchData();
+    fetchData();
   }
 
   function fetchData() {
@@ -104,7 +107,7 @@ export default function ToDoDetails(props: any) {
           console.error(res.error);
         } else {
           setdata(res.data);
-          console.log(res.data);
+          //   console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -187,7 +190,18 @@ export default function ToDoDetails(props: any) {
             setModalVisible(!modalVisible);
           }}
         >
-          <EditToDo title={'Edit To-Do'} onSave={saveComplete} setModalVisible={setModalVisible} />
+          <EditToDo
+            title={'Edit To-Do'}
+            todoID={data?.id}
+            titleFromParent={data?.title}
+            dateFromParent={data?.dueDate}
+            priorityFromParent={data?.priority}
+            locationFromParent={data?.location}
+            attendeeFromParent={data?.attendees ?? []}
+            notesFromParent={data?.notes}
+            onSave={saveComplete}
+            setModalVisible={setModalVisible}
+          />
         </Modal>
       )}
     </View>

@@ -29,7 +29,7 @@ export function deleteToDo(toDoID: string): Promise<ToDoDeleteDataResponse> {
 export function addNewToDo(
   title: string,
   dueDate: string,
-  priority: boolean,
+  priority: string,
   location: string,
   notes: string,
   untilType: string,
@@ -84,6 +84,31 @@ export function addNewToDo(
         type: type,
       },
       attendees: attendees,
+    },
+  });
+}
+
+export function editToDo(
+  todoID: string,
+  title: string,
+  dueDate: string,
+  priority: string,
+  location: string,
+  notes: string,
+  attendees: AttendeesProps[]
+): Promise<AddToDoDataResponse> {
+  console.log('add new to do: ' + todoID);
+  return http.put(`todos?id=${todoID}`, {
+    body: {
+      // no bracket since not an array
+      title: title,
+      dueDate: dueDate,
+      priority: priority,
+      location: location,
+      notes: notes,
+      //when attendees is empty, the API still expects an array
+      //of 1 empty object
+      attendees: (attendees?.length ?? 0) == 0 ? [{}] : attendees,
     },
   });
 }

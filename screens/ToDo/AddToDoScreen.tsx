@@ -46,12 +46,12 @@ export default function AddToDoScreen(props: any) {
   const [date, setDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [toDoAnnualDate, setToDoAnnualDate] = useState(new Date());
-  const [priority, setPriority] = useState(false);
+  const [priority, setPriority] = useState('False');
   const [recurrence, setRecurrence] = useState('Never');
   const [weeklyFrequency, setWeeklyFrequency] = useState('Every Week');
   const [monthlyFrequency, setMonthlyFrequency] = useState('Every Month');
   const [yearlyFrequency, setYearlyFrequency] = useState('Every Year');
-  const [untilType, setUntilType] = useState('Times');
+  const [untilType, setUntilType] = useState('Until');
   const [untilVal, setUntilVal] = useState('0');
   const [order, setOrder] = useState('First');
   const [reminder, setReminder] = useState('None');
@@ -67,7 +67,6 @@ export default function AddToDoScreen(props: any) {
   const [saturday, setSaturday] = useState(false);
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
-  //const [mode, setMode] = useState('date');
   const [showTopDate, setShowTopDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
@@ -182,7 +181,7 @@ export default function AddToDoScreen(props: any) {
     console.log(index);
     attendees.splice(index, 1);
     const newAttendees = [...attendees, ...[]];
-    console.log(attendees.length);
+    //   console.log(attendees.length);
     setAttendees(newAttendees);
   }
 
@@ -227,16 +226,13 @@ export default function AddToDoScreen(props: any) {
       Alert.alert('Please enter a Title');
       return;
     }
-    if (recurrence != 'Never' && untilType == 'Times') {
+    if (untilType == 'Times') {
       if (untilVal == '0') {
         Alert.alert('The number of times must be greater than 0');
         return;
       }
     }
-    if (toDoTitle == '') {
-      Alert.alert('Please enter a Title');
-      return;
-    }
+
     console.log('i am here');
 
     var newAttendees = new Array();
@@ -397,7 +393,7 @@ export default function AddToDoScreen(props: any) {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric',
-                  hour: 'numeric',
+                  //   hour: 'numeric',
                 })}
               </Text>
             </View>
@@ -427,7 +423,7 @@ export default function AddToDoScreen(props: any) {
           style={styles.checkBox}
           onPress={(isChecked: boolean) => {
             console.log(isChecked);
-            setPriority(!priority);
+            setPriority(priority == 'True' ? 'False' : 'True');
           }}
         />
 
@@ -579,7 +575,7 @@ export default function AddToDoScreen(props: any) {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
-                    hour: 'numeric',
+                    //   hour: 'numeric',
                   })}
                 </Text>
               </View>
@@ -1176,7 +1172,7 @@ const styles = StyleSheet.create({
   },
   attendeeInput: {
     fontSize: 18,
-    color: 'white',
+    color: 'silver',
     marginTop: 10,
     paddingLeft: 10,
     width: '92%',
