@@ -317,7 +317,7 @@ export default function PodcastPlayer(props: any) {
 
       <View style={styles.timeContainer}>
         <Text style={styles.startTime}>{getTimeStamp()}</Text>
-        <Text style={styles.buffering}>{playerStatus.isBuffering ? 'Buffering...' : ''}</Text>
+        <Text style={styles.buffering}>{playerStatus.isBuffering ? 'Loading...' : ''}</Text>
         <Text style={styles.duration}>{getDurationTimeStamp()}</Text>
       </View>
 
@@ -373,19 +373,20 @@ export const styles = StyleSheet.create({
     width: 17,
     height: 14,
     marginLeft: 7,
-    marginTop: 20, // alignment varies by device, so need a better way
+    marginTop: 22, // alignment varies by device, so need a better way
   },
   pageTitle: {
     color: 'white',
     fontSize: 16,
-    marginTop: 15, // alignment varies by device, so need a better way
+    marginTop: 20, // alignment varies by device, so need a better way
     textAlign: 'center',
   },
   podcastName: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 16,
     margin: 10,
     textAlign: 'center',
+    width: '90%',
   },
   blankButton: {
     // Helps placement of arrow and title (there's probably a better way to do this)
