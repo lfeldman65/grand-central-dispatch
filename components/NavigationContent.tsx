@@ -190,7 +190,7 @@ function CustomDrawerContent(props: any) {
             <Text style={styles.menuItemText}>Podcasts</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => pressed('SettingsScreen')}>
+        <TouchableOpacity onPress={() => pressed('SettingsScreenNav')}>
           <View style={styles.menuItem}>
             <Image source={settingsIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Settings</Text>

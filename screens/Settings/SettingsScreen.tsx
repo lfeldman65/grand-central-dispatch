@@ -19,6 +19,7 @@ export default function SettingsScreen() {
   const [profileData, setProfileData] = useState<ProfileProps>();
   const [date, setDate] = useState(new Date());
   const isFocused = useIsFocused();
+  const [landingPage, setLandingPage] = useState('Dashboard');
 
   function signOutPressed() {
     navigation.navigate('Login');
@@ -50,6 +51,7 @@ export default function SettingsScreen() {
 
   function landingPagePressed() {
     console.log('landing page');
+    navigation.navigate('LandingScreen');
   }
 
   function displayAZPressed() {
@@ -91,7 +93,7 @@ export default function SettingsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res.data);
+          //  console.log(res.data);
           setProfileData(res.data);
         }
       })
@@ -107,7 +109,16 @@ export default function SettingsScreen() {
     } else {
       setIsDarkMode(false);
       storage.setItem('darkOrLight', 'light');
-      console.log('larry3: ' + dOrLight);
+    }
+  }
+
+  async function getCurrentLandingPage() {
+    var storedLanding = await storage.getItem('landingPage');
+    console.log('settings landing: ' + storedLanding);
+    if (storedLanding != null) {
+      setLandingPage(storedLanding);
+    } else {
+      setLandingPage('Dashboard');
     }
   }
 
@@ -126,6 +137,7 @@ export default function SettingsScreen() {
       headerLeft: () => <MenuIcon />,
     });
     getDarkOrLightMode();
+    getCurrentLandingPage();
     fetchProfile();
   }, [isFocused]);
 
@@ -195,7 +207,7 @@ export default function SettingsScreen() {
             <View style={styles.textBoxSupp}>
               <Text style={styles.activityText}>Landing Page</Text>
             </View>
-            <Text style={styles.suppText}>Dashboard</Text>
+            <Text style={styles.suppText}>{landingPage}</Text>
 
             <View style={styles.chevronBox}>
               <Image source={chevron} style={styles.chevron} />
@@ -432,14 +444,14 @@ const styles = StyleSheet.create({
   },
   textBoxSupp: {
     height: 40,
-    width: '45%',
+    width: '60%',
     textAlign: 'left',
     marginLeft: -10,
   },
   suppText: {
     paddingTop: 13,
     height: 40,
-    width: '45%',
+    width: '30%',
     textAlign: 'right',
     marginLeft: 10,
     color: '#1398F5',

@@ -3,8 +3,6 @@ import { StyleSheet, Image } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 
-// Sections test
-
 import DashboardScreen from '../screens/Dashboard/DashboardScreen';
 import GoalsScreen from '../screens/Goals/GoalsScreen';
 import PACScreen from '../screens/PAC/PACScreen';
@@ -25,6 +23,7 @@ import RealEstateTransactionsScreen from '../screens/Transactions/RealEstateTran
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
+import LandingScreen from '../screens/Settings/LandingScreen';
 
 export type RootStackParamList = {
   [x: string]: any;
@@ -235,12 +234,44 @@ export const PACStackNavigator = () => {
           headerBackVisible: true,
         }}
       />
+    </Stack.Navigator>
+  );
+};
+
+export const SettingsStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
+        options={{
+          title: 'Settings',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="LandingScreen"
+        component={LandingScreen}
+        options={{
+          title: 'Select Landing Page',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
 
       {/* <Stack.Screen
-        name="PACCompleteScreen"
-        component={PACCompleteScreen}
+        name="RelOrderScreen"
+        component={RelOrderScreen}
         options={{
-          title: 'Name',
+          title: 'Display Relationships A - Z',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
@@ -520,15 +551,11 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="SettingsScreen"
-        component={SettingsScreen}
+        name="SettingsScreenNav"
+        component={SettingsStackNavigator}
         options={{
-          title: 'Settings',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
