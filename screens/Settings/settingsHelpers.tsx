@@ -13,3 +13,16 @@ export const landingPages = [
   'Calendar',
   'Podcasts',
 ];
+
+export const displayAZRows = ['First Last', 'Last, First'];
+
+export const lightOrDarkRows = ['light', 'dark'];
+
+export const notificationRows = [
+  'Calls',
+  'To-Do',
+  'Win The Day and Win the Week',
+  'Pop-Bys',
+  'Import Relationships',
+  'Videos',
+];
