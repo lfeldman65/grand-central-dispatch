@@ -4,7 +4,7 @@ const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useIsFocused } from '@react-navigation/native';
 import { addNewContact } from './api';
-import SelRefScreen from './SelectReferralScreen';
+import SelRefScreen from './SelectRelationshipScreen';
 import { RolodexDataProps } from './interfaces';
 
 let deviceWidth = Dimensions.get('window').width;
