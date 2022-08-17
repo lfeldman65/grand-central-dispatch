@@ -401,6 +401,15 @@ export default function AddToDoScreen(props: any) {
         </TouchableOpacity>
 
         {showTopDate && (
+          <TouchableOpacity
+            onPress={() => {
+              setShowTopDate(false);
+            }}
+          >
+            <Text style={styles.saveButton}>Close</Text>
+          </TouchableOpacity>
+        )}
+        {showTopDate && (
           <DateTimePicker
             testID="dateTimePicker"
             value={date}
@@ -580,6 +589,16 @@ export default function AddToDoScreen(props: any) {
                 </Text>
               </View>
             </View>
+          </TouchableOpacity>
+        )}
+
+        {showEndDate && (
+          <TouchableOpacity
+            onPress={() => {
+              setShowEndDate(false);
+            }}
+          >
+            <Text style={styles.saveButton}>Close</Text>
           </TouchableOpacity>
         )}
 

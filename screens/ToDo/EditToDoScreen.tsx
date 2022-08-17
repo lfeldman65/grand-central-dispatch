@@ -61,6 +61,7 @@ export default function EditToDoScreen(props: any) {
     setNewLocation(locationFromParent);
     setNewNotes(notesFromParent);
     setPriority(priorityFromParent);
+    setNewDate(new Date(Date.parse(dateFromParent)));
     console.log('priority1: ' + priorityFromParent);
   }, [isFocused]);
 
@@ -100,10 +101,18 @@ export default function EditToDoScreen(props: any) {
     setAttendees(attendeeFromParent);
   }
 
+  function deleteAttendee(index: number) {
+    console.log(index);
+    attendeeFromParent.splice(index, 1);
+    const newAttendees = [...attendeeFromParent, ...[]];
+    //  console.log(newAttendees.length);
+    setAttendees(newAttendees);
+  }
+
   function savePressed() {
     console.log('toDoID: ' + todoID);
     console.log('attendeeFromParent: ' + attendeeFromParent);
-    editToDo(todoID, newTitle, dateFromParent, priority, newLocation, newNotes, attendeeFromParent)
+    editToDo(todoID, newTitle, newDate.toISOString(), priority, newLocation, newNotes, attendeeFromParent)
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
@@ -150,10 +159,20 @@ export default function EditToDoScreen(props: any) {
       <TouchableOpacity onPress={showDateTopPicker}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput}>{prettyDate(dateFromParent)}</Text>
+            <Text style={styles.textInput}>{prettyDate(newDate.toISOString())}</Text>
           </View>
         </View>
       </TouchableOpacity>
+
+      {showTopDate && (
+        <TouchableOpacity
+          onPress={() => {
+            setShowTopDate(false);
+          }}
+        >
+          <Text style={styles.saveButton}>Close</Text>
+        </TouchableOpacity>
+      )}
 
       {showTopDate && (
         <DateTimePicker
@@ -198,6 +217,17 @@ export default function EditToDoScreen(props: any) {
 
       <Text style={styles.nameTitle}>Attendees</Text>
 
+      {attendeeFromParent?.map((item: any, index: number) => (
+        <View style={styles.mainContent}>
+          <View style={styles.attendeeView}>
+            <Text style={styles.attendeeInput}>{item.name}</Text>
+            <TouchableOpacity onPress={() => deleteAttendee(index)}>
+              <Image source={closeButton} style={styles.deleteAttendeeX} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      ))}
+
       <View style={styles.mainContent}>
         <View style={styles.inputView}>
           <Text style={styles.addAttendee} onPress={handleAttendeesPressed}>
@@ -220,6 +250,22 @@ export default function EditToDoScreen(props: any) {
           />
         </View>
       </View>
+      {modalAttendeesVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalAttendeesVisible}
+          onRequestClose={() => {
+            setModalAttendeesVisible(!modalAttendeesVisible);
+          }}
+        >
+          <Attendees
+            title="Attendees"
+            setModalAttendeesVisible={setModalAttendeesVisible}
+            setSelectedAttendees={handleSelectedAttendees}
+          />
+        </Modal>
+      )}
     </ScrollView>
   );
 }
