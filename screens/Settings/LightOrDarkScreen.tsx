@@ -22,14 +22,76 @@ import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/types
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { lightOrDarkRows } from './settingsHelpers';
+import { lightOrDarkRows, prettyText } from './settingsHelpers';
 
 export default function LightOrDarkScreen(props: any) {
-  const [lightOrDark, setLightOrDark] = useState(lightOrDarkRows[0]);
+  const [lightOrDark, setIsLightOrDark] = useState(lightOrDarkRows[0]);
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
-  return <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}></View>;
+  useEffect(() => {
+    navigation.setOptions({
+      title: 'Light Or Dark Mode',
+      headerRight: () => <Button color="#fff" onPress={savePressed} title="Save" />,
+    });
+  }, [navigation, lightOrDark]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    console.log('useeffect: ' + lightOrDark);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    var savedMode = await storage.getItem('darkOrLight');
+    if (savedMode != null) {
+      setIsLightOrDark(savedMode);
+      console.log('getCurrent: ' + savedMode);
+    } else {
+      setIsLightOrDark(lightOrDarkRows[0]);
+      console.log('getCurrent: ' + savedMode);
+    }
+  }
+
+  function savePressed() {
+    console.log('save pressed: ' + lightOrDark);
+    storage.setItem('darkOrLight', lightOrDark);
+    navigation.goBack();
+  }
+
+  return (
+    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+      {lightOrDarkRows.map((item, index) => (
+        <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+          <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>
+            {prettyText(lightOrDarkRows[index])}
+          </Text>
+          <View style={styles.checkView}>
+            <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+              size={25}
+              textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+              fillColor="#37C0FF"
+              unfillColor="white"
+              iconStyle={{ borderColor: 'gray' }}
+              text=""
+              textContainerStyle={{ marginLeft: 10 }}
+              disableBuiltInState={true}
+              isChecked={lightOrDark == lightOrDarkRows[index]}
+              onPress={(isChecked: boolean) => {
+                setIsLightOrDark(lightOrDarkRows[index]);
+              }}
+            />
+          </View>
+        </View>
+      ))}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

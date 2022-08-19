@@ -16,9 +16,9 @@ export const landingPages = [
 
 export const displayAZRows = ['First Last', 'Last, First'];
 
-export const lightOrDarkRows = ['light', 'dark'];
+export const lightOrDarkRows = ['automatic', 'light', 'dark'];
 
-export const notificationRows = [
+export const notificationRowsWithVid = [
   'Calls',
   'To-Do',
   'Win The Day and Win the Week',
@@ -26,3 +26,24 @@ export const notificationRows = [
   'Import Relationships',
   'Videos',
 ];
+
+export const notificationRowsNoVid = [
+  'Calls',
+  'To-Do',
+  'Win The Day and Win the Week',
+  'Pop-Bys',
+  'Import Relationships',
+];
+
+export function prettyText(uglyText: string) {
+  console.log('ugly: ' + uglyText);
+  if (uglyText == 'automatic') {
+    return 'Automatic';
+  }
+  if (uglyText == 'light') {
+    return 'Light';
+  }
+  if (uglyText == 'dark') {
+    return 'Dark';
+  }
+}

@@ -9,18 +9,18 @@ import { storage } from '../../utils/storage';
 import { getProfileData } from './api';
 import { ProfileProps } from './interfaces';
 import Constants from 'expo-constants';
-
+import { landingPages, displayAZRows, lightOrDarkRows, prettyText } from './settingsHelpers';
 const chevron = require('../../images/chevron_white_right.png');
 const person = require('../Settings/images/user.png');
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [lightOrDark, setLightOrDark] = useState(lightOrDarkRows[0]);
   const [profileData, setProfileData] = useState<ProfileProps>();
   const [date, setDate] = useState(new Date());
   const isFocused = useIsFocused();
-  const [landingPage, setLandingPage] = useState('Dashboard');
-  const [displayAZ, setDisplayAZ] = useState('First Last');
+  const [landingPage, setLandingPage] = useState(landingPages[0]);
+  const [displayAZ, setDisplayAZ] = useState(displayAZRows[0]);
 
   function signOutPressed() {
     navigation.navigate('Login');
@@ -103,19 +103,16 @@ export default function SettingsScreen() {
   }
 
   async function getDarkOrLightMode() {
-    const dOrLight = await storage.getItem('darkOrLight');
-    if (dOrLight == 'dark') {
-      setIsDarkMode(true);
-      storage.setItem('darkOrLight', 'dark');
+    var savedState = await storage.getItem('darkOrLight');
+    if (savedState == null) {
+      setLightOrDark(lightOrDarkRows[0]);
     } else {
-      setIsDarkMode(false);
-      storage.setItem('darkOrLight', 'light');
+      setLightOrDark(savedState);
     }
   }
 
   async function getDisplayAZ() {
     var stored = await storage.getItem('displayAZ');
-    //  console.log('settings display: ' + stored);
     if (stored != null) {
       setDisplayAZ(stored);
     } else {
@@ -134,6 +131,7 @@ export default function SettingsScreen() {
   }
 
   useEffect(() => {
+    let isMounted = true;
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
@@ -141,6 +139,9 @@ export default function SettingsScreen() {
     getCurrentLandingPage();
     getDisplayAZ();
     fetchProfile();
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   return (
@@ -234,7 +235,7 @@ export default function SettingsScreen() {
             <View style={styles.textBoxSupp}>
               <Text style={styles.activityText}>Light or Dark Mode</Text>
             </View>
-            <Text style={styles.suppText}>{isDarkMode ? 'Dark' : 'Light'}</Text>
+            <Text style={styles.suppText}>{prettyText(lightOrDark)}</Text>
             <View style={styles.chevronBox}>
               <Image source={chevron} style={styles.chevron} />
             </View>
