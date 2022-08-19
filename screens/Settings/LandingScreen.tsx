@@ -77,27 +77,31 @@ export default function LandingScreen(props: any) {
 
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      {landingPages.map((item, index) => (
-        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-          <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>{landingPages[index]}</Text>
-          <View style={styles.checkView}>
-            <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-              size={25}
-              textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-              fillColor="#37C0FF"
-              unfillColor="white"
-              iconStyle={{ borderColor: 'gray' }}
-              text=""
-              textContainerStyle={{ marginLeft: 10 }}
-              disableBuiltInState={true}
-              isChecked={landingPage == landingPages[index]}
-              onPress={(isChecked: boolean) => {
-                setLandingPage(landingPages[index]);
-              }}
-            />
+      {React.Children.toArray(
+        landingPages.map((item, index) => (
+          <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+            <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>
+              {landingPages[index]}
+            </Text>
+            <View style={styles.checkView}>
+              <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+                size={25}
+                textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+                fillColor="#37C0FF"
+                unfillColor="white"
+                iconStyle={{ borderColor: 'gray' }}
+                text=""
+                textContainerStyle={{ marginLeft: 10 }}
+                disableBuiltInState={true}
+                isChecked={landingPage == landingPages[index]}
+                onPress={(isChecked: boolean) => {
+                  setLandingPage(landingPages[index]);
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ))}
+        ))
+      )}
     </View>
   );
 }
