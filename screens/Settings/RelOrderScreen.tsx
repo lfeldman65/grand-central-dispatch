@@ -30,7 +30,7 @@ export default function RelOrderScreen(props: any) {
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       title: 'Display Relationships A - Z',
       headerRight: () => <Button color="#fff" onPress={savePressed} title="Save" />,
@@ -78,7 +78,7 @@ export default function RelOrderScreen(props: any) {
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       {displayAZRows.map((item, index) => (
-        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+        <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>{displayAZRows[index]}</Text>
           <View style={styles.checkView}>
             <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
