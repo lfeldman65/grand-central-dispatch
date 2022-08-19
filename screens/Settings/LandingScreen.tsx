@@ -38,23 +38,27 @@ export default function LandingScreen(props: any) {
   }, [navigation, landingPage]);
 
   useEffect(() => {
-    getDarkOrLightMode();
-    getCurrentLandingPage();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    getCurrentLandingPage(isMounted);
     console.log('useeffect: ' + landingPage);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
-  function savePressed() {
-    console.log('save pressed landing: ' + landingPage);
-    storage.setItem('landingPage', landingPage);
-    navigation.goBack();
-  }
-
-  async function getCurrentLandingPage() {
+  async function getCurrentLandingPage(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     var savedLanding = await storage.getItem('landingPage');
     if (savedLanding != null) {
       setLandingPage(savedLanding);
@@ -63,6 +67,12 @@ export default function LandingScreen(props: any) {
       setLandingPage(landingPages[0]);
       console.log('getCurrent: ' + savedLanding);
     }
+  }
+
+  function savePressed() {
+    console.log('save pressed landing: ' + landingPage);
+    storage.setItem('landingPage', landingPage);
+    navigation.goBack();
   }
 
   return (
