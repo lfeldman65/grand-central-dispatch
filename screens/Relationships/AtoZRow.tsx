@@ -17,33 +17,57 @@ interface AtoZRowProps {
   relFromAbove: string;
 }
 
-function chooseImage(rank: string) {
-  if (rank == 'A+') return rankAPlus;
-  if (rank == 'A') return rankA;
-  if (rank == 'B') return rankB;
-  if (rank == 'C') return rankC;
-  return rankD;
-}
-
-function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
-  if (type == 'Rel') {
-    return first + ' ' + last;
-  }
-  return employer + ' (' + first + ')';
-}
-
 export default function AtoZRow(props: AtoZRowProps) {
   const { relFromAbove } = props;
+  const [displayOrder, setDisplayOrder] = useState('First Last');
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    getDisplayAZ(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  function chooseImage(rank: string) {
+    if (rank == 'A+') return rankAPlus;
+    if (rank == 'A') return rankA;
+    if (rank == 'B') return rankB;
+    if (rank == 'C') return rankC;
+    return rankD;
+  }
+
+  function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
+    if (type == 'Rel') {
+      if (displayOrder == 'First Last') {
+        return first + ' ' + last;
+      }
+      return last + ', ' + first;
+    }
+    return employer + ' (' + first + ')';
+  }
+
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  async function getDisplayAZ(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    const relOrder = await storage.getItem('displayAZ');
+    if (relOrder == null || relOrder == 'First Last') {
+      setDisplayOrder('First Last');
+    } else {
+      setDisplayOrder('Last, First');
+    }
   }
 
   return (

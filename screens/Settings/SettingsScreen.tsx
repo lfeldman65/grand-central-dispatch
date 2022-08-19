@@ -20,6 +20,7 @@ export default function SettingsScreen() {
   const [date, setDate] = useState(new Date());
   const isFocused = useIsFocused();
   const [landingPage, setLandingPage] = useState('Dashboard');
+  const [displayAZ, setDisplayAZ] = useState('First Last');
 
   function signOutPressed() {
     navigation.navigate('Login');
@@ -34,7 +35,7 @@ export default function SettingsScreen() {
   }
 
   function profilePressed() {
-    console.log('set up profile');
+    navigation.navigate('ProfileStackNavigator');
   }
 
   function businessGoalsPressed() {
@@ -56,15 +57,17 @@ export default function SettingsScreen() {
 
   function displayAZPressed() {
     console.log('display A-Z');
+    navigation.navigate('RelOrderScreen');
   }
 
   function lightOrDarkPressed() {
     console.log('light or dark');
-    changeBackground();
+    navigation.navigate('LightOrDarkScreen');
   }
 
   function notificationsPressed() {
     console.log('notifications');
+    navigation.navigate('NotificationsScreen');
   }
 
   function tutorialPressed() {
@@ -93,7 +96,6 @@ export default function SettingsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          //  console.log(res.data);
           setProfileData(res.data);
         }
       })
@@ -105,30 +107,29 @@ export default function SettingsScreen() {
     if (dOrLight == 'dark') {
       setIsDarkMode(true);
       storage.setItem('darkOrLight', 'dark');
-      console.log('larry2: ' + dOrLight);
     } else {
       setIsDarkMode(false);
       storage.setItem('darkOrLight', 'light');
+    }
+  }
+
+  async function getDisplayAZ() {
+    var stored = await storage.getItem('displayAZ');
+    //  console.log('settings display: ' + stored);
+    if (stored != null) {
+      setDisplayAZ(stored);
+    } else {
+      setDisplayAZ('First Last');
     }
   }
 
   async function getCurrentLandingPage() {
     var storedLanding = await storage.getItem('landingPage');
-    console.log('settings landing: ' + storedLanding);
+    //   console.log('settings landing: ' + storedLanding);
     if (storedLanding != null) {
       setLandingPage(storedLanding);
     } else {
       setLandingPage('Dashboard');
-    }
-  }
-
-  function changeBackground() {
-    if (isDarkMode) {
-      setIsDarkMode(false);
-      storage.setItem('darkOrLight', 'light');
-    } else {
-      setIsDarkMode(true);
-      storage.setItem('darkOrLight', 'dark');
     }
   }
 
@@ -138,6 +139,7 @@ export default function SettingsScreen() {
     });
     getDarkOrLightMode();
     getCurrentLandingPage();
+    getDisplayAZ();
     fetchProfile();
   }, [isFocused]);
 
@@ -220,8 +222,7 @@ export default function SettingsScreen() {
             <View style={styles.textBoxSupp}>
               <Text style={styles.activityText}>Display Relationships A - Z</Text>
             </View>
-            <Text style={styles.suppText}>First Last</Text>
-
+            <Text style={styles.suppText}>{displayAZ}</Text>
             <View style={styles.chevronBox}>
               <Image source={chevron} style={styles.chevron} />
             </View>

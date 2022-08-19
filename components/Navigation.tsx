@@ -23,7 +23,12 @@ import RealEstateTransactionsScreen from '../screens/Transactions/RealEstateTran
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
+import Profile1 from '../screens/Settings/ProfileScreen1';
+import Profile2 from '../screens/Settings/ProfileScreen2';
 import LandingScreen from '../screens/Settings/LandingScreen';
+import RelOrderScreen from '../screens/Settings/RelOrderScreen';
+import LightOrDarkScreen from '../screens/Settings/LightOrDarkScreen';
+import NotificationsScreen from '../screens/Settings/NotificationsScreen';
 
 export type RootStackParamList = {
   [x: string]: any;
@@ -238,6 +243,38 @@ export const PACStackNavigator = () => {
   );
 };
 
+export const ProfileStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Profile1"
+        component={Profile1}
+        options={{
+          title: 'Welcome',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="Profile2"
+        component={Profile2}
+        options={{
+          title: 'Mailing Address',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const SettingsStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -255,6 +292,15 @@ export const SettingsStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="ProfileStackNavigator"
+        component={ProfileStackNavigator}
+        options={{
+          headerBackVisible: true,
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
         name="LandingScreen"
         component={LandingScreen}
         options={{
@@ -267,7 +313,7 @@ export const SettingsStackNavigator = () => {
         }}
       />
 
-      {/* <Stack.Screen
+      <Stack.Screen
         name="RelOrderScreen"
         component={RelOrderScreen}
         options={{
@@ -278,7 +324,33 @@ export const SettingsStackNavigator = () => {
           },
           headerBackVisible: true,
         }}
-      /> */}
+      />
+
+      <Stack.Screen
+        name="LightOrDarkScreen"
+        component={LightOrDarkScreen}
+        options={{
+          title: 'Light Or Dark Mode',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="NotificationsScreen"
+        component={NotificationsScreen}
+        options={{
+          title: 'Notifications',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
     </Stack.Navigator>
   );
 };
