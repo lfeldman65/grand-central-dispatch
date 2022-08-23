@@ -54,7 +54,7 @@ export default function PACDetailScreen(props: any) {
 
   async function completePressed() {
     console.log('complete pressed: ' + contactId);
-    analytics.event(new Event('PAC Detail', 'Complete', '0'));
+    //  analytics.event(new Event('PAC Detail', 'Complete', '0'));
     setModalVisible(true);
   }
 

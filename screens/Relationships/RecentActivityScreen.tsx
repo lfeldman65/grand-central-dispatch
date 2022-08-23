@@ -75,14 +75,7 @@ export default function RecentActivityScreenScreen() {
       contactId: dataActivity[index].ContactId,
       firstName: dataActivity[index].Name,
       lastName: '',
-      //  rankFromAbove: dataRolodex[index]['ranking'],
-      //  qualFromAbove: dataRolodex[index]['qualified'],
     });
-
-    // navigation.navigate('RelationshipDetailScreen', {});
-    // navigation.navigate('RelationshipDetailScreen', {
-    //   //  contactId: data[index]['contactId'],
-    // });
   };
   useEffect(() => {
     navigation.setOptions({
@@ -96,9 +89,8 @@ export default function RecentActivityScreenScreen() {
 
   useEffect(() => {
     getDarkOrLightMode();
+    fetchData();
   }, [isFocused]);
-
-  //useEffect(() => {}); // this will run on every render
 
   function filterPressed() {
     analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));

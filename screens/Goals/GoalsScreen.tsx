@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -7,14 +7,15 @@ import { Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import { isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
-import { getGoalData } from './api';
+import { getGoalData, trackAction } from './api';
 import { storage } from '../../utils/storage';
+import TrackActivity from './TrackActivityScreen';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
 
-import globalStyles from '../../globalStyles';
+import globalStyles from '../../globalStyles'; // branch
 
 export default function GoalsScreen() {
   const navigation = useNavigation<any>();
@@ -22,10 +23,15 @@ export default function GoalsScreen() {
   const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
 
+  function trackActivityPressed() {
+    setModalVisible(true);
+  }
+
   function winTheDayPressed() {
-    analytics.event(new Event('Goals', 'Win the Day Pressed'));
+    // analytics.event(new Event('Goals', 'Win the Day Pressed'));
     setWinTheDaySelected(true);
     fetchGoals();
   }
@@ -149,8 +155,6 @@ export default function GoalsScreen() {
   }
 
   const handleLinkPress = (index: number) => {
-    //console.log('here ' + index.toString());
-
     switch (index) {
       case 0:
         analytics.event(new Event('Goals', 'Calls Pressed'));
@@ -197,6 +201,47 @@ export default function GoalsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
+  function saveComplete(note: string, goal: string) {
+    var guid = 'e9e7dfeb-b909-412e-ac88-ceb2109d08d7';
+    var type = 'call';
+    console.log('B goal: ' + goal);
+    //  completeEvent(guid, type, note);
+    completeEvent(guid, goal, note);
+  }
+
+  function completeEvent(contactId: string, type: string, note: string) {
+    setIsLoading(true);
+    console.log('C type: ' + type);
+    trackActivityAPI(contactId, type, note, trackSuccess, trackFailure);
+  }
+
+  function trackActivityAPI(contactId: string, type: string, note: string, onSuccess: any, onFailure: any) {
+    console.log('D type: ' + type);
+    trackAction(contactId, type, note)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 'error') {
+          console.error(res.error);
+          onFailure();
+        } else {
+          onSuccess();
+        }
+      })
+      .catch((error) => {
+        onFailure();
+        console.log('complete error' + error);
+      });
+  }
+
+  function trackSuccess() {
+    setIsLoading(false);
+  }
+
+  function trackFailure() {
+    setIsLoading(false);
+    console.log('track failure');
+  }
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
@@ -204,12 +249,9 @@ export default function GoalsScreen() {
   });
 
   useEffect(() => {
+    fetchGoals();
     getDarkOrLightMode();
   }, [isFocused]);
-
-  useEffect(() => {
-    fetchGoals();
-  }, []);
 
   if (isLoading) {
     return (
@@ -268,9 +310,23 @@ export default function GoalsScreen() {
           <View style={lightOrDark == 'dark' ? styles.hackDark : styles.hackLight}></View>
         </ScrollView>
 
-        {/* {<TouchableOpacity onPress={fetchGoals}>
-        <Text style={styles.trackText}>Track Activity</Text>
-      </TouchableOpacity> } */}
+        <TouchableOpacity style={styles.bottomContainer} onPress={() => trackActivityPressed()}>
+          <View style={styles.trackActivityButton}>
+            <Text style={styles.buttonText}>Track Activity</Text>
+          </View>
+        </TouchableOpacity>
+        {modalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <TrackActivity trackTitle="Track Activity Goal" onSave={saveComplete} setModalVisible={setModalVisible} />
+          </Modal>
+        )}
       </View>
     );
   }
@@ -279,9 +335,11 @@ export default function GoalsScreen() {
 const styles = StyleSheet.create({
   containerDark: {
     backgroundColor: 'black',
+    height: '100%',
   },
   containerLight: {
     backgroundColor: 'white',
+    height: '100%',
   },
   hackDark: {
     height: 100,
@@ -349,5 +407,27 @@ const styles = StyleSheet.create({
   trackText: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  bottomContainer: {
+    backgroundColor: '#1A6295',
+    height: 60,
+  },
+  trackActivityButton: {
+    marginTop: 5,
+    backgroundColor: '#1A6295',
+    paddingTop: 10,
+    borderColor: 'white',
+    borderWidth: 2,
+    borderRadius: 10,
+    height: 50,
+    width: '95%',
+    alignSelf: 'center',
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 18,
+    // justifyContent: 'center',
+    marginBottom: 12,
   },
 });
