@@ -90,7 +90,10 @@ export default function SettingsScreen() {
     console.log('terms');
   }
 
-  function fetchProfile() {
+  function fetchProfile(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     getProfileData()
       .then((res) => {
         if (res.status == 'error') {
@@ -102,7 +105,10 @@ export default function SettingsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     var savedState = await storage.getItem('darkOrLight');
     if (savedState == null) {
       setLightOrDark(lightOrDarkRows[0]);
@@ -111,7 +117,10 @@ export default function SettingsScreen() {
     }
   }
 
-  async function getDisplayAZ() {
+  async function getDisplayAZ(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     var stored = await storage.getItem('displayAZ');
     if (stored != null) {
       setDisplayAZ(stored);
@@ -120,9 +129,11 @@ export default function SettingsScreen() {
     }
   }
 
-  async function getCurrentLandingPage() {
+  async function getCurrentLandingPage(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     var storedLanding = await storage.getItem('landingPage');
-    //   console.log('settings landing: ' + storedLanding);
     if (storedLanding != null) {
       setLandingPage(storedLanding);
     } else {
@@ -135,10 +146,10 @@ export default function SettingsScreen() {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-    getDarkOrLightMode();
-    getCurrentLandingPage();
-    getDisplayAZ();
-    fetchProfile();
+    getDarkOrLightMode(isMounted);
+    getCurrentLandingPage(isMounted);
+    getDisplayAZ(isMounted);
+    fetchProfile(isMounted);
     return () => {
       isMounted = false;
     };
