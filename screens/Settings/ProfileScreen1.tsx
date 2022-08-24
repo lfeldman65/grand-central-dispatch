@@ -6,7 +6,8 @@ import { analytics } from '../../utils/analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-
+import { getProfileData } from './api';
+import { ProfileDataProps } from './interfaces';
 const rmLogo = require('../../images/logoWide.png');
 
 const Sheets = {
@@ -22,20 +23,65 @@ const bizTypeMenu = {
 
 export default function ProfileScreen1(props: any) {
   const [email, setEmail] = useState('');
-  const [bizType, setBizType] = useState('Both');
-  const [timeZone, setTimeZone] = useState('Pacific Standard Time');
+  const [bizType, setBizType] = useState('');
+  const [timeZone, setTimeZone] = useState('');
   const [mobilePhone, setMobilePhone] = useState('');
   const isFocused = useIsFocused();
+  // const [profileData, setProfileData] = useState<ProfileDataProps>();
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
 
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       title: 'Welcome',
       headerLeft: () => <Button color="#fff" onPress={backPressed} title="Back" />,
       headerRight: () => <Button color="#fff" onPress={nextPressed} title="Next" />,
     });
   }, [navigation, email, timeZone, mobilePhone, bizType]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchProfile(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  function convertToParam(pretty: string) {
+    if (pretty == 'Both') {
+      return 'realtorAndLender';
+    }
+    return pretty;
+  }
+
+  function initializeFields(email?: string, bizType?: string, timeZone?: string, mobile?: string) {
+    if (email == null || email == '') {
+      setEmail('');
+    } else {
+      setEmail(email);
+    }
+    if (bizType == null || bizType == '' || bizType == 'realtorAndLender') {
+      setBizType('Both');
+    } else {
+      setBizType(bizType);
+    }
+    if (bizType == 'realtor') {
+      setBizType('Realtor');
+    }
+    if (bizType == 'lender') {
+      setBizType('Lender');
+    }
+    if (timeZone == null || timeZone == '') {
+      setTimeZone('');
+    } else {
+      setTimeZone(timeZone);
+    }
+    if (mobile == null || mobile == '') {
+      setMobilePhone('');
+    } else {
+      setMobilePhone(mobile);
+    }
+  }
 
   function businessTypePressed() {
     console.log('business type pressed');
@@ -51,15 +97,136 @@ export default function ProfileScreen1(props: any) {
   }
 
   function nextPressed() {
+    console.log('biz type:' + convertToParam(bizType));
     navigation.navigate('Profile2', {
       email: email,
-      businessType: bizType,
+      businessType: convertToParam(bizType),
       timeZone: timeZone,
       mobile: mobilePhone,
     });
   }
 
-  return <ScrollView style={styles.container}></ScrollView>;
+  function fetchProfile(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    getProfileData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          //  setProfileData(res.data);
+          console.log(res.data);
+          initializeFields(res.data.email, res.data.businessType, res.data.timezone, res.data.mobile);
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.topView}>
+        <View style={styles.imageBox}>
+          <Image source={rmLogo} style={styles.logoImage} />
+        </View>
+        <Text style={styles.fieldText}>
+          Spend a few minutes with our setup wizard to maximize the lead genereration potential of your relationships.
+          Don't worry, we've made the process easy, and you can always come back and update or add info you might not
+          have today.
+        </Text>
+      </View>
+      <Text></Text>
+      <Text style={styles.nameTitle}>Email</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setEmail(text)}
+            defaultValue={email}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Business Type</Text>
+      <TouchableOpacity onPress={businessTypePressed}>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <Text style={styles.textInput}>{bizType}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <ActionSheet // reminder
+        initialOffsetFromBottom={10}
+        onBeforeShow={(data) => console.log('reminder')}
+        id={Sheets.bizTypeSheet}
+        ref={actionSheetRef}
+        statusBarTranslucent
+        bounceOnOpen={true}
+        drawUnderStatusBar={true}
+        bounciness={4}
+        gestureEnabled={true}
+        bottomOffset={40}
+        defaultOverlayOpacity={0.3}
+      >
+        <View
+          style={{
+            paddingHorizontal: 12,
+          }}
+        >
+          <ScrollView
+            nestedScrollEnabled
+            onMomentumScrollEnd={() => {
+              actionSheetRef.current?.handleChildScrollEnd();
+            }}
+            style={styles.filterView}
+          >
+            <View>
+              {Object.entries(bizTypeMenu).map(([key, value]) => (
+                <TouchableOpacity
+                  //  key={key}
+                  onPress={() => {
+                    SheetManager.hide(Sheets.bizTypeSheet, null);
+                    console.log('biz type: ' + value);
+                    setBizType(value);
+                  }}
+                  style={styles.listItemCell}
+                >
+                  <Text style={styles.listItem}>{key}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      </ActionSheet>
+
+      <Text style={styles.nameTitle}>Time Zone</Text>
+      <TouchableOpacity onPress={timeZonePressed}>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <Text style={styles.textInput}>{timeZone}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <Text style={styles.nameTitle}>Mobile Number</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setMobilePhone(text)}
+            defaultValue={mobilePhone}
+          />
+        </View>
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
