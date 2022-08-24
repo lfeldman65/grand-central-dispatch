@@ -7,18 +7,14 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { getProfileData } from './api';
-import { ProfileDataProps } from './interfaces';
+import { bizTypeMenu } from './settingsHelpers';
+import momentTZ from 'moment-timezone';
+
 const rmLogo = require('../../images/logoWide.png');
 
 const Sheets = {
   bizTypeSheet: 'filter_sheet_bizType',
   timeZoneSheet: 'filter_sheet_timeZone',
-};
-
-const bizTypeMenu = {
-  Realtor: 'Realtor',
-  Lender: 'Lender',
-  Both: 'Both',
 };
 
 export default function ProfileScreen1(props: any) {
@@ -27,9 +23,9 @@ export default function ProfileScreen1(props: any) {
   const [timeZone, setTimeZone] = useState('');
   const [mobilePhone, setMobilePhone] = useState('');
   const isFocused = useIsFocused();
-  // const [profileData, setProfileData] = useState<ProfileDataProps>();
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
+  const timeZonesList = momentTZ.tz.names();
 
   useEffect(() => {
     navigation.setOptions({
@@ -45,7 +41,7 @@ export default function ProfileScreen1(props: any) {
     return () => {
       isMounted = false;
     };
-  }, [isFocused]);
+  }, []);
 
   function convertToParam(pretty: string) {
     if (pretty == 'Both') {
@@ -55,6 +51,8 @@ export default function ProfileScreen1(props: any) {
   }
 
   function initializeFields(email?: string, bizType?: string, timeZone?: string, mobile?: string) {
+    console.log(timeZonesList);
+
     if (email == null || email == '') {
       setEmail('');
     } else {
@@ -90,6 +88,7 @@ export default function ProfileScreen1(props: any) {
 
   function timeZonePressed() {
     console.log('time zone pressed');
+    SheetManager.show(Sheets.timeZoneSheet);
   }
 
   function backPressed() {
@@ -159,9 +158,9 @@ export default function ProfileScreen1(props: any) {
         </View>
       </TouchableOpacity>
 
-      <ActionSheet // reminder
+      <ActionSheet // Biz Type
         initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('reminder')}
+        onBeforeShow={(data) => console.log('bizType')}
         id={Sheets.bizTypeSheet}
         ref={actionSheetRef}
         statusBarTranslucent
@@ -211,6 +210,50 @@ export default function ProfileScreen1(props: any) {
           </View>
         </View>
       </TouchableOpacity>
+
+      <ActionSheet // Time Zone
+        initialOffsetFromBottom={10}
+        onBeforeShow={(data) => console.log('timeZone')}
+        id={Sheets.timeZoneSheet}
+        ref={actionSheetRef}
+        statusBarTranslucent
+        bounceOnOpen={true}
+        drawUnderStatusBar={true}
+        bounciness={4}
+        gestureEnabled={true}
+        bottomOffset={40}
+        defaultOverlayOpacity={0.3}
+      >
+        <View
+          style={{
+            paddingHorizontal: 12,
+          }}
+        >
+          <ScrollView
+            nestedScrollEnabled
+            onMomentumScrollEnd={() => {
+              actionSheetRef.current?.handleChildScrollEnd();
+            }}
+            style={styles.filterView}
+          >
+            <View>
+              {Object.entries(timeZone).map(([key, value]) => (
+                <TouchableOpacity
+                  //  key={key}
+                  onPress={() => {
+                    SheetManager.hide(Sheets.timeZoneSheet, null);
+                    console.log('time zone: ' + value);
+                    setTimeZone(value);
+                  }}
+                  style={styles.listItemCell}
+                >
+                  <Text style={styles.listItem}>{key}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      </ActionSheet>
 
       <Text style={styles.nameTitle}>Mobile Number</Text>
       <View style={styles.mainContent}>

@@ -1,3 +1,9 @@
+export const bizTypeMenu = {
+  Realtor: 'Realtor',
+  Lender: 'Lender',
+  Both: 'Both',
+};
+
 export const landingPages = [
   'Dashboard',
   'Goals',
