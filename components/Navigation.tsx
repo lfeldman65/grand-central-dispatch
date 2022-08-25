@@ -25,6 +25,7 @@ import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsSc
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
+import BizGoals from '../screens/Settings/BizGoalsScreen';
 import LandingScreen from '../screens/Settings/LandingScreen';
 import RelOrderScreen from '../screens/Settings/RelOrderScreen';
 import LightOrDarkScreen from '../screens/Settings/LightOrDarkScreen';
@@ -243,6 +244,25 @@ export const PACStackNavigator = () => {
   );
 };
 
+export const BizGoalsStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="BizGoalsScreen"
+        component={BizGoals}
+        options={{
+          title: 'Welcome',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -294,6 +314,15 @@ export const SettingsStackNavigator = () => {
       <Stack.Screen
         name="ProfileStackNavigator"
         component={ProfileStackNavigator}
+        options={{
+          headerBackVisible: true,
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="BizGoalsStacckNavigator"
+        component={BizGoalsStackNavigator}
         options={{
           headerBackVisible: true,
           headerShown: false,

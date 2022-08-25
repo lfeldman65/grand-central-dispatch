@@ -7,7 +7,7 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../constants/analytics';
 import { storage } from '../../utils/storage';
 import { getProfileData } from './api';
-import { ProfileProps } from './interfaces';
+import { ProfileDataProps } from './interfaces';
 import Constants from 'expo-constants';
 import { landingPages, displayAZRows, lightOrDarkRows, prettyText } from './settingsHelpers';
 const chevron = require('../../images/chevron_white_right.png');
@@ -16,7 +16,7 @@ const person = require('../Settings/images/user.png');
 export default function SettingsScreen() {
   const navigation = useNavigation();
   const [lightOrDark, setLightOrDark] = useState(lightOrDarkRows[0]);
-  const [profileData, setProfileData] = useState<ProfileProps>();
+  const [profileData, setProfileData] = useState<ProfileDataProps>();
   const [date, setDate] = useState(new Date());
   const isFocused = useIsFocused();
   const [landingPage, setLandingPage] = useState(landingPages[0]);
