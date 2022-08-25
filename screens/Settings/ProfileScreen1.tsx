@@ -8,7 +8,7 @@ import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { getProfileData } from './api';
 import { bizTypeMenu } from './settingsHelpers';
-import momentTZ from 'moment-timezone';
+// import momentTZ from 'moment-timezone';
 
 const rmLogo = require('../../images/logoWide.png');
 
@@ -25,7 +25,7 @@ export default function ProfileScreen1(props: any) {
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
-  const timeZonesList = momentTZ.tz.names();
+  // const timeZonesList = momentTZ.tz.names();
 
   useEffect(() => {
     navigation.setOptions({
@@ -51,7 +51,7 @@ export default function ProfileScreen1(props: any) {
   }
 
   function initializeFields(email?: string, bizType?: string, timeZone?: string, mobile?: string) {
-    console.log(timeZonesList);
+    //  console.log(timeZonesList);
 
     if (email == null || email == '') {
       setEmail('');
@@ -88,7 +88,7 @@ export default function ProfileScreen1(props: any) {
 
   function timeZonePressed() {
     console.log('time zone pressed');
-    SheetManager.show(Sheets.timeZoneSheet);
+    // SheetManager.show(Sheets.timeZoneSheet);
   }
 
   function backPressed() {

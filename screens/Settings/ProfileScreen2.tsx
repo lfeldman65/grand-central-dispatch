@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useLayoutEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -6,6 +6,8 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
+import { getProfileData, editProfileData } from './api';
+import { ProfileDataProps } from './interfaces';
 
 export default function ProfileScreen2(props: any) {
   const { route } = props;
@@ -22,7 +24,7 @@ export default function ProfileScreen2(props: any) {
   const [country, setCountry] = useState('');
   const navigation = useNavigation<any>();
 
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       title: 'Mailing Address',
       headerRight: () => <Button color="#fff" onPress={donePressed} title="Done" />,
@@ -30,18 +32,127 @@ export default function ProfileScreen2(props: any) {
   }, [navigation, firstName, lastName, company, street1, street2, city, state, zip, country]);
 
   useEffect(() => {
-    console.log(email + ' ' + businessType + ' ' + timeZone + ' ' + mobile);
+    let isMounted = true;
+    fetchProfile(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   function donePressed() {
-    console.log('done pressed');
-    console.log(firstName + ' ' + lastName + ' ' + company);
-    console.log(street1 + ' ' + street2 + ' ' + city);
-    console.log(state + ' ' + zip + ' ' + country);
-    navigation.navigate('SettingsScreen');
+    editProfileData(
+      email,
+      businessType,
+      timeZone,
+      mobile,
+      firstName,
+      lastName,
+      company,
+      'stree1',
+      'street2',
+      'city',
+      'state',
+      'zip',
+      'country'
+    )
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+        } else {
+          console.log(res);
+          navigation.navigate('SettingsScreen');
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
-  return <ScrollView style={styles.container}></ScrollView>;
+  function initializeFields(firstName?: string, lastName?: string, companyName?: string) {
+    if (firstName == null || firstName == '') {
+      setFirstName('');
+    } else {
+      setFirstName(firstName);
+    }
+    if (lastName == null || lastName == '') {
+      setLastName('');
+    } else {
+      setLastName(lastName);
+    }
+    if (companyName == null || companyName == '') {
+      setCompany('');
+    } else {
+      setCompany(companyName);
+    }
+  }
+
+  function fetchProfile(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    getProfileData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log(res.data);
+          initializeFields(res.data.firstName, res.data.lastName, res.data.companyName);
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.topView}>
+        <Text style={styles.fieldText}>
+          {
+            'Enter your mailing address to utilize our Client Appreciation Program (CAP), a consistent target marketing that deepens trust with your relationships. Set the foundation of your campaigns in our mobile app and take full advantage of the feature in our Web portal.'
+          }
+        </Text>
+      </View>
+      <Text></Text>
+      <Text style={styles.nameTitle}>First Name</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setFirstName(text)}
+            defaultValue={firstName}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Last Name</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setLastName(text)}
+            defaultValue={lastName}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Company Name</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setCompany(text)}
+            defaultValue={company}
+          />
+        </View>
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
