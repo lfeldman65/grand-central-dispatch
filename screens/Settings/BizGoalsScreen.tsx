@@ -6,7 +6,7 @@ import { analytics } from '../../utils/analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { getProfileData } from './api';
+import { getBizGoals } from './api';
 
 export default function BizGoalsScreen1(props: any) {
   const [netIncome, setNetIncome] = useState('');
@@ -28,7 +28,7 @@ export default function BizGoalsScreen1(props: any) {
 
   useEffect(() => {
     let isMounted = true;
-    fetchProfile(isMounted);
+    fetchBizGoals(isMounted);
     return () => {
       isMounted = false;
     };
@@ -41,37 +41,50 @@ export default function BizGoalsScreen1(props: any) {
     return pretty;
   }
 
-  function initializeFields(email?: string, bizType?: string, timeZone?: string, mobile?: string) {
-    //  console.log(timeZonesList);
-
-    if (email == null || email == '') {
+  function initializeFields(
+    desSal?: string,
+    taxRate?: string,
+    yearlyExp?: string,
+    commPercentage?: string,
+    aveSalePrice?: string,
+    aveComm?: string,
+    commType?: string
+  ) {
+    if (desSal == null || desSal == '') {
       setNetIncome('');
     } else {
-      setNetIncome(email);
+      setNetIncome(desSal);
     }
-    if (bizType == null || bizType == '' || bizType == 'realtorAndLender') {
-      setTaxRate('Both');
+    if (taxRate == null || taxRate == '') {
+      setTaxRate('');
     } else {
-      setTaxRate(bizType);
+      setTaxRate(taxRate);
     }
-    if (bizType == 'realtor') {
-      setTaxRate('Realtor');
+    if (yearlyExp == null || yearlyExp == '') {
+      setAnnualExpenses('');
+    } else {
+      setAnnualExpenses(yearlyExp);
     }
-    if (bizType == 'lender') {
-      setTaxRate('Lender');
+    if (commPercentage == null || commPercentage == '') {
+      setAgentBrokerSplit('');
+    } else {
+      setAgentBrokerSplit(commPercentage);
     }
-  }
-
-  function businessTypePressed() {
-    console.log('business type pressed');
-  }
-
-  function timeZonePressed() {
-    console.log('time zone pressed');
+    if (aveSalePrice == null || aveSalePrice == '') {
+      setAveAmount('');
+    } else {
+      setAveAmount(aveSalePrice);
+    }
+    if (aveComm == null || aveComm == '') {
+      setAveCommission('');
+    } else {
+      setAveCommission(aveComm);
+    }
   }
 
   function backPressed() {
-    navigation.navigate('SettingsScreen');
+    //  navigation.navigate('SettingsScreen');
+    navigation.goBack();
   }
 
   function nextPressed() {
@@ -84,18 +97,25 @@ export default function BizGoalsScreen1(props: any) {
     });
   }
 
-  function fetchProfile(isMounted: boolean) {
+  function fetchBizGoals(isMounted: boolean) {
     if (!isMounted) {
       return;
     }
-    getProfileData()
+    getBizGoals()
       .then((res) => {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          //  setProfileData(res.data);
           console.log(res.data);
-          initializeFields(res.data.email, res.data.businessType, res.data.timezone, res.data.mobile);
+          initializeFields(
+            res.data.desiredSalary,
+            res.data.taxRate,
+            res.data.yearlyExpenses,
+            res.data.myCommissionPercentage,
+            res.data.averageSalePrice,
+            res.data.averageSaleCommission,
+            res.data.commissionType
+          );
         }
       })
       .catch((error) => console.error('failure ' + error));

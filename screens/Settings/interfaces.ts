@@ -47,3 +47,21 @@ export interface EditProfileProps {
   country: string;
   hasBombBombPermission: boolean;
 }
+
+// Settings Biz Goals in Postman
+
+export interface BizGoalsDataResponse {
+  data: BizGoalsDataProps;
+  error: string;
+  status: string;
+}
+
+export interface BizGoalsDataProps {
+  desiredSalary: string;
+  taxRate: string;
+  yearlyExpenses: string;
+  myCommissionPercentage: string;
+  averageSalePrice: string;
+  averageSaleCommission: string;
+  commissionType: string;
+}

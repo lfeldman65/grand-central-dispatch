@@ -1,5 +1,5 @@
 import { http } from '../../utils/http';
-import { ProfileDataResponse, EditProfileDataResponse } from './interfaces';
+import { ProfileDataResponse, EditProfileDataResponse, BizGoalsDataResponse } from './interfaces';
 
 export function getProfileData(): Promise<ProfileDataResponse> {
   return http.get('setup/profile');
@@ -37,4 +37,8 @@ export function editProfileData(
       country,
     },
   });
+}
+
+export function getBizGoals(): Promise<BizGoalsDataResponse> {
+  return http.get('setup/goals');
 }
