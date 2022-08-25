@@ -7,31 +7,24 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { getProfileData } from './api';
-import { bizTypeMenu } from './settingsHelpers';
-
-const rmLogo = require('../../images/logoWide.png');
-
-const Sheets = {
-  bizTypeSheet: 'filter_sheet_bizType',
-  timeZoneSheet: 'filter_sheet_timeZone',
-};
 
 export default function BizGoalsScreen1(props: any) {
-  const [email, setEmail] = useState('');
-  const [bizType, setBizType] = useState('');
-  const [timeZone, setTimeZone] = useState('');
-  const [mobilePhone, setMobilePhone] = useState('');
+  const [netIncome, setNetIncome] = useState('');
+  const [taxRate, setTaxRate] = useState('');
+  const [annualExpenses, setAnnualExpenses] = useState('');
+  const [aveAmount, setAveAmount] = useState('');
+  const [aveCommission, setAveCommission] = useState('');
+  const [agentBrokerSplit, setAgentBrokerSplit] = useState('');
   const isFocused = useIsFocused();
-  const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Welcome',
+      title: 'Set Your Goals',
       headerLeft: () => <Button color="#fff" onPress={backPressed} title="Back" />,
       headerRight: () => <Button color="#fff" onPress={nextPressed} title="Next" />,
     });
-  }, [navigation, email, timeZone, mobilePhone, bizType]);
+  }, [navigation, netIncome, taxRate, annualExpenses, agentBrokerSplit]);
 
   useEffect(() => {
     let isMounted = true;
@@ -39,7 +32,7 @@ export default function BizGoalsScreen1(props: any) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isFocused]);
 
   function convertToParam(pretty: string) {
     if (pretty == 'Both') {
@@ -52,41 +45,29 @@ export default function BizGoalsScreen1(props: any) {
     //  console.log(timeZonesList);
 
     if (email == null || email == '') {
-      setEmail('');
+      setNetIncome('');
     } else {
-      setEmail(email);
+      setNetIncome(email);
     }
     if (bizType == null || bizType == '' || bizType == 'realtorAndLender') {
-      setBizType('Both');
+      setTaxRate('Both');
     } else {
-      setBizType(bizType);
+      setTaxRate(bizType);
     }
     if (bizType == 'realtor') {
-      setBizType('Realtor');
+      setTaxRate('Realtor');
     }
     if (bizType == 'lender') {
-      setBizType('Lender');
-    }
-    if (timeZone == null || timeZone == '') {
-      setTimeZone('');
-    } else {
-      setTimeZone(timeZone);
-    }
-    if (mobile == null || mobile == '') {
-      setMobilePhone('');
-    } else {
-      setMobilePhone(mobile);
+      setTaxRate('Lender');
     }
   }
 
   function businessTypePressed() {
     console.log('business type pressed');
-    SheetManager.show(Sheets.bizTypeSheet);
   }
 
   function timeZonePressed() {
     console.log('time zone pressed');
-    // SheetManager.show(Sheets.timeZoneSheet);
   }
 
   function backPressed() {
@@ -94,12 +75,12 @@ export default function BizGoalsScreen1(props: any) {
   }
 
   function nextPressed() {
-    console.log('biz type:' + convertToParam(bizType));
-    navigation.navigate('Profile2', {
-      email: email,
-      businessType: convertToParam(bizType),
-      timeZone: timeZone,
-      mobile: mobilePhone,
+    console.log('biz type:' + convertToParam(taxRate));
+    navigation.navigate('BizGoalsReview', {
+      email: netIncome,
+      businessType: convertToParam(taxRate),
+      timeZone: annualExpenses,
+      mobile: agentBrokerSplit,
     });
   }
 
@@ -122,18 +103,10 @@ export default function BizGoalsScreen1(props: any) {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.topView}>
-        <View style={styles.imageBox}>
-          <Image source={rmLogo} style={styles.logoImage} />
-        </View>
-        <Text style={styles.fieldText}>
-          Spend a few minutes with our setup wizard to maximize the lead genereration potential of your relationships.
-          Don't worry, we've made the process easy, and you can always come back and update or add info you might not
-          have today.
-        </Text>
-      </View>
-      <Text></Text>
-      <Text style={styles.nameTitle}>Email</Text>
+      <View style={styles.topView}></View>
+      <Text style={styles.nameTitle}>
+        How much money would you like to take home in the next 12 months? This is your net income.
+      </Text>
       <View style={styles.mainContent}>
         <View style={styles.inputView}>
           <TextInput
@@ -141,119 +114,13 @@ export default function BizGoalsScreen1(props: any) {
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            onChangeText={(text) => setEmail(text)}
-            defaultValue={email}
+            onChangeText={(text) => setNetIncome(text)}
+            defaultValue={netIncome}
           />
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>Business Type</Text>
-      <TouchableOpacity onPress={businessTypePressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{bizType}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <ActionSheet // Biz Type
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('bizType')}
-        id={Sheets.bizTypeSheet}
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={true}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.3}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={styles.filterView}
-          >
-            <View>
-              {Object.entries(bizTypeMenu).map(([key, value]) => (
-                <TouchableOpacity
-                  //  key={key}
-                  onPress={() => {
-                    SheetManager.hide(Sheets.bizTypeSheet, null);
-                    console.log('biz type: ' + value);
-                    setBizType(value);
-                  }}
-                  style={styles.listItemCell}
-                >
-                  <Text style={styles.listItem}>{key}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
-
-      <Text style={styles.nameTitle}>Time Zone</Text>
-      <TouchableOpacity onPress={timeZonePressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{timeZone}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <ActionSheet // Time Zone
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('timeZone')}
-        id={Sheets.timeZoneSheet}
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={true}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.3}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={styles.filterView}
-          >
-            <View>
-              {Object.entries(timeZone).map(([key, value]) => (
-                <TouchableOpacity
-                  //  key={key}
-                  onPress={() => {
-                    SheetManager.hide(Sheets.timeZoneSheet, null);
-                    console.log('time zone: ' + value);
-                    setTimeZone(value);
-                  }}
-                  style={styles.listItemCell}
-                >
-                  <Text style={styles.listItem}>{key}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
-
-      <Text style={styles.nameTitle}>Mobile Number</Text>
+      <Text style={styles.nameTitle}>What is your tax rate? An estimate is OK.</Text>
       <View style={styles.mainContent}>
         <View style={styles.inputView}>
           <TextInput
@@ -261,8 +128,71 @@ export default function BizGoalsScreen1(props: any) {
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            onChangeText={(text) => setMobilePhone(text)}
-            defaultValue={mobilePhone}
+            onChangeText={(text) => setTaxRate(text)}
+            defaultValue={taxRate}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>
+        Approximately how much are your annual business expenses? A ballpark figure is fine. It doesn't have to be
+        exact.
+      </Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setAnnualExpenses(text)}
+            defaultValue={annualExpenses}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>
+        What is your agent/broker split? What percent of your commission do you keep vs. what goes to the brokerage?
+      </Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setAgentBrokerSplit(text)}
+            defaultValue={agentBrokerSplit}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>
+        What is the average sales price/loan amount of the transactions you closed in the last 12 months?
+      </Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setAveAmount(text)}
+            defaultValue={aveAmount}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>What is the average commission you receive for each transactions?</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setAveCommission(text)}
+            defaultValue={aveCommission}
           />
         </View>
       </View>
@@ -279,8 +209,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   topView: {
-    height: 190,
+    height: 20,
     flexDirection: 'column',
+    paddingLeft: 10,
+    paddingRight: 10,
     borderWidth: 0.5,
     borderTopColor: 'white',
     borderBottomColor: '#1A6295',
@@ -314,7 +246,7 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: 20,
     fontWeight: '500',
-    marginBottom: 5,
+    marginBottom: 20,
     textAlign: 'left',
   },
   inputView: {

@@ -39,7 +39,7 @@ export default function SettingsScreen() {
   }
 
   function businessGoalsPressed() {
-    console.log('set your business goals');
+    navigation.navigate('BizGoalsStackNavigator');
   }
 
   function importPressed() {

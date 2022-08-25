@@ -26,6 +26,7 @@ import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
 import BizGoals from '../screens/Settings/BizGoalsScreen';
+import BizGoalsReview from '../screens/Settings/BizGoalsReviewScreen';
 import LandingScreen from '../screens/Settings/LandingScreen';
 import RelOrderScreen from '../screens/Settings/RelOrderScreen';
 import LightOrDarkScreen from '../screens/Settings/LightOrDarkScreen';
@@ -259,6 +260,19 @@ export const BizGoalsStackNavigator = () => {
           headerBackVisible: true,
         }}
       />
+
+      <Stack.Screen
+        name="BizGoalsReview"
+        component={BizGoalsReview}
+        options={{
+          title: 'Welcome',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -321,7 +335,7 @@ export const SettingsStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="BizGoalsStacckNavigator"
+        name="BizGoalsStackNavigator"
         component={BizGoalsStackNavigator}
         options={{
           headerBackVisible: true,
