@@ -18,4 +18,4 @@ export function getRolodexData(type: string): Promise<RolodexDataResponse> {
 
 export function getRolodexSearch(searchParam: string): Promise<RolodexDataResponse> {
   return http.get(`contacts?batchSize=50&lastItem=0&sortType=alpha&search=${searchParam}`);
-} // bac
+}

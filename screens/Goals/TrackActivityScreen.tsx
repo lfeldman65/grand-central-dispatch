@@ -1,18 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+//import ChooseRelationship from '../Goals/ChooseRelationship';
 import { RolodexDataProps, RelProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+import { trackAction } from './api';
+
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
-  const { onSave, setModalVisible, trackTitle } = props;
+  const { setModalVisible, trackTitle } = props;
   const [note, onNoteChange] = useState('Some notes 25');
   const [lightOrDark, setIsLightOrDark] = useState('');
-  const [relName, setRelName] = useState<RolodexDataProps[]>([]);
+  const [relationship, setRelationship] = useState<RolodexDataProps>();
   const [goal, setGoal] = useState('Calls Made');
   const [date, setDate] = useState(new Date());
   const [subject, setSubject] = useState('');
@@ -22,14 +25,15 @@ export default function TrackActivityScreen(props: any) {
   const actionSheetRef = useRef<ActionSheet>(null);
   const isFocused = useIsFocused();
 
-  var newAttendees = new Array();
-  relName.forEach((item, index) => {
-    var attendeeProps: RelProps = {
-      id: item.id,
-      name: item.firstName,
-    };
-    newAttendees.push(attendeeProps);
-  });
+  const Sheets = {
+    goalSheet: 'filter_sheet_goals',
+  };
+
+  const activityGoalMenu = {
+    'Calls Made': 'Calls Made',
+    'Notes Written': 'Notes Written',
+    'Pop-Bys': 'Pop-Bys',
+  };
 
   function handleRelPressed() {
     setModalRelVisible(!modalRelVisible);
@@ -37,7 +41,19 @@ export default function TrackActivityScreen(props: any) {
 
   function handleGoalPressed() {
     console.log('activity goal pressed');
+    SheetManager.show(Sheets.goalSheet);
   }
+
+  function showDatePicker() {
+    setShowDate(true);
+  }
+
+  const onDatePickerChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setShowDate(false);
+    setDate(currentDate);
+  };
 
   function makeParam(menuItem: string) {
     console.log('A Make param: ' + menuItem);
@@ -53,17 +69,41 @@ export default function TrackActivityScreen(props: any) {
     return 'other';
   }
 
-  function savePressed() {
-    setModalVisible(false);
-    console.log('A: goal ' + goal);
-    var param = makeParam(goal);
-    console.log('A: param: ' + param);
-    onSave(note, param);
-  }
-
   function cancelPressed() {
     setModalVisible(false);
   }
+
+  function savePressed() {
+    if (relationship?.id == null) {
+      Alert.alert('Please Choose a Relationship');
+      return;
+    }
+    var param = makeParam(goal);
+    console.log('goal: ' + param);
+    console.log('note: ' + note);
+    trackActivityAPI(relationship?.id!, param, note);
+  }
+
+  function trackActivityAPI(contactId: string, type: string, note: string) {
+    trackAction(contactId, type, note)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 'error') {
+          console.error(res.error);
+          setModalVisible(false);
+        } else {
+          setModalVisible(false);
+        }
+      })
+      .catch((error) => {
+        console.log('complete error' + error);
+        setModalVisible(false);
+      });
+  }
+
+  useEffect(() => {
+    onNoteChange(subject);
+  }, [subject]);
 
   useEffect(() => {
     getDarkOrLightMode();
@@ -89,26 +129,15 @@ export default function TrackActivityScreen(props: any) {
       </View>
 
       <Text style={styles.fieldTitle}>Relationship</Text>
-      {relName.length > 0 &&
-        relName.map((item, index) => (
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={styles.textInput} onPress={handleRelPressed}>
-                {item.firstName}
-              </Text>
-            </View>
-          </View>
-        ))}
-
-      {relName.length == 0 && (
+      <TouchableOpacity onPress={handleRelPressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput} onPress={handleRelPressed}>
-              + Add
-            </Text>
+            <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+              {relationship == null ? '' : relationship.firstName + ' ' + relationship.lastName}
+            </TextInput>
           </View>
         </View>
-      )}
+      </TouchableOpacity>
 
       <Text style={styles.fieldTitle}>Activity Goal</Text>
       <TouchableOpacity onPress={handleGoalPressed}>
@@ -118,6 +147,50 @@ export default function TrackActivityScreen(props: any) {
           </View>
         </View>
       </TouchableOpacity>
+
+      <ActionSheet
+        initialOffsetFromBottom={10}
+        onBeforeShow={(data) => console.log('recurrence sheet')}
+        id={Sheets.goalSheet}
+        ref={actionSheetRef}
+        statusBarTranslucent
+        bounceOnOpen={true}
+        drawUnderStatusBar={true}
+        bounciness={4}
+        gestureEnabled={true}
+        bottomOffset={40}
+        defaultOverlayOpacity={0.3}
+      >
+        <View
+          style={{
+            paddingHorizontal: 12,
+          }}
+        >
+          <ScrollView
+            nestedScrollEnabled
+            onMomentumScrollEnd={() => {
+              actionSheetRef.current?.handleChildScrollEnd();
+            }}
+            style={styles.filterView}
+          >
+            <View>
+              {Object.entries(activityGoalMenu).map(([key, value]) => (
+                <TouchableOpacity
+                  key={key}
+                  onPress={() => {
+                    SheetManager.hide(Sheets.goalSheet, null);
+                    console.log('goal: ' + value);
+                    setGoal(value);
+                  }}
+                  style={styles.listItemCell}
+                >
+                  <Text style={styles.listItem}>{key}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      </ActionSheet>
 
       <Text style={styles.fieldTitle}>Subject</Text>
       <View style={styles.mainContent}>
@@ -132,6 +205,90 @@ export default function TrackActivityScreen(props: any) {
           />
         </View>
       </View>
+
+      <Text style={styles.fieldTitle}>Date</Text>
+      <TouchableOpacity onPress={showDatePicker}>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <Text style={styles.textInput}>
+              {date.toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+              })}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      {showDate && (
+        <TouchableOpacity
+          onPress={() => {
+            setShowDate(false);
+          }}
+        >
+          <Text style={styles.saveButton}>Close</Text>
+        </TouchableOpacity>
+      )}
+
+      {showDate && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={'date'}
+          is24Hour={true}
+          onChange={onDatePickerChange}
+          display="spinner"
+          textColor="white"
+        />
+      )}
+
+      <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+        size={25}
+        textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+        fillColor="#37C0FF"
+        unfillColor="#004F89"
+        iconStyle={{ borderColor: 'white' }}
+        text="I asked for a referral"
+        textContainerStyle={{ marginLeft: 10 }}
+        style={styles.checkBox}
+        onPress={(isChecked: boolean) => {
+          console.log(isChecked);
+          setAskedReferral(!askedReferral);
+        }}
+      />
+
+      <Text style={styles.fieldTitle}>Notes</Text>
+      <View style={styles.mainContent}>
+        <View style={lightOrDark == 'dark' ? styles.inputViewDark : styles.inputViewLight}>
+          <TextInput
+            style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
+            placeholder="Type Here"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            value={note}
+            onChangeText={onNoteChange}
+          />
+        </View>
+      </View>
+      {modalRelVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalRelVisible}
+          onRequestClose={() => {
+            setModalRelVisible(!modalRelVisible);
+          }}
+        >
+          {/* <ChooseRelationship
+            title="Choose Relationship"
+            setModalRelVisible={setModalRelVisible}
+            setSelectedRel={setRelationship}
+          /> */}
+        </Modal>
+      )}
     </View>
   );
 }
@@ -191,8 +348,6 @@ const styles = StyleSheet.create({
   nameLabel: {
     color: 'white',
     fontSize: 18,
-    marginLeft: 20,
-    marginTop: 10,
   },
   pageTitle: {
     color: 'white',
@@ -218,7 +373,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'black',
     width: '90%',
-    height: '50%',
+    height: '45%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
@@ -228,7 +383,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'white',
     width: '90%',
-    height: '50%',
+    height: '45%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,

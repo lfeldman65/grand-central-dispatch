@@ -7,7 +7,7 @@ import { Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import { isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
-import { getGoalData, trackAction } from './api';
+import { getGoalData } from './api';
 import { storage } from '../../utils/storage';
 import TrackActivity from './TrackActivityScreen';
 
@@ -201,47 +201,6 @@ export default function GoalsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function saveComplete(note: string, goal: string) {
-    var guid = 'e9e7dfeb-b909-412e-ac88-ceb2109d08d7';
-    var type = 'call';
-    console.log('B goal: ' + goal);
-    //  completeEvent(guid, type, note);
-    completeEvent(guid, goal, note);
-  }
-
-  function completeEvent(contactId: string, type: string, note: string) {
-    setIsLoading(true);
-    console.log('C type: ' + type);
-    trackActivityAPI(contactId, type, note, trackSuccess, trackFailure);
-  }
-
-  function trackActivityAPI(contactId: string, type: string, note: string, onSuccess: any, onFailure: any) {
-    console.log('D type: ' + type);
-    trackAction(contactId, type, note)
-      .then((res) => {
-        console.log(res);
-        if (res.status == 'error') {
-          console.error(res.error);
-          onFailure();
-        } else {
-          onSuccess();
-        }
-      })
-      .catch((error) => {
-        onFailure();
-        console.log('complete error' + error);
-      });
-  }
-
-  function trackSuccess() {
-    setIsLoading(false);
-  }
-
-  function trackFailure() {
-    setIsLoading(false);
-    console.log('track failure');
-  }
-
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
@@ -324,7 +283,7 @@ export default function GoalsScreen() {
               setModalVisible(!modalVisible);
             }}
           >
-            <TrackActivity trackTitle="Track Activity Goal" onSave={saveComplete} setModalVisible={setModalVisible} />
+            <TrackActivity trackTitle="Track Activity Goal" setModalVisible={setModalVisible} />
           </Modal>
         )}
       </View>
@@ -427,7 +386,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontSize: 18,
-    // justifyContent: 'center',
     marginBottom: 12,
   },
 });
