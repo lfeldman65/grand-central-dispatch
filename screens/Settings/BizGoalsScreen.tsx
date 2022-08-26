@@ -4,8 +4,6 @@ import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
-import globalStyles from '../../globalStyles';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { getBizGoals } from './api';
 
 export default function BizGoalsScreen1(props: any) {
@@ -13,8 +11,8 @@ export default function BizGoalsScreen1(props: any) {
   const [taxRate, setTaxRate] = useState('');
   const [annualExpenses, setAnnualExpenses] = useState('');
   const [aveAmount, setAveAmount] = useState('');
-  const [aveCommission, setAveCommission] = useState('');
   const [agentBrokerSplit, setAgentBrokerSplit] = useState('');
+  const [aveCommission, setAveCommission] = useState('');
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
@@ -22,9 +20,9 @@ export default function BizGoalsScreen1(props: any) {
     navigation.setOptions({
       title: 'Set Your Goals',
       headerLeft: () => <Button color="#fff" onPress={backPressed} title="Back" />,
-      headerRight: () => <Button color="#fff" onPress={nextPressed} title="Next" />,
+      headerRight: () => <Button color="#fff" onPress={reviewPressed} title="Review" />,
     });
-  }, [navigation, netIncome, taxRate, annualExpenses, agentBrokerSplit]);
+  }, [navigation, netIncome, taxRate, annualExpenses, aveAmount, agentBrokerSplit, aveCommission]);
 
   useEffect(() => {
     let isMounted = true;
@@ -87,13 +85,14 @@ export default function BizGoalsScreen1(props: any) {
     navigation.goBack();
   }
 
-  function nextPressed() {
-    console.log('biz type:' + convertToParam(taxRate));
+  function reviewPressed() {
     navigation.navigate('BizGoalsReview', {
-      email: netIncome,
-      businessType: convertToParam(taxRate),
-      timeZone: annualExpenses,
-      mobile: agentBrokerSplit,
+      netIncome: netIncome,
+      taxRate: convertToParam(taxRate),
+      annualExpenses: annualExpenses,
+      aveAmount: aveAmount,
+      agentBrokerSplit: agentBrokerSplit,
+      aveCommission: aveCommission,
     });
   }
 

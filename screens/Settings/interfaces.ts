@@ -65,3 +65,21 @@ export interface BizGoalsDataProps {
   averageSaleCommission: string;
   commissionType: string;
 }
+
+// Settings Goal Summary in Postman
+
+export interface BizGoalsSummaryDataResponse {
+  data: BizGoalsSummaryDataProps;
+  error: string;
+  status: string;
+}
+
+export interface BizGoalsSummaryDataProps {
+  yearlyNetIncome: string;
+  yearlyGrossIncome: string;
+  yearlyTransactions: string;
+  yearlyReferrals: string;
+  yearlyContacts: string;
+  monthlyNetIncome: string;
+  monthlyGrossIncome: string;
+}

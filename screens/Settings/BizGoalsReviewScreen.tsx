@@ -6,40 +6,30 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
-import { getProfileData, editProfileData } from './api';
-import { ProfileDataProps } from './interfaces';
+import { getBizGoalsSummary } from './api';
 
 export default function BizGoalsReviewScreen(props: any) {
   const { route } = props;
-  const { email, businessType, timeZone, mobile } = route.params;
+  const { netIncome, taxRate, annualExpenses, aveAmount, agentBrokerSplit, aveComm } = route.params;
   const isFocused = useIsFocused();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [company, setCompany] = useState('');
-  const [street1, setStreet1] = useState('');
-  const [street2, setStreet2] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zip, setZip] = useState('');
-  const [country, setCountry] = useState('');
   const navigation = useNavigation<any>();
 
   useEffect(() => {
     navigation.setOptions({
       title: 'Goals Review',
-      headerRight: () => <Button color="#fff" onPress={donePressed} title="Done" />,
+      headerRight: () => <Button color="#fff" onPress={savePressed} title="Save" />,
     });
-  }, [navigation, firstName, lastName, company, street1, street2, city, state, zip, country]);
+  }, [navigation]);
 
   useEffect(() => {
     let isMounted = true;
-    fetchProfile(isMounted);
+    fetchGoalSummary(isMounted);
     return () => {
       isMounted = false;
     };
   }, [isFocused]);
 
-  function donePressed() {
+  function savePressed() {
     // editProfileData(
     //   email,
     //   businessType,
@@ -66,35 +56,19 @@ export default function BizGoalsReviewScreen(props: any) {
     //   .catch((error) => console.error('failure ' + error));
   }
 
-  function initializeFields(firstName?: string, lastName?: string, companyName?: string) {
-    if (firstName == null || firstName == '') {
-      setFirstName('');
-    } else {
-      setFirstName(firstName);
-    }
-    if (lastName == null || lastName == '') {
-      setLastName('');
-    } else {
-      setLastName(lastName);
-    }
-    if (companyName == null || companyName == '') {
-      setCompany('');
-    } else {
-      setCompany(companyName);
-    }
-  }
+  function initializeFields(firstName?: string, lastName?: string, companyName?: string) {}
 
-  function fetchProfile(isMounted: boolean) {
+  function fetchGoalSummary(isMounted: boolean) {
     if (!isMounted) {
       return;
     }
-    getProfileData()
+    getBizGoalsSummary()
       .then((res) => {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
           console.log(res.data);
-          initializeFields(res.data.firstName, res.data.lastName, res.data.companyName);
+          //   initializeFields(res.data.firstName, res.data.lastName, res.data.companyName);
         }
       })
       .catch((error) => console.error('failure ' + error));
@@ -103,7 +77,12 @@ export default function BizGoalsReviewScreen(props: any) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topView}></View>
-      <Text></Text>
+      <Text>{netIncome}</Text>
+      <Text>{taxRate}</Text>
+      <Text>{annualExpenses}</Text>
+      <Text>{aveAmount}</Text>
+      <Text>{agentBrokerSplit}</Text>
+      <Text>{aveComm}</Text>
     </ScrollView>
   );
 }
