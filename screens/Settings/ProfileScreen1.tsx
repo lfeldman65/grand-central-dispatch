@@ -186,7 +186,7 @@ export default function ProfileScreen1(props: any) {
             <View>
               {Object.entries(bizTypeMenu).map(([key, value]) => (
                 <TouchableOpacity
-                  //  key={key}
+                  key={'bizType'}
                   onPress={() => {
                     SheetManager.hide(Sheets.bizTypeSheet, null);
                     console.log('biz type: ' + value);
@@ -239,7 +239,7 @@ export default function ProfileScreen1(props: any) {
             <View>
               {Object.entries(timeZone).map(([key, value]) => (
                 <TouchableOpacity
-                  //  key={key}
+                  key={'timeZone'}
                   onPress={() => {
                     SheetManager.hide(Sheets.timeZoneSheet, null);
                     console.log('time zone: ' + value);
