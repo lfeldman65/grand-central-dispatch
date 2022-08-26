@@ -12,6 +12,7 @@ import { ProfileDataProps } from './interfaces';
 export default function ProfileScreen2(props: any) {
   const { route } = props;
   const { email, businessType, timeZone, mobile } = route.params;
+  // const [profileData, setProfileData] = useState<ProfileDataProps>();
   const isFocused = useIsFocused();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -27,7 +28,7 @@ export default function ProfileScreen2(props: any) {
   useEffect(() => {
     navigation.setOptions({
       title: 'Mailing Address',
-      headerRight: () => <Button color="#fff" onPress={donePressed} title="Done" />,
+      headerRight: () => <Button color="#fff" onPress={savePressed} title="Save" />,
     });
   }, [navigation, firstName, lastName, company, street1, street2, city, state, zip, country]);
 
@@ -39,7 +40,7 @@ export default function ProfileScreen2(props: any) {
     };
   }, [isFocused]);
 
-  function donePressed() {
+  function savePressed() {
     editProfileData(
       email,
       businessType,
@@ -48,12 +49,12 @@ export default function ProfileScreen2(props: any) {
       firstName,
       lastName,
       company,
-      'stree1',
-      'street2',
-      'city',
-      'state',
-      'zip',
-      'country'
+      street1,
+      street2,
+      city,
+      state,
+      zip,
+      country
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -66,7 +67,17 @@ export default function ProfileScreen2(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function initializeFields(firstName?: string, lastName?: string, companyName?: string) {
+  function initializeFields(
+    firstName?: string,
+    lastName?: string,
+    companyName?: string,
+    street1?: string,
+    street2?: string,
+    city?: string,
+    state?: string,
+    zip?: string,
+    country?: string
+  ) {
     if (firstName == null || firstName == '') {
       setFirstName('');
     } else {
@@ -82,6 +93,36 @@ export default function ProfileScreen2(props: any) {
     } else {
       setCompany(companyName);
     }
+    if (street1 == null || street1 == '') {
+      setStreet1('');
+    } else {
+      setStreet1(street1);
+    }
+    if (street2 == null || street2 == '') {
+      setStreet2('');
+    } else {
+      setStreet2(street2);
+    }
+    if (city == null || city == '') {
+      setCity('');
+    } else {
+      setCity(city);
+    }
+    if (state == null || state == '') {
+      setState('');
+    } else {
+      setState(state);
+    }
+    if (zip == null || zip == '') {
+      setZip('');
+    } else {
+      setZip(zip);
+    }
+    if (country == null || country == '') {
+      setCountry('');
+    } else {
+      setCountry(country);
+    }
   }
 
   function fetchProfile(isMounted: boolean) {
@@ -93,8 +134,19 @@ export default function ProfileScreen2(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
+          //  setProfileData(res.data);
           console.log(res.data);
-          initializeFields(res.data.firstName, res.data.lastName, res.data.companyName);
+          initializeFields(
+            res.data.firstName,
+            res.data.lastName,
+            res.data.companyName,
+            res.data.street1,
+            res.data.street2,
+            res.data.city,
+            res.data.state,
+            res.data.zip,
+            res.data.country
+          );
         }
       })
       .catch((error) => console.error('failure ' + error));
@@ -148,6 +200,90 @@ export default function ProfileScreen2(props: any) {
             textAlign="left"
             onChangeText={(text) => setCompany(text)}
             defaultValue={company}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Street 1</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setStreet1(text)}
+            defaultValue={street1}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Street 2</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setStreet2(text)}
+            defaultValue={street2}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>City</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setCity(text)}
+            defaultValue={city}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>State / Province</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setState(text)}
+            defaultValue={state}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Zip / Postal Code</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setZip(text)}
+            defaultValue={zip}
+          />
+        </View>
+      </View>
+
+      <Text style={styles.nameTitle}>Country</Text>
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setCountry(text)}
+            defaultValue={country}
           />
         </View>
       </View>
