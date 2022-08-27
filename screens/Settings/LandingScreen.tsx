@@ -76,7 +76,7 @@ export default function LandingScreen(props: any) {
   }
 
   return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+    <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       {landingPages.map((item, index) => (
         <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>{landingPages[index]}</Text>
@@ -98,7 +98,7 @@ export default function LandingScreen(props: any) {
           </View>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
