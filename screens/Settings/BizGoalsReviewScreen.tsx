@@ -1,5 +1,5 @@
 import { Fragment, useLayoutEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
@@ -7,11 +7,13 @@ import { analytics } from '../../utils/analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import { getBizGoalsSummary } from './api';
+import { BizGoalsSummaryDataProps } from './interfaces';
 
 export default function BizGoalsReviewScreen(props: any) {
   const { route } = props;
   const { netIncome, taxRate, annualExpenses, aveAmount, agentBrokerSplit, aveComm } = route.params;
   const isFocused = useIsFocused();
+  const [summaryData, setSummaryData] = useState<BizGoalsSummaryDataProps>();
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -56,8 +58,6 @@ export default function BizGoalsReviewScreen(props: any) {
     //   .catch((error) => console.error('failure ' + error));
   }
 
-  function initializeFields(firstName?: string, lastName?: string, companyName?: string) {}
-
   function fetchGoalSummary(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -68,7 +68,7 @@ export default function BizGoalsReviewScreen(props: any) {
           console.error(res.error);
         } else {
           console.log(res.data);
-          //   initializeFields(res.data.firstName, res.data.lastName, res.data.companyName);
+          setSummaryData(res.data);
         }
       })
       .catch((error) => console.error('failure ' + error));
@@ -76,47 +76,34 @@ export default function BizGoalsReviewScreen(props: any) {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.topView}></View>
-      <Text>{netIncome}</Text>
-      <Text>{taxRate}</Text>
-      <Text>{annualExpenses}</Text>
-      <Text>{aveAmount}</Text>
-      <Text>{agentBrokerSplit}</Text>
-      <Text>{aveComm}</Text>
+      <Text style={styles.headerLight}>Yearly Income Goals</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Net Income</Text>
+      <Text style={styles.nameTitle}>{summaryData?.yearlyNetIncome}</Text>
+      <Text style={styles.headerLight}>Monthly Income Goals</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.headerLight}>Recommended Weekly Activities</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.headerLight}>Recommended Daily Activities</Text>
+      <View style={styles.dividingLine}></View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#1A6295',
+    backgroundColor: 'white',
     height: '100%',
   },
   mainContent: {
     alignItems: 'center',
   },
-  topView: {
-    height: 20,
-    flexDirection: 'column',
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderWidth: 0.5,
-    borderTopColor: 'white',
-    borderBottomColor: '#1A6295',
-  },
-  imageBox: {
-    width: 200,
-    height: 30,
-    marginTop: 20,
-    marginRight: 30,
-    alignSelf: 'center',
-  },
-  logoImage: {
-    height: 30,
-    width: 200,
+  sectionHeader: {
+    fontSize: 14,
+    color: 'gray',
     marginLeft: 15,
-    marginRight: 5,
-    alignItems: 'center',
+    marginBottom: 1,
+    marginTop: 10,
   },
   fieldText: {
     marginTop: 20,
@@ -124,16 +111,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 15,
   },
-  textInput: {
-    fontSize: 18,
-    color: '#FFFFFF',
-    width: 300,
-  },
   nameTitle: {
-    color: 'white',
+    color: 'gray',
+    marginTop: 10,
     marginLeft: 20,
-    fontWeight: '500',
-    marginBottom: 5,
+    marginBottom: 10,
     textAlign: 'left',
   },
   inputView: {
@@ -162,5 +144,25 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignItems: 'center',
     textAlign: 'center',
+  },
+  dividingLine: {
+    backgroundColor: 'lightgray',
+    height: 1,
+  },
+  headerDark: {
+    fontSize: 18,
+    color: 'white',
+    marginLeft: 15,
+    marginTop: 10,
+    marginBottom: 10,
+    fontWeight: '500',
+  },
+  headerLight: {
+    fontSize: 18,
+    color: 'black',
+    marginLeft: 15,
+    marginTop: 10,
+    marginBottom: 10,
+    fontWeight: '500',
   },
 });

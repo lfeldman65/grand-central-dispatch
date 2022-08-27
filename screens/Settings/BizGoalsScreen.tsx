@@ -236,20 +236,6 @@ const styles = StyleSheet.create({
     borderTopColor: 'white',
     borderBottomColor: '#1A6295',
   },
-  imageBox: {
-    width: 200,
-    height: 30,
-    marginTop: 20,
-    marginRight: 30,
-    alignSelf: 'center',
-  },
-  logoImage: {
-    height: 30,
-    width: 200,
-    marginLeft: 15,
-    marginRight: 5,
-    alignItems: 'center',
-  },
   fieldText: {
     marginTop: 20,
     color: 'white',
@@ -277,22 +263,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 10,
     fontSize: 29,
-  },
-  filterView: {
-    width: '100%',
-    padding: 12,
-  },
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
   },
 });
