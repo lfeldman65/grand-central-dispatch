@@ -82,4 +82,13 @@ export interface BizGoalsSummaryDataProps {
   yearlyContacts: string;
   monthlyNetIncome: string;
   monthlyGrossIncome: string;
+  monthlyTransactions: string;
+  monthlyReferrals: string;
+  monthlyContacts: string;
+  weeklyCalls: number;
+  weeklyNotes: number;
+  weeklyPopBys: number;
+  dailyCalls: number;
+  dailyNotes: number;
+  dailyPopBys: number;
 }

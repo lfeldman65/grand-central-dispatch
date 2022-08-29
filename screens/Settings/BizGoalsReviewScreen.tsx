@@ -8,12 +8,14 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import { getBizGoalsSummary } from './api';
 import { BizGoalsSummaryDataProps } from './interfaces';
+import { storage } from '../../utils/storage';
 
 export default function BizGoalsReviewScreen(props: any) {
   const { route } = props;
   const { netIncome, taxRate, annualExpenses, aveAmount, agentBrokerSplit, aveComm } = route.params;
   const isFocused = useIsFocused();
   const [summaryData, setSummaryData] = useState<BizGoalsSummaryDataProps>();
+  const [lightOrDark, setIsLightOrDark] = useState('');
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -30,6 +32,22 @@ export default function BizGoalsReviewScreen(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
 
   function savePressed() {
     // editProfileData(
@@ -75,26 +93,76 @@ export default function BizGoalsReviewScreen(props: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.headerLight}>Yearly Income Goals</Text>
+    <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+      <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Yearly Income Goals</Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Net Income</Text>
-      <Text style={styles.nameTitle}>{summaryData?.yearlyNetIncome}</Text>
-      <Text style={styles.headerLight}>Monthly Income Goals</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {'$' + summaryData?.yearlyNetIncome}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Gross Income</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {'$' + summaryData?.yearlyGrossIncome}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Transactions</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.yearlyTransactions}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Referrals</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.yearlyReferrals}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Voice-to-Voice or Face-to-Face Contacts</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.yearlyContacts}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Monthly Income Goals</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Net Income</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {'$' + summaryData?.monthlyNetIncome}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Gross Income</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {'$' + summaryData?.monthlyGrossIncome}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Transactions</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.monthlyTransactions}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Referrals</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.monthlyReferrals}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Voice-to-Voice or Face-to-Face Contacts</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.monthlyContacts}</Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.headerLight}>Recommended Weekly Activities</Text>
       <View style={styles.dividingLine}></View>
-      <Text style={styles.headerLight}>Recommended Daily Activities</Text>
+      <Text style={styles.nameTitle}>Calls</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyCalls}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Notes</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyNotes}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Calls</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyPopBys}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Recommended Daily Activities</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Calls</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.dailyCalls}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Notes</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.dailyNotes}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Calls</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.dailyPopBys}</Text>
       <View style={styles.dividingLine}></View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    height: '100%',
-  },
   mainContent: {
     alignItems: 'center',
   },
@@ -105,11 +173,19 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     marginTop: 10,
   },
-  fieldText: {
-    marginTop: 20,
+  dataDark: {
+    marginTop: 5,
+    marginBottom: 10,
     color: 'white',
     fontSize: 16,
-    marginLeft: 15,
+    marginLeft: 20,
+  },
+  dataLight: {
+    marginTop: 5,
+    marginBottom: 10,
+    color: 'black',
+    fontSize: 16,
+    marginLeft: 20,
   },
   nameTitle: {
     color: 'gray',
@@ -117,33 +193,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: 10,
     textAlign: 'left',
-  },
-  inputView: {
-    backgroundColor: '#002341',
-    width: '90%',
-    height: 50,
-    marginBottom: 20,
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    fontSize: 29,
-  },
-  filterView: {
-    width: '100%',
-    padding: 12,
-  },
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
+    fontSize: 16,
   },
   dividingLine: {
     backgroundColor: 'lightgray',
@@ -152,7 +202,7 @@ const styles = StyleSheet.create({
   headerDark: {
     fontSize: 18,
     color: 'white',
-    marginLeft: 15,
+    marginLeft: 20,
     marginTop: 10,
     marginBottom: 10,
     fontWeight: '500',
@@ -160,7 +210,7 @@ const styles = StyleSheet.create({
   headerLight: {
     fontSize: 18,
     color: 'black',
-    marginLeft: 15,
+    marginLeft: 20,
     marginTop: 10,
     marginBottom: 10,
     fontWeight: '500',
