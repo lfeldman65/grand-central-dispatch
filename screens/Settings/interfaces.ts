@@ -92,3 +92,21 @@ export interface BizGoalsSummaryDataProps {
   dailyNotes: number;
   dailyPopBys: number;
 }
+
+// About US in Postman
+
+export interface AboutUsDataProps {
+  id: number;
+  title: string;
+  url: string;
+  imageUrl: string;
+  duration: number;
+  authorName: string;
+  type: string;
+}
+
+export interface AboutUsDataResponse {
+  data: AboutUsDataProps[];
+  error: string;
+  status: string;
+}

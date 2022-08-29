@@ -75,7 +75,7 @@ export default function SettingsScreen() {
   }
 
   function aboutUsPressed() {
-    console.log('about us');
+    navigation.navigate('AboutUsScreen');
   }
 
   function ratePressed() {

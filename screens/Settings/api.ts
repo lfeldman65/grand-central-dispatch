@@ -4,6 +4,7 @@ import {
   EditProfileDataResponse,
   BizGoalsDataResponse,
   BizGoalsSummaryDataResponse,
+  AboutUsDataResponse,
 } from './interfaces';
 
 export function getProfileData(): Promise<ProfileDataResponse> {
@@ -50,4 +51,8 @@ export function getBizGoals(): Promise<BizGoalsDataResponse> {
 
 export function getBizGoalsSummary(): Promise<BizGoalsSummaryDataResponse> {
   return http.get('setup/goalSummary');
+}
+
+export function getMedia(type: string): Promise<AboutUsDataResponse> {
+  return http.get(`media?batchSize=20&lastItem=0&type=${type}`);
 }
