@@ -49,10 +49,32 @@ export function getBizGoals(): Promise<BizGoalsDataResponse> {
   return http.get('setup/goals');
 }
 
+export function updateBizGoals(
+  desiredSalary: string,
+  taxRate: string,
+  yearlyExpenses: string,
+  myCommissionPercentage: string,
+  averageSalePrice: string,
+  averageSaleCommission: string,
+  commissionType: string
+): Promise<BizGoalsDataResponse> {
+  return http.put('setup/goals', {
+    body: {
+      desiredSalary,
+      taxRate,
+      yearlyExpenses,
+      myCommissionPercentage,
+      averageSalePrice,
+      averageSaleCommission,
+      commissionType,
+    },
+  });
+}
+
 export function getBizGoalsSummary(): Promise<BizGoalsSummaryDataResponse> {
   return http.get('setup/goalSummary');
 }
 
 export function getMedia(type: string): Promise<AboutUsDataResponse> {
-  return http.get(`media?batchSize=20&lastItem=0&type=${type}`);
+  return http.get(`media?batchSize=50&lastItem=0&type=${type}`);
 }

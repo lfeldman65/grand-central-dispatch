@@ -12,7 +12,7 @@ import { storage } from '../../utils/storage';
 
 export default function BizGoalsReviewScreen(props: any) {
   const { route } = props;
-  const { netIncome, taxRate, annualExpenses, aveAmount, agentBrokerSplit, aveComm } = route.params;
+  // const { netIncome, taxRate, annualExpenses, aveAmount, agentBrokerSplit, aveComm, commissionType } = route.params;
   const isFocused = useIsFocused();
   const [summaryData, setSummaryData] = useState<BizGoalsSummaryDataProps>();
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -50,30 +50,7 @@ export default function BizGoalsReviewScreen(props: any) {
   }
 
   function savePressed() {
-    // editProfileData(
-    //   email,
-    //   businessType,
-    //   timeZone,
-    //   mobile,
-    //   firstName,
-    //   lastName,
-    //   company,
-    //   'stree1',
-    //   'street2',
-    //   'city',
-    //   'state',
-    //   'zip',
-    //   'country'
-    // )
-    //   .then((res) => {
-    //     if (res.status == 'error') {
-    //       console.log(res);
-    //     } else {
-    //       console.log(res);
-    //       navigation.navigate('SettingsScreen');
-    //     }
-    //   })
-    //   .catch((error) => console.error('failure ' + error));
+    navigation.navigate('SettingsScreen');
   }
 
   function fetchGoalSummary(isMounted: boolean) {

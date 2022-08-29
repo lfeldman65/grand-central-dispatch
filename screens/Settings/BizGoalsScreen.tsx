@@ -4,10 +4,11 @@ import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
-import { getBizGoals } from './api';
+import { getBizGoals, updateBizGoals } from './api';
 
 export default function BizGoalsScreen1(props: any) {
   const [netIncome, setNetIncome] = useState('');
+  const [netIncomeBU, setNetIncomeBU] = useState('');
   const [taxRate, setTaxRate] = useState('');
   const [annualExpenses, setAnnualExpenses] = useState('');
   const [aveAmount, setAveAmount] = useState('');
@@ -32,13 +33,6 @@ export default function BizGoalsScreen1(props: any) {
     };
   }, [isFocused]);
 
-  function convertToParam(pretty: string) {
-    if (pretty == 'Both') {
-      return 'realtorAndLender';
-    }
-    return pretty;
-  }
-
   function initializeFields(
     desSal?: string,
     taxRate?: string,
@@ -50,8 +44,10 @@ export default function BizGoalsScreen1(props: any) {
   ) {
     if (desSal == null || desSal == '') {
       setNetIncome('');
+      setNetIncomeBU('');
     } else {
       setNetIncome(desSal);
+      setNetIncomeBU(desSal);
     }
     if (taxRate == null || taxRate == '') {
       setTaxRate('');
@@ -81,19 +77,33 @@ export default function BizGoalsScreen1(props: any) {
   }
 
   function backPressed() {
-    //  navigation.navigate('SettingsScreen');
     navigation.goBack();
   }
 
+  function goToReview() {
+    navigation.navigate('BizGoalsReview');
+    // navigation.navigate('BizGoalsReview', {
+    //   netIncome: netIncome, // desiredSalary
+    //   taxRate: taxRate, // taxRate
+    //   annualExpenses: annualExpenses, // yearlyExpenses
+    //   agentBrokerSplit: agentBrokerSplit,
+    //   aveAmount: aveAmount, // averageSalePrice
+    //   aveCommission: aveCommission, // averageSaleCommission
+    //   commissionType: 'dollar',
+    // });
+  }
+
   function reviewPressed() {
-    navigation.navigate('BizGoalsReview', {
-      netIncome: netIncome,
-      taxRate: convertToParam(taxRate),
-      annualExpenses: annualExpenses,
-      aveAmount: aveAmount,
-      agentBrokerSplit: agentBrokerSplit,
-      aveCommission: aveCommission,
-    });
+    updateBizGoals(netIncome, taxRate, annualExpenses, agentBrokerSplit, aveCommission, aveAmount, 'dollar')
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+        } else {
+          console.log(res);
+          goToReview();
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   function fetchBizGoals(isMounted: boolean) {

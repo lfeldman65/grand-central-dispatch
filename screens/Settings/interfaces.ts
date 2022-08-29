@@ -34,7 +34,7 @@ export interface EditProfileDataResponse {
 export interface EditProfileProps {
   email: string;
   businesstype: string;
-  timezonne: string;
+  timezone: string;
   mobile: string;
   firstName: string;
   lastName: string;
@@ -93,7 +93,7 @@ export interface BizGoalsSummaryDataProps {
   dailyPopBys: number;
 }
 
-// About US in Postman
+// About Us in Postman
 
 export interface AboutUsDataProps {
   id: number;
