@@ -136,7 +136,7 @@ export default function BizGoalsReviewScreen(props: any) {
       <Text style={styles.nameTitle}>Voice-to-Voice or Face-to-Face Contacts</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.monthlyContacts}</Text>
       <View style={styles.dividingLine}></View>
-      <Text style={styles.headerLight}>Recommended Weekly Activities</Text>
+      <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Recommended Weekly Activities</Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Calls</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyCalls}</Text>
