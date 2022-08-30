@@ -1,15 +1,16 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button, TextInput, Alert } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { getBizGoals, updateBizGoals } from './api';
+import { removeTrailingDecimal, removeLeadingDecimal } from './settingsHelpers';
 
 export default function BizGoalsScreen1(props: any) {
   const [netIncome, setNetIncome] = useState('');
   const [netIncomeBU, setNetIncomeBU] = useState('');
-  const [taxRate, setTaxRate] = useState('');
+  const [taxRatePercent, setTaxRatePercent] = useState('');
   const [annualExpenses, setAnnualExpenses] = useState('');
   const [aveAmount, setAveAmount] = useState('');
   const [agentBrokerSplit, setAgentBrokerSplit] = useState('');
@@ -23,7 +24,7 @@ export default function BizGoalsScreen1(props: any) {
       headerLeft: () => <Button color="#fff" onPress={backPressed} title="Back" />,
       headerRight: () => <Button color="#fff" onPress={reviewPressed} title="Review" />,
     });
-  }, [navigation, netIncome, taxRate, annualExpenses, aveAmount, agentBrokerSplit, aveCommission]);
+  }, [navigation, netIncome, taxRatePercent, annualExpenses, aveAmount, agentBrokerSplit, aveCommission]);
 
   useEffect(() => {
     let isMounted = true;
@@ -46,33 +47,33 @@ export default function BizGoalsScreen1(props: any) {
       setNetIncome('');
       setNetIncomeBU('');
     } else {
-      setNetIncome(desSal);
-      setNetIncomeBU(desSal);
+      setNetIncome(removeTrailingDecimal(desSal));
+      setNetIncomeBU(removeTrailingDecimal(desSal));
     }
     if (taxRate == null || taxRate == '') {
-      setTaxRate('');
+      setTaxRatePercent('');
     } else {
-      setTaxRate(taxRate);
+      setTaxRatePercent(removeLeadingDecimal(taxRate));
     }
     if (yearlyExp == null || yearlyExp == '') {
       setAnnualExpenses('');
     } else {
-      setAnnualExpenses(yearlyExp);
+      setAnnualExpenses(removeTrailingDecimal(yearlyExp));
     }
     if (commPercentage == null || commPercentage == '') {
       setAgentBrokerSplit('');
     } else {
-      setAgentBrokerSplit(commPercentage);
+      setAgentBrokerSplit(removeLeadingDecimal(commPercentage));
     }
     if (aveSalePrice == null || aveSalePrice == '') {
       setAveAmount('');
     } else {
-      setAveAmount(aveSalePrice);
+      setAveAmount(removeTrailingDecimal(aveSalePrice));
     }
     if (aveComm == null || aveComm == '') {
       setAveCommission('');
     } else {
-      setAveCommission(aveComm);
+      setAveCommission(removeTrailingDecimal(aveComm));
     }
   }
 
@@ -94,7 +95,19 @@ export default function BizGoalsScreen1(props: any) {
   }
 
   function reviewPressed() {
-    updateBizGoals(netIncome, taxRate, annualExpenses, agentBrokerSplit, aveCommission, aveAmount, 'dollar')
+    if (!validateFields()) {
+      Alert.alert('All fields are required');
+      return;
+    }
+    updateBizGoals(
+      netIncome,
+      '.' + taxRatePercent,
+      annualExpenses,
+      '.' + agentBrokerSplit,
+      aveAmount,
+      aveCommission,
+      'dollar'
+    )
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
@@ -104,6 +117,20 @@ export default function BizGoalsScreen1(props: any) {
         }
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  function validateFields() {
+    if (
+      netIncome == '' ||
+      taxRatePercent == '' ||
+      annualExpenses == '' ||
+      agentBrokerSplit == '' ||
+      aveAmount == '' ||
+      aveCommission == ''
+    ) {
+      return false;
+    }
+    return true;
   }
 
   function fetchBizGoals(isMounted: boolean) {
@@ -143,8 +170,9 @@ export default function BizGoalsScreen1(props: any) {
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            onChangeText={(text) => setNetIncome(text)}
-            defaultValue={netIncome}
+            onChangeText={(text) => setNetIncome(removeTrailingDecimal(text))}
+            defaultValue={removeTrailingDecimal(netIncome)}
+            keyboardType="number-pad"
           />
         </View>
       </View>
@@ -157,8 +185,9 @@ export default function BizGoalsScreen1(props: any) {
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            onChangeText={(text) => setTaxRate(text)}
-            defaultValue={taxRate}
+            onChangeText={(text) => setTaxRatePercent(text)}
+            defaultValue={taxRatePercent}
+            keyboardType="number-pad"
           />
         </View>
       </View>
@@ -174,8 +203,9 @@ export default function BizGoalsScreen1(props: any) {
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            onChangeText={(text) => setAnnualExpenses(text)}
-            defaultValue={annualExpenses}
+            onChangeText={(text) => setAnnualExpenses(removeTrailingDecimal(text))}
+            defaultValue={removeTrailingDecimal(annualExpenses)}
+            keyboardType="number-pad"
           />
         </View>
       </View>
@@ -192,6 +222,7 @@ export default function BizGoalsScreen1(props: any) {
             textAlign="left"
             onChangeText={(text) => setAgentBrokerSplit(text)}
             defaultValue={agentBrokerSplit}
+            keyboardType="number-pad"
           />
         </View>
       </View>
@@ -206,8 +237,9 @@ export default function BizGoalsScreen1(props: any) {
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            onChangeText={(text) => setAveAmount(text)}
-            defaultValue={aveAmount}
+            onChangeText={(text) => setAveAmount(removeTrailingDecimal(text))}
+            defaultValue={removeTrailingDecimal(aveAmount)}
+            keyboardType="number-pad"
           />
         </View>
       </View>
@@ -220,11 +252,13 @@ export default function BizGoalsScreen1(props: any) {
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            onChangeText={(text) => setAveCommission(text)}
-            defaultValue={aveCommission}
+            onChangeText={(text) => setAveCommission(removeTrailingDecimal(text))}
+            defaultValue={removeTrailingDecimal(aveCommission)}
+            keyboardType="number-pad"
           />
         </View>
       </View>
+      <View style={styles.bottom}></View>
     </ScrollView>
   );
 }
@@ -233,6 +267,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#1A6295',
     height: '100%',
+    borderWidth: 0.5,
+    borderTopColor: '#1A6295',
   },
   mainContent: {
     alignItems: 'center',
@@ -269,9 +305,11 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 50,
     marginBottom: 20,
-    alignItems: 'baseline',
     justifyContent: 'center',
     paddingLeft: 10,
     fontSize: 29,
+  },
+  bottom: {
+    height: 300,
   },
 });

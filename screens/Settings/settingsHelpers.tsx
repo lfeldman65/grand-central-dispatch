@@ -53,3 +53,22 @@ export function prettyText(uglyText: string) {
     return 'Dark';
   }
 }
+
+export function removeTrailingDecimal(value: string) {
+  // i.e. 3129.27 -> 3129
+  if (value.includes('.')) {
+    let noDecimalValue = value.split('.');
+    console.log(noDecimalValue[0]);
+    return noDecimalValue[0];
+  }
+  return value;
+}
+
+export function removeLeadingDecimal(value: string) {
+  // i.e. 3129.27 -> 27
+  if (value.includes('.')) {
+    let noDecimalValue = value.split('.');
+    return noDecimalValue[1];
+  }
+  return value;
+}
