@@ -9,12 +9,18 @@ import { removeTrailingDecimal, removeLeadingDecimal } from './settingsHelpers';
 
 export default function BizGoalsScreen1(props: any) {
   const [netIncome, setNetIncome] = useState('');
-  const [netIncomeBU, setNetIncomeBU] = useState('');
+  const [netIncomeBU, setNetIncomeBU] = useState(''); // BU = backup
   const [taxRatePercent, setTaxRatePercent] = useState('');
+  const [taxRatePercentBU, setTaxRatePercentBU] = useState('');
   const [annualExpenses, setAnnualExpenses] = useState('');
+  const [annualExpensesBU, setAnnualExpensesBU] = useState('');
   const [aveAmount, setAveAmount] = useState('');
+  const [aveAmountBU, setAveAmountBU] = useState('');
   const [agentBrokerSplit, setAgentBrokerSplit] = useState('');
+  const [agentBrokerSplitBU, setAgentBrokerSplitBU] = useState('');
   const [aveCommission, setAveCommission] = useState('');
+  const [aveCommissionBU, setAveCommissionBU] = useState('');
+  const [dollarOrPercent, setDollarOrPercent] = useState('dollar');
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
@@ -52,33 +58,65 @@ export default function BizGoalsScreen1(props: any) {
     }
     if (taxRate == null || taxRate == '') {
       setTaxRatePercent('');
+      setTaxRatePercentBU('');
     } else {
       setTaxRatePercent(removeLeadingDecimal(taxRate));
+      setTaxRatePercentBU(removeLeadingDecimal(taxRate));
     }
     if (yearlyExp == null || yearlyExp == '') {
       setAnnualExpenses('');
+      setAnnualExpensesBU('');
     } else {
       setAnnualExpenses(removeTrailingDecimal(yearlyExp));
+      setAnnualExpensesBU(removeTrailingDecimal(yearlyExp));
     }
     if (commPercentage == null || commPercentage == '') {
       setAgentBrokerSplit('');
+      setAgentBrokerSplitBU('');
     } else {
       setAgentBrokerSplit(removeLeadingDecimal(commPercentage));
+      setAgentBrokerSplitBU(removeLeadingDecimal(commPercentage));
     }
     if (aveSalePrice == null || aveSalePrice == '') {
       setAveAmount('');
+      setAveAmountBU('');
     } else {
       setAveAmount(removeTrailingDecimal(aveSalePrice));
+      setAveAmountBU(removeTrailingDecimal(aveSalePrice));
     }
     if (aveComm == null || aveComm == '') {
       setAveCommission('');
+      setAveCommissionBU('');
     } else {
       setAveCommission(removeTrailingDecimal(aveComm));
+      setAveCommissionBU(removeTrailingDecimal(aveComm));
     }
   }
 
   function backPressed() {
+    restoreFields();
     navigation.goBack();
+  }
+
+  function restoreFields() {
+    updateBizGoals(
+      netIncomeBU,
+      '.' + taxRatePercentBU,
+      annualExpensesBU,
+      '.' + agentBrokerSplitBU,
+      aveAmountBU,
+      aveCommissionBU,
+      'dollar'
+    )
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+        } else {
+          //   console.log(res);
+          goToReview();
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   function goToReview() {
@@ -112,7 +150,7 @@ export default function BizGoalsScreen1(props: any) {
         if (res.status == 'error') {
           console.log(res);
         } else {
-          console.log(res);
+          //   console.log(res);
           goToReview();
         }
       })
@@ -142,7 +180,7 @@ export default function BizGoalsScreen1(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res.data);
+          //  console.log(res.data);
           initializeFields(
             res.data.desiredSalary,
             res.data.taxRate,

@@ -42,7 +42,6 @@ export const notificationRowsNoVid = [
 ];
 
 export function prettyText(uglyText: string) {
-  console.log('ugly: ' + uglyText);
   if (uglyText == 'automatic') {
     return 'Automatic';
   }
@@ -56,19 +55,37 @@ export function prettyText(uglyText: string) {
 
 export function removeTrailingDecimal(value: string) {
   // i.e. 3129.27 -> 3129
+  if (value == null || value == '') {
+    return '';
+  }
+  console.log('value: ' + value);
   if (value.includes('.')) {
-    let noDecimalValue = value.split('.');
-    console.log(noDecimalValue[0]);
-    return noDecimalValue[0];
+    let pieces = value.split('.');
+    return pieces[0];
   }
   return value;
 }
 
 export function removeLeadingDecimal(value: string) {
   // i.e. 3129.27 -> 27
+  if (value == null || value == '') {
+    return '0';
+  }
   if (value.includes('.')) {
-    let noDecimalValue = value.split('.');
-    return noDecimalValue[1];
+    let pieces = value.split('.');
+    return pieces[1];
+  }
+  return value;
+}
+
+export function roundToInt(value: string) {
+  if (value == null || value == '') {
+    return '0';
+  }
+  if (value.includes('.')) {
+    let raw = parseFloat(value);
+    let round = Math.round(raw);
+    return round.toString();
   }
   return value;
 }

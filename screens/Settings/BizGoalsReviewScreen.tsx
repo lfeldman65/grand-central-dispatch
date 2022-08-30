@@ -9,6 +9,7 @@ import globalStyles from '../../globalStyles';
 import { getBizGoalsSummary } from './api';
 import { BizGoalsSummaryDataProps } from './interfaces';
 import { storage } from '../../utils/storage';
+import { removeTrailingDecimal, roundToInt } from './settingsHelpers';
 
 export default function BizGoalsReviewScreen(props: any) {
   const { route } = props;
@@ -75,43 +76,55 @@ export default function BizGoalsReviewScreen(props: any) {
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Net Income</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
-        {'$' + summaryData?.yearlyNetIncome}
+        {'$' + removeTrailingDecimal(summaryData?.yearlyNetIncome!)}
       </Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Gross Income</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
-        {'$' + summaryData?.yearlyGrossIncome}
+        {'$' + removeTrailingDecimal(summaryData?.yearlyGrossIncome!)}
       </Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Transactions</Text>
-      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.yearlyTransactions}</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.yearlyTransactions!)}
+      </Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Referrals</Text>
-      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.yearlyReferrals}</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.yearlyReferrals!)}
+      </Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Voice-to-Voice or Face-to-Face Contacts</Text>
-      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.yearlyContacts}</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.yearlyContacts!)}
+      </Text>
       <View style={styles.dividingLine}></View>
       <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Monthly Income Goals</Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Net Income</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
-        {'$' + summaryData?.monthlyNetIncome}
+        {'$' + removeTrailingDecimal(summaryData?.monthlyNetIncome!)}
       </Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Gross Income</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
-        {'$' + summaryData?.monthlyGrossIncome}
+        {'$' + removeTrailingDecimal(summaryData?.monthlyGrossIncome!)}
       </Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Transactions</Text>
-      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.monthlyTransactions}</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.monthlyTransactions!)}
+      </Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Referrals</Text>
-      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.monthlyReferrals}</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.monthlyReferrals!)}
+      </Text>
       <View style={styles.dividingLine}></View>
       <Text style={styles.nameTitle}>Voice-to-Voice or Face-to-Face Contacts</Text>
-      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.monthlyContacts}</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.monthlyContacts!)}
+      </Text>
       <View style={styles.dividingLine}></View>
       <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Recommended Weekly Activities</Text>
       <View style={styles.dividingLine}></View>
