@@ -9,7 +9,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Image,
-  PermissionsAndroid,
+  TextInput,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
@@ -27,7 +27,9 @@ import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
-const chevron = require('../../images/chevron_blue.png');
+// const chevron = require('../../images/chevron_blue.png');
+const searchGlass = require('../../images/whiteSearch.png');
+const closeButton = require('../../images/button_close_white.png');
 const pinAPlus = require('./images/mapPinAPlus.png');
 const pinA = require('./images/mapPinA.png');
 const pinB = require('./images/mapPinB.png');
@@ -42,7 +44,12 @@ export default function ManageRelationshipsScreen() {
   const isFocused = useIsFocused();
   const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [data, setData] = useState<PopByRadiusDataProps[]>([]);
+  const [popByData, setPopByData] = useState<PopByRadiusDataProps[]>([]);
+  const [showAPlus, setShowAPlus] = useState(true);
+  const [showA, setShowA] = useState(true);
+  const [showB, setShowB] = useState(true);
+  const [showC, setShowC] = useState(true);
+  const [search, setSearch] = useState('');
 
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -52,26 +59,25 @@ export default function ManageRelationshipsScreen() {
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
+  function clearSearchPressed() {}
+
   const handleRowPress = (index: number) => {
     console.log('rolodex row press');
     //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
     navigation.navigate('RelDetails', {
-      contactId: data[index]['id'],
-      firstName: data[index]['firstName'],
-      lastName: data[index]['lastName'],
-      rankFromAbove: data[index]['ranking'],
-      //  qualFromAbove: dataRolodex[index]['qualified'],
+      contactId: popByData[index].id,
+      firstName: popByData[index].firstName,
+      lastName: popByData[index].lastName,
+      rankFromAbove: popByData[index].ranking,
     });
   };
 
   useEffect(() => {
+    navigation.setOptions({ title: 'Pop-By' });
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-  }, []);
-
-  useEffect(() => {
     getDarkOrLightMode();
     if (tabSelected == 'Near Me') {
       fetchPopBys('nearby');
@@ -82,23 +88,12 @@ export default function ManageRelationshipsScreen() {
     }
   }, [isFocused]);
 
-  useEffect(() => {
-    navigation.setOptions({ title: 'Pop-By' });
-    //  fetchPopBys(tabSelected);
-    console.log(tabSelected);
-  }, [isFilterRel]);
-
-  useEffect(() => {
-    showFilterTitle();
-  }, [isFilterRel]);
-
-  //  useEffect(() => {}); // this will run on every render
-
-  function showFilterTitle() {
-    if (isFilterRel) {
-      return 'Rel';
-    }
-    return 'Biz';
+  function matchesRankFilter(ranking: String) {
+    if (ranking == 'A+' && showAPlus) return true;
+    if (ranking == 'A' && showA) return true;
+    if (ranking == 'B' && showB) return true;
+    if (ranking == 'C' && showC) return true;
+    return false;
   }
 
   function nearPressed() {
@@ -119,19 +114,8 @@ export default function ManageRelationshipsScreen() {
     fetchPopBys('Saved');
   }
 
-  function filterPressed() {
-    console.log('filter');
-    //  analytics.event(new Event('Manage Relationships', 'Filter', 'Press', 0));
-    if (isFilterRel) {
-      setIsFilterRel(false);
-    } else {
-      setIsFilterRel(true);
-      showFilterTitle();
-    }
-  }
-
   function getRankPin(ranking: string) {
-    console.log(ranking);
+    // console.log(ranking);
     if (ranking == 'A+') {
       return pinAPlus;
     }
@@ -147,6 +131,26 @@ export default function ManageRelationshipsScreen() {
     return pinD;
   }
 
+  function tapAPlusFilter() {
+    console.log('Tap A+ Filter ');
+    setShowAPlus(!showAPlus);
+  }
+
+  function tapAFilter() {
+    console.log('Tap A Filter ');
+    setShowA(!showA);
+  }
+
+  function tapBFilter() {
+    console.log('Tap B Filter ');
+    setShowB(!showB);
+  }
+
+  function tapCFilter() {
+    console.log('Tap C Filter ');
+    setShowC(!showC);
+  }
+
   function fetchPopBys(type: string) {
     setIsLoading(true);
     getPopByRadiusData(type)
@@ -154,17 +158,13 @@ export default function ManageRelationshipsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          setData(res.data);
+          setPopByData(res.data);
           console.log(res.data);
         }
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
-
-  // function saveComplete() {
-  //   fetchPopBys('alpha');
-  // }
 
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
@@ -183,6 +183,39 @@ export default function ManageRelationshipsScreen() {
         </Text>
       </View>
 
+      <View style={styles.searchView}>
+        <Image source={searchGlass} style={styles.magGlass} />
+
+        <TextInput
+          style={styles.textInput}
+          placeholder="Search By Name or Address"
+          //    placeholderTextColor="#AFB9C2"
+          placeholderTextColor="white"
+          textAlign="left"
+          defaultValue={search}
+          onChangeText={(text) => setSearch(text)}
+        />
+
+        <TouchableOpacity onPress={clearSearchPressed}>
+          <Image source={closeButton} style={styles.closeX} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={lightOrDark == 'dark' ? styles.filterView : styles.filterView}>
+        <TouchableOpacity onPress={tapAPlusFilter}>
+          <Image source={pinAPlus} style={showAPlus ? styles.pinFilterShow : styles.pinFilterHide} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={tapAFilter}>
+          <Image source={pinA} style={showA ? styles.pinFilterShow : styles.pinFilterHide} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={tapBFilter}>
+          <Image source={pinB} style={showB ? styles.pinFilterShow : styles.pinFilterHide} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={tapCFilter}>
+          <Image source={pinC} style={showC ? styles.pinFilterShow : styles.pinFilterHide} />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.mapView}>
         <MapView
           showsUserLocation={true}
@@ -190,8 +223,10 @@ export default function ManageRelationshipsScreen() {
           followsUserLocation={true}
           initialRegion={{ latitude: 33.1175, longitude: -117.25, latitudeDelta: 0.11, longitudeDelta: 0.06 }}
         >
-          {data.map((person, index) =>
-            person.location?.latitude != null && person.location?.longitude != null ? (
+          {popByData.map((person, index) =>
+            matchesRankFilter(person.ranking) &&
+            person.location?.latitude != null &&
+            person.location?.longitude != null ? (
               <Marker
                 key={index}
                 coordinate={{
@@ -218,29 +253,38 @@ export default function ManageRelationshipsScreen() {
           <ScrollView>
             {tabSelected == 'Near Me' && (
               <View>
-                {data.map((item, index) => (
-                  <PopByRow relFromAbove={'Near Me'} key={index} data={item} onPress={() => handleRowPress(index)} />
-                ))}
+                {popByData.map(
+                  (item, index) =>
+                    matchesRankFilter(item.ranking) && (
+                      <PopByRow popByTab={'Near Me'} key={index} data={item} onPress={() => handleRowPress(index)} />
+                    )
+                )}
               </View>
             )}
             {tabSelected == 'Priority' && (
               <View>
-                {data.map((item, index) => (
-                  <PopByRow relFromAbove={'Priority'} key={index} data={item} onPress={() => handleRowPress(index)} />
-                ))}
+                {popByData.map(
+                  (item, index) =>
+                    matchesRankFilter(item.ranking) && (
+                      <PopByRow popByTab={'Priority'} key={index} data={item} onPress={() => handleRowPress(index)} />
+                    )
+                )}
               </View>
             )}
             {tabSelected == 'Saved' && (
               <View>
-                {data.map((item, index) => (
-                  <PopByRowSaved
-                    relFromAbove={'Saved'}
-                    key={index}
-                    data={item}
-                    onPress={() => handleRowPress(index)}
-                    refresh={() => savedPressed()}
-                  />
-                ))}
+                {popByData.map(
+                  (item, index) =>
+                    matchesRankFilter(item.ranking) && (
+                      <PopByRowSaved
+                        popByTab={'Saved'}
+                        key={index}
+                        data={item}
+                        onPress={() => handleRowPress(index)}
+                        refresh={() => savedPressed()}
+                      />
+                    )
+                )}
               </View>
             )}
           </ScrollView>
@@ -251,6 +295,49 @@ export default function ManageRelationshipsScreen() {
 }
 
 export const styles = StyleSheet.create({
+  searchView: {
+    backgroundColor: '#002341',
+    height: 40,
+    justifyContent: 'space-evenly',
+    paddingLeft: 10,
+    borderWidth: 1,
+    flexDirection: 'row',
+  },
+  magGlass: {
+    width: 20,
+    height: 20,
+    marginLeft: -20,
+    marginTop: 8,
+  },
+  textInput: {
+    fontSize: 16,
+    color: '#FFFFFF',
+    width: 300,
+  },
+  closeX: {
+    width: 15,
+    height: 15,
+    marginRight: -10,
+    marginTop: 12,
+  },
+  filterView: {
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    paddingTop: 8,
+    marginLeft: '20%',
+    marginRight: '20%',
+  },
+  pinFilterShow: {
+    width: 30,
+    height: 43,
+    opacity: 1.0,
+  },
+  pinFilterHide: {
+    width: 30,
+    height: 43,
+    opacity: 0.4,
+  },
   mapView: {
     height: '60%',
     width: '100%',

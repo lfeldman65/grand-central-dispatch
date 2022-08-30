@@ -17,7 +17,7 @@ const chevron = require('../../images/chevron_blue_right.png');
 interface PopBysRowProps {
   data: PopByRadiusDataProps;
   onPress(): void;
-  relFromAbove: string;
+  popByTab: string;
   refresh(): void;
 }
 
@@ -30,7 +30,7 @@ function chooseImage(rank: string) {
 }
 
 export default function PopByRowSaved(props: PopBysRowProps) {
-  const { relFromAbove } = props;
+  const { popByTab } = props;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
