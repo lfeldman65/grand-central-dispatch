@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { StyleSheet, View, Dimensions, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Dimensions, Modal, ScrollView, ActivityIndicator, Linking } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -13,46 +13,65 @@ import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 
 export default function PodcastsScreen() {
-  let deviceWidth = Dimensions.get('window').width;
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
-  const [data, setData] = useState<AboutUsDataProps[]>([]);
+  const [socialData, setSocialData] = useState<AboutUsDataProps[]>([]);
+  const [moreLinksData, setMoreLinksData] = useState<AboutUsDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
-  const [modalPlayerVisible, setModalPlayerVisible] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
-  const handleRowPress = (index: number) => {
-    // analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
-    console.log('About Us Row Pressed');
-    setSelectedIndex(index);
-    setModalPlayerVisible(!modalPlayerVisible);
+  const handleRowPress = (item: AboutUsDataProps) => {
+    // analytics.event(new Event('About Us', 'Row', 'Press', 0));
+    Linking.openURL(item.url);
   };
 
   useEffect(() => {
-    getDarkOrLightMode();
-    getAboutUsList();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  //useEffect(() => {}); // this will run on every render
+  useEffect(() => {
+    let isMounted = true;
+    getAboutUsList('moreSocial', isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
-  function saveComplete() {
-    console.log('Save Complete');
-  }
+  useEffect(() => {
+    let isMounted = true;
+    getAboutUsList('moreLinks', isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
-  function getAboutUsList() {
+  function getAboutUsList(type: string, isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     setIsLoading(true);
-    getMedia('moreLinks')
+    getMedia(type)
       .then((res) => {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          setData(res.data);
+          if (type == 'moreLinks') {
+            setMoreLinksData(res.data);
+          } else {
+            setSocialData(res.data);
+          }
         }
         setIsLoading(false);
       })
@@ -69,8 +88,16 @@ export default function PodcastsScreen() {
         <React.Fragment>
           <ScrollView>
             <View>
-              {data.map((item, index) => (
-                <AboutUsRow key={index} data={item} onPress={() => handleRowPress(index)} />
+              {moreLinksData.map(
+                (item, index) =>
+                  item.title != 'About Us' && (
+                    <AboutUsRow key={index} data={item} onPress={() => handleRowPress(item)} />
+                  )
+              )}
+            </View>
+            <View>
+              {socialData.map((item, index) => (
+                <AboutUsRow key={index} data={item} onPress={() => handleRowPress(item)} />
               ))}
             </View>
           </ScrollView>

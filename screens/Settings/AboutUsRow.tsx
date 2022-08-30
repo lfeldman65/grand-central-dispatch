@@ -1,16 +1,5 @@
 import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Linking,
-  ScrollView,
-  ActivityIndicator,
-  TouchableHighlight,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
@@ -26,80 +15,32 @@ interface AboutUsRowProps {
   onPress(): void;
 }
 
-function makeTitlePretty(title: string) {
-  if (title.length < 40) {
-    return title;
-  }
-  return title.substring(0, 40) + '...';
+function modifyTitle(oldTitle: string) {
+  return oldTitle;
 }
 
-function makeTimePretty(duration: number) {
-  var hrs = 0;
-  var hrsFloor = 0;
-  var min = 0;
-  var minFloor = 0;
-  var sec = 0;
-
-  hrs = duration / 3600;
-  hrsFloor = Math.floor(hrs);
-  duration = duration - hrsFloor * 3600;
-  min = duration / 60;
-  minFloor = Math.floor(min);
-  duration = duration - minFloor * 60;
-  sec = duration;
-
-  return (
-    pad0IfNeeded(hrsFloor.toString()) + ':' + pad0IfNeeded(minFloor.toString()) + ':' + pad0IfNeeded(sec.toString())
-  );
-}
-
-function makeTimePretty2(duration: number) {
-  duration = 3601;
-  if (duration == 3600) {
-    return '01:00:00';
-  }
-  if (duration == 7200) {
-    return '02:00:00';
-  }
-  var hrs = 0;
-  var hrsFloor = 0;
-  var min = 0;
-  var minFloor = 0;
-  var sec = 0;
-
-  hrs = duration / 3600.0;
-  hrsFloor = Math.floor(hrs);
-  console.log(hrs);
-
-  duration = duration % 3600;
-  hrs = Math.floor(duration / 3600);
-  duration = duration % 3600;
-  min = duration / 60;
-  minFloor = Math.floor(min);
-  duration = duration % 60;
-  sec = duration;
-
-  return pad0IfNeeded(hrs.toString()) + ':' + pad0IfNeeded(minFloor.toString()) + ':' + pad0IfNeeded(sec.toString());
-}
-
-function pad0IfNeeded(part: string) {
-  if (part.length < 2) {
-    return '0' + part;
-  }
-  return part;
+function modifySubtext(oldSubtext: string) {
+  return oldSubtext;
 }
 
 export default function AboutUsRow(props: AboutUsRowProps) {
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   return (
@@ -110,9 +51,9 @@ export default function AboutUsRow(props: AboutUsRowProps) {
         </View>
         <View style={styles.textBox}>
           <Text style={lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
-            {makeTitlePretty(props.data.title)}
+            {modifyTitle(props.data.title)}
           </Text>
-          <Text style={styles.timeText}>{makeTimePretty(props.data.duration)}</Text>
+          <Text style={styles.timeText}>{modifySubtext(props.data.authorName)}</Text>
         </View>
 
         {/* <View style={styles.chevronBox}>
