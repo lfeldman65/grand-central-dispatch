@@ -39,14 +39,11 @@ export default function NotificationsScreen(props: any) {
   useEffect(() => {
     navigation.setOptions({
       title: 'Notifications',
-      headerRight: () => 
-      
-
-      <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
-      <Text style={styles.saveText}>Save</Text>
-      </TouchableOpacity>
-
-      
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
+          <Text style={styles.saveText}>Save</Text>
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, notifCall, notifToDo, notifWins, notifPopBys, notifImport, notifVideos]);
 
@@ -298,13 +295,13 @@ export default function NotificationsScreen(props: any) {
 }
 
 const styles = StyleSheet.create({
-
   saveButton: {
-   padding:10,
-    backgroundColor: '#00AAAA'
+    padding: 10,
+    // backgroundColor: '#00AAAA'
   },
   saveText: {
-    color: '#FFFFFF'
+    color: 'white',
+    fontSize: 18,
   },
   rowDark: {
     flexDirection: 'row',
