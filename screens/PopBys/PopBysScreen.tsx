@@ -59,7 +59,9 @@ export default function ManageRelationshipsScreen() {
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
-  function clearSearchPressed() {}
+  function clearSearchPressed() {
+    setSearch('');
+  }
 
   const handleRowPress = (index: number) => {
     console.log('rolodex row press');
@@ -87,6 +89,38 @@ export default function ManageRelationshipsScreen() {
       fetchPopBys('favorites');
     }
   }, [isFocused]);
+
+  function matchesSearch(person: PopByRadiusDataProps) {
+    var searchLower = search.toLowerCase();
+    if (searchLower == '') {
+      return true;
+    }
+    if (person.firstName != null && person.firstName.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (person.lastName != null && person.lastName.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (person.address != null && person.address.street.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (person.address != null && person.address.street2.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (person.address != null && person.address.city.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (person.address != null && person.address.state.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (person.address != null && person.address.zip.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (person.address != null && person.address.country.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    return false;
+  }
 
   function matchesRankFilter(ranking: String) {
     if (ranking == 'A+' && showAPlus) return true;
@@ -189,8 +223,7 @@ export default function ManageRelationshipsScreen() {
         <TextInput
           style={styles.textInput}
           placeholder="Search By Name or Address"
-          //    placeholderTextColor="#AFB9C2"
-          placeholderTextColor="white"
+          placeholderTextColor="#AFB9C2"
           textAlign="left"
           defaultValue={search}
           onChangeText={(text) => setSearch(text)}
@@ -225,6 +258,7 @@ export default function ManageRelationshipsScreen() {
         >
           {popByData.map((person, index) =>
             matchesRankFilter(person.ranking) &&
+            matchesSearch(person) &&
             person.location?.latitude != null &&
             person.location?.longitude != null ? (
               <Marker
@@ -255,7 +289,8 @@ export default function ManageRelationshipsScreen() {
               <View>
                 {popByData.map(
                   (item, index) =>
-                    matchesRankFilter(item.ranking) && (
+                    matchesRankFilter(item.ranking) &&
+                    matchesSearch(item) && (
                       <PopByRow popByTab={'Near Me'} key={index} data={item} onPress={() => handleRowPress(index)} />
                     )
                 )}
@@ -265,7 +300,8 @@ export default function ManageRelationshipsScreen() {
               <View>
                 {popByData.map(
                   (item, index) =>
-                    matchesRankFilter(item.ranking) && (
+                    matchesRankFilter(item.ranking) &&
+                    matchesSearch(item) && (
                       <PopByRow popByTab={'Priority'} key={index} data={item} onPress={() => handleRowPress(index)} />
                     )
                 )}
@@ -275,7 +311,8 @@ export default function ManageRelationshipsScreen() {
               <View>
                 {popByData.map(
                   (item, index) =>
-                    matchesRankFilter(item.ranking) && (
+                    matchesRankFilter(item.ranking) &&
+                    matchesSearch(item) && (
                       <PopByRowSaved
                         popByTab={'Saved'}
                         key={index}
@@ -298,9 +335,12 @@ export const styles = StyleSheet.create({
   searchView: {
     backgroundColor: '#002341',
     height: 40,
+    // marginLeft: 5,
+    //  marginRight: 5,
     justifyContent: 'space-evenly',
     paddingLeft: 10,
     borderWidth: 1,
+    // borderRadius: 10,
     flexDirection: 'row',
   },
   magGlass: {
@@ -321,6 +361,7 @@ export const styles = StyleSheet.create({
     marginTop: 12,
   },
   filterView: {
+    //  backgroundColor: 'red',
     height: 60,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
