@@ -4,15 +4,14 @@ import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-//import ChooseRelationship from '../Goals/ChooseRelationship';
+import ChooseRelationship from '../Goals/ChooseRelationship';
 import { RolodexDataProps, RelProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { trackAction } from './api';
-
+import { sub } from 'react-native-reanimated';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
-  const { setModalVisible, trackTitle } = props;
+  const { onSave, setModalVisible, trackTitle } = props;
   const [note, onNoteChange] = useState('Some notes 25');
   const [lightOrDark, setIsLightOrDark] = useState('');
   const [relationship, setRelationship] = useState<RolodexDataProps>();
@@ -58,19 +57,15 @@ export default function TrackActivityScreen(props: any) {
   function makeParam(menuItem: string) {
     console.log('A Make param: ' + menuItem);
     if (menuItem == 'Calls Made') {
-      return 'call';
+      return '1';
     }
     if (menuItem == 'Notes Written') {
-      return 'notes';
+      return '2';
     }
     if (menuItem == 'Pop-Bys') {
-      return 'popby';
+      return '3';
     }
-    return 'other';
-  }
-
-  function cancelPressed() {
-    setModalVisible(false);
+    return '4';
   }
 
   function savePressed() {
@@ -78,32 +73,14 @@ export default function TrackActivityScreen(props: any) {
       Alert.alert('Please Choose a Relationship');
       return;
     }
-    var param = makeParam(goal);
-    console.log('goal: ' + param);
-    console.log('note: ' + note);
-    trackActivityAPI(relationship?.id!, param, note);
+    setModalVisible(false);
+    var goalId = makeParam(goal);
+    onSave(relationship?.id, goalId, subject, date, askedReferral, note);
   }
 
-  function trackActivityAPI(contactId: string, type: string, note: string) {
-    trackAction(contactId, type, note)
-      .then((res) => {
-        console.log(res);
-        if (res.status == 'error') {
-          console.error(res.error);
-          setModalVisible(false);
-        } else {
-          setModalVisible(false);
-        }
-      })
-      .catch((error) => {
-        console.log('complete error' + error);
-        setModalVisible(false);
-      });
+  function cancelPressed() {
+    setModalVisible(false);
   }
-
-  useEffect(() => {
-    onNoteChange(subject);
-  }, [subject]);
 
   useEffect(() => {
     getDarkOrLightMode();
@@ -215,8 +192,8 @@ export default function TrackActivityScreen(props: any) {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
+                //  hour: 'numeric',
+                //  minute: 'numeric',
               })}
             </Text>
           </View>
@@ -282,11 +259,11 @@ export default function TrackActivityScreen(props: any) {
             setModalRelVisible(!modalRelVisible);
           }}
         >
-          {/* <ChooseRelationship
+          <ChooseRelationship
             title="Choose Relationship"
             setModalRelVisible={setModalRelVisible}
             setSelectedRel={setRelationship}
-          /> */}
+          />
         </Modal>
       )}
     </View>
@@ -373,7 +350,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'black',
     width: '90%',
-    height: '45%',
+    height: '40%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
@@ -383,7 +360,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'white',
     width: '90%',
-    height: '45%',
+    height: '40%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
@@ -407,6 +384,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    height: 60,
   },
   listItem: {
     flex: 1,

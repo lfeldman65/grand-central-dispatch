@@ -7,7 +7,7 @@ import { Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import { isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
-import { getGoalData } from './api';
+import { getGoalData, trackAction } from './api';
 import { storage } from '../../utils/storage';
 import TrackActivity from './TrackActivityScreen';
 
@@ -201,6 +201,46 @@ export default function GoalsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
+  function saveComplete(guid: string, goal: string, subject: string, date: string, askedRef: boolean, note: string) {
+    setIsLoading(true);
+    trackActivityAPI(guid, goal, subject, date, askedRef, note, trackSuccess, trackFailure);
+  }
+
+  function trackActivityAPI(
+    contactId: string,
+    goalId: string,
+    subject: string,
+    date: string,
+    referral: boolean,
+    note: string,
+    onSuccess: any,
+    onFailure: any
+  ) {
+    trackAction(contactId, goalId, subject, date, referral, note)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 'error') {
+          console.error(res.error);
+          onFailure();
+        } else {
+          onSuccess();
+        }
+      })
+      .catch((error) => {
+        onFailure();
+        console.log('complete error' + error);
+      });
+  }
+
+  function trackSuccess() {
+    setIsLoading(false);
+  }
+
+  function trackFailure() {
+    setIsLoading(false);
+    console.log('track failure');
+  }
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
@@ -283,7 +323,7 @@ export default function GoalsScreen() {
               setModalVisible(!modalVisible);
             }}
           >
-            <TrackActivity trackTitle="Track Activity Goal" setModalVisible={setModalVisible} />
+            <TrackActivity trackTitle="Track Activity Goal" onSave={saveComplete} setModalVisible={setModalVisible} />
           </Modal>
         )}
       </View>

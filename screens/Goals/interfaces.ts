@@ -23,7 +23,7 @@ export interface GoalDataResponse {
 // Track Action in Postman
 
 export interface TrackDataProps {
-  message: string;
+  goalId: string;
 }
 
 export interface TrackDataResponse {
