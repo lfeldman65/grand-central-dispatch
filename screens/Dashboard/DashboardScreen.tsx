@@ -80,6 +80,12 @@ export default function DashboardScreen() {
         label: 'Relationships',
       });
     }
+    if (landingPage == 'Recent Contact Activity') {
+      handleNavigation({
+        screen: 'RecentActivity',
+        label: 'RecentActivity',
+      });
+    }
     if (landingPage == 'Video History') {
       handleNavigation({
         screen: 'VideoStack',
