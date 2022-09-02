@@ -92,7 +92,7 @@ export default function TrackActivityScreen(props: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
           <Image source={closeButton} style={styles.closeX} />
@@ -266,7 +266,7 @@ export default function TrackActivityScreen(props: any) {
           />
         </Modal>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
