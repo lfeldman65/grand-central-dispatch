@@ -464,9 +464,9 @@ const styles = StyleSheet.create({
   suppText: {
     paddingTop: 13,
     height: 40,
-    width: '30%',
+    width: '40%',
     textAlign: 'right',
-    marginLeft: 10,
+    marginLeft: -30,
     color: '#1398F5',
     fontSize: 14,
     paddingRight: 8,
