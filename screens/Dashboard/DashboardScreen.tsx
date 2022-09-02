@@ -55,17 +55,104 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     getDarkOrLightMode();
-  }, [isFocused]);
+    getLandingPage();
+  }, []);
+
+  function navigateToLandingPage(landingPage?: string) {
+    console.log('landing page:' + landingPage);
+    if (landingPage == 'Priority Action Center') {
+      handleNavigation({
+        parentScreen: 'PAC',
+        screen: 'PAC1',
+        params: { defaultTab: 'calls' },
+        label: 'Calls Pressed',
+      });
+    }
+    if (landingPage == 'Goals') {
+      handleNavigation({
+        screen: 'goals',
+        label: 'Goals',
+      });
+    }
+    if (landingPage == 'Manage Relationships') {
+      handleNavigation({
+        screen: 'Rolodex',
+        label: 'Relationships',
+      });
+    }
+    if (landingPage == 'Video History') {
+      handleNavigation({
+        screen: 'VideoStack',
+        label: 'VideoStack',
+      });
+    }
+    if (landingPage == 'Real Estate Transactions') {
+      handleNavigation({
+        screen: 'RETransactionsMenu',
+        label: 'RETransactionsMenu',
+      });
+    }
+    if (landingPage == 'Lender Transactions') {
+      handleNavigation({
+        screen: 'LenderTransactionsMenu',
+        label: 'LenderTransactionsMenu',
+      });
+    }
+    if (landingPage == 'Other Transactions') {
+      handleNavigation({
+        screen: 'OtherTransactionsMenu',
+        label: 'OtherTransactionsMenu',
+      });
+    }
+    if (landingPage == 'Pop-By') {
+      handleNavigation({
+        screen: 'PopBysScreen',
+        label: 'PopBysScreen',
+      });
+    }
+    if (landingPage == 'To-Do') {
+      handleNavigation({
+        screen: 'To-Do',
+        label: 'To-Do',
+      });
+    }
+    if (landingPage == 'Calendar') {
+      handleNavigation({
+        screen: 'CalendarScreen',
+        label: 'CalendarScreen',
+      });
+    }
+    if (landingPage == 'Podcasts') {
+      handleNavigation({
+        screen: 'PodcastsScreen',
+        label: 'PodcastsScreen',
+      });
+    }
+  }
+
+  async function getLandingPage() {
+    var savedLanding = await storage.getItem('landingPage');
+    if (savedLanding != null) {
+      console.log('getCurrent: ' + savedLanding);
+      if (savedLanding != 'Dashboard') {
+        navigateToLandingPage(savedLanding);
+      }
+    } else {
+      console.log('getCurrent: ' + savedLanding);
+    }
+  }
 
   const handleNavigation = (props: DashboardNavigationProps) => {
     // SentryTest();
+    console.log('parent screen: ' + props.parentScreen);
     if (props.parentScreen) {
-      analytics.event(new Event('Dashboard', props.label + ' Pressed', '0'));
+      //  analytics.event(new Event('Dashboard', props.label + ' Pressed', '0'));
       navigation.navigate(props.parentScreen, {
         screen: props.screen,
         params: props.params ? props.params : null,
       });
     } else {
+      console.log('propsscreen: ' + props.screen);
       props.params ? navigation.navigate(props.screen, { ...props.params }) : navigation.navigate(props.screen);
     }
   };
