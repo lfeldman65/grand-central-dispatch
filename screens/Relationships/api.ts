@@ -1,3 +1,4 @@
+import { consoleSandbox } from '@sentry/utils';
 import { http } from '../../utils/http';
 import {
   RolodexDataResponse,
@@ -12,7 +13,8 @@ import {
 } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
-  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=250`);
+  console.log('api type:' + type);
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=100`);
 } // back tick (`) only necessary for string interpolation
 
 export function getToDos(guid: string): Promise<ToDoAndApptResponse> {
@@ -77,4 +79,74 @@ export function getVideoDetails(vidGuid: string): Promise<VideoDetailsDataRespon
 
 export function deleteRelationship(guid: string): Promise<ContactDeleteDataResponse> {
   return http.delete(`contacts/${guid}`);
+}
+
+export function changeRankAndQual(guid: string, rank: string, qual: string): Promise<RelDetailsResponse> {
+  return http.put(`contacts/${guid}`, {
+    body: { ranking: rank, qualified: qual },
+  });
+}
+
+export function editContact(
+  guid: string,
+  rank: string,
+  qual: string,
+  first: string,
+  last: string,
+  mobile: string,
+  homePhone: string,
+  officePhone: string,
+  email: string,
+  website: string,
+  street1: string,
+  street2: string,
+  city: string,
+  state: string,
+  zip: string,
+  country: string,
+  genNotes: string,
+  relOrBiz: string,
+  children: string,
+  personalNotes: string,
+  company: string,
+  services: string,
+  bizNotes: string,
+  interests: string
+): Promise<RelDetailsResponse> {
+  console.log('api last:' + last);
+  return http.put(`contacts/${guid}`, {
+    body: {
+      ranking: rank,
+      qualified: qual,
+      firstName: first,
+      lastName: last,
+      mobile: mobile,
+      homePhone: homePhone,
+      officePhone: officePhone,
+      email: email,
+      website: website,
+      address: {
+        street: street1,
+        street2: street2,
+        city: city,
+        state: state,
+        zip: zip,
+        country: country,
+      },
+      notes: genNotes,
+      contactTypeID: relOrBiz,
+      personalAndFamily: {
+        childrensNames: children,
+        personalNotes: personalNotes,
+      },
+      businessAndCareer: {
+        employerName: company,
+        occupation: services,
+        careerNotes: bizNotes,
+      },
+      interestsAndFavorites: {
+        notes: interests,
+      },
+    },
+  });
 }

@@ -4,14 +4,15 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
-import { getRelDetails, getToDos, deleteRelationship } from './api';
+import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual, editContact } from './api';
 import { RelDetailsProps, ToDoAndApptProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
 import { formatDate } from '../../utils/general';
 import openMap from 'react-native-open-maps';
+import EditRelationshipScreen from './EditRelationshipScreen';
 const chevron = require('../../images/chevron_blue_right.png');
-//const suitcase = require('../Relationships/images/iconSuitcase.png');
+//const suitcase = require('../Relationships/images/iconSuitcase.png'); // branch
 
 const aPlusSel = require('../Relationships/images/aPlusSel.png');
 const aPlusReg = require('../Relationships/images/aPlusReg.png');
@@ -63,48 +64,108 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [showInterests, setShowInterests] = useState(false);
   const [showBiz, setShowBiz] = useState(false);
 
-  async function getDarkOrLightMode() {
+  //need this for the edit screen
+  //not sure why the useEffect for dataDetails is sometimes null
+  //in editPressed;
+  var data: RelDetailsProps;
+
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     console.log('getDarkOrLight');
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => <Button color="#fff" onPress={() => console.log('Edit pressed')} title="Edit" />,
+  function editPressed() {
+    console.log(data);
+    if (data == null) return;
+    navigation.navigate('EditRelationshipScreen', {
+      data: data,
     });
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
+          <Text style={styles.saveText}>Edit</Text>
+        </TouchableOpacity>
+      ),
+    });
+    navigation.setOptions({ title: fullName() });
   }, [navigation]);
 
   useEffect(() => {
-    getDarkOrLightMode();
-    fetchRelDetails();
-    fetchToDos();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    console.log('is focused');
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  // useEffect(() => {
-  //   fetchRelDetails();
-  // }, [isFocused]);
-
-  // useEffect(() => {
-  //   fetchToDos();
-  // }, [isFocused]);
+  useEffect(() => {
+    let isMounted = true;
+    fetchRelDetails(isMounted);
+    console.log('is focused');
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
   useEffect(() => {
-    //contact name will be initially be blank, when data is received
-    //render happens again and will run everything in this function again
-    navigation.setOptions({ title: fullName() });
-  }); // this will run on every render
+    let isMounted = true;
+    fetchToDos(isMounted);
+    console.log('is focused');
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
-  function handleButtonPress() {
+  function saveComplete(note: string) {
+    console.log('save complete edit');
+  }
+
+  function quickUpdateRankQual() {
+    // test saving rank and qual for now
+    console.log('guid: ' + dataDetails?.id!);
+    changeRankAndQual(dataDetails?.id!, theRank, isQual)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+          Alert.alert(res.error);
+        } else {
+          console.log(res);
+          //   navigation.navigate.goBack();
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function handleButtonPress(index: number) {
     console.log('button pressed');
+    quickUpdateRankQual();
   }
 
   function handleReferralPressed() {
     console.log('referral pressed');
+    navigation.navigate('RelDetails2', {
+      contactId: dataDetails?.referredBy.id!,
+      firstName: dataDetails?.referredBy.name,
+      lastName: '',
+    });
   }
 
   function handleSpousePressed() {
     console.log('spouse pressed');
+    navigation.navigate('RelDetails2', {
+      contactId: dataDetails?.spouse.id,
+      firstName: dataDetails?.spouse.name,
+      lastName: '',
+    });
   }
 
   function handleHistoryPressed(notes: string) {
@@ -152,6 +213,13 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function showSection5() {
+    if (!isNullOrEmpty(dataDetails?.businessAndCareer.careerNotes)) return true;
+    if (!isNullOrEmpty(dataDetails?.businessAndCareer.employerName)) return true;
+    if (!isNullOrEmpty(dataDetails?.businessAndCareer.occupation)) return true;
+    return false;
+  }
+
+  function showSection6() {
     if (!isNullOrEmpty(dataDetails?.interestsAndFavorites.notes)) {
       return true;
     }
@@ -162,14 +230,8 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     console.log('Save Pop-By Pressed');
   }
 
-  function showSection6() {
-    if (!isNullOrEmpty(dataDetails?.businessAndCareer.careerNotes)) return true;
-    if (!isNullOrEmpty(dataDetails?.businessAndCareer.employerName)) return true;
-    if (!isNullOrEmpty(dataDetails?.businessAndCareer.occupation)) return true;
-    return false;
-  }
-
   function fullName() {
+    console.log('biz or rel: ' + dataDetails?.contactTypeID);
     if (dataDetails?.contactTypeID == 'Biz') {
       return dataDetails.businessAndCareer.employerName;
     }
@@ -201,10 +263,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       setShowGroups(!showGroups);
     }
     if (sectionIndex == 5) {
-      setShowInterests(!showInterests);
+      setShowBiz(!showBiz);
     }
     if (sectionIndex == 6) {
-      setShowBiz(!showBiz);
+      setShowInterests(!showInterests);
     }
   }
 
@@ -269,7 +331,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     return addressString;
   }
 
-  function fetchRelDetails() {
+  function fetchRelDetails(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    console.log('fetch rel details');
     setIsLoading(true);
     getRelDetails(contactId)
       .then((res) => {
@@ -277,41 +343,42 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           console.error(res.error);
         } else {
           setDataDetails(res.data);
+          data = res.data;
           setTheRank(res.data.ranking);
           setIsQual(res.data.qualified);
-          console.log(res.data.ranking);
+          console.log('dataDetails:' + res.data.address.country);
         }
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
 
-  function getRankButtonImage(rank: string) {
-    if (rank == 'A+') {
+  function getRankButtonImage(rankPressed: string) {
+    if (rankPressed == 'A+') {
       if (theRank == 'A+') {
         return aPlusSel;
       }
       return aPlusReg;
     }
-    if (rank == 'A') {
+    if (rankPressed == 'A') {
       if (theRank == 'A') {
         return aSel;
       }
       return aReg;
     }
-    if (rank == 'B') {
+    if (rankPressed == 'B') {
       if (theRank == 'B') {
         return bSel;
       }
       return bReg;
     }
-    if (rank == 'C') {
+    if (rankPressed == 'C') {
       if (theRank == 'C') {
         return cSel;
       }
       return cReg;
     }
-    if (rank == 'D') {
+    if (rankPressed == 'D') {
       if (theRank == 'D') {
         return dSel;
       }
@@ -340,7 +407,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     console.log(isQual);
   }
 
-  function fetchToDos() {
+  function fetchToDos(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     setIsLoading(true);
     getToDos(contactId)
       .then((res) => {
@@ -373,35 +443,35 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       <View style={styles.topAndBottomRows}>
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(0)}>
             <Image source={messageImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Message</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(1)}>
             <Image source={callImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Call</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(2)}>
             <Image source={videoImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Video</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(3)}>
             <Image source={emailImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Email</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(4)}>
             <Image source={mapImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Map</Text>}
@@ -517,6 +587,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
               {cityStateZip(dataDetails?.address.city, dataDetails?.address.state, dataDetails?.address.zip)}
             </Text>
           )}
+        {!isNullOrEmpty(dataDetails?.address.country) && (
+          <Text style={lightOrDark == 'dark' ? styles.addressDark : styles.addressLight}>
+            {dataDetails?.address.country}
+          </Text>
+        )}
 
         <Text></Text>
         {!isNullOrEmpty(dataDetails?.notes) && <Text style={styles.subTitle}>Notes</Text>}
@@ -699,26 +774,13 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
         <TouchableOpacity onPress={() => handleSectionTap(5)}>
           {showSection5() && (
-            <Text style={styles.sectionText}>
-              {showInterests ? 'Hide Interests and Favorites' : 'Show Interests and Favorites'}
-            </Text>
-          )}
-        </TouchableOpacity>
-        {showInterests && !isNullOrEmpty(dataDetails?.interestsAndFavorites.notes) && (
-          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {dataDetails?.interestsAndFavorites.notes}
-          </Text>
-        )}
-
-        <TouchableOpacity onPress={() => handleSectionTap(6)}>
-          {showSection6() && (
             <Text style={styles.sectionText}>{showBiz ? 'Hide Business and Career' : 'Show Business and Career'}</Text>
           )}
         </TouchableOpacity>
-        {showBiz && showSection6() && (
+        {showBiz && showSection5() && (
           <Text style={styles.subTitle}>{dataDetails?.contactTypeID == 'Biz' ? 'Company Name' : 'Employer Name'}</Text>
         )}
-        {showBiz && showSection6() && (
+        {showBiz && showSection5() && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
             {dataDetails?.businessAndCareer.employerName}
           </Text>
@@ -743,6 +805,19 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             {dataDetails?.businessAndCareer.careerNotes}
           </Text>
         )}
+
+        <TouchableOpacity onPress={() => handleSectionTap(6)}>
+          {showSection6() && (
+            <Text style={styles.sectionText}>
+              {showInterests ? 'Hide Interests and Favorites' : 'Show Interests and Favorites'}
+            </Text>
+          )}
+        </TouchableOpacity>
+        {showInterests && !isNullOrEmpty(dataDetails?.interestsAndFavorites.notes) && (
+          <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
+            {dataDetails?.interestsAndFavorites.notes}
+          </Text>
+        )}
         <TouchableOpacity onPress={deletePressed}>
           <Text style={styles.deleteText}>Delete</Text>
         </TouchableOpacity>
@@ -752,7 +827,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
       <View style={styles.topAndBottomRows}>
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(5)}>
             <Image source={activityImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -763,7 +838,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(6)}>
             <Image source={toDoImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -774,7 +849,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(7)}>
             <Image source={transImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -785,14 +860,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(8)}>
             <Image source={apptImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.bottomButtonTextDark : styles.bottomButtonTextLight}>Appt</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress()}>
+          <TouchableOpacity onPress={() => handleButtonPress(9)}>
             <Image source={ideasImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -812,6 +887,13 @@ const styles = StyleSheet.create({
     color: 'orange',
     marginLeft: 15,
     marginBottom: 10,
+  },
+  saveButton: {
+    padding: 10,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
   textAndChevronRow: {
     paddingTop: 10,

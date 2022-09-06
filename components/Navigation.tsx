@@ -16,6 +16,7 @@ import PodcastScreen from '../screens/Podcasts/PodcastsScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
 import RelationshipDetailsScreen from '../screens/Relationships/RelationshipDetailsScreen';
+import EditRelationshipScreen from '../screens/Relationships/EditRelationshipScreen';
 import RecentContactActivityScreen from '../screens/Relationships/RecentActivityScreen';
 import VideoHistoryScreen from '../screens/Relationships/VideoHistoryScreen';
 import VideoDetailsScreen from '../screens/Relationships/VideoDetailsScreen';
@@ -374,6 +375,32 @@ export const RelStackNavigator = () => {
       <Stack.Screen
         name="RelDetails"
         component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="RelDetails2"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="EditRelationshipScreen"
+        component={EditRelationshipScreen}
         options={{
           title: 'Details',
           headerTintColor: 'white',

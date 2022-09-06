@@ -34,14 +34,15 @@ export default function ManageRelationshipsScreen() {
   const isFocused = useIsFocused();
   const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]); // A-Z and Ranking tabs
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
-
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -50,11 +51,9 @@ export default function ManageRelationshipsScreen() {
     console.log('rolodex row press');
     analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
     navigation.navigate('RelDetails', {
-      contactId: dataRolodex[index]['id'],
-      firstName: dataRolodex[index]['firstName'],
-      lastName: dataRolodex[index]['lastName'],
-      //  rankFromAbove: dataRolodex[index]['ranking'],
-      //  qualFromAbove: dataRolodex[index]['qualified'],
+      contactId: dataRolodex[index].id,
+      firstName: dataRolodex[index].firstName,
+      lastName: dataRolodex[index].lastName,
     });
   };
 
@@ -63,25 +62,28 @@ export default function ManageRelationshipsScreen() {
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-    getDarkOrLightMode();
-    if (tabSelected != 'groups') {
-      fetchRolodexPressed(tabSelected);
+    navigation.setOptions({ title: 'Relationships' });
+  }, [navigation]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    if (tabSelected == 'a-z') {
+      fetchRolodexPressed('alpha');
+    } else if (tabSelected == 'ranking') {
+      fetchRolodexPressed('ranking');
     } else {
-      fetchGroupsPressed(tabSelected);
+      fetchRolodexPressed('groups');
     }
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   useEffect(() => {
-    navigation.setOptions({ title: 'Relationships' });
-    fetchRolodexPressed(tabSelected);
-    console.log(tabSelected);
-  }, [isFilterRel]);
-
-  useEffect(() => {
     showFilterTitle();
+    fetchRolodexPressed(tabSelected);
   }, [isFilterRel]);
-
-  // useEffect(() => {}); // this will run on every render
 
   function showFilterTitle() {
     if (isFilterRel) {
@@ -125,6 +127,7 @@ export default function ManageRelationshipsScreen() {
   }
 
   function fetchRolodexPressed(type: string) {
+    console.log('type: ' + type);
     setIsLoading(true);
     getRolodexData(type)
       .then((res) => {
