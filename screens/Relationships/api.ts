@@ -10,6 +10,9 @@ import {
   VideoDetailsDataResponse,
   ToDoAndApptResponse,
   ContactDeleteDataResponse,
+  GroupMembersDataResponse,
+  RemoveGroupMemberDataResponse,
+  AddGroupMemberDataResponse,
 } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
@@ -27,6 +30,26 @@ export function getRelDetails(guid: string): Promise<RelDetailsResponse> {
 
 export function getGroupsData(): Promise<GroupsDataResponse> {
   return http.get('groups?batchSize=500&lastItem=0');
+}
+
+export function getGroupMembers(groupID: string): Promise<GroupMembersDataResponse> {
+  console.log('get group members');
+  return http.get(`contacts?sortType=alpha&groupID=${groupID}&lastItem=0&batchSize=100`);
+}
+
+export function getGroupMembersSearch(groupID: string, searchParam: string): Promise<GroupMembersDataResponse> {
+  console.log('get group members search');
+  return http.get(`contacts?sortType=alpha&search=${searchParam}&groupID=${groupID}&lastItem=0&batchSize=100`);
+}
+
+export function removeGroupMember(groupID: string, guid: string): Promise<RemoveGroupMemberDataResponse> {
+  console.log('remove group member');
+  return http.get(`removeContactFromGroup?contactGUID=${guid}&groupID=${groupID}`);
+}
+
+export function addRelToGroup(groupID: string, guid: string): Promise<AddGroupMemberDataResponse> {
+  console.log('add group member');
+  return http.get(`addContactToGroup?contactGUID=${guid}&groupID=${groupID}`);
 }
 
 export function addNewContact(

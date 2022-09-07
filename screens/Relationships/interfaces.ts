@@ -143,6 +143,46 @@ export interface GroupsDataResponse {
   status: string;
 }
 
+// Group Members in Postman
+
+export interface GroupMembersDataResponse {
+  data: GroupMembersDataProps[];
+  error: string;
+  status: string;
+}
+
+export interface GroupMembersDataProps {
+  id: string;
+  firstName: string;
+  lastName: string;
+  ranking: string;
+  contactTypeID: string;
+}
+
+// Remove Contact From Group in Postman
+
+export interface RemoveGroupMemberDataProps {
+  message: string;
+}
+
+export interface RemoveGroupMemberDataResponse {
+  data: RemoveGroupMemberDataProps[];
+  error: string;
+  status: string;
+}
+
+// Add Contact To Group in Postman
+
+export interface AddGroupMemberDataProps {
+  message: string;
+}
+
+export interface AddGroupMemberDataResponse {
+  data: AddGroupMemberDataProps[];
+  error: string;
+  status: string;
+}
+
 // Recent Activity in Postman
 
 export interface RecentActivityDataProps {
