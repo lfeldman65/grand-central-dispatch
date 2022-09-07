@@ -44,6 +44,7 @@ export default function DashboardScreen() {
 
   async function getDarkOrLightMode() {
     const dOrlight = await storage.getItem('darkOrLight');
+    console.log('dark or light: ' + dOrlight);
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
@@ -54,9 +55,12 @@ export default function DashboardScreen() {
   });
 
   useEffect(() => {
-    getDarkOrLightMode();
     getLandingPage();
   }, []);
+
+  useEffect(() => {
+    getDarkOrLightMode();
+  }, [isFocused]);
 
   function navigateToLandingPage(landingPage?: string) {
     console.log('landing page:' + landingPage);
