@@ -17,6 +17,7 @@ import SettingsScreen from '../screens/Settings/SettingsScreen';
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
 import RelationshipDetailsScreen from '../screens/Relationships/RelationshipDetailsScreen';
 import EditRelationshipScreen from '../screens/Relationships/EditRelationshipScreen';
+import GroupMembersScreen from '../screens/Relationships/GroupMembersScreen';
 import RecentContactActivityScreen from '../screens/Relationships/RecentActivityScreen';
 import VideoHistoryScreen from '../screens/Relationships/VideoHistoryScreen';
 import VideoDetailsScreen from '../screens/Relationships/VideoDetailsScreen';
@@ -369,6 +370,19 @@ export const RelStackNavigator = () => {
             backgroundColor: '#1A6295',
           },
           headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="GroupMembersScreen"
+        component={GroupMembersScreen}
+        options={{
+          title: 'Group Members',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
         }}
       />
 
