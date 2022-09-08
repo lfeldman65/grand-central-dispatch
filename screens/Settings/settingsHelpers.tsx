@@ -4,6 +4,14 @@ export const bizTypeMenu = {
   Both: 'Both',
 };
 
+export const timeZoneMenu = {
+  'Atlantic Standard Time': 'Atlantic Standard Time',
+  'Eastern Standard Time': 'Eastern Standard Time',
+  'Central Standard Time': 'Central Standard Time',
+  'Mountain Standard Time': 'Mountain Standard Time',
+  'Pacific Standard Time': 'Pacific Standard Time',
+};
+
 export const landingPages = [
   'Dashboard',
   'Goals',

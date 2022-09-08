@@ -7,8 +7,7 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { getProfileData } from './api';
-import { bizTypeMenu } from './settingsHelpers';
-// import momentTZ from 'moment-timezone';
+import { bizTypeMenu, timeZoneMenu } from './settingsHelpers';
 
 const rmLogo = require('../../images/logoWide.png');
 
@@ -25,13 +24,20 @@ export default function ProfileScreen1(props: any) {
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
-  // const timeZonesList = momentTZ.tz.names();
 
   useEffect(() => {
     navigation.setOptions({
       title: 'Welcome',
-      headerLeft: () => <Button color="#fff" onPress={backPressed} title="Back" />,
-      headerRight: () => <Button color="#fff" onPress={nextPressed} title="Next" />,
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={nextPressed}>
+          <Text style={styles.saveText}>Next</Text>
+        </TouchableOpacity>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={backPressed}>
+          <Text style={styles.saveText}>Back</Text>
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, email, timeZone, mobilePhone, bizType]);
 
@@ -41,7 +47,7 @@ export default function ProfileScreen1(props: any) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isFocused]);
 
   function convertToParam(pretty: string) {
     if (pretty == 'Both') {
@@ -88,7 +94,7 @@ export default function ProfileScreen1(props: any) {
 
   function timeZonePressed() {
     console.log('time zone pressed');
-    // SheetManager.show(Sheets.timeZoneSheet);
+    SheetManager.show(Sheets.timeZoneSheet);
   }
 
   function backPressed() {
@@ -186,7 +192,7 @@ export default function ProfileScreen1(props: any) {
             <View>
               {Object.entries(bizTypeMenu).map(([key, value]) => (
                 <TouchableOpacity
-                  key={'bizType'}
+                  key={key}
                   onPress={() => {
                     SheetManager.hide(Sheets.bizTypeSheet, null);
                     console.log('biz type: ' + value);
@@ -237,9 +243,9 @@ export default function ProfileScreen1(props: any) {
             style={styles.filterView}
           >
             <View>
-              {Object.entries(timeZone).map(([key, value]) => (
+              {Object.entries(timeZoneMenu).map(([key, value]) => (
                 <TouchableOpacity
-                  key={'timeZone'}
+                  key={key}
                   onPress={() => {
                     SheetManager.hide(Sheets.timeZoneSheet, null);
                     console.log('time zone: ' + value);
@@ -273,6 +279,13 @@ export default function ProfileScreen1(props: any) {
 }
 
 const styles = StyleSheet.create({
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
+  },
   container: {
     backgroundColor: '#1A6295',
     height: '100%',
