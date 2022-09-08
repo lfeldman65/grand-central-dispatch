@@ -61,6 +61,7 @@ export default function EditRelationshipScreen(props: any) {
   const [interests, setInterests] = useState(data.interestsAndFavorites.notes);
   const [isReferral, setIsReferral] = useState(data.referral);
   const [modalRelVisible, setModalRelVisible] = useState(false);
+  const [modalSpouseVisible, setModalSpouseVisibile] = useState(false);
 
   const [date, setDate] = useState(new Date());
 
@@ -89,8 +90,12 @@ export default function EditRelationshipScreen(props: any) {
     setChangeTypeButtonText(relOrBiz == 'Biz' ? 'Change to Relationship' : 'Change to Business');
   }
 
-  function handleRelPressed() {
+  function handleRefPressed() {
     setModalRelVisible(!modalRelVisible);
+  }
+
+  function handleSpousePressed() {
+    setModalSpouseVisibile(!modalSpouseVisible);
   }
 
   function savePressed() {
@@ -105,19 +110,19 @@ export default function EditRelationshipScreen(props: any) {
   }
 
   function setReferredFromModal(user: RolodexDataProps) {
-    console.log('userId: ' + user.id);
+    console.log('userId1: ' + user.id);
     console.log('userFirst: ' + user.firstName);
     let dp: RelDetailsReferredBy = {
       id: user.id,
       name: user.firstName,
     };
+    console.log('referredBy ' + referral.name);
 
     setReferral(dp);
-    console.log('referredBy ' + referral);
   }
 
   function setSpouseFromModal(user: RolodexDataProps) {
-    console.log(user.id);
+    console.log('userId2: ' + user.id);
     console.log(user.firstName);
     let dp: RelDetailsSpouse = {
       id: user.id,
@@ -208,6 +213,7 @@ export default function EditRelationshipScreen(props: any) {
     services,
     bizNotes,
     interests,
+    referral,
   ]);
 
   function getRankButtonImage(rank: string) {
@@ -260,14 +266,13 @@ export default function EditRelationshipScreen(props: any) {
   }
 
   function spousePressed() {
-    if (spouse == null || spouse.id == '' || spouse.id == null) {
-      handleRelPressed();
-    }
+    console.log('spouse pressed');
+    handleSpousePressed();
   }
 
   function referralPressed() {
     console.log('referral pressed');
-    handleRelPressed();
+    handleRefPressed();
   }
 
   useEffect(() => {
@@ -475,16 +480,20 @@ export default function EditRelationshipScreen(props: any) {
         </View>
       </TouchableOpacity>
 
-      {modalRelVisible && (
+      {modalSpouseVisible && (
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalRelVisible}
+          visible={modalSpouseVisible}
           onRequestClose={() => {
-            setModalRelVisible(!modalRelVisible);
+            setModalSpouseVisibile(!modalSpouseVisible);
           }}
         >
-          <AddRel title={'Select Relationship'} setReferral={setSpouseFromModal} setModalVisible={setModalRelVisible} />
+          <AddRel
+            title={'Select Relationship'}
+            setReferral={setSpouseFromModal}
+            setModalVisible={setModalSpouseVisibile}
+          />
         </Modal>
       )}
 
