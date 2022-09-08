@@ -64,11 +64,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [showInterests, setShowInterests] = useState(false);
   const [showBiz, setShowBiz] = useState(false);
 
-  //need this for the edit screen
-  //not sure why the useEffect for dataDetails is sometimes null
-  //in editPressed;
-  var data: RelDetailsProps;
-
   async function getDarkOrLightMode(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -78,11 +73,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
+  function backPressed() {
+    quickUpdateRankQual();
+  }
+
   function editPressed() {
-    console.log(data);
-    if (data == null) return;
+    if (dataDetails == null) return;
     navigation.navigate('EditRelationshipScreen', {
-      data: data,
+      data: dataDetails,
     });
   }
 
@@ -93,9 +91,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           <Text style={styles.saveText}>Edit</Text>
         </TouchableOpacity>
       ),
+      headerLeft: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={backPressed}>
+          <Text style={styles.saveText}>Back</Text>
+        </TouchableOpacity>
+      ),
     });
     navigation.setOptions({ title: fullName() });
-  }, [navigation]);
+  }, [navigation, dataDetails, theRank, isQual]);
 
   useEffect(() => {
     let isMounted = true;
@@ -124,13 +127,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     };
   }, [isFocused]);
 
-  function saveComplete(note: string) {
-    console.log('save complete edit');
-  }
+  // function saveComplete(note: string) {
+  //   console.log('save complete edit');
+  // }
 
   function quickUpdateRankQual() {
-    // test saving rank and qual for now
     console.log('guid: ' + dataDetails?.id!);
+    console.log('the rank: ' + theRank);
+
     changeRankAndQual(dataDetails?.id!, theRank, isQual)
       .then((res) => {
         if (res.status == 'error') {
@@ -138,7 +142,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           Alert.alert(res.error);
         } else {
           console.log(res);
-          //   navigation.navigate.goBack();
+          navigation.goBack();
         }
         setIsLoading(false);
       })
@@ -343,7 +347,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           console.error(res.error);
         } else {
           setDataDetails(res.data);
-          data = res.data;
+          //  data = res.data;
           setTheRank(res.data.ranking);
           setIsQual(res.data.qualified);
           console.log('dataDetails:' + res.data.address.country);
@@ -390,21 +394,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     console.log('rank1: ' + rank);
     //  if(theRank == 'A+')
     setTheRank(rank);
+    dataDetails!.ranking = rank;
+    setDataDetails(dataDetails);
   }
 
   function handleQualPress() {
-    console.log(isQual);
+    dataDetails!.qualified = isQual == 'False' ? 'True' : 'False';
     setIsQual(isQual == 'False' ? 'True' : 'False');
-
-    // if (isQual == 'False') {
-    //   console.log('here false');
-    //   setIsQual('True');
-    // } else {
-    //   console.log('here true');
-
-    //   setIsQual('False');
-    // }
-    console.log(isQual);
+    setDataDetails(dataDetails);
   }
 
   function fetchToDos(isMounted: boolean) {
@@ -889,7 +886,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   saveButton: {
-    padding: 10,
+    padding: 5,
   },
   saveText: {
     color: 'white',

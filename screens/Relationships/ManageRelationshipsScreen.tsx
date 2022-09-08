@@ -39,7 +39,10 @@ export default function ManageRelationshipsScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -63,17 +66,38 @@ export default function ManageRelationshipsScreen() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    if (tabSelected == 'a-z') {
+      fetchRolodexPressed('alpha');
+    } else if (tabSelected == 'ranking') {
+      fetchRolodexPressed('ranking');
+    } else {
+      fetchRolodexPressed('groups');
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    showFilterTitle();
+    if (tabSelected == 'a-z') {
+      fetchRolodexPressed('alpha');
+    } else if (tabSelected == 'ranking') {
+      fetchRolodexPressed('ranking');
+    } else {
+      fetchRolodexPressed('groups');
+    }
+  }, [isFilterRel]);
+
+  useEffect(() => {
+    navigation.setOptions({ title: 'Relationships' });
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-    getDarkOrLightMode();
-    if (tabSelected != 'groups') {
-      fetchRolodexPressed(tabSelected);
-    } else {
-      fetchGroupsPressed();
-    }
-  }, [isFocused]);
+  }, [navigation]);
 
   useEffect(() => {
     navigation.setOptions({ title: 'Relationships' });
@@ -84,8 +108,6 @@ export default function ManageRelationshipsScreen() {
   useEffect(() => {
     showFilterTitle();
   }, [isFilterRel]);
-
-  // useEffect(() => {}); // this will run on every render
 
   function showFilterTitle() {
     if (isFilterRel) {

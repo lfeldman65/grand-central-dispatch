@@ -65,7 +65,7 @@ export const PopByStackNavigator = () => {
           headerStyle: {
             backgroundColor: '#1A6295',
           },
-          headerBackVisible: true,
+          headerBackVisible: false,
         }}
       />
     </Stack.Navigator>
@@ -110,7 +110,7 @@ export const ToDoStackNavigator = () => {
           headerStyle: {
             backgroundColor: '#1A6295',
           },
-          headerBackVisible: true,
+          headerBackVisible: false,
         }}
       />
     </Stack.Navigator>
@@ -395,20 +395,7 @@ export const RelStackNavigator = () => {
           headerStyle: {
             backgroundColor: '#1A6295',
           },
-          headerBackVisible: true,
-        }}
-      />
-
-      <Stack.Screen
-        name="RelDetails2"
-        component={RelationshipDetailsScreen}
-        options={{
-          title: 'Details',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: true,
+          headerBackVisible: false,
         }}
       />
 
@@ -421,7 +408,7 @@ export const RelStackNavigator = () => {
           headerStyle: {
             backgroundColor: '#1A6295',
           },
-          headerBackVisible: true,
+          headerBackVisible: false,
         }}
       />
     </Stack.Navigator>
@@ -453,7 +440,7 @@ export const RecentActivityStackNavigator = () => {
           headerStyle: {
             backgroundColor: '#1A6295',
           },
-          headerBackVisible: true,
+          headerBackVisible: false,
         }}
       />
     </Stack.Navigator>

@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Button, StyleSheet, ScrollView, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, ScrollView, Text, View, TextInput, Image, TouchableOpacity, Modal } from 'react-native';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { isNullOrEmpty, prettyDate } from '../../utils/general';
 import { editContact } from './api';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import AddRel from './SelectRelationshipScreen';
+import { RolodexDataProps, RelDetailsSpouse, RelDetailsReferredBy } from './interfaces';
 
 const aPlusSel = require('../Relationships/images/aPlusSel.png');
 const aPlusReg = require('../Relationships/images/aPlusReg.png');
@@ -23,6 +26,9 @@ const qualUnchecked = require('../Relationships/images/qualUnchecked.png');
 export default function EditRelationshipScreen(props: any) {
   const { route } = props;
   const { data } = route.params;
+
+  //var d : RelDetailsProps = data;
+
   const [lightOrDark, setIsLightOrDark] = useState('');
   const [relOrBiz, setRelOrBiz] = useState(data.contactTypeID);
   const [changeTypeButtonText, setChangeTypeButtonText] = useState('');
@@ -36,17 +42,15 @@ export default function EditRelationshipScreen(props: any) {
   const [officePhone, setOfficePhone] = useState(data.officePhone);
   const [email, setEmail] = useState(data.email);
   const [website, setWebsite] = useState(data.website);
-  const [spouse, setSpouse] = useState(data.spouse.name);
-  const [spouseID, setSpouseID] = useState(data.spouse.id);
-  const [street1, setStreet1] = useState(data.address.street);
-  const [street2, setStreet2] = useState(data.address.street2);
-  const [city, setCity] = useState(data.address.city);
-  const [state, setState] = useState(data.address.state);
-  const [zip, setZip] = useState(data.address.zip);
-  const [country, setCountry] = useState(data.address.country);
+  const [spouse, setSpouse] = useState<RelDetailsSpouse>(data.spouse);
+  const [street1, setStreet1] = useState(data.address?.street);
+  const [street2, setStreet2] = useState(data.address?.street2);
+  const [city, setCity] = useState(data.address?.city);
+  const [state, setState] = useState(data.address?.state);
+  const [zip, setZip] = useState(data.address?.zip);
+  const [country, setCountry] = useState(data.address?.country);
   const [genNotes, setGenNotes] = useState(data.notes);
-  const [referral, setReferral] = useState(data.referredBy.name);
-  const [referralID, setReferralID] = useState(data.referredBy.id);
+  const [referral, setReferral] = useState<RelDetailsReferredBy>(data.referredBy);
   const [birthday, setBirthday] = useState(prettyDate(data.personalAndFamily.birthday));
   const [wedding, setWedding] = useState(prettyDate(data.personalAndFamily.weddingAnniversary));
   const [children, setChildren] = useState(data.personalAndFamily.childrensNames);
@@ -55,6 +59,10 @@ export default function EditRelationshipScreen(props: any) {
   const [services, setServices] = useState(data.businessAndCareer.occupation);
   const [bizNotes, setBizNotes] = useState(data.businessAndCareer.careerNotes);
   const [interests, setInterests] = useState(data.interestsAndFavorites.notes);
+  const [isReferral, setIsReferral] = useState(data.referral);
+  const [modalRelVisible, setModalRelVisible] = useState(false);
+
+  const [date, setDate] = useState(new Date());
 
   const isFocused = useIsFocused();
   const navigation = useNavigation();
@@ -63,13 +71,26 @@ export default function EditRelationshipScreen(props: any) {
     const currentDate = selectedDate;
     console.log(currentDate);
     setShowBirthDate(false);
-    setBirthday(currentDate);
+    setDate(currentDate);
   };
+
+  function saveComplete() {
+    console.log('save complete');
+  }
+
+  function showBirthDatePicker() {
+    console.log('show birthday picker');
+    setShowBirthDate(true);
+  }
 
   function changeType() {
     console.log('isBiz: ' + relOrBiz);
     setRelOrBiz(relOrBiz == 'Biz' ? 'Rel' : 'Biz');
     setChangeTypeButtonText(relOrBiz == 'Biz' ? 'Change to Relationship' : 'Change to Business');
+  }
+
+  function handleRelPressed() {
+    setModalRelVisible(!modalRelVisible);
   }
 
   function savePressed() {
@@ -78,8 +99,38 @@ export default function EditRelationshipScreen(props: any) {
     updateContact();
   }
 
+  function backPressed() {
+    console.log('back pressed');
+    navigation.goBack();
+  }
+
+  function setReferredFromModal(user: RolodexDataProps) {
+    console.log('userId: ' + user.id);
+    console.log('userFirst: ' + user.firstName);
+    let dp: RelDetailsReferredBy = {
+      id: user.id,
+      name: user.firstName,
+    };
+
+    setReferral(dp);
+    console.log('referredBy ' + referral);
+  }
+
+  function setSpouseFromModal(user: RolodexDataProps) {
+    console.log(user.id);
+    console.log(user.firstName);
+    let dp: RelDetailsSpouse = {
+      id: user.id,
+      name: user.firstName,
+    };
+
+    setSpouse(dp);
+  }
+
   function updateContact() {
     console.log('office: ' + officePhone);
+    console.log(spouse);
+
     editContact(
       data?.id,
       theRank,
@@ -104,7 +155,9 @@ export default function EditRelationshipScreen(props: any) {
       company,
       services,
       bizNotes,
-      interests
+      interests,
+      spouse,
+      referral
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -121,6 +174,11 @@ export default function EditRelationshipScreen(props: any) {
       headerRight: () => (
         <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
           <Text style={styles.saveText}>Save</Text>
+        </TouchableOpacity>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={backPressed}>
+          <Text style={styles.saveText}>Back</Text>
         </TouchableOpacity>
       ),
     });
@@ -186,11 +244,29 @@ export default function EditRelationshipScreen(props: any) {
   }
 
   function removeSpousePressed() {
-    setSpouse('');
+    let dp: RelDetailsSpouse = {
+      id: '',
+      name: '',
+    };
+    setSpouse(dp);
   }
 
   function removeReferralPressed() {
-    setReferral('');
+    let dp: RelDetailsReferredBy = {
+      id: '',
+      name: '',
+    };
+    setReferral(dp);
+  }
+
+  function spousePressed() {
+    console.log('spouse pressed');
+    handleRelPressed();
+  }
+
+  function referralPressed() {
+    console.log('referral pressed');
+    handleRelPressed();
   }
 
   useEffect(() => {
@@ -381,22 +457,36 @@ export default function EditRelationshipScreen(props: any) {
         defaultValue={website}
       />
       <View style={styles.divider}></View>
+
       <View style={styles.textAndButtonRow}>
         <Text style={styles.subTitle}>Spouse</Text>
-        {spouse != '' && spouse != null && (
+        {spouse != null && spouse.id != '' && spouse.id != null && (
           <TouchableOpacity style={styles.inlineButtons} onPress={removeSpousePressed}>
             <Text style={styles.inlineButtons}>Remove</Text>
           </TouchableOpacity>
         )}
       </View>
-      <TextInput
-        style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
-        placeholder="+Add"
-        placeholderTextColor="#AFB9C2"
-        secureTextEntry={false}
-        onChangeText={(text) => setSpouse(text)}
-        defaultValue={spouse}
-      />
+
+      <TouchableOpacity onPress={spousePressed}>
+        <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
+          {spouse != null && spouse.id != '' && spouse.id != null && <Text>{spouse.name}</Text>}
+          {(spouse == null || spouse.id == '' || spouse.id == null) && <Text style={styles.addText}>+Add</Text>}
+        </View>
+      </TouchableOpacity>
+
+      {modalRelVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalRelVisible}
+          onRequestClose={() => {
+            setModalRelVisible(!modalRelVisible);
+          }}
+        >
+          <AddRel title={'Select Relationship'} setReferral={setSpouseFromModal} setModalVisible={setModalRelVisible} />
+        </Modal>
+      )}
+
       <View style={styles.divider}></View>
       <Text style={styles.subTitle}>Street</Text>
       <TextInput
@@ -468,27 +558,45 @@ export default function EditRelationshipScreen(props: any) {
         defaultValue={genNotes}
       />
       <View style={styles.divider}></View>
+
       <View style={styles.textAndButtonRow}>
         <Text style={styles.subTitle}>Referred By</Text>
-        {referral != '' && referral != null && (
+        {referral != null && referral.id != '' && referral.id != null && (
           <TouchableOpacity style={styles.inlineButtons} onPress={removeReferralPressed}>
             <Text style={styles.inlineButtons}>Remove</Text>
           </TouchableOpacity>
         )}
       </View>
-      <TextInput
-        style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
-        placeholder="+Add"
-        placeholderTextColor="#AFB9C2"
-        secureTextEntry={false}
-        onChangeText={(text) => setReferral(text)}
-        defaultValue={referral}
-      />
+
+      <TouchableOpacity onPress={referralPressed}>
+        <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
+          {referral != null && referral.id != '' && referral.id != null && <Text>{referral.name}</Text>}
+          {(referral == null || referral.id == '' || referral.id == null) && <Text style={styles.addText}>+Add</Text>}
+        </View>
+      </TouchableOpacity>
+
+      {modalRelVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalRelVisible}
+          onRequestClose={() => {
+            setModalRelVisible(!modalRelVisible);
+          }}
+        >
+          <AddRel
+            title={'Select Relationship'}
+            setReferral={setReferredFromModal}
+            setModalVisible={setModalRelVisible}
+          />
+        </Modal>
+      )}
+
       <View style={styles.divider}></View>
       <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Personal And Family</Text>
       <View style={styles.divider}></View>
 
-      <Text style={styles.subTitle}>Birthday</Text>
+      {/*<Text style={styles.subTitle}>Birthday</Text>
       <TextInput
         style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
         placeholder="+Add"
@@ -496,7 +604,44 @@ export default function EditRelationshipScreen(props: any) {
         secureTextEntry={false}
         onChangeText={(text) => setBirthday(text)}
         defaultValue={birthday}
-      />
+      /> */}
+
+      <Text style={styles.subTitle}>Birthday Test</Text>
+      <TouchableOpacity onPress={showBirthDatePicker}>
+        <View style={styles.inputViewLight}>
+          <Text style={styles.textInputLight}>
+            {date.toLocaleDateString('en-us', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              //  hour: 'numeric',
+              //  minute: 'numeric',
+            })}
+          </Text>
+        </View>
+      </TouchableOpacity>
+
+      {showBirthDate && (
+        <TouchableOpacity
+          onPress={() => {
+            setShowBirthDate(false);
+          }}
+        >
+          <Text style={styles.saveButton}>Close</Text>
+        </TouchableOpacity>
+      )}
+
+      {showBirthDate && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={'date'}
+          is24Hour={true}
+          onChange={onDatePickerBdayChange}
+          display="spinner"
+          textColor="white"
+        />
+      )}
 
       <View style={styles.divider}></View>
       <Text style={styles.subTitle}>Wedding Anniversary</Text>
@@ -584,7 +729,7 @@ export default function EditRelationshipScreen(props: any) {
 
 const styles = StyleSheet.create({
   saveButton: {
-    padding: 10,
+    padding: 5,
   },
   saveText: {
     color: 'white',
@@ -666,7 +811,7 @@ const styles = StyleSheet.create({
   },
   inputViewLight: {
     marginTop: 10,
-    backgroundColor: 'white',
+    backgroundColor: 'red',
     width: '90%',
     height: '50%',
     marginBottom: 2,
@@ -697,5 +842,9 @@ const styles = StyleSheet.create({
     color: 'black',
     marginLeft: 15,
     marginBottom: 10,
+  },
+  addText: {
+    fontSize: 16,
+    color: '#AFB9C2',
   },
 });

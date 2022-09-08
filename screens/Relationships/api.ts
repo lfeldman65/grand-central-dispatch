@@ -13,6 +13,8 @@ import {
   GroupMembersDataResponse,
   RemoveGroupMemberDataResponse,
   AddGroupMemberDataResponse,
+  RelDetailsSpouse,
+  RelDetailsReferredBy,
 } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
@@ -134,7 +136,9 @@ export function editContact(
   company: string,
   services: string,
   bizNotes: string,
-  interests: string
+  interests: string,
+  spouse: RelDetailsSpouse,
+  referredBy: RelDetailsReferredBy
 ): Promise<RelDetailsResponse> {
   console.log('api last:' + last);
   return http.put(`contacts/${guid}`, {
@@ -143,10 +147,13 @@ export function editContact(
       qualified: qual,
       firstName: first,
       lastName: last,
+      referral: 'True',
       mobile: mobile,
       homePhone: homePhone,
       officePhone: officePhone,
       email: email,
+      spouse: spouse,
+      referredBy: referredBy,
       website: website,
       address: {
         street: street1,
