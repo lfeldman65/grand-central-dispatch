@@ -260,8 +260,9 @@ export default function EditRelationshipScreen(props: any) {
   }
 
   function spousePressed() {
-    console.log('spouse pressed');
-    handleRelPressed();
+    if (spouse == null || spouse.id == '' || spouse.id == null) {
+      handleRelPressed();
+    }
   }
 
   function referralPressed() {
