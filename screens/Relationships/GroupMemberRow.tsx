@@ -3,6 +3,7 @@ import { GroupMembersDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { storage } from '../../utils/storage';
+import { removeGroupMember } from './api';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -10,7 +11,7 @@ const rankB = require('../Relationships/images/rankB.png');
 const rankC = require('../Relationships/images/rankC.png');
 const rankD = require('../Relationships/images/rankD.png');
 
-interface GroupRowProps {
+interface GroupMemberRowProps {
   data: GroupMembersDataProps;
   onPress(): void;
   search: string;
@@ -26,11 +27,14 @@ function chooseImage(rank: string) {
   return rankD;
 }
 
-function displayName(first: string, last: string) {
-  return first + ' ' + last;
+function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
+  if (type == 'Rel') {
+    return first + ' ' + last;
+  }
+  return employer + ' (' + first + ')';
 }
 
-export default function GroupMemberRow(props: GroupRowProps) {
+export default function GroupMemberRow(props: GroupMemberRowProps) {
   const { groupID, groupName } = props;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -38,17 +42,55 @@ export default function GroupMemberRow(props: GroupRowProps) {
   const navigation = useNavigation();
 
   useEffect(() => {
-    getDarkOrLightMode();
-    console.log('group name ya: ' + groupName);
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
   function removePressed() {
-    console.log('remove pressed');
+    Alert.alert(
+      'Remove ' + props.data.firstName + ' ' + props.data.lastName + ' from ' + groupName + '?',
+      '',
+      [
+        {
+          text: 'Remove',
+          onPress: () => removePressedContinued(),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  function removePressedContinued() {
+    console.log('group id from above: ' + groupID);
+    console.log('guid from above: ' + props.data.id);
+    setIsLoading(true);
+    removeGroupMember(groupID, props.data.id)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          navigation.goBack();
+          //  console.log(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   return (
@@ -56,7 +98,7 @@ export default function GroupMemberRow(props: GroupRowProps) {
       <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
         <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
-          {displayName(props.data.firstName, props.data.lastName)}
+          {displayName(props.data.firstName, props.data.lastName, props.data.contactTypeID, 'Motorola', true)}
         </Text>
         <View style={styles.removeView}>
           <Text onPress={removePressed} style={styles.removeButton}>

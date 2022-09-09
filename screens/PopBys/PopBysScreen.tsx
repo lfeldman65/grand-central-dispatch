@@ -223,7 +223,7 @@ export default function ManageRelationshipsScreen() {
         <TextInput
           style={styles.textInput}
           placeholder="Search By Name or Address"
-          placeholderTextColor="#AFB9C2"
+          placeholderTextColor="white"
           textAlign="left"
           defaultValue={search}
           onChangeText={(text) => setSearch(text)}
@@ -333,15 +333,16 @@ export default function ManageRelationshipsScreen() {
 
 export const styles = StyleSheet.create({
   searchView: {
-    backgroundColor: '#002341',
+    backgroundColor: '#1a6295',
     height: 40,
-    // marginLeft: 5,
-    //  marginRight: 5,
     justifyContent: 'space-evenly',
     paddingLeft: 10,
+    borderColor: 'white',
     borderWidth: 1,
-    // borderRadius: 10,
+    borderRadius: 10,
     flexDirection: 'row',
+    marginTop: 5,
+    marginBottom: 5,
   },
   magGlass: {
     width: 20,
@@ -351,7 +352,7 @@ export const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: 'white',
     width: 300,
   },
   closeX: {

@@ -73,7 +73,7 @@ export default function ManageRelationshipsScreen() {
     } else if (tabSelected == 'ranking') {
       fetchRolodexPressed('ranking');
     } else {
-      fetchRolodexPressed('groups');
+      fetchGroupsPressed();
     }
     return () => {
       isMounted = false;
@@ -87,7 +87,7 @@ export default function ManageRelationshipsScreen() {
     } else if (tabSelected == 'ranking') {
       fetchRolodexPressed('ranking');
     } else {
-      fetchRolodexPressed('groups');
+      fetchGroupsPressed();
     }
   }, [isFilterRel]);
 
