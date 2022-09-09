@@ -95,6 +95,7 @@ export default function BizGoalsScreen1(props: any) {
 
   function backPressed() {
     restoreFields();
+    //  navigation.goBack();
   }
 
   function restoreFields() {

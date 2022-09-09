@@ -60,13 +60,13 @@ export function updateBizGoals(
 ): Promise<BizGoalsDataResponse> {
   return http.put('setup/goals', {
     body: {
-      desiredSalary,
-      taxRate,
-      yearlyExpenses,
-      myCommissionPercentage,
-      averageSalePrice,
-      averageSaleCommission,
-      commissionType,
+      desiredSalary: desiredSalary,
+      taxRate: taxRate,
+      yearlyExpenses: yearlyExpenses,
+      myCommissionPercentage: myCommissionPercentage,
+      averageSalePrice: averageSalePrice,
+      averageSaleCommission: averageSaleCommission,
+      commissionType: commissionType,
     },
   });
 }
