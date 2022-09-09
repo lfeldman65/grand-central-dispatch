@@ -12,7 +12,7 @@ import {
   Modal,
 } from 'react-native';
 import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused, NavigationContainer } from '@react-navigation/native';
 import { getGroupMembers, getGroupMembersSearch, addRelToGroup } from './api';
 import { GroupMembersDataProps } from './interfaces';
 import GroupMemberRow from './GroupMemberRow';
@@ -36,8 +36,16 @@ export default function GroupMembersScreen(props: any) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerLeft: () => null,
-      headerRight: () => <Button color="#fff" onPress={() => addPressed()} title="Add" />,
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={addPressed}>
+          <Text style={styles.saveText}>Add</Text>
+        </TouchableOpacity>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={backPressed}>
+          <Text style={styles.saveText}>Back</Text>
+        </TouchableOpacity>
+      ),
     });
   }, [navigation]);
 
@@ -48,6 +56,10 @@ export default function GroupMembersScreen(props: any) {
       lastName: dataGroups[index].lastName,
     });
   };
+
+  function backPressed() {
+    navigation.goBack();
+  }
 
   function clearSearchPressed() {
     setSearch('');
@@ -215,6 +227,13 @@ export default function GroupMembersScreen(props: any) {
 }
 
 const styles = StyleSheet.create({
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
+  },
   containerDark: {
     flex: 1,
     backgroundColor: 'black',
@@ -272,12 +291,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     marginLeft: 30,
-  },
-  saveButton: {
-    color: 'white',
-    fontSize: 18,
-    textAlign: 'center',
-    marginRight: '10%',
   },
   notesText: {
     color: 'white',

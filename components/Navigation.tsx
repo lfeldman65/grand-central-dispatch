@@ -382,7 +382,7 @@ export const RelStackNavigator = () => {
           headerStyle: {
             backgroundColor: '#1A6295',
           },
-          headerBackVisible: true,
+          headerBackVisible: false,
         }}
       />
 
