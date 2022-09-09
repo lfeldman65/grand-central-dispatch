@@ -95,7 +95,6 @@ export default function BizGoalsScreen1(props: any) {
 
   function backPressed() {
     restoreFields();
-    navigation.goBack();
   }
 
   function restoreFields() {
@@ -112,8 +111,7 @@ export default function BizGoalsScreen1(props: any) {
         if (res.status == 'error') {
           console.log(res);
         } else {
-          //   console.log(res);
-          goToReview();
+          navigation.goBack();
         }
       })
       .catch((error) => console.error('failure ' + error));
