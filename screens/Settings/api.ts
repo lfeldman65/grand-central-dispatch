@@ -22,19 +22,19 @@ export function editProfileData(
 ): Promise<EditProfileDataResponse> {
   return http.post('setup/profile', {
     body: {
-      email,
-      businessType,
-      timezone,
-      mobile,
-      firstName,
-      lastName,
-      companyName,
-      street1,
-      street2,
-      city,
-      state,
-      zip,
-      country,
+      email: email,
+      businessType: businessType,
+      timezone: timezone,
+      mobile: mobile,
+      firstName: firstName,
+      lastName: lastName,
+      companyName: companyName,
+      street1: street1,
+      street2: street2,
+      city: city,
+      state: state,
+      zip: zip,
+      country: country,
     },
   });
 }
