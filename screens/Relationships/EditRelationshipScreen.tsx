@@ -4,7 +4,7 @@ import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { isNullOrEmpty, prettyDate } from '../../utils/general';
-import { editContact } from './api';
+import { editContact, changeRankAndQual } from './api';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AddRel from './SelectRelationshipScreen';
 import { RolodexDataProps, RelDetailsSpouse, RelDetailsReferredBy } from './interfaces';
@@ -33,6 +33,7 @@ export default function EditRelationshipScreen(props: any) {
   const [relOrBiz, setRelOrBiz] = useState(data.contactTypeID);
   const [changeTypeButtonText, setChangeTypeButtonText] = useState('');
   const [showBirthDate, setShowBirthDate] = useState(false);
+  const [showWeddingDate, setShowWeddingDate] = useState(false);
   const [theRank, setTheRank] = useState(data.ranking);
   const [isQual, setIsQual] = useState(data.qualified);
   const [firstName, setFirstName] = useState(data.firstName);
@@ -69,19 +70,37 @@ export default function EditRelationshipScreen(props: any) {
   const navigation = useNavigation();
 
   const onDatePickerBdayChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log(currentDate);
-    setShowBirthDate(false);
-    setDate(currentDate);
+    setBirthday(
+      selectedDate.toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      })
+    );
   };
 
-  function saveComplete() {
-    console.log('save complete');
-  }
+  const onDatePickerWeddingChange = (event: any, selectedDate: any) => {
+    setWedding(
+      selectedDate.toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      })
+    );
+  };
+
+  // function saveComplete() {
+  //   console.log('save complete');
+  // }
 
   function showBirthDatePicker() {
     console.log('show birthday picker');
     setShowBirthDate(true);
+  }
+
+  function showWeddingDatePicker() {
+    console.log('show wedding picker');
+    setShowWeddingDate(true);
   }
 
   function changeType() {
@@ -106,7 +125,8 @@ export default function EditRelationshipScreen(props: any) {
 
   function backPressed() {
     console.log('back pressed');
-    navigation.goBack();
+    //   navigation.goBack();
+    quickUpdateRankQual();
   }
 
   function setReferredFromModal(user: RolodexDataProps) {
@@ -133,9 +153,6 @@ export default function EditRelationshipScreen(props: any) {
   }
 
   function updateContact() {
-    console.log('office: ' + officePhone);
-    console.log(spouse);
-
     editContact(
       data?.id,
       theRank,
@@ -162,7 +179,9 @@ export default function EditRelationshipScreen(props: any) {
       bizNotes,
       interests,
       spouse,
-      referral
+      referral,
+      birthday,
+      wedding
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -214,6 +233,8 @@ export default function EditRelationshipScreen(props: any) {
     bizNotes,
     interests,
     referral,
+    birthday,
+    wedding,
   ]);
 
   function getRankButtonImage(rank: string) {
@@ -287,6 +308,24 @@ export default function EditRelationshipScreen(props: any) {
     console.log('rank1: ' + rank);
     setTheRank(rank);
     console.log('rank after: ' + theRank);
+  }
+
+  function quickUpdateRankQual() {
+    console.log('guid: ' + data.id);
+    console.log('the rank: ' + theRank);
+
+    changeRankAndQual(data?.id!, theRank, isQual)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+          //   Alert.alert(res.error);
+        } else {
+          console.log(res);
+          navigation.goBack();
+        }
+        //  setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   function handleQualPress(qualParameter: string) {
@@ -606,28 +645,11 @@ export default function EditRelationshipScreen(props: any) {
       <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Personal And Family</Text>
       <View style={styles.divider}></View>
 
-      {/*<Text style={styles.subTitle}>Birthday</Text>
-      <TextInput
-        style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
-        placeholder="+Add"
-        placeholderTextColor="#AFB9C2"
-        secureTextEntry={false}
-        onChangeText={(text) => setBirthday(text)}
-        defaultValue={birthday}
-      /> */}
-
-      <Text style={styles.subTitle}>Birthday Test</Text>
+      <Text style={styles.subTitle}>Birthday</Text>
       <TouchableOpacity onPress={showBirthDatePicker}>
-        <View style={styles.inputViewLight}>
-          <Text style={styles.textInputLight}>
-            {date.toLocaleDateString('en-us', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-              //  hour: 'numeric',
-              //  minute: 'numeric',
-            })}
-          </Text>
+        <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
+          {birthday != null && birthday != '' && <Text>{birthday}</Text>}
+          {(birthday == null || birthday == '') && <Text style={styles.addText}>+Add</Text>}
         </View>
       </TouchableOpacity>
 
@@ -637,34 +659,54 @@ export default function EditRelationshipScreen(props: any) {
             setShowBirthDate(false);
           }}
         >
-          <Text style={styles.saveButton}>Close</Text>
+          <Text style={styles.closePicker}>Close</Text>
         </TouchableOpacity>
       )}
 
       {showBirthDate && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={date}
+          value={new Date(birthday)}
           mode={'date'}
           is24Hour={true}
           onChange={onDatePickerBdayChange}
           display="spinner"
-          textColor="white"
+          textColor={lightOrDark == 'dark' ? 'white' : 'black'}
         />
       )}
-
       <View style={styles.divider}></View>
-      <Text style={styles.subTitle}>Wedding Anniversary</Text>
-      <TextInput
-        style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
-        placeholder="+Add"
-        placeholderTextColor="#AFB9C2"
-        secureTextEntry={false}
-        onChangeText={(text) => setWedding(text)}
-        defaultValue={wedding}
-      />
 
+      <Text style={styles.subTitle}>Wedding</Text>
+      <TouchableOpacity onPress={showWeddingDatePicker}>
+        <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
+          {wedding != null && wedding != '' && <Text>{wedding}</Text>}
+          {(wedding == null || wedding == '') && <Text style={styles.addText}>+Add</Text>}
+        </View>
+      </TouchableOpacity>
+
+      {showWeddingDate && (
+        <TouchableOpacity
+          onPress={() => {
+            setShowWeddingDate(false);
+          }}
+        >
+          <Text style={styles.closePicker}>Close</Text>
+        </TouchableOpacity>
+      )}
+
+      {showWeddingDate && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={new Date(wedding)}
+          mode={'date'}
+          is24Hour={true}
+          onChange={onDatePickerWeddingChange}
+          display="spinner"
+          textColor={lightOrDark == 'dark' ? 'white' : 'black'}
+        />
+      )}
       <View style={styles.divider}></View>
+
       <Text style={styles.subTitle}>Children's Names</Text>
       <TextInput
         style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
@@ -740,6 +782,10 @@ export default function EditRelationshipScreen(props: any) {
 const styles = StyleSheet.create({
   saveButton: {
     padding: 5,
+  },
+  closePicker: {
+    textAlign: 'center',
+    fontSize: 18,
   },
   saveText: {
     color: 'white',

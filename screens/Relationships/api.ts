@@ -138,7 +138,9 @@ export function editContact(
   bizNotes: string,
   interests: string,
   spouse: RelDetailsSpouse,
-  referredBy: RelDetailsReferredBy
+  referredBy: RelDetailsReferredBy,
+  birthday: string,
+  wedding: string
 ): Promise<RelDetailsResponse> {
   console.log('api last:' + last);
   return http.put(`contacts/${guid}`, {
@@ -168,6 +170,8 @@ export function editContact(
       personalAndFamily: {
         childrensNames: children,
         personalNotes: personalNotes,
+        birthday: birthday,
+        weddingAnniversary: wedding,
       },
       businessAndCareer: {
         employerName: company,
