@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -31,7 +31,7 @@ export default function SettingsScreen() {
   }
 
   function changePasswordPressed() {
-    console.log('change password');
+    Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
   }
 
   function profilePressed() {
@@ -83,11 +83,11 @@ export default function SettingsScreen() {
   }
 
   function privacyPressed() {
-    console.log('privacy');
+    Linking.openURL('https://www.buffiniandcompany.com/privacy-policy.aspx');
   }
 
   function termsPressed() {
-    console.log('terms');
+    Linking.openURL('https://buffiniandcompany.com/terms');
   }
 
   function fetchProfile(isMounted: boolean) {
