@@ -4,8 +4,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Dimensions,
-  Modal,
   ScrollView,
   ActivityIndicator,
   Image,
@@ -27,7 +25,6 @@ import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
-// const chevron = require('../../images/chevron_blue.png');
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
 const pinAPlus = require('./images/mapPinAPlus.png');
@@ -42,19 +39,19 @@ export default function ManageRelationshipsScreen() {
   const [tabSelected, setTabSelected] = useState<TabType>('Near Me');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [isFilterRel, setIsFilterRel] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
   const [popByData, setPopByData] = useState<PopByRadiusDataProps[]>([]);
   const [showAPlus, setShowAPlus] = useState(true);
   const [showA, setShowA] = useState(true);
   const [showB, setShowB] = useState(true);
   const [showC, setShowC] = useState(true);
   const [search, setSearch] = useState('');
-
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -80,14 +77,28 @@ export default function ManageRelationshipsScreen() {
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-    getDarkOrLightMode();
+  }, [navigation]);
+
+  useEffect(() => {
+    let isMounted = true;
     if (tabSelected == 'Near Me') {
-      fetchPopBys('nearby');
+      fetchPopBys('nearby', isMounted);
     } else if (tabSelected == 'Priority') {
-      fetchPopBys('priority');
+      fetchPopBys('priority', isMounted);
     } else {
-      fetchPopBys('favorites');
+      fetchPopBys('favorites', isMounted);
     }
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   function matchesSearch(person: PopByRadiusDataProps) {
@@ -122,7 +133,7 @@ export default function ManageRelationshipsScreen() {
     return false;
   }
 
-  function matchesRankFilter(ranking: String) {
+  function matchesRankFilter(ranking: string) {
     if (ranking == 'A+' && showAPlus) return true;
     if (ranking == 'A' && showA) return true;
     if (ranking == 'B' && showB) return true;
@@ -133,23 +144,22 @@ export default function ManageRelationshipsScreen() {
   function nearPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
     setTabSelected('Near Me');
-    fetchPopBys('Near Me');
+    fetchPopBys('Near Me', true);
   }
 
   function priorityPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
     setTabSelected('Priority');
-    fetchPopBys('Priority');
+    fetchPopBys('Priority', true);
   }
 
   function savedPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
     setTabSelected('Saved');
-    fetchPopBys('Saved');
+    fetchPopBys('Saved', true);
   }
 
   function getRankPin(ranking: string) {
-    // console.log(ranking);
     if (ranking == 'A+') {
       return pinAPlus;
     }
@@ -185,7 +195,10 @@ export default function ManageRelationshipsScreen() {
     setShowC(!showC);
   }
 
-  function fetchPopBys(type: string) {
+  function fetchPopBys(type: string, isMounted: boolean) {
+    if (!isMounted) {
+      return false;
+    }
     setIsLoading(true);
     getPopByRadiusData(type)
       .then((res) => {
@@ -215,23 +228,6 @@ export default function ManageRelationshipsScreen() {
         <Text style={tabSelected == 'Saved' ? globalStyles.selected : globalStyles.unselected} onPress={savedPressed}>
           Saved
         </Text>
-      </View>
-
-      <View style={styles.searchView}>
-        <Image source={searchGlass} style={styles.magGlass} />
-
-        <TextInput
-          style={styles.textInput}
-          placeholder="Search By Name or Address"
-          placeholderTextColor="white"
-          textAlign="left"
-          defaultValue={search}
-          onChangeText={(text) => setSearch(text)}
-        />
-
-        <TouchableOpacity onPress={clearSearchPressed}>
-          <Image source={closeButton} style={styles.closeX} />
-        </TouchableOpacity>
       </View>
 
       <View style={lightOrDark == 'dark' ? styles.filterView : styles.filterView}>
@@ -284,6 +280,20 @@ export default function ManageRelationshipsScreen() {
         </View>
       ) : (
         <React.Fragment>
+          <View style={styles.searchView}>
+            <Image source={searchGlass} style={styles.magGlass} />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Search By Name or Address"
+              placeholderTextColor="white"
+              textAlign="left"
+              defaultValue={search}
+              onChangeText={(text) => setSearch(text)}
+            />
+            <TouchableOpacity onPress={clearSearchPressed}>
+              <Image source={closeButton} style={styles.closeX} />
+            </TouchableOpacity>
+          </View>
           <ScrollView>
             {tabSelected == 'Near Me' && (
               <View>
@@ -339,10 +349,7 @@ export const styles = StyleSheet.create({
     paddingLeft: 10,
     borderColor: 'white',
     borderWidth: 1,
-    borderRadius: 10,
     flexDirection: 'row',
-    marginTop: 5,
-    marginBottom: 5,
   },
   magGlass: {
     width: 20,
@@ -381,7 +388,7 @@ export const styles = StyleSheet.create({
     opacity: 0.4,
   },
   mapView: {
-    height: '60%',
+    height: '50%',
     width: '100%',
   },
   map: {
