@@ -80,6 +80,7 @@ export default function SettingsScreen() {
 
   function ratePressed() {
     console.log('rate');
+    Linking.openURL('https://apps.apple.com/us/app/referral-maker-crm/id1097338930');
   }
 
   function privacyPressed() {
