@@ -33,23 +33,7 @@ export default function SelectReferralScreen(props: any) {
   const handleRowPress = (index: number) => {
     setReferral(dataRolodex[index]);
     setModalVisible(false);
-    //  analytics.event(new Event('PAC', 'Go To Details'));
-    // navigation.navigate('PACDetail', {
-    //   contactId: data[index]['contactId'],
-    //   type: data[index]['type'],
-    //   ranking: data[index]['ranking'],
-    //   lastCallDate: data[index]['lastCallDate'],
-    //   lastNoteDate: data[index]['lastNoteDate'],
-    //   lastPopByDate: data[index]['lastPopByDate'],
-    // });
   };
-
-  //   useEffect(() => {
-  //     navigation.setOptions({
-  //       headerLeft: () => <MenuIcon />,
-  //       tab: tabSelected,
-  //     });
-  //   }, []);
 
   useEffect(() => {
     if (tabSelected == 'Search Existing') {
@@ -66,7 +50,6 @@ export default function SelectReferralScreen(props: any) {
   function addNewPressed() {
     //  analytics.event(new Event('PAC', 'Notes Tab'));
     setTabSelected('Add New');
-    // fetchRolodexPressed('alpha');
   }
 
   function cancelPressed() {
@@ -77,10 +60,13 @@ export default function SelectReferralScreen(props: any) {
     console.log('search pressed');
   }
 
-  function fetchRolodexPressed(type: string) {
+  function fetchRolodexPressed(type: string, isMounted: boolean = true) {
     setIsLoading(true);
     getRolodexData(type)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -91,23 +77,28 @@ export default function SelectReferralScreen(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
   useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => <MenuIcon />,
-    });
-  });
-
-  useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   useEffect(() => {
-    fetchRolodexPressed('alpha');
+    let isMounted = true;
+    fetchRolodexPressed('alpha', isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   return (
