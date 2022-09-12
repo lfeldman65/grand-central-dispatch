@@ -783,12 +783,12 @@ const styles = StyleSheet.create({
   saveButton: {
     padding: 5,
   },
-  closePicker: {
-    textAlign: 'center',
-    fontSize: 18,
-  },
   saveText: {
     color: 'white',
+    fontSize: 18,
+  },
+  closePicker: {
+    textAlign: 'center',
     fontSize: 18,
   },
   scrollViewDark: {

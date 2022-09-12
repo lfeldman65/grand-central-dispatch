@@ -44,6 +44,17 @@ export default function NotificationsScreen(props: any) {
   }, [navigation, notifCall, notifToDo, notifWins, notifPopBys, notifImport, notifVideos]);
 
   useEffect(() => {
+    navigation.setOptions({
+      title: 'Notifications',
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
+          <Text style={styles.saveText}>Save</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [[navigation, notifCall, notifToDo, notifWins, notifPopBys, notifImport, notifVideos]]);
+
+  useEffect(() => {
     let isMounted = true;
     getDarkOrLightMode(isMounted);
     getCurrentNotifs(isMounted);
@@ -306,6 +317,13 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 0.5,
     paddingBottom: 10,
+  },
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
   checkView: {
     marginTop: 12,
