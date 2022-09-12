@@ -146,9 +146,37 @@ export default function SettingsScreen() {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
+    return () => {
+      isMounted = false;
+    };
+  }, [navigation]);
+
+  useEffect(() => {
+    let isMounted = true;
     getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
     getCurrentLandingPage(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
     getDisplayAZ(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
     fetchProfile(isMounted);
     return () => {
       isMounted = false;
