@@ -72,8 +72,8 @@ export default function ManageRelationshipsScreen() {
   };
 
   useEffect(() => {
-    navigation.setOptions({ title: 'Pop-By' });
     navigation.setOptions({
+      title: 'Pop-By',
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
