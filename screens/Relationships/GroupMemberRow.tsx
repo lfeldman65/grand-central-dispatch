@@ -17,6 +17,7 @@ interface GroupMemberRowProps {
   search: string;
   groupID: string;
   groupName: string;
+  refresh(): void;
 }
 
 function chooseImage(rank: string) {
@@ -85,8 +86,9 @@ export default function GroupMemberRow(props: GroupMemberRowProps) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          navigation.goBack();
+          //  navigation.goBack();
           //  console.log(res.data);
+          props.refresh();
         }
         setIsLoading(false);
       })

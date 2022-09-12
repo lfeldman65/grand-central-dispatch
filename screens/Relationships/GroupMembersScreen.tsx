@@ -204,6 +204,7 @@ export default function GroupMembersScreen(props: any) {
                 key={index}
                 data={item}
                 onPress={() => handleRowPress(index)}
+                refresh={() => fetchGroupMembers(groupID, true)}
               />
             ))}
           </View>
@@ -217,7 +218,11 @@ export default function GroupMembersScreen(props: any) {
                 setRelModalVisible(!relModalVisible);
               }}
             >
-              <SelRelScreen title={'Select Referral'} setReferral={setMember} setModalVisible={setRelModalVisible} />
+              <SelRelScreen
+                title={'Select Relationship'}
+                setReferral={setMember}
+                setModalVisible={setRelModalVisible}
+              />
             </Modal>
           )}
         </ScrollView>
