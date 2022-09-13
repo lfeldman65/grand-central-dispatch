@@ -198,9 +198,9 @@ export default function ProfileScreen1(props: any) {
                     console.log('biz type: ' + value);
                     setBizType(value);
                   }}
-                  style={styles.listItemCell}
+                  style={globalStyles.listItemCell}
                 >
-                  <Text style={styles.listItem}>{key}</Text>
+                  <Text style={globalStyles.listItem}>{key}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -251,9 +251,9 @@ export default function ProfileScreen1(props: any) {
                     console.log('time zone: ' + value);
                     setTimeZone(value);
                   }}
-                  style={styles.listItemCell}
+                  style={globalStyles.listItemCell}
                 >
-                  <Text style={styles.listItem}>{key}</Text>
+                  <Text style={globalStyles.listItem}>{key}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -345,18 +345,5 @@ const styles = StyleSheet.create({
   filterView: {
     width: '100%',
     padding: 12,
-  },
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
   },
 });

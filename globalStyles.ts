@@ -83,4 +83,19 @@ export default StyleSheet.create({
     backgroundColor: '#1A6295',
     height: 60,
   },
+
+  // Drop-Down Menues
+  listItemCell: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  listItem: {
+    flex: 1,
+    marginVertical: 30,
+    borderRadius: 5,
+    fontSize: 20,
+    alignItems: 'center',
+    textAlign: 'center',
+  },
 });

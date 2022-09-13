@@ -194,10 +194,10 @@ export default function RecentActivityScreenScreen() {
                         setFilterSetting(value);
                         // fetchData();
                       }}
-                      style={styles.listItemCell}
+                      style={globalStyles.listItemCell}
                     >
                       {/*  you can style the text in listItem */}
-                      <Text style={styles.listItem}>{key}</Text>
+                      <Text style={globalStyles.listItem}>{key}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -214,55 +214,16 @@ export default function RecentActivityScreenScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    height: '100%',
-  },
-  filterRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 40,
-  },
-  blankButton: {
-    // Helps placement of title and chevron
-    marginLeft: '10%',
-  },
   chevron: {
     marginRight: 20,
     marginTop: 15,
     height: 12,
     width: 20,
   },
-  filterButton: {
-    height: 40,
-    alignItems: 'center',
-    borderColor: 'lightgray',
-    borderWidth: 1,
-    backgroundColor: 'white',
-  },
-  filterText: {
-    flexDirection: 'row',
-    fontSize: 16,
-    color: '#1C6597',
-    marginTop: 10,
-  },
   filter: {
     flexDirection: 'row',
     fontSize: 16,
     color: '#1C6597',
-  },
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
   },
   scrollview: {
     width: '100%',
@@ -270,11 +231,5 @@ const styles = StyleSheet.create({
   },
   footer: {
     height: 50,
-  },
-  btnLeft: {
-    width: 30,
-    height: 30,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 100,
   },
 });

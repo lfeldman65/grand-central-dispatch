@@ -7,7 +7,8 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import { RolodexDataProps, RelProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { sub } from 'react-native-reanimated';
+import globalStyles from '../../globalStyles';
+
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
@@ -159,9 +160,9 @@ export default function TrackActivityScreen(props: any) {
                     console.log('goal: ' + value);
                     setGoal(value);
                   }}
-                  style={styles.listItemCell}
+                  style={globalStyles.listItemCell}
                 >
-                  <Text style={styles.listItem}>{key}</Text>
+                  <Text style={globalStyles.listItem}>{key}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -239,7 +240,7 @@ export default function TrackActivityScreen(props: any) {
 
       <Text style={styles.fieldTitle}>Notes</Text>
       <View style={styles.mainContent}>
-        <View style={lightOrDark == 'dark' ? styles.inputViewDark : styles.inputViewLight}>
+        <View style={lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>
           <TextInput
             style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
             placeholder="Type Here"
@@ -346,21 +347,21 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 20,
   },
-  inputViewDark: {
+  notesDark: {
     marginTop: 10,
     backgroundColor: 'black',
     width: '90%',
-    height: '40%',
+    height: '60%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  inputViewLight: {
+  notesLight: {
     marginTop: 10,
     backgroundColor: 'white',
     width: '90%',
-    height: '40%',
+    height: '60%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
@@ -379,19 +380,5 @@ const styles = StyleSheet.create({
   filterView: {
     width: '100%',
     padding: 12,
-  },
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    height: 60,
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
   },
 });

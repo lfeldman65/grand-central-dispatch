@@ -352,17 +352,4 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 12,
   },
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
-  },
 });

@@ -240,10 +240,10 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
                         continueTxChangeStatus(currentId, value, changeStatusSuccess, changeStatusFailure);
                         // fetchData();
                       }}
-                      style={styles2.listItemCell}
+                      style={globalStyles.listItemCell}
                     >
                       {/*  you can style the text in listItem */}
-                      <Text style={styles2.listItem}>{key}</Text>
+                      <Text style={globalStyles.listItem}>{key}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -257,19 +257,6 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
 }
 
 const styles2 = StyleSheet.create({
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
-  },
   scrollview: {
     width: '100%',
     padding: 12,

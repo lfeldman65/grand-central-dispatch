@@ -649,9 +649,9 @@ export default function AddToDoScreen(props: any) {
                       setRecurrence(value);
                       // fetchData();
                     }}
-                    style={styles.listItemCell}
+                    style={globalStyles.listItemCell}
                   >
-                    <Text style={styles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{key}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -695,9 +695,9 @@ export default function AddToDoScreen(props: any) {
                       setUntilType(value);
                       // fetchData();
                     }}
-                    style={styles.listItemCell}
+                    style={globalStyles.listItemCell}
                   >
-                    <Text style={styles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{key}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -742,9 +742,9 @@ export default function AddToDoScreen(props: any) {
                       setReminder(value);
                       // fetchData();
                     }}
-                    style={styles.listItemCell}
+                    style={globalStyles.listItemCell}
                   >
-                    <Text style={styles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{key}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -789,9 +789,9 @@ export default function AddToDoScreen(props: any) {
                       setMonthlyFrequency(value);
                       // fetchData();
                     }}
-                    style={styles.listItemCell}
+                    style={globalStyles.listItemCell}
                   >
-                    <Text style={styles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{key}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -836,9 +836,9 @@ export default function AddToDoScreen(props: any) {
                       setWeeklyFrequency(value);
                       // fetchData();
                     }}
-                    style={styles.listItemCell}
+                    style={globalStyles.listItemCell}
                   >
-                    <Text style={styles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{key}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -883,9 +883,9 @@ export default function AddToDoScreen(props: any) {
                       setOrder(value);
                       // fetchData();
                     }}
-                    style={styles.listItemCell}
+                    style={globalStyles.listItemCell}
                   >
-                    <Text style={styles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{key}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -930,9 +930,9 @@ export default function AddToDoScreen(props: any) {
                       setYearlyFrequency(value);
                       // fetchData();
                     }}
-                    style={styles.listItemCell}
+                    style={globalStyles.listItemCell}
                   >
-                    <Text style={styles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{key}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -1072,19 +1072,6 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
-  },
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 15,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
   },
   filterView: {
     width: '100%',
