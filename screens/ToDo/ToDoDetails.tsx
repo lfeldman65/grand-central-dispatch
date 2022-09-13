@@ -22,17 +22,35 @@ export default function ToDoDetails(props: any) {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    getDarkOrLightMode();
-    fetchData();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  React.useLayoutEffect(() => {
+  useEffect(() => {
+    let isMounted = true;
+    fetchData(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <Button color="#fff" onPress={editPressed} title="Edit" />,
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
+          <Text style={styles.saveText}>Save</Text>
+        </TouchableOpacity>
+      ),
     });
   }, [navigation]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -96,13 +114,16 @@ export default function ToDoDetails(props: any) {
 
   function saveComplete() {
     console.log('save complete');
-    fetchData();
+    fetchData(true);
   }
 
-  function fetchData() {
+  function fetchData(isMounted: boolean) {
     setIsLoading(true);
     getToDoDetails(toDoID)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -327,5 +348,12 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginRight: 10,
     marginTop: 7,
+  },
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
 });
