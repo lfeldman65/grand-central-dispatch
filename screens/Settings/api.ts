@@ -1,6 +1,11 @@
 import { http } from '../../utils/http';
-import { ProfileDataResponse, EditProfileDataResponse } from './interfaces';
-
+import {
+  ProfileDataResponse,
+  EditProfileDataResponse,
+  BizGoalsDataResponse,
+  BizGoalsSummaryDataResponse,
+  AboutUsDataResponse,
+} from './interfaces';
 export function getProfileData(): Promise<ProfileDataResponse> {
   return http.get('setup/profile');
 }
@@ -37,4 +42,39 @@ export function editProfileData(
       country: country,
     },
   });
+}
+
+export function getBizGoals(): Promise<BizGoalsDataResponse> {
+  return http.get('setup/goals');
+}
+
+export function updateBizGoals(
+  desiredSalary: string,
+  taxRate: string,
+  yearlyExpenses: string,
+  myCommissionPercentage: string,
+  averageSalePrice: string,
+  averageSaleCommission: string,
+  commissionType: string
+): Promise<BizGoalsDataResponse> {
+  console.log('biz: ' + averageSaleCommission);
+  return http.put('setup/goals', {
+    body: {
+      desiredSalary: desiredSalary,
+      taxRate: taxRate,
+      yearlyExpenses: yearlyExpenses,
+      myCommissionPercentage: myCommissionPercentage,
+      averageSalePrice: averageSalePrice,
+      averageSaleCommission: averageSaleCommission,
+      commissionType: commissionType,
+    },
+  });
+}
+
+export function getBizGoalsSummary(): Promise<BizGoalsSummaryDataResponse> {
+  return http.get('setup/goalSummary');
+}
+
+export function getMedia(type: string): Promise<AboutUsDataResponse> {
+  return http.get(`media?batchSize=50&lastItem=0&type=${type}`);
 }
