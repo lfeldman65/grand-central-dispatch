@@ -61,7 +61,7 @@ export default function BizGoalsScreen1(props: any) {
     return () => {
       isMounted = false;
     };
-  }, [isFocused]);
+  }, []);
 
   function initializeFields(
     desSal?: string,
@@ -194,7 +194,7 @@ export default function BizGoalsScreen1(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          //  console.log(res.data);
+          console.log(res.data);
           initializeFields(
             res.data.desiredSalary,
             res.data.taxRate,
