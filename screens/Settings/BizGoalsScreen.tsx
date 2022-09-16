@@ -1,12 +1,11 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { getBizGoals, updateBizGoals } from './api';
 import { removeTrailingDecimal, removeLeadingDecimal } from './settingsHelpers';
-import { round } from 'react-native-reanimated';
 
 export default function BizGoalsScreen1(props: any) {
   const [netIncome, setNetIncome] = useState('');
@@ -21,7 +20,8 @@ export default function BizGoalsScreen1(props: any) {
   const [agentBrokerSplitBU, setAgentBrokerSplitBU] = useState('');
   const [aveCommission, setAveCommission] = useState('');
   const [aveCommissionBU, setAveCommissionBU] = useState('');
-  const [dollarOrPercent, setDollarOrPercent] = useState('dollar');
+  const [dollarOrPercent, setDollarOrPercent] = useState('');
+  const [dollarOrPercentBU, setDollarOrPercentBU] = useState('');
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
@@ -53,6 +53,8 @@ export default function BizGoalsScreen1(props: any) {
     agentBrokerSplitBU,
     aveCommission,
     aveCommissionBU,
+    dollarOrPercent,
+    dollarOrPercentBU,
   ]);
 
   useEffect(() => {
@@ -107,30 +109,44 @@ export default function BizGoalsScreen1(props: any) {
       setAveAmount(removeTrailingDecimal(aveSalePrice));
       setAveAmountBU(removeTrailingDecimal(aveSalePrice));
     }
+    console.log('commtypelf: ' + commType!);
+    setDollarOrPercent(commType!);
+    setDollarOrPercentBU(commType!);
     if (aveComm == null || aveComm == '') {
       setAveCommission('');
       setAveCommissionBU('');
     } else {
-      setAveCommission(removeTrailingDecimal(aveComm));
-      setAveCommissionBU(removeTrailingDecimal(aveComm));
+      if (commType == 'dollar') {
+        setAveCommission(removeTrailingDecimal(aveComm!));
+        setAveCommissionBU(removeTrailingDecimal(aveComm!));
+      } else {
+        setAveCommission(removeLeadingDecimal(aveComm!));
+        setAveCommissionBU(removeLeadingDecimal(aveComm!));
+      }
     }
   }
 
   function backPressed() {
     restoreFields();
-    //  navigation.goBack();
   }
 
   function restoreFields() {
-    console.log('netIncome: ' + netIncomeBU);
+    console.log('lf commission BU: ' + aveCommissionBU);
+    console.log('lf dollarOrPercent BU: ' + dollarOrPercentBU);
+
+    var commission = aveCommissionBU;
+    if (dollarOrPercentBU == 'percentage') {
+      commission = '.' + aveCommissionBU;
+    }
+    console.log('lf commission: ' + commission);
     updateBizGoals(
       netIncomeBU,
       '.' + taxRatePercentBU,
       annualExpensesBU,
       '.' + agentBrokerSplitBU,
       aveAmountBU,
-      aveCommissionBU,
-      'dollar'
+      commission,
+      dollarOrPercentBU
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -146,10 +162,26 @@ export default function BizGoalsScreen1(props: any) {
     navigation.navigate('BizGoalsReview');
   }
 
+  function dollarPressed() {
+    if (dollarOrPercent == 'percentage') {
+      setDollarOrPercent('dollar');
+    }
+  }
+
+  function percentPressed() {
+    if (dollarOrPercent == 'dollar') {
+      setDollarOrPercent('percentage');
+    }
+  }
+
   function reviewPressed() {
     if (!validateFields()) {
       Alert.alert('All fields are required');
       return;
+    }
+    var aveComm2 = aveCommission;
+    if (dollarOrPercent == 'percentage') {
+      aveComm2 = '.' + aveCommission;
     }
     updateBizGoals(
       netIncome,
@@ -157,8 +189,8 @@ export default function BizGoalsScreen1(props: any) {
       annualExpenses,
       '.' + agentBrokerSplit,
       aveAmount,
-      aveCommission,
-      'dollar'
+      aveComm2,
+      dollarOrPercent
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -186,14 +218,14 @@ export default function BizGoalsScreen1(props: any) {
   }
 
   function fetchBizGoals(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
     getBizGoals()
       .then((res) => {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
+          if (!isMounted) {
+            return;
+          }
           console.log(res.data);
           initializeFields(
             res.data.desiredSalary,
@@ -289,8 +321,8 @@ export default function BizGoalsScreen1(props: any) {
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            onChangeText={(text) => setAveAmount(removeTrailingDecimal(text))}
-            defaultValue={removeTrailingDecimal(aveAmount)}
+            onChangeText={(text) => setAveAmount(text)}
+            defaultValue={aveAmount}
             keyboardType="number-pad"
           />
         </View>
@@ -298,16 +330,34 @@ export default function BizGoalsScreen1(props: any) {
 
       <Text style={styles.nameTitle}>What is the average commission you receive for each transactions?</Text>
       <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setAveCommission(removeTrailingDecimal(text))}
-            defaultValue={removeTrailingDecimal(aveCommission)}
-            keyboardType="number-pad"
-          />
+        <View style={styles.aveCommRow}>
+          <View style={styles.percentView}>
+            <Text
+              onPress={dollarPressed}
+              style={dollarOrPercent == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+            >
+              $
+            </Text>
+          </View>
+          <View style={styles.aveCommInputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setAveCommission(text)}
+              defaultValue={aveCommission}
+              keyboardType="number-pad"
+            />
+          </View>
+          <View style={styles.percentView}>
+            <Text
+              onPress={percentPressed}
+              style={dollarOrPercent == 'percentage' ? styles.percentText : styles.percentTextDim}
+            >
+              %
+            </Text>
+          </View>
         </View>
       </View>
       <View style={styles.bottom}></View>
@@ -324,6 +374,9 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
+  },
+  aveCommRow: {
+    flexDirection: 'row',
   },
   topView: {
     height: 20,
@@ -343,7 +396,7 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: 18,
     color: '#FFFFFF',
-    width: 300,
+    //  width: 300,
   },
   nameTitle: {
     color: 'white',
@@ -361,8 +414,17 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 29,
   },
+  aveCommInputView: {
+    backgroundColor: '#002341',
+    width: '80%',
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    paddingLeft: 10,
+    fontSize: 29,
+  },
   bottom: {
-    height: 300,
+    height: 300, // leave room for keyboard
   },
   saveButton: {
     padding: 5,
@@ -370,5 +432,41 @@ const styles = StyleSheet.create({
   saveText: {
     color: 'white',
     fontSize: 18,
+  },
+  percentView: {
+    backgroundColor: '#002341',
+    height: 50,
+    width: '5%',
+  },
+  dollarView: {
+    backgroundColor: '#002341',
+    height: 50,
+    width: '5%',
+  },
+  dollarText: {
+    fontSize: 20,
+    color: '#02ABF7',
+    marginTop: 12,
+    paddingLeft: 10,
+    opacity: 1.0,
+  },
+  dollarTextDim: {
+    fontSize: 20,
+    color: '#02ABF7',
+    marginTop: 12,
+    paddingLeft: 10,
+    opacity: 0.4,
+  },
+  percentText: {
+    fontSize: 20,
+    color: '#02ABF7',
+    marginTop: 12,
+    opacity: 1.0,
+  },
+  percentTextDim: {
+    fontSize: 20,
+    color: '#02ABF7',
+    marginTop: 12,
+    opacity: 0.4,
   },
 });

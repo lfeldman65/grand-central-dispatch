@@ -1,4 +1,4 @@
-import { Fragment, useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -20,14 +20,23 @@ export default function BizGoalsReviewScreen(props: any) {
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Goals Review',
+      title: 'Set Your Goals',
+
       headerRight: () => (
         <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
-          <Text style={styles.saveText}>Review</Text>
+          <Text style={styles.saveText}>Save</Text>
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchGoalSummary(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;
@@ -49,8 +58,101 @@ export default function BizGoalsReviewScreen(props: any) {
     navigation.navigate('SettingsScreen');
   }
 
+  function fetchGoalSummary(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    getBizGoalsSummary()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log(res.data);
+          setSummaryData(res.data);
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
   return (
-    <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}></ScrollView>
+    <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+      <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Yearly Income Goals</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Net Income</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {'$' + removeTrailingDecimal(summaryData?.yearlyNetIncome!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Gross Income</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {'$' + removeTrailingDecimal(summaryData?.yearlyGrossIncome!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Transactions</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.yearlyTransactions!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Referrals</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.yearlyReferrals!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Voice-to-Voice or Face-to-Face Contacts</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.yearlyContacts!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Monthly Income Goals</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Net Income</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {'$' + removeTrailingDecimal(summaryData?.monthlyNetIncome!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Gross Income</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {'$' + removeTrailingDecimal(summaryData?.monthlyGrossIncome!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Transactions</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.monthlyTransactions!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Referrals</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.monthlyReferrals!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Voice-to-Voice or Face-to-Face Contacts</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>
+        {roundToInt(summaryData?.monthlyContacts!)}
+      </Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Recommended Weekly Activities</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Calls</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyCalls}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Notes</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyNotes}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Pop-By</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyPopBys}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Recommended Daily Activities</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Calls</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.dailyCalls}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Notes</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.dailyNotes}</Text>
+      <View style={styles.dividingLine}></View>
+      <Text style={styles.nameTitle}>Pop-By</Text>
+      <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.dailyPopBys}</Text>
+      <View style={styles.dividingLine}></View>
+    </ScrollView>
   );
 }
 
