@@ -35,7 +35,6 @@ export default function EditToDoScreen(props: any) {
   const [newLocation, setNewLocation] = useState('');
   const [newNotes, setNewNotes] = useState('');
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
-  // const [newAttendees, setNewAttendees] = useState<RolodexDataProps[]>([]);
   const [attendee, setAttendees] = useState<RolodexDataProps[]>([]);
 
   const showDateTopPicker = () => {
@@ -56,13 +55,19 @@ export default function EditToDoScreen(props: any) {
   };
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
     setNewTitle(titleFromParent);
     setNewLocation(locationFromParent);
     setNewNotes(notesFromParent);
     setPriority(priorityFromParent);
     setNewDate(new Date(Date.parse(dateFromParent)));
-    console.log('priority1: ' + priorityFromParent);
   }, [isFocused]);
 
   function cancelPressed() {
@@ -126,7 +131,10 @@ export default function EditToDoScreen(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }

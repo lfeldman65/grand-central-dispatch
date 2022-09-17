@@ -41,7 +41,7 @@ export default function ToDoDetails(props: any) {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
-          <Text style={styles.saveText}>Save</Text>
+          <Text style={styles.saveText}>Edit</Text>
         </TouchableOpacity>
       ),
     });
