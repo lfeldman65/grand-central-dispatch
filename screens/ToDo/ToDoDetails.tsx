@@ -187,7 +187,7 @@ export default function ToDoDetails(props: any) {
 
         {!isNullOrEmpty(data?.attendees) &&
           data?.attendees.map((item, index) => (
-            <TouchableOpacity onPress={() => handleAttendeePressed(item.id)}>
+            <TouchableOpacity key={index} onPress={() => handleAttendeePressed(item.id)}>
               <Text style={styles.link}>{item.name}</Text>
             </TouchableOpacity>
           ))}

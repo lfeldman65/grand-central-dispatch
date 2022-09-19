@@ -31,13 +31,20 @@ export default function ToDoRow(props: ToDoRowProps) {
   const isFocused = useIsFocused();
   const [lightOrDark, setIsLightOrDark] = useState('');
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   return (

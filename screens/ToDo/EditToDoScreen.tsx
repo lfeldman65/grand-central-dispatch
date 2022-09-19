@@ -229,7 +229,7 @@ export default function EditToDoScreen(props: any) {
         <View style={styles.mainContent}>
           <View style={styles.attendeeView}>
             <Text style={styles.attendeeInput}>{item.name}</Text>
-            <TouchableOpacity onPress={() => deleteAttendee(index)}>
+            <TouchableOpacity key={index} onPress={() => deleteAttendee(index)}>
               <Image source={closeButton} style={styles.deleteAttendeeX} />
             </TouchableOpacity>
           </View>
