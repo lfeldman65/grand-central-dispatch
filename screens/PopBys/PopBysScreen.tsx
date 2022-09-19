@@ -27,6 +27,11 @@ import { Marker } from 'react-native-maps';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
+const blankSpace = require('../Podcasts/images/audio_blank.png');
+const saveAll = require('./images/saveAll.png');
+const unsaveAll = require('./images/removeAll.png');
+const routeCircle = require('./images/routeCircle.png');
+const routeX = require('./images/routeX.png');
 const pinAPlus = require('./images/mapPinAPlus.png');
 const pinA = require('./images/mapPinA.png');
 const pinB = require('./images/mapPinB.png');
@@ -45,6 +50,7 @@ export default function ManageRelationshipsScreen() {
   const [showB, setShowB] = useState(true);
   const [showC, setShowC] = useState(true);
   const [search, setSearch] = useState('');
+  const [showRoute, setShowRoute] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
 
@@ -175,6 +181,31 @@ export default function ManageRelationshipsScreen() {
     return pinD;
   }
 
+  function toggleRouteButton() {
+    if (showRoute) {
+      console.log('showRoute: ' + showRoute);
+    } else {
+      console.log('showRoute: ' + showRoute);
+    }
+    setShowRoute(!showRoute);
+  }
+
+  function saveOrUnsavePressed() {
+    if (tabSelected == 'Saved') {
+      unSaveAllPressed();
+    } else {
+      saveAllPressed();
+    }
+  }
+
+  function saveAllPressed() {
+    console.log('save all pressed');
+  }
+
+  function unSaveAllPressed() {
+    console.log('unsave all pressed');
+  }
+
   function tapAPlusFilter() {
     console.log('Tap A+ Filter ');
     setShowAPlus(!showAPlus);
@@ -193,6 +224,23 @@ export default function ManageRelationshipsScreen() {
   function tapCFilter() {
     console.log('Tap C Filter ');
     setShowC(!showC);
+  }
+
+  function getRouteButton() {
+    if (tabSelected == 'Near Me' || tabSelected == 'Priority') {
+      return blankSpace;
+    }
+    if (showRoute) {
+      return routeX;
+    }
+    return routeCircle;
+  }
+
+  function getSavedButton() {
+    if (tabSelected == 'Near Me' || tabSelected == 'Priority') {
+      return saveAll;
+    }
+    return unsaveAll;
   }
 
   function fetchPopBys(type: string, isMounted: boolean) {
@@ -230,19 +278,32 @@ export default function ManageRelationshipsScreen() {
         </Text>
       </View>
 
-      <View style={lightOrDark == 'dark' ? styles.filterView : styles.filterView}>
-        <TouchableOpacity onPress={tapAPlusFilter}>
-          <Image source={pinAPlus} style={showAPlus ? styles.pinFilterShow : styles.pinFilterHide} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={tapAFilter}>
-          <Image source={pinA} style={showA ? styles.pinFilterShow : styles.pinFilterHide} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={tapBFilter}>
-          <Image source={pinB} style={showB ? styles.pinFilterShow : styles.pinFilterHide} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={tapCFilter}>
-          <Image source={pinC} style={showC ? styles.pinFilterShow : styles.pinFilterHide} />
-        </TouchableOpacity>
+      <View style={styles.buttonView}>
+        <View style={styles.actionButtonView}>
+          <TouchableOpacity onPress={toggleRouteButton}>
+            <Image source={getRouteButton()} style={styles.actionButtons} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.filterView}>
+          <TouchableOpacity onPress={tapAPlusFilter}>
+            <Image source={pinAPlus} style={showAPlus ? styles.pinFilterShow : styles.pinFilterDim} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={tapAFilter}>
+            <Image source={pinA} style={showA ? styles.pinFilterShow : styles.pinFilterDim} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={tapBFilter}>
+            <Image source={pinB} style={showB ? styles.pinFilterShow : styles.pinFilterDim} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={tapCFilter}>
+            <Image source={pinC} style={showC ? styles.pinFilterShow : styles.pinFilterDim} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.actionButtonView}>
+          <TouchableOpacity onPress={saveOrUnsavePressed}>
+            <Image source={getSavedButton()} style={styles.actionButtons} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.mapView}>
@@ -368,24 +429,36 @@ export const styles = StyleSheet.create({
     marginRight: -10,
     marginTop: 12,
   },
+  buttonView: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
   filterView: {
-    //  backgroundColor: 'red',
     height: 60,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     paddingTop: 8,
-    marginLeft: '20%',
-    marginRight: '20%',
+    width: '50%',
   },
   pinFilterShow: {
     width: 30,
     height: 43,
     opacity: 1.0,
   },
-  pinFilterHide: {
+  pinFilterDim: {
     width: 30,
     height: 43,
     opacity: 0.4,
+  },
+  actionButtonView: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '20%',
+    paddingTop: 8,
+  },
+  actionButtons: {
+    width: 40,
+    height: 40,
   },
   mapView: {
     height: '50%',
@@ -394,5 +467,9 @@ export const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+  },
+  blankButton: {
+    // Helps placement of route button, save/unsave buttons, and filter pins
+    width: 30,
   },
 });
