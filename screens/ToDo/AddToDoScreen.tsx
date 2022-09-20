@@ -88,14 +88,12 @@ export default function AddToDoScreen(props: any) {
   const onDatePickerTopChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
-    setShowTopDate(false);
     setDate(currentDate);
   };
 
   const onDatePickerEndChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
-    setShowEndDate(false);
     setEndDate(currentDate);
   };
 
@@ -703,9 +701,9 @@ export default function AddToDoScreen(props: any) {
               style={styles.filterView}
             >
               <View>
-                {Object.entries(untilTypeMenu).map(([key, value]) => (
+                {Object.entries(untilTypeMenu).map(([index, value]) => (
                   <TouchableOpacity
-                    //  key={key}
+                    key={index}
                     onPress={() => {
                       SheetManager.hide(Sheets.untilSheet, null);
                       console.log('filter: ' + value);
@@ -714,7 +712,7 @@ export default function AddToDoScreen(props: any) {
                     }}
                     style={globalStyles.listItemCell}
                   >
-                    <Text style={globalStyles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{index}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -750,9 +748,9 @@ export default function AddToDoScreen(props: any) {
               style={styles.filterView}
             >
               <View>
-                {Object.entries(reminderMenu).map(([key, value]) => (
+                {Object.entries(reminderMenu).map(([index, value]) => (
                   <TouchableOpacity
-                    //  key={key}
+                    key={index}
                     onPress={() => {
                       SheetManager.hide(Sheets.reminderSheet, null);
                       console.log('reminder: ' + value);
@@ -761,7 +759,7 @@ export default function AddToDoScreen(props: any) {
                     }}
                     style={globalStyles.listItemCell}
                   >
-                    <Text style={globalStyles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{index}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -797,9 +795,9 @@ export default function AddToDoScreen(props: any) {
               style={styles.filterView}
             >
               <View>
-                {Object.entries(frequencyMonthMenu).map(([key, value]) => (
+                {Object.entries(frequencyMonthMenu).map(([index, value]) => (
                   <TouchableOpacity
-                    //  key={key}
+                    key={index}
                     onPress={() => {
                       SheetManager.hide(Sheets.frequencyMonthSheet, null);
                       console.log('frequency Month: ' + value);
@@ -808,7 +806,7 @@ export default function AddToDoScreen(props: any) {
                     }}
                     style={globalStyles.listItemCell}
                   >
-                    <Text style={globalStyles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{index}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -844,9 +842,9 @@ export default function AddToDoScreen(props: any) {
               style={styles.filterView}
             >
               <View>
-                {Object.entries(frequencyWeekMenu).map(([key, value]) => (
+                {Object.entries(frequencyWeekMenu).map(([index, value]) => (
                   <TouchableOpacity
-                    //  key={key}
+                    key={index}
                     onPress={() => {
                       SheetManager.hide(Sheets.frequencyWeekSheet, null);
                       console.log('frequency Week: ' + value);
@@ -855,7 +853,7 @@ export default function AddToDoScreen(props: any) {
                     }}
                     style={globalStyles.listItemCell}
                   >
-                    <Text style={globalStyles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{index}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -891,9 +889,9 @@ export default function AddToDoScreen(props: any) {
               style={styles.filterView}
             >
               <View>
-                {Object.entries(orderMenu).map(([key, value]) => (
+                {Object.entries(orderMenu).map(([index, value]) => (
                   <TouchableOpacity
-                    //  key={key}
+                    key={index}
                     onPress={() => {
                       SheetManager.hide(Sheets.orderMenu, null);
                       console.log('order: ' + value);
@@ -902,7 +900,7 @@ export default function AddToDoScreen(props: any) {
                     }}
                     style={globalStyles.listItemCell}
                   >
-                    <Text style={globalStyles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{index}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -938,9 +936,9 @@ export default function AddToDoScreen(props: any) {
               style={styles.filterView}
             >
               <View>
-                {Object.entries(frequencyYearMenu).map(([key, value]) => (
+                {Object.entries(frequencyYearMenu).map(([index, value]) => (
                   <TouchableOpacity
-                    //  key={key}
+                    key={index}
                     onPress={() => {
                       SheetManager.hide(Sheets.frequencyYearSheet, null);
                       console.log('frequency monthly: ' + value);
@@ -949,7 +947,7 @@ export default function AddToDoScreen(props: any) {
                     }}
                     style={globalStyles.listItemCell}
                   >
-                    <Text style={globalStyles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{index}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -1029,7 +1027,7 @@ export default function AddToDoScreen(props: any) {
           <View style={styles.mainContent}>
             <View style={styles.attendeeView}>
               <Text style={styles.attendeeInput}>{item.firstName}</Text>
-              <TouchableOpacity onPress={() => deleteAttendee(index)}>
+              <TouchableOpacity key={index} onPress={() => deleteAttendee(index)}>
                 <Image source={closeButton} style={styles.deleteAttendeeX} />
               </TouchableOpacity>
             </View>

@@ -45,7 +45,6 @@ export default function EditToDoScreen(props: any) {
   const onDatePickerTopChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
-    setShowTopDate(false);
     setNewDate(currentDate);
   };
 
