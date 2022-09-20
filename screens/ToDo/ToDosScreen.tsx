@@ -45,7 +45,10 @@ export default function ToDosScreen() {
     filterSheet: 'filter_sheet_id',
   };
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -60,15 +63,29 @@ export default function ToDosScreen() {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(true);
   }, [filterSetting]);
 
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-    getDarkOrLightMode();
-    fetchData();
+  }, [navigation]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchData(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   //useEffect(() => {}); // this will run on every render
@@ -107,15 +124,16 @@ export default function ToDosScreen() {
   }
 
   function saveComplete() {
-    // fetchRolodexPressed('alpha');
-    console.log('save complete');
-    fetchData();
+    fetchData(true);
   }
 
-  function fetchData() {
+  function fetchData(isMounted: boolean) {
     setIsLoading(true);
     getToDoData(filterSetting)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -192,9 +210,9 @@ export default function ToDosScreen() {
                 style={styles.scrollview}
               >
                 <View>
-                  {Object.entries(filters).map(([key, value]) => (
+                  {Object.entries(filters).map(([index, value]) => (
                     <TouchableOpacity
-                      key={key}
+                      key={index}
                       onPress={() => {
                         SheetManager.hide(Sheets.filterSheet, null);
                         setFilterSetting(value);
@@ -202,7 +220,7 @@ export default function ToDosScreen() {
                       }}
                       style={globalStyles.listItemCell}
                     >
-                      <Text style={globalStyles.listItem}>{key}</Text>
+                      <Text style={globalStyles.listItem}>{index}</Text>
                     </TouchableOpacity>
                   ))}
                 </View>

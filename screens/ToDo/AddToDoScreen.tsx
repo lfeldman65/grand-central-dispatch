@@ -134,8 +134,19 @@ export default function AddToDoScreen(props: any) {
   }, [reminder]);
 
   useEffect(() => {
-    getDarkOrLightMode();
-    getCurrentDay();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getCurrentDay(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   useEffect(() => {
@@ -148,7 +159,10 @@ export default function AddToDoScreen(props: any) {
     }
   }, [recurrence]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -185,7 +199,10 @@ export default function AddToDoScreen(props: any) {
     setAttendees(newAttendees);
   }
 
-  function getCurrentDay() {
+  function getCurrentDay(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     var today = date.getDay();
     console.log(today);
     switch (today) {
@@ -640,9 +657,9 @@ export default function AddToDoScreen(props: any) {
               style={styles.filterView}
             >
               <View>
-                {Object.entries(recurrenceMenu).map(([key, value]) => (
+                {Object.entries(recurrenceMenu).map(([index, value]) => (
                   <TouchableOpacity
-                    //    key={key}
+                    key={index}
                     onPress={() => {
                       SheetManager.hide(Sheets.recurrenceSheet, null);
                       console.log('filter: ' + value);
@@ -651,7 +668,7 @@ export default function AddToDoScreen(props: any) {
                     }}
                     style={globalStyles.listItemCell}
                   >
-                    <Text style={globalStyles.listItem}>{key}</Text>
+                    <Text style={globalStyles.listItem}>{index}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
