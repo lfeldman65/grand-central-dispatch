@@ -38,12 +38,18 @@ export default function PopByRowSaved(props: PopBysRowProps) {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
     setIsFavorite(props.data.address.isFavorite);
-    console.log(props.data.address.isFavorite);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }

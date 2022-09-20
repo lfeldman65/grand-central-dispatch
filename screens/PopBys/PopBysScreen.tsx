@@ -24,6 +24,7 @@ import { storage } from '../../utils/storage';
 import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
+import { matchesSearch } from './popByHelpers';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
@@ -107,38 +108,6 @@ export default function ManageRelationshipsScreen() {
     };
   }, [isFocused]);
 
-  function matchesSearch(person: PopByRadiusDataProps) {
-    var searchLower = search.toLowerCase();
-    if (searchLower == '') {
-      return true;
-    }
-    if (person.firstName != null && person.firstName.toLowerCase().includes(searchLower)) {
-      return true;
-    }
-    if (person.lastName != null && person.lastName.toLowerCase().includes(searchLower)) {
-      return true;
-    }
-    if (person.address != null && person.address.street.toLowerCase().includes(searchLower)) {
-      return true;
-    }
-    if (person.address != null && person.address.street2.toLowerCase().includes(searchLower)) {
-      return true;
-    }
-    if (person.address != null && person.address.city.toLowerCase().includes(searchLower)) {
-      return true;
-    }
-    if (person.address != null && person.address.state.toLowerCase().includes(searchLower)) {
-      return true;
-    }
-    if (person.address != null && person.address.zip.toLowerCase().includes(searchLower)) {
-      return true;
-    }
-    if (person.address != null && person.address.country.toLowerCase().includes(searchLower)) {
-      return true;
-    }
-    return false;
-  }
-
   function matchesRankFilter(ranking: string) {
     if (ranking == 'A+' && showAPlus) return true;
     if (ranking == 'A' && showA) return true;
@@ -183,11 +152,19 @@ export default function ManageRelationshipsScreen() {
 
   function toggleRouteButton() {
     if (showRoute) {
-      console.log('showRoute: ' + showRoute);
+      handleShortestRoute();
     } else {
-      console.log('showRoute: ' + showRoute);
+      handleClosestToFarthest();
     }
     setShowRoute(!showRoute);
+  }
+
+  function handleShortestRoute() {
+    console.log('handle shortest route');
+  }
+
+  function handleClosestToFarthest() {
+    console.log('handle closest to farthest');
   }
 
   function saveOrUnsavePressed() {
@@ -254,7 +231,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          console.log(res.data);
+          //  console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -315,7 +292,7 @@ export default function ManageRelationshipsScreen() {
         >
           {popByData.map((person, index) =>
             matchesRankFilter(person.ranking) &&
-            matchesSearch(person) &&
+            matchesSearch(person, search) &&
             person.location?.latitude != null &&
             person.location?.longitude != null ? (
               <Marker
@@ -361,7 +338,7 @@ export default function ManageRelationshipsScreen() {
                 {popByData.map(
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
-                    matchesSearch(item) && (
+                    matchesSearch(item, search) && (
                       <PopByRow popByTab={'Near Me'} key={index} data={item} onPress={() => handleRowPress(index)} />
                     )
                 )}
@@ -372,7 +349,7 @@ export default function ManageRelationshipsScreen() {
                 {popByData.map(
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
-                    matchesSearch(item) && (
+                    matchesSearch(item, search) && (
                       <PopByRow popByTab={'Priority'} key={index} data={item} onPress={() => handleRowPress(index)} />
                     )
                 )}
@@ -383,7 +360,7 @@ export default function ManageRelationshipsScreen() {
                 {popByData.map(
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
-                    matchesSearch(item) && (
+                    matchesSearch(item, search) && (
                       <PopByRowSaved
                         popByTab={'Saved'}
                         key={index}
