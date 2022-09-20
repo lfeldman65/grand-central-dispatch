@@ -51,7 +51,7 @@ export default function ManageRelationshipsScreen() {
   const [showB, setShowB] = useState(true);
   const [showC, setShowC] = useState(true);
   const [search, setSearch] = useState('');
-  const [showRoute, setShowRoute] = useState(true);
+  const [showRoute, setShowRoute] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
 
@@ -165,6 +165,7 @@ export default function ManageRelationshipsScreen() {
 
   function handleClosestToFarthest() {
     console.log('handle closest to farthest');
+    fetchPopBys('favorites', true);
   }
 
   function saveOrUnsavePressed() {
