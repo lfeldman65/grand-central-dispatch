@@ -91,11 +91,11 @@ export default function SettingsScreen() {
   }
 
   function fetchProfile(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
     getProfileData()
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -142,13 +142,9 @@ export default function SettingsScreen() {
   }
 
   useEffect(() => {
-    let isMounted = true;
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-    return () => {
-      isMounted = false;
-    };
   }, [navigation]);
 
   useEffect(() => {
