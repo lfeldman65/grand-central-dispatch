@@ -182,6 +182,9 @@ export default function ManageRelationshipsScreen() {
 
   function unSaveAllPressed() {
     console.log('unsave all pressed');
+    popByData.forEach((item, index) => {
+      item.address.isFavorite = 'False';
+    });
   }
 
   function tapAPlusFilter() {
@@ -232,7 +235,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          //  console.log(res.data);
+          console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -361,7 +364,8 @@ export default function ManageRelationshipsScreen() {
                 {popByData.map(
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
-                    matchesSearch(item, search) && (
+                    matchesSearch(item, search) &&
+                    item.address.isFavorite == 'True' && (
                       <PopByRowSaved
                         popByTab={'Saved'}
                         key={index}
