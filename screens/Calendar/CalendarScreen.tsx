@@ -22,10 +22,12 @@ import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { storage } from '../../utils/storage';
+import AddAppointmentScreen from './AddAppointmentScreen';
 
 export default function CalendarScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState<AppointmentDataProps[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -38,6 +40,10 @@ export default function CalendarScreen() {
 
   const handleRowPress = (index: number) => {
     console.log('appointment row press');
+    //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    navigation.navigate('ApptDetails', {
+      apptID: data[index].id,
+    });
   };
 
   useEffect(() => {
@@ -55,7 +61,7 @@ export default function CalendarScreen() {
   }, [isFocused]);
 
   function addAppointmentPressed() {
-    console.log('add appt pressed');
+    setModalVisible(true);
   }
 
   function fetchAppointments(month: string, year: string) {
@@ -101,6 +107,18 @@ export default function CalendarScreen() {
           <Text style={styles.addText}>{'Add Appointment'}</Text>
         </View>
       </TouchableOpacity>
+      {modalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <AddAppointmentScreen title={'New Appointment'} onSave={saveComplete} setModalVisible={setModalVisible} />
+        </Modal>
+      )}
     </View>
   );
 }
@@ -108,7 +126,7 @@ const styles = StyleSheet.create({
   calendarView: {
     height: '50%',
     width: '100%',
-    backgroundColor: 'cyan',
+    backgroundColor: 'red',
   },
   bottomContainer: {
     backgroundColor: '#1A6295',
