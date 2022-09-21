@@ -15,7 +15,8 @@ export function getPopByRadiusData(tab: string): Promise<PopByRadiusDataResponse
   } else if (tab == 'Saved') {
     param = 'favorites';
   }
-  return http.get(`popbys?currentLocation=33.1175%2C-117.25&lastItem=0&batchSize=50&radius=30&sortType=${param}`);
+  console.log('param: ' + param);
+  return http.get(`popbys?currentLocation=33.1175%2C-117.25&lastItem=0&batchSize=50000&radius=30&sortType=${param}`);
 }
 
 export function savePop(guid: string): Promise<PopByFavoriteDataResponse> {

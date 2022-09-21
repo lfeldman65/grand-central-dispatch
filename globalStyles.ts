@@ -92,10 +92,11 @@ export default StyleSheet.create({
   },
   listItem: {
     flex: 1,
-    marginVertical: 30,
+    marginVertical: 10,
     borderRadius: 5,
     fontSize: 20,
     alignItems: 'center',
     textAlign: 'center',
+    marginBottom: 30,
   },
 });

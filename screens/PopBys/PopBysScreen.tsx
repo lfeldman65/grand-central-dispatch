@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Image,
   TextInput,
+  Alert,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
@@ -15,7 +16,7 @@ import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import PopByRow from './PopByRow';
 import PopByRowSaved from './PopByRowSaved';
-import { getPopByRadiusData, removePop } from './api';
+import { getPopByRadiusData, removePop, savePop } from './api';
 import { PopByRadiusDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
@@ -28,7 +29,6 @@ import { matchesSearch } from './popByHelpers';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
-const blankSpace = require('../Podcasts/images/audio_blank.png');
 const saveAll = require('./images/saveAll.png');
 const unsaveAll = require('./images/removeAll.png');
 const routeCircle = require('./images/routeCircle.png');
@@ -38,8 +38,11 @@ const pinA = require('./images/mapPinA.png');
 const pinB = require('./images/mapPinB.png');
 const pinC = require('./images/mapPinC.png');
 const pinD = require('./images/mapPinD.png');
+const triangleUp = require('./images/triangleUp.png');
+const triangleDown = require('./images/triangleDown.png');
 
 type TabType = 'Near Me' | 'Priority' | 'Saved'; // nearby, priority and favorites in API
+type MapLength = 'short' | 'medium' | 'long';
 
 export default function ManageRelationshipsScreen() {
   const [tabSelected, setTabSelected] = useState<TabType>('Near Me');
@@ -51,7 +54,7 @@ export default function ManageRelationshipsScreen() {
   const [showB, setShowB] = useState(true);
   const [showC, setShowC] = useState(true);
   const [search, setSearch] = useState('');
-  const [isDown, setIsDown] = useState(true);
+  const [mapHeight, setMapHeight] = useState<MapLength>('long');
   const [showRoute, setShowRoute] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -68,9 +71,32 @@ export default function ManageRelationshipsScreen() {
     setSearch('');
   }
 
-  function upOrDownPressed() {
-    setIsDown(!isDown);
-    console.log('isDown: ' + isDown);
+  function upPressed() {
+    if (mapHeight == 'long') {
+      setMapHeight('medium');
+    } else if (mapHeight == 'medium') {
+      setMapHeight('short');
+    }
+  }
+
+  function downPressed() {
+    if (mapHeight == 'short') {
+      setMapHeight('medium');
+    } else if (mapHeight == 'medium') {
+      setMapHeight('long');
+    }
+  }
+
+  function getMapStyle() {
+    if (mapHeight == 'short') {
+      return styles.mapViewShort;
+    }
+    if (mapHeight == 'medium') {
+      return styles.mapViewMedium;
+    }
+    if (mapHeight == 'long') {
+      return styles.mapViewLong;
+    }
   }
 
   const handleRowPress = (index: number) => {
@@ -90,7 +116,7 @@ export default function ManageRelationshipsScreen() {
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-  }, [navigation, isDown]);
+  }, [navigation, mapHeight]);
 
   useEffect(() => {
     let isMounted = true;
@@ -183,20 +209,60 @@ export default function ManageRelationshipsScreen() {
   }
 
   function saveAllPressed() {
-    console.log('save all pressed');
+    Alert.alert(
+      'Are you sure you want to save these relationships?',
+      '',
+      [
+        {
+          text: 'Save',
+          onPress: () => saveAllPressedContinue(),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false }
+    );
   }
 
   function unSaveAllPressed() {
-    console.log('unsave all pressed');
+    Alert.alert(
+      'Remove all relationships?',
+      '',
+      [
+        {
+          text: 'Remove',
+          onPress: () => unSaveAllPressedContinue(),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false }
+    );
+  }
 
+  function saveAllPressedContinue() {
+    console.log('save all pressed');
     setIsLoading(true);
-
     popByData.forEach(async (item, index) => {
-      //item.address.isFavorite = 'False';
+      await savePop(item.id);
+      console.log('save pop ' + item.id);
+    });
+    fetchPopBys('favorites', true);
+  }
+
+  function unSaveAllPressedContinue() {
+    console.log('unsave all pressed');
+    setIsLoading(true);
+    popByData.forEach(async (item, index) => {
       await removePop(item.id);
       console.log('removePop ' + item.id);
     });
-
     fetchPopBys('favorites', true);
   }
 
@@ -221,13 +287,20 @@ export default function ManageRelationshipsScreen() {
   }
 
   function getRouteButton() {
-    if (tabSelected == 'Near Me' || tabSelected == 'Priority') {
-      return blankSpace;
-    }
     if (showRoute) {
       return routeX;
     }
     return routeCircle;
+  }
+
+  function getUpArrowStyle() {
+    if (mapHeight == 'short') return styles.upAndDownButtonsDim;
+    return styles.upAndDownButtons;
+  }
+
+  function getDownArrowStyle() {
+    if (mapHeight == 'long') return styles.upAndDownButtonsDim;
+    return styles.upAndDownButtons;
   }
 
   function getSavedButton() {
@@ -272,11 +345,13 @@ export default function ManageRelationshipsScreen() {
         </Text>
       </View>
 
-      <View style={styles.buttonView}>
+      <View style={styles.actionAndFilterButtonView}>
         <View style={styles.actionButtonView}>
-          <TouchableOpacity onPress={toggleRouteButton}>
-            <Image source={getRouteButton()} style={styles.actionButtons} />
-          </TouchableOpacity>
+          {tabSelected == 'Saved' && (
+            <TouchableOpacity onPress={toggleRouteButton}>
+              <Image source={getRouteButton()} style={styles.actionButtons} />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.filterView}>
           <TouchableOpacity onPress={tapAPlusFilter}>
@@ -300,7 +375,7 @@ export default function ManageRelationshipsScreen() {
         </View>
       </View>
 
-      <View style={isDown ? styles.mapViewLong : styles.mapViewShort}>
+      <View style={getMapStyle()}>
         <MapView
           showsUserLocation={true}
           style={styles.map}
@@ -336,6 +411,11 @@ export default function ManageRelationshipsScreen() {
       ) : (
         <React.Fragment>
           <View style={styles.searchRow}>
+            <TouchableOpacity style={styles.upAndDownView} onPress={upPressed}>
+              <View style={styles.upAndDownView}>
+                <Image source={triangleUp} style={getUpArrowStyle()} />
+              </View>
+            </TouchableOpacity>
             <View style={styles.searchView}>
               <Image source={searchGlass} style={styles.magGlass} />
               <TextInput
@@ -346,12 +426,16 @@ export default function ManageRelationshipsScreen() {
                 defaultValue={search}
                 onChangeText={(text) => setSearch(text)}
               />
+            </View>
+            <View style={styles.closeXView}>
               <TouchableOpacity onPress={clearSearchPressed}>
                 <Image source={closeButton} style={styles.closeX} />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.upAndDownView} onPress={upOrDownPressed}>
-              <View style={styles.upAndDownView}></View>
+            <TouchableOpacity style={styles.upAndDownView} onPress={downPressed}>
+              <View style={styles.upAndDownView}>
+                <Image source={triangleDown} style={getDownArrowStyle()} />
+              </View>
             </TouchableOpacity>
           </View>
           <ScrollView>
@@ -410,34 +494,38 @@ export const styles = StyleSheet.create({
   },
   upAndDownView: {
     width: '10%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchView: {
     backgroundColor: '#1a6295',
-    justifyContent: 'space-evenly',
-    paddingLeft: 20,
-    borderColor: 'white',
-    borderWidth: 1,
+    paddingLeft: 10,
     flexDirection: 'row',
-    width: '90%',
+    width: '75%',
   },
   magGlass: {
     width: 20,
     height: 20,
-    marginLeft: -20,
-    marginTop: 8,
-  },
-  closeX: {
-    width: 15,
-    height: 15,
-    marginRight: 10,
-    marginTop: 12,
+    paddingLeft: 5,
+    marginTop: 9,
   },
   textInput: {
     fontSize: 16,
     color: 'white',
-    width: 300,
+    paddingLeft: 10,
   },
-  buttonView: {
+  closeXView: {
+    backgroundColor: '#1a6295',
+    width: '5%',
+    height: 40,
+    paddingRight: 30,
+  },
+  closeX: {
+    width: 15,
+    height: 15,
+    marginTop: 12,
+  },
+  actionAndFilterButtonView: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
@@ -468,20 +556,30 @@ export const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  mapViewLong: {
-    height: '60%',
-    width: '100%',
+  upAndDownButtons: {
+    width: 24,
+    height: 24,
+    opacity: 1.0,
+  },
+  upAndDownButtonsDim: {
+    width: 24,
+    height: 24,
+    opacity: 0.4,
   },
   mapViewShort: {
     height: '0%',
     width: '100%',
   },
+  mapViewMedium: {
+    height: '40%',
+    width: '100%',
+  },
+  mapViewLong: {
+    height: '70%',
+    width: '100%',
+  },
   map: {
     width: '100%',
     height: '100%',
-  },
-  blankButton: {
-    // Helps placement of route button, save/unsave buttons, and filter pins
-    width: 30,
   },
 });
