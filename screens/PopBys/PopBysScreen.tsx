@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import PopByRow from './PopByRow';
 import PopByRowSaved from './PopByRowSaved';
-import { getPopByRadiusData } from './api';
+import { getPopByRadiusData, removePop } from './api';
 import { PopByRadiusDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
@@ -180,11 +180,19 @@ export default function ManageRelationshipsScreen() {
     console.log('save all pressed');
   }
 
-  function unSaveAllPressed() {
+   function  unSaveAllPressed() {
     console.log('unsave all pressed');
-    popByData.forEach((item, index) => {
-      item.address.isFavorite = 'False';
+
+    setIsLoading(true);
+
+    popByData.forEach(async (item, index) => {
+      //item.address.isFavorite = 'False';
+      await removePop(item.id);
+      console.log('removePop ' + item.id);
     });
+
+    fetchPopBys('favorites', true);
+
   }
 
   function tapAPlusFilter() {
