@@ -51,6 +51,7 @@ export default function ManageRelationshipsScreen() {
   const [showB, setShowB] = useState(true);
   const [showC, setShowC] = useState(true);
   const [search, setSearch] = useState('');
+  const [isDown, setIsDown] = useState(true);
   const [showRoute, setShowRoute] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -65,6 +66,11 @@ export default function ManageRelationshipsScreen() {
 
   function clearSearchPressed() {
     setSearch('');
+  }
+
+  function upOrDownPressed() {
+    setIsDown(!isDown);
+    console.log('isDown: ' + isDown);
   }
 
   const handleRowPress = (index: number) => {
@@ -84,7 +90,7 @@ export default function ManageRelationshipsScreen() {
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-  }, [navigation]);
+  }, [navigation, isDown]);
 
   useEffect(() => {
     let isMounted = true;
@@ -180,7 +186,7 @@ export default function ManageRelationshipsScreen() {
     console.log('save all pressed');
   }
 
-   function  unSaveAllPressed() {
+  function unSaveAllPressed() {
     console.log('unsave all pressed');
 
     setIsLoading(true);
@@ -192,7 +198,6 @@ export default function ManageRelationshipsScreen() {
     });
 
     fetchPopBys('favorites', true);
-
   }
 
   function tapAPlusFilter() {
@@ -295,7 +300,7 @@ export default function ManageRelationshipsScreen() {
         </View>
       </View>
 
-      <View style={styles.mapView}>
+      <View style={isDown ? styles.mapViewLong : styles.mapViewShort}>
         <MapView
           showsUserLocation={true}
           style={styles.map}
@@ -330,18 +335,23 @@ export default function ManageRelationshipsScreen() {
         </View>
       ) : (
         <React.Fragment>
-          <View style={styles.searchView}>
-            <Image source={searchGlass} style={styles.magGlass} />
-            <TextInput
-              style={styles.textInput}
-              placeholder="Search By Name or Address"
-              placeholderTextColor="white"
-              textAlign="left"
-              defaultValue={search}
-              onChangeText={(text) => setSearch(text)}
-            />
-            <TouchableOpacity onPress={clearSearchPressed}>
-              <Image source={closeButton} style={styles.closeX} />
+          <View style={styles.searchRow}>
+            <View style={styles.searchView}>
+              <Image source={searchGlass} style={styles.magGlass} />
+              <TextInput
+                style={styles.textInput}
+                placeholder="Search By Name or Address"
+                placeholderTextColor="white"
+                textAlign="left"
+                defaultValue={search}
+                onChangeText={(text) => setSearch(text)}
+              />
+              <TouchableOpacity onPress={clearSearchPressed}>
+                <Image source={closeButton} style={styles.closeX} />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.upAndDownView} onPress={upOrDownPressed}>
+              <View style={styles.upAndDownView}></View>
             </TouchableOpacity>
           </View>
           <ScrollView>
@@ -393,14 +403,22 @@ export default function ManageRelationshipsScreen() {
 }
 
 export const styles = StyleSheet.create({
+  searchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    height: 40,
+  },
+  upAndDownView: {
+    width: '10%',
+  },
   searchView: {
     backgroundColor: '#1a6295',
-    height: 40,
     justifyContent: 'space-evenly',
-    paddingLeft: 10,
+    paddingLeft: 20,
     borderColor: 'white',
     borderWidth: 1,
     flexDirection: 'row',
+    width: '90%',
   },
   magGlass: {
     width: 20,
@@ -408,16 +426,16 @@ export const styles = StyleSheet.create({
     marginLeft: -20,
     marginTop: 8,
   },
+  closeX: {
+    width: 15,
+    height: 15,
+    marginRight: 10,
+    marginTop: 12,
+  },
   textInput: {
     fontSize: 16,
     color: 'white',
     width: 300,
-  },
-  closeX: {
-    width: 15,
-    height: 15,
-    marginRight: -10,
-    marginTop: 12,
   },
   buttonView: {
     flexDirection: 'row',
@@ -450,8 +468,12 @@ export const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  mapView: {
-    height: '50%',
+  mapViewLong: {
+    height: '60%',
+    width: '100%',
+  },
+  mapViewShort: {
+    height: '0%',
     width: '100%',
   },
   map: {
