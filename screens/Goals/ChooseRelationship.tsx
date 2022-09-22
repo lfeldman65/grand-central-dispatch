@@ -1,14 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getRolodexData, getRolodexSearch } from './api';
@@ -28,7 +19,7 @@ export default function ChooseRelationship(props: any) {
   const [search, setSearch] = useState('');
 
   const handleRowPress = (index: number) => {
-    console.log('row pressed choose: ' + index);
+    console.log(dataRolodex[index].firstName);
     setSelectedRel(dataRolodex[index]);
     setModalRelVisible(false);
   };
@@ -46,16 +37,30 @@ export default function ChooseRelationship(props: any) {
     if (search != '') {
       fetchRolodexSearch(search);
     } else {
-      fetchRolodexPressed('alpha');
+      fetchRolodexPressed('alpha', true);
     }
   }, [search]);
 
   useEffect(() => {
-    getDarkOrLightMode();
-    fetchRolodexPressed('alpha');
+    let isMounted = true;
+    fetchRolodexPressed('alpha', isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -75,11 +80,14 @@ export default function ChooseRelationship(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function fetchRolodexPressed(type: string) {
+  function fetchRolodexPressed(type: string, isMounted: boolean) {
     console.log('fetch rolodex');
     setIsLoading(true);
     getRolodexData(type)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {

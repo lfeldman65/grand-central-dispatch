@@ -40,7 +40,6 @@ export default function TrackActivityScreen(props: any) {
   }
 
   function handleGoalPressed() {
-    console.log('activity goal pressed');
     SheetManager.show(Sheets.goalSheet);
   }
 
@@ -56,7 +55,6 @@ export default function TrackActivityScreen(props: any) {
   };
 
   function makeParam(menuItem: string) {
-    console.log('A Make param: ' + menuItem);
     if (menuItem == 'Calls Made') {
       return '1';
     }
@@ -76,6 +74,7 @@ export default function TrackActivityScreen(props: any) {
     }
     setModalVisible(false);
     var goalId = makeParam(goal);
+    console.log('id: ' + relationship?.id);
     onSave(relationship?.id, goalId, subject, date, askedReferral, note);
   }
 
@@ -267,6 +266,7 @@ export default function TrackActivityScreen(props: any) {
           />
         </Modal>
       )}
+      <View style={styles.bottom}></View>
     </ScrollView>
   );
 }
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'black',
     width: '90%',
-    height: '60%',
+    height: '50%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: 'white',
     width: '90%',
-    height: '60%',
+    height: '50%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
@@ -380,5 +380,8 @@ const styles = StyleSheet.create({
   filterView: {
     width: '100%',
     padding: 12,
+  },
+  bottom: {
+    height: 600,
   },
 });

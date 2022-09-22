@@ -13,7 +13,6 @@ const rankD = require('../Relationships/images/rankD.png');
 interface AtoZRowProps {
   data: RolodexDataProps;
   onPress(): void;
-  // relFromAbove: string;
 }
 
 function chooseImage(rank: string) {
@@ -32,15 +31,21 @@ function displayName(first: string, last: string, type: string, employer: string
 }
 
 export default function ChooseRelRow(props: AtoZRowProps) {
-  //  const { relFromAbove } = props;
   const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -64,16 +69,6 @@ export default function ChooseRelRow(props: AtoZRowProps) {
 }
 
 export const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    height: '100%',
-  },
-  checkView: {
-    marginTop: 12,
-    left: '90%',
-    position: 'absolute',
-    marginBottom: 12,
-  },
   personNameDark: {
     color: 'white',
     fontSize: 18,

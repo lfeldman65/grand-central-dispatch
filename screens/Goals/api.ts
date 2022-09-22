@@ -15,6 +15,12 @@ export function trackAction(
   notes: string
 ): Promise<TrackDataResponse> {
   console.log('guid: ' + guid);
+  console.log('goalID: ' + goalId);
+  console.log('subject: ' + subject);
+  console.log('date: ' + date);
+  console.log('referral: ' + referral);
+  console.log('notes: ' + notes);
+
   return http.post(`activityGoalsTrack/${guid}`, {
     body: { goalId: goalId, subject: subject, date: date, referral: referral, notes: notes },
   });

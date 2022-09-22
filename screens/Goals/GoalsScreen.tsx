@@ -10,12 +10,11 @@ import { GoalDataProps, GoalObject } from './interfaces';
 import { getGoalData, trackAction } from './api';
 import { storage } from '../../utils/storage';
 import TrackActivity from './TrackActivityScreen';
+import globalStyles from '../../globalStyles';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
-
-import globalStyles from '../../globalStyles'; // branch
 
 export default function GoalsScreen() {
   const navigation = useNavigation<any>();
@@ -33,16 +32,19 @@ export default function GoalsScreen() {
   function winTheDayPressed() {
     // analytics.event(new Event('Goals', 'Win the Day Pressed'));
     setWinTheDaySelected(true);
-    fetchGoals();
+    fetchGoals(true);
   }
 
   function winTheWeekPressed() {
     analytics.event(new Event('Goals', 'Win the Week Pressed'));
     setWinTheDaySelected(false);
-    fetchGoals();
+    fetchGoals(true);
   }
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -187,10 +189,13 @@ export default function GoalsScreen() {
     }
   };
 
-  function fetchGoals() {
+  function fetchGoals(isMounted: boolean) {
     setIsLoading(true);
     getGoalData()
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -248,8 +253,19 @@ export default function GoalsScreen() {
   });
 
   useEffect(() => {
-    fetchGoals();
-    getDarkOrLightMode();
+    let isMounted = true;
+    fetchGoals(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   if (isLoading) {
@@ -260,7 +276,7 @@ export default function GoalsScreen() {
     );
   } else {
     return (
-      <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={globalStyles.tabButtonRow}>
           <Text
             style={winTheDaySelected == true ? globalStyles.selected : globalStyles.unselected}
@@ -332,14 +348,6 @@ export default function GoalsScreen() {
 }
 
 const styles = StyleSheet.create({
-  containerDark: {
-    backgroundColor: 'black',
-    height: '100%',
-  },
-  containerLight: {
-    backgroundColor: 'white',
-    height: '100%',
-  },
   hackDark: {
     height: 100,
     backgroundColor: 'black',
