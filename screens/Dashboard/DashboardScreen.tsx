@@ -42,7 +42,10 @@ export default function DashboardScreen() {
     Sentry.Native.captureException(new Error('Oops!'));
   }
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     console.log('dark or light: ' + dOrlight);
     setIsLightOrDark(dOrlight ?? 'light');
@@ -59,7 +62,11 @@ export default function DashboardScreen() {
   }, []);
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   function navigateToLandingPage(landingPage?: string) {
