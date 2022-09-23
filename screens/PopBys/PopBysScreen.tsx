@@ -25,7 +25,7 @@ import { storage } from '../../utils/storage';
 import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { matchesSearch } from './popByHelpers';
+import { matchesSearch, milesBetween } from './popByHelpers';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
@@ -87,7 +87,7 @@ export default function ManageRelationshipsScreen() {
     }
   }
 
-  function getMapStyle() {
+  function getMapHeight() {
     if (mapHeight == 'short') {
       return styles.mapViewShort;
     }
@@ -193,6 +193,8 @@ export default function ManageRelationshipsScreen() {
 
   function handleShortestRoute() {
     console.log('handle shortest route');
+    let d = milesBetween(27, 3, 32, 4);
+    console.log('d: ' + d);
   }
 
   function handleClosestToFarthest() {
@@ -321,7 +323,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          console.log(res.data);
+          //   console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -375,34 +377,38 @@ export default function ManageRelationshipsScreen() {
         </View>
       </View>
 
-      <View style={getMapStyle()}>
-        <MapView
-          showsUserLocation={true}
-          style={styles.map}
-          followsUserLocation={true}
-          initialRegion={{ latitude: 33.1175, longitude: -117.25, latitudeDelta: 0.11, longitudeDelta: 0.06 }}
-        >
-          {popByData.map((person, index) =>
-            matchesRankFilter(person.ranking) &&
-            matchesSearch(person, search) &&
-            person.location?.latitude != null &&
-            person.location?.longitude != null ? (
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: parseFloat(person.location.latitude),
-                  longitude: parseFloat(person.location.longitude),
-                }}
-                image={getRankPin(person.ranking)}
-                title={person.firstName + ' ' + person.lastName}
-                description={person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'}
-              />
-            ) : (
-              <View></View>
-            )
-          )}
-        </MapView>
-      </View>
+      {!isLoading && (
+        <View style={getMapHeight()}>
+          <MapView
+            showsUserLocation={true}
+            style={styles.map}
+            followsUserLocation={true}
+            initialRegion={{ latitude: 33.1175, longitude: -117.25, latitudeDelta: 0.11, longitudeDelta: 0.06 }}
+          >
+            {popByData.map((person, index) =>
+              matchesRankFilter(person.ranking) &&
+              matchesSearch(person, search) &&
+              person.location?.latitude != null &&
+              person.location?.longitude != null ? (
+                <Marker
+                  key={index}
+                  coordinate={{
+                    latitude: parseFloat(person.location.latitude),
+                    longitude: parseFloat(person.location.longitude),
+                  }}
+                  image={getRankPin(person.ranking)}
+                  title={person.firstName + ' ' + person.lastName}
+                  description={
+                    person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'
+                  }
+                />
+              ) : (
+                <View></View>
+              )
+            )}
+          </MapView>
+        </View>
+      )}
 
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -571,11 +577,11 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   mapViewMedium: {
-    height: '40%',
+    height: '50%',
     width: '100%',
   },
   mapViewLong: {
-    height: '70%',
+    height: '80%',
     width: '100%',
   },
   map: {
