@@ -55,8 +55,14 @@ export function matchesSearch(person: PopByRadiusDataProps, search?: string) {
 //     return 3962.16 * (2.0 * Math.Atan2(Math.Sqrt(d3), Math.Sqrt(1.0 - d3)));
 // }
 
-export function milesBetween(lon1: number, lat1: number, lon2: number, lat2: number) {
+export function milesBetween(lat1: number, lon1: number, lat2: number, lon2: number) {
   console.log('lon1: ' + lon1);
-  var lon1Radians = lat1 * (Math.PI / 180.0);
-  return lon1Radians;
+  var lat1Radians = lat1 * (Math.PI / 180.0);
+  var lon1Radians = lon1 * (Math.PI / 180.0);
+  var lat2Radians = lat2 * (Math.PI / 180.0);
+  var lon2RadiansAdj = lon2 * (Math.PI / 180.0) - lon1Radians;
+  var result1 =
+    Math.pow(Math.sin((lat2Radians - lat1Radians) / 2.0), 2) +
+    Math.cos(lat1Radians) * Math.pow(Math.sin(lon2RadiansAdj / 2.0), 2);
+  return 3962.16 * (2.0 * Math.atan2(Math.sqrt(result1), Math.sqrt(1.0 - result1)));
 }

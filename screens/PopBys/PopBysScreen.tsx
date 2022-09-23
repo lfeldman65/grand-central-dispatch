@@ -450,7 +450,8 @@ export default function ManageRelationshipsScreen() {
                 {popByData.map(
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
-                    matchesSearch(item, search) && (
+                    matchesSearch(item, search) &&
+                    !item.distance.includes('-') && (
                       <PopByRow popByTab={'Near Me'} key={index} data={item} onPress={() => handleRowPress(index)} />
                     )
                 )}
@@ -461,7 +462,8 @@ export default function ManageRelationshipsScreen() {
                 {popByData.map(
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
-                    matchesSearch(item, search) && (
+                    matchesSearch(item, search) &&
+                    !item.distance.includes('-') && (
                       <PopByRow popByTab={'Priority'} key={index} data={item} onPress={() => handleRowPress(index)} />
                     )
                 )}
@@ -473,6 +475,7 @@ export default function ManageRelationshipsScreen() {
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
                     matchesSearch(item, search) &&
+                    !item.distance.includes('-') &&
                     item.address.isFavorite == 'True' && (
                       <PopByRowSaved
                         popByTab={'Saved'}
