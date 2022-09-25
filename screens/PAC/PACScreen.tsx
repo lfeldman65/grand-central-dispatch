@@ -63,25 +63,28 @@ export default function PACScreen(props: PACScreenProps) {
   function callsPressed() {
     analytics.event(new Event('PAC', 'Calls Tab'));
     setTabSelected('calls');
-    fetchData('calls');
+    fetchData('calls', true);
   }
 
   function notesPressed() {
     analytics.event(new Event('PAC', 'Notes Tab'));
     setTabSelected('notes');
-    fetchData('notes');
+    fetchData('notes', true);
   }
 
   function popPressed() {
     analytics.event(new Event('PAC', 'Pop-By Tab'));
     setTabSelected('popby');
-    fetchData('popby');
+    fetchData('popby', true);
   }
 
-  function fetchData(type: string) {
+  function fetchData(type: string, isMounted: boolean) {
     setIsLoading(true);
     getPACData(type)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -92,7 +95,10 @@ export default function PACScreen(props: PACScreenProps) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -104,20 +110,20 @@ export default function PACScreen(props: PACScreenProps) {
   });
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   useEffect(() => {
-    fetchData(tabSelected);
+    let isMounted = true;
+    fetchData(tabSelected, isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
-
-  // useEffect(() => {
-  //   if (route?.params?.contactToRemoveId) {
-  //     const filteredData = data.filter((item) => item.contactId != route?.params?.contactToRemoveId);
-  //     console.log(`filteredData: ${filteredData}`);
-  //     setData(filteredData);
-  //   }
-  // }, []);
 
   return (
     <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>

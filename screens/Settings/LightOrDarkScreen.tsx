@@ -39,7 +39,6 @@ export default function LightOrDarkScreen(props: any) {
   useEffect(() => {
     let isMounted = true;
     getDarkOrLightMode(isMounted);
-    console.log('useeffect: ' + lightOrDark);
     return () => {
       isMounted = false;
     };

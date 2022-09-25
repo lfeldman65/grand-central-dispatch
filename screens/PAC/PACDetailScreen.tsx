@@ -19,7 +19,6 @@ export default function PACDetailScreen(props: any) {
   const { route } = props;
   const { contactId, type, ranking, lastCallDate, lastNoteDate, lastPopByDate } = route.params;
   const navigation = useNavigation();
-
   const [data, setData] = useState<ContactDetailDataProps>();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,10 +31,17 @@ export default function PACDetailScreen(props: any) {
   }
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }

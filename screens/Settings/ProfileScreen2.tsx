@@ -12,7 +12,6 @@ import { ProfileDataProps } from './interfaces';
 export default function ProfileScreen2(props: any) {
   const { route } = props;
   const { email, businessType, timeZone, mobile } = route.params;
-  // const [profileData, setProfileData] = useState<ProfileDataProps>();
   const isFocused = useIsFocused();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -126,11 +125,11 @@ export default function ProfileScreen2(props: any) {
   }
 
   function fetchProfile(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
     getProfileData()
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {

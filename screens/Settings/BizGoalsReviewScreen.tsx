@@ -59,11 +59,11 @@ export default function BizGoalsReviewScreen(props: any) {
   }
 
   function fetchGoalSummary(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
     getBizGoalsSummary()
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {

@@ -40,8 +40,14 @@ export default function LandingScreen(props: any) {
   useEffect(() => {
     let isMounted = true;
     getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
     getCurrentLandingPage(isMounted);
-    console.log('useeffect: ' + landingPage);
     return () => {
       isMounted = false;
     };

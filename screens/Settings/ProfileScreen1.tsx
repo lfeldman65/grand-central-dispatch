@@ -112,11 +112,11 @@ export default function ProfileScreen1(props: any) {
   }
 
   function fetchProfile(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
     getProfileData()
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {

@@ -40,8 +40,14 @@ export default function RelOrderScreen(props: any) {
   useEffect(() => {
     let isMounted = true;
     getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
     getCurrentDisplayAZ(isMounted);
-    console.log('useeffect: ' + displayAZ);
     return () => {
       isMounted = false;
     };

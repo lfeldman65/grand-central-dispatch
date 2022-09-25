@@ -57,6 +57,13 @@ export default function NotificationsScreen(props: any) {
   useEffect(() => {
     let isMounted = true;
     getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
     getCurrentNotifs(isMounted);
     return () => {
       isMounted = false;
