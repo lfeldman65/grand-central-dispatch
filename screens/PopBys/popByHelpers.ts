@@ -67,7 +67,61 @@ export function milesBetween(lat1: number, lon1: number, lat2: number, lon2: num
   return 3962.16 * (2.0 * Math.atan2(Math.sqrt(result1), Math.sqrt(1.0 - result1)));
 }
 
-export function shortestRoute() {
+// void ShortestRoute(ObservableCollection<ObservableContactPopbyItemModel> myItems)
+//         {
+//             int dim = myItems.Count;
+
+//             if (dim == 0)
+//             {
+//                 return;
+//             }
+
+//             if (dim < minVertex)
+//             {
+//                 return;
+//             }
+
+//             else if (dim > maxVertex)
+//             {
+//                 dim = 10;
+//             }
+
+//             double[,] graph = new double[dim, dim];
+
+//             int i, j;
+
+//             for (i = 0; i < dim; i++)
+//             {
+//                 for (j = 0; j < dim; j++)
+//                 {
+//                     graph[i, j] = PopBysHelpers.MilesBetween(myItems[i].Location.Longitude, myItems[i].Location.Latitude, myItems[j].Location.Longitude, myItems[j].Location.Latitude);
+//                 }
+//             }
+
+//             double distance = TSP(graph, Items.Count);
+//             string message = "The min distance is " + distance.ToString("F") + " miles";
+//             System.Diagnostics.Debug.WriteLine(message);
+//             ShuffleItems();
+//             RaisePropertyChanged();
+//             RaisePropertyChanged(() => MapItems);
+//         }
+
+export function shortestRoute(data: PopByRadiusDataProps[]) {
+  console.log('count: ' + data.length);
+  var i = 0;
+  var j = 0;
+  // var graph = [];
+  for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 5; j++) {
+      // graph[i][j] = milesBetween(
+      //   parseFloat(data[i].location.latitude),
+      //   parseFloat(data[i].location.longitude),
+      //   parseFloat(data[j].location.latitude),
+      //   parseFloat(data[j].location.longitude)
+      // );
+    }
+  }
+
   let latAndLon = [
     { lat: 33.119871, lon: -117.260084 },
     { lat: 33.133552, lon: -117.271921 },
@@ -81,6 +135,6 @@ export function shortestRoute() {
   let hal = [1.23, 1.26, 0, 2.79, 4.97];
   let iris = [3.12, 1.95, 2.79, 0, 7.6];
   let tonia = [4.52, 5.67, 4.97, 7.6, 0];
-  let graph = [grace, steph, hal, iris, tonia];
-  console.log(graph);
+  let graph2 = [grace, steph, hal, iris, tonia];
+  console.log(graph2);
 }

@@ -184,20 +184,18 @@ export default function ManageRelationshipsScreen() {
 
   function toggleRouteButton() {
     if (showRoute) {
-      handleShortestRoute();
+      handleShortestRoute(popByData);
     } else {
       handleClosestToFarthest();
     }
     setShowRoute(!showRoute);
   }
 
-  function handleShortestRoute() {
+  function handleShortestRoute(popByData: PopByRadiusDataProps[]) {
     console.log('handle shortest route');
-    let d = milesBetween(27, 3, 32, 4);
-
-    console.log('d: ' + d);
-    console.log('data: ' + popByData[0].email);
-    shortestRoute();
+    //  let d = milesBetween(27, 3, 32, 4);
+    //  console.log('data: ' + popByData[0].email);
+    shortestRoute(popByData);
   }
 
   function handleClosestToFarthest() {
@@ -326,7 +324,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          //   console.log(res.data);
+          console.log(res.data);
         }
         setIsLoading(false);
       })
