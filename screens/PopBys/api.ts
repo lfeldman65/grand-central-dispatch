@@ -7,6 +7,7 @@ import {
 } from './interfaces';
 
 export function getPopByRadiusData(tab: string): Promise<PopByRadiusDataResponse> {
+  console.log('tab: ' + tab);
   var param = '';
   if (tab == 'Near Me') {
     param = 'nearby';

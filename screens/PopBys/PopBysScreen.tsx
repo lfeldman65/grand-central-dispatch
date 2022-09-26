@@ -116,7 +116,7 @@ export default function ManageRelationshipsScreen() {
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-  }, [navigation, mapHeight]);
+  }, [navigation, mapHeight, tabSelected]);
 
   useEffect(() => {
     let isMounted = true;
@@ -127,9 +127,6 @@ export default function ManageRelationshipsScreen() {
     } else {
       fetchPopBys('favorites', isMounted);
     }
-    return () => {
-      isMounted = false;
-    };
   }, [isFocused]);
 
   useEffect(() => {
@@ -314,17 +311,17 @@ export default function ManageRelationshipsScreen() {
   }
 
   function fetchPopBys(type: string, isMounted: boolean) {
-    if (!isMounted) {
-      return false;
-    }
     setIsLoading(true);
     getPopByRadiusData(type)
       .then((res) => {
+        if (!isMounted) {
+          return false;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          console.log(res.data);
+          console.log('length: ' + res.data.length);
         }
         setIsLoading(false);
       })
