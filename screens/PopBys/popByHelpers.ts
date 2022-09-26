@@ -66,3 +66,21 @@ export function milesBetween(lat1: number, lon1: number, lat2: number, lon2: num
     Math.cos(lat1Radians) * Math.pow(Math.sin(lon2RadiansAdj / 2.0), 2);
   return 3962.16 * (2.0 * Math.atan2(Math.sqrt(result1), Math.sqrt(1.0 - result1)));
 }
+
+export function shortestRoute() {
+  let latAndLon = [
+    { lat: 33.119871, lon: -117.260084 },
+    { lat: 33.133552, lon: -117.271921 },
+    { lat: 33.156456, lon: -117.291626 },
+    { lat: 33.117061, lon: -117.280999 },
+    { lat: 33.059709, lon: -117.229444 },
+  ];
+
+  let grace = [0, 1.17, 1.23, 3.12, 4.52];
+  let steph = [1.17, 0, 1.26, 1.95, 5.67];
+  let hal = [1.23, 1.26, 0, 2.79, 4.97];
+  let iris = [3.12, 1.95, 2.79, 0, 7.6];
+  let tonia = [4.52, 5.67, 4.97, 7.6, 0];
+  let graph = [grace, steph, hal, iris, tonia];
+  console.log(graph);
+}

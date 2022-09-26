@@ -25,7 +25,7 @@ import { storage } from '../../utils/storage';
 import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { matchesSearch, milesBetween } from './popByHelpers';
+import { matchesSearch, milesBetween, shortestRoute } from './popByHelpers';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
@@ -194,7 +194,10 @@ export default function ManageRelationshipsScreen() {
   function handleShortestRoute() {
     console.log('handle shortest route');
     let d = milesBetween(27, 3, 32, 4);
+
     console.log('d: ' + d);
+    console.log('data: ' + popByData[0].email);
+    shortestRoute();
   }
 
   function handleClosestToFarthest() {
@@ -505,6 +508,7 @@ export const styles = StyleSheet.create({
     width: '10%',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   searchView: {
     backgroundColor: '#1a6295',
