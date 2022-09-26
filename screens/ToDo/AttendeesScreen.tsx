@@ -45,9 +45,20 @@ export default function AttendeeScreen(props: any) {
   }
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
   useEffect(() => {
     console.log('search: ' + search);
     if (search != '') {
@@ -60,11 +71,6 @@ export default function AttendeeScreen(props: any) {
   useEffect(() => {
     fetchRolodexPressed('alpha');
   }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function fetchRolodexSearch(type: string) {
     setIsLoading(true);
