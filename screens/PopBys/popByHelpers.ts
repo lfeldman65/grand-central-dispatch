@@ -45,99 +45,100 @@ export function matchesSearch(person: PopByRadiusDataProps, search?: string) {
   return false;
 }
 
-// public static double MilesBetween(double lon1, double lat1, double lon2, double lat2)
-// {
-//     var d1 = lat1 * (Math.PI / 180.0);
-//     var num1 = lon1 * (Math.PI / 180.0);
-//     var d2 = lat2 * (Math.PI / 180.0);
-//     var num2 = lon2 * (Math.PI / 180.0) - num1;
-//     var d3 = Math.Pow(Math.Sin((d2 - d1) / 2.0), 2.0) + Math.Cos(d1) * Math.Cos(d2) * Math.Pow(Math.Sin(num2 / 2.0), 2.0);
-//     return 3962.16 * (2.0 * Math.Atan2(Math.Sqrt(d3), Math.Sqrt(1.0 - d3)));
-// }
-
-export function milesBetween(lat1: number, lon1: number, lat2: number, lon2: number) {
-  //console.log('lon1: ' + lon1);
-  var lat1Radians = lat1 * (Math.PI / 180.0);
-  var lon1Radians = lon1 * (Math.PI / 180.0);
-  var lat2Radians = lat2 * (Math.PI / 180.0);
-  var lon2RadiansAdj = lon2 * (Math.PI / 180.0) - lon1Radians;
-  var result1 =
-    Math.pow(Math.sin((lat2Radians - lat1Radians) / 2.0), 2) +
-    Math.cos(lat1Radians) * Math.pow(Math.sin(lon2RadiansAdj / 2.0), 2);
-  return 3962.16 * (2.0 * Math.atan2(Math.sqrt(result1), Math.sqrt(1.0 - result1)));
-}
-
-// void ShortestRoute(ObservableCollection<ObservableContactPopbyItemModel> myItems)
-//         {
-//             int dim = myItems.Count;
-
-//             if (dim == 0)
-//             {
-//                 return;
-//             }
-
-//             if (dim < minVertex)
-//             {
-//                 return;
-//             }
-
-//             else if (dim > maxVertex)
-//             {
-//                 dim = 10;
-//             }
-
-//             double[,] graph = new double[dim, dim];
-
-//             int i, j;
-
-//             for (i = 0; i < dim; i++)
-//             {
-//                 for (j = 0; j < dim; j++)
-//                 {
-//                     graph[i, j] = PopBysHelpers.MilesBetween(myItems[i].Location.Longitude, myItems[i].Location.Latitude, myItems[j].Location.Longitude, myItems[j].Location.Latitude);
-//                 }
-//             }
-
-//             double distance = TSP(graph, Items.Count);
-//             string message = "The min distance is " + distance.ToString("F") + " miles";
-//             System.Diagnostics.Debug.WriteLine(message);
-//             ShuffleItems();
-//             RaisePropertyChanged();
-//             RaisePropertyChanged(() => MapItems);
-//         }
-
 export function shortestRoute(data: PopByRadiusDataProps[]) {
-  console.log('count: ' + data.length);
+  console.log('count: ' + data);
   var i = 0;
   var j = 0;
-  //var graph = [];
+  var optimalRoute = '';
+  var sTSP = 0;
+  var vertex = new Array();
+  var bestRoute = new Array();
+  var minPath = 999999;
+  var currentCost = 0;
 
-  var graph:number[][] = [] ;
+  var graph: number[][] = [];
   for (var i = 0; i < data.length; i++) {
     graph[i] = [];
     for (var j = 0; j < data.length; j++) {
       graph[i][j] = milesBetween(
+        parseFloat(data[i].location.longitude),
         parseFloat(data[i].location.latitude),
-         parseFloat(data[i].location.longitude),
-         parseFloat(data[j].location.latitude),
-         parseFloat(data[j].location.longitude)
-       );
+        parseFloat(data[j].location.longitude),
+        parseFloat(data[j].location.latitude)
+      );
     }
   }
-
-  let latAndLon = [
-    { lat: 33.119871, lon: -117.260084 },
-    { lat: 33.133552, lon: -117.271921 },
-    { lat: 33.156456, lon: -117.291626 },
-    { lat: 33.117061, lon: -117.280999 },
-    { lat: 33.059709, lon: -117.229444 },
-  ];
-
-  let grace = [0, 1.17, 1.23, 3.12, 4.52];
-  let steph = [1.17, 0, 1.26, 1.95, 5.67];
-  let hal = [1.23, 1.26, 0, 2.79, 4.97];
-  let iris = [3.12, 1.95, 2.79, 0, 7.6];
-  let tonia = [4.52, 5.67, 4.97, 7.6, 0];
-  let graph2 = [grace, steph, hal, iris, tonia];
   console.log(graph);
+  for (var i = 0; i < data.length; i++) {
+    if (i != sTSP) {
+      vertex.push(i);
+    }
+  }
+  console.log('vertex: ' + vertex);
+  while (nextPerm(vertex)) {
+    var currentCost = 0;
+    var k = sTSP;
+    for (var i = 0; i < vertex.length; i++) {
+      currentCost = currentCost + graph[k][vertex[i]];
+      console.log('current cost: ' + currentCost);
+      k = vertex[i];
+    }
+    currentCost = currentCost + graph[k][sTSP];
+    console.log('currentCost: ' + currentCost);
+    if (currentCost < minPath) {
+      minPath = currentCost;
+      console.log('minPath:' + minPath);
+      bestRoute = [];
+      optimalRoute = '0 -> ';
+      for (var j = 0; j < vertex.length; j++) {
+        bestRoute.push(vertex[j]);
+        optimalRoute = optimalRoute + vertex[j].toString() + ' -> ';
+      }
+    }
+  }
+  optimalRoute = optimalRoute + '0';
+  console.log('optimal route: ' + optimalRoute);
+  //  console.log('min path: ' + minPath);
+  return minPath;
+}
+
+export function milesBetween(lon1: number, lat1: number, lon2: number, lat2: number) {
+  var d1 = lat1 * (Math.PI / 180.0);
+  var num1 = lon1 * (Math.PI / 180.0);
+  var d2 = lat2 * (Math.PI / 180.0);
+  var num2 = lon2 * (Math.PI / 180.0) - num1;
+  var d3 = Math.pow(Math.sin((d2 - d1) / 2.0), 2) + Math.cos(d1) * Math.cos(d2) * Math.pow(Math.sin(num2 / 2.0), 2);
+  return 3962.16 * (2.0 * Math.atan2(Math.sqrt(d3), Math.sqrt(1.0 - d3)));
+}
+
+function nextPerm(array: number[]) {
+  console.log('array: ' + array);
+  var n = array.length;
+  var i = n - 2;
+  while (i >= 0 && array[i] > array[i + 1]) {
+    i = i - 1;
+  }
+  if (i == -1) {
+    return false;
+  }
+  var j = i + 1;
+  while (j < n && array[j] > array[i]) {
+    j = j + 1;
+  }
+  j = j - 1;
+  var temp = array[i];
+  array[i] = array[j];
+  array[j] = temp;
+
+  var left = i + 1;
+  var right = n - 1;
+
+  while (left < right) {
+    var temp2 = array[left];
+    array[left] = array[right];
+    array[right] = temp2;
+    left = left + 1;
+    right = right - 1;
+  }
+  return true;
 }

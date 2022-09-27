@@ -148,19 +148,19 @@ export default function ManageRelationshipsScreen() {
   function nearPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
     setTabSelected('Near Me');
-    fetchPopBys('Near Me', true);
+    fetchPopBys('nearby', true);
   }
 
   function priorityPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
     setTabSelected('Priority');
-    fetchPopBys('Priority', true);
+    fetchPopBys('priority', true);
   }
 
   function savedPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
     setTabSelected('Saved');
-    fetchPopBys('Saved', true);
+    fetchPopBys('favorites', true);
   }
 
   function getRankPin(ranking: string) {
@@ -190,9 +190,8 @@ export default function ManageRelationshipsScreen() {
 
   function handleShortestRoute(popByData: PopByRadiusDataProps[]) {
     console.log('handle shortest route');
-    //  let d = milesBetween(27, 3, 32, 4);
-    //  console.log('data: ' + popByData[0].email);
-    shortestRoute(popByData);
+    var distance = shortestRoute(popByData);
+    console.log('shortest route: ' + distance);
   }
 
   function handleClosestToFarthest() {
@@ -311,6 +310,7 @@ export default function ManageRelationshipsScreen() {
   }
 
   function fetchPopBys(type: string, isMounted: boolean) {
+    console.log('type: ' + type);
     setIsLoading(true);
     getPopByRadiusData(type)
       .then((res) => {

@@ -6,17 +6,7 @@ import {
   PopCompleteResponse,
 } from './interfaces';
 
-export function getPopByRadiusData(tab: string): Promise<PopByRadiusDataResponse> {
-  console.log('tab: ' + tab);
-  var param = '';
-  if (tab == 'Near Me') {
-    param = 'nearby';
-  } else if (tab == 'Priority') {
-    param = 'priority';
-  } else if (tab == 'Saved') {
-    param = 'favorites';
-    console.log('param: ' + param);
-  }
+export function getPopByRadiusData(param: string): Promise<PopByRadiusDataResponse> {
   console.log('param: ' + param);
   console.log(`popbys?currentLocation=33.1175%2C-117.25&lastItem=0&batchSize=50000&radius=30&sortType=${param}`);
   return http.get(`popbys?currentLocation=33.1175%2C-117.25&lastItem=0&batchSize=50000&radius=30&sortType=${param}`);
