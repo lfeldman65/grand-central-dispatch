@@ -56,7 +56,7 @@ export function matchesSearch(person: PopByRadiusDataProps, search?: string) {
 // }
 
 export function milesBetween(lat1: number, lon1: number, lat2: number, lon2: number) {
-  console.log('lon1: ' + lon1);
+  //console.log('lon1: ' + lon1);
   var lat1Radians = lat1 * (Math.PI / 180.0);
   var lon1Radians = lon1 * (Math.PI / 180.0);
   var lat2Radians = lat2 * (Math.PI / 180.0);
@@ -110,15 +110,18 @@ export function shortestRoute(data: PopByRadiusDataProps[]) {
   console.log('count: ' + data.length);
   var i = 0;
   var j = 0;
-  // var graph = [];
-  for (var i = 0; i < 5; i++) {
-    for (var j = 0; j < 5; j++) {
-      // graph[i][j] = milesBetween(
-      //   parseFloat(data[i].location.latitude),
-      //   parseFloat(data[i].location.longitude),
-      //   parseFloat(data[j].location.latitude),
-      //   parseFloat(data[j].location.longitude)
-      // );
+  //var graph = [];
+
+  var graph:number[][] = [] ;
+  for (var i = 0; i < data.length; i++) {
+    graph[i] = [];
+    for (var j = 0; j < data.length; j++) {
+      graph[i][j] = milesBetween(
+        parseFloat(data[i].location.latitude),
+         parseFloat(data[i].location.longitude),
+         parseFloat(data[j].location.latitude),
+         parseFloat(data[j].location.longitude)
+       );
     }
   }
 
@@ -136,5 +139,5 @@ export function shortestRoute(data: PopByRadiusDataProps[]) {
   let iris = [3.12, 1.95, 2.79, 0, 7.6];
   let tonia = [4.52, 5.67, 4.97, 7.6, 0];
   let graph2 = [grace, steph, hal, iris, tonia];
-  console.log(graph2);
+  console.log(graph);
 }
