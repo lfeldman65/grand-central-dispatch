@@ -74,20 +74,16 @@ export function shortestRoute(data: PopByRadiusDataProps[]) {
       vertex.push(i);
     }
   }
-  console.log('vertex: ' + vertex);
   while (nextPerm(vertex)) {
     var currentCost = 0;
     var k = sTSP;
     for (var i = 0; i < vertex.length; i++) {
       currentCost = currentCost + graph[k][vertex[i]];
-      console.log('current cost: ' + currentCost);
       k = vertex[i];
     }
     currentCost = currentCost + graph[k][sTSP];
-    console.log('currentCost: ' + currentCost);
     if (currentCost < minPath) {
       minPath = currentCost;
-      console.log('minPath:' + minPath);
       bestRoute = [];
       optimalRoute = '0 -> ';
       for (var j = 0; j < vertex.length; j++) {
@@ -98,21 +94,24 @@ export function shortestRoute(data: PopByRadiusDataProps[]) {
   }
   optimalRoute = optimalRoute + '0';
   console.log('optimal route: ' + optimalRoute);
-  //  console.log('min path: ' + minPath);
-  return minPath;
+  console.log('min path: ' + minPath);
+  return bestRoute;
 }
 
 export function milesBetween(lon1: number, lat1: number, lon2: number, lat2: number) {
-  var d1 = lat1 * (Math.PI / 180.0);
-  var num1 = lon1 * (Math.PI / 180.0);
-  var d2 = lat2 * (Math.PI / 180.0);
-  var num2 = lon2 * (Math.PI / 180.0) - num1;
-  var d3 = Math.pow(Math.sin((d2 - d1) / 2.0), 2) + Math.cos(d1) * Math.cos(d2) * Math.pow(Math.sin(num2 / 2.0), 2);
-  return 3962.16 * (2.0 * Math.atan2(Math.sqrt(d3), Math.sqrt(1.0 - d3)));
+  try {
+    var d1 = lat1 * (Math.PI / 180.0);
+    var num1 = lon1 * (Math.PI / 180.0);
+    var d2 = lat2 * (Math.PI / 180.0);
+    var num2 = lon2 * (Math.PI / 180.0) - num1;
+    var d3 = Math.pow(Math.sin((d2 - d1) / 2.0), 2) + Math.cos(d1) * Math.cos(d2) * Math.pow(Math.sin(num2 / 2.0), 2);
+    return 3962.16 * (2.0 * Math.atan2(Math.sqrt(d3), Math.sqrt(1.0 - d3)));
+  } catch {
+    return 0;
+  }
 }
 
 function nextPerm(array: number[]) {
-  console.log('array: ' + array);
   var n = array.length;
   var i = n - 2;
   while (i >= 0 && array[i] > array[i + 1]) {

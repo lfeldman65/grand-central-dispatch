@@ -189,9 +189,14 @@ export default function ManageRelationshipsScreen() {
   }
 
   function handleShortestRoute(popByData: PopByRadiusDataProps[]) {
-    console.log('handle shortest route');
-    var distance = shortestRoute(popByData);
-    console.log('shortest route: ' + distance);
+    var route = shortestRoute(popByData);
+    console.log('shortest route: ' + route);
+    var orderedList = popByData;
+    orderedList[0] = popByData[0];
+    for (var i = 1; i < orderedList.length; i++) {
+      // orderedList[i] = popByData[route[i]];
+    }
+    // console.log('orderedList: ' + orderedList);
   }
 
   function handleClosestToFarthest() {
@@ -321,7 +326,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          console.log('length: ' + res.data.length);
+          //   console.log('length: ' + res.data.length);
         }
         setIsLoading(false);
       })
