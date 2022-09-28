@@ -25,8 +25,9 @@ import { storage } from '../../utils/storage';
 import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { matchesSearch, milesBetween, shortestRoute } from './popByHelpers';
-import { or, ZoomOutRotate } from 'react-native-reanimated';
+import { matchesSearch, shortestRoute } from './popByHelpers';
+
+var newRoute: PopByRadiusDataProps[] = [];
 
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
@@ -55,7 +56,7 @@ export default function ManageRelationshipsScreen() {
   const [showB, setShowB] = useState(true);
   const [showC, setShowC] = useState(true);
   const [search, setSearch] = useState('');
-  const [mapHeight, setMapHeight] = useState<MapLength>('long');
+  const [mapHeight, setMapHeight] = useState<MapLength>('medium');
   const [showRoute, setShowRoute] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -122,11 +123,11 @@ export default function ManageRelationshipsScreen() {
   useEffect(() => {
     let isMounted = true;
     if (tabSelected == 'Near Me') {
-      fetchPopBys('nearby', isMounted);
+      fetchPopBys('nearby', isMounted, false);
     } else if (tabSelected == 'Priority') {
-      fetchPopBys('priority', isMounted);
+      fetchPopBys('priority', isMounted, false);
     } else {
-      fetchPopBys('favorites', isMounted);
+      fetchPopBys('favorites', isMounted, false);
     }
   }, [isFocused]);
 
@@ -148,20 +149,29 @@ export default function ManageRelationshipsScreen() {
 
   function nearPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
+    if (isLoading) {
+      return;
+    }
     setTabSelected('Near Me');
-    fetchPopBys('nearby', true);
+    fetchPopBys('nearby', true, false);
   }
 
   function priorityPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
+    if (isLoading) {
+      return;
+    }
     setTabSelected('Priority');
-    fetchPopBys('priority', true);
+    fetchPopBys('priority', true, false);
   }
 
   function savedPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
+    if (isLoading) {
+      return;
+    }
     setTabSelected('Saved');
-    fetchPopBys('favorites', true);
+    fetchPopBys('favorites', true, false);
   }
 
   function getRankPin(ranking: string) {
@@ -181,33 +191,39 @@ export default function ManageRelationshipsScreen() {
   }
 
   function toggleRouteButton() {
+    if (isLoading) {
+      return;
+    }
     if (showRoute) {
-      handleShortestRoute(popByData);
-    } else {
+      // these seem reversed but they aren't since showRoute isn't toggled til the end of this function.
       handleClosestToFarthest();
+    } else {
+      handleShortestRoute(popByData);
     }
     setShowRoute(!showRoute);
   }
 
   function handleShortestRoute(popByData: PopByRadiusDataProps[]) {
     var route = shortestRoute(popByData);
-    console.log('shortest route: ' + route);
-    var orderedList = [];
-    orderedList.push(popByData[0]);
+    newRoute = [];
+    newRoute.push(popByData[0]);
     for (var i = 1; i < popByData.length; i++) {
-      orderedList.push(popByData[route[i - 1]]);
+      newRoute.push(popByData[route[i - 1]]);
     }
-    for (var i = 0; i < orderedList.length; i++) {
-      console.log('list: ' + orderedList[i].firstName);
+    for (var i = 0; i < newRoute.length; i++) {
+      popByData[i] = newRoute[i];
     }
+    Alert.alert('Relationships are listed to minimize the route distance');
   }
 
   function handleClosestToFarthest() {
-    console.log('handle closest to farthest');
-    fetchPopBys('favorites', true);
+    fetchPopBys('favorites', true, true);
   }
 
   function saveOrUnsavePressed() {
+    if (isLoading) {
+      return;
+    }
     if (tabSelected == 'Saved') {
       unSaveAllPressed();
     } else {
@@ -260,7 +276,7 @@ export default function ManageRelationshipsScreen() {
       await savePop(item.id);
       console.log('save pop ' + item.id);
     });
-    fetchPopBys('favorites', true);
+    fetchPopBys('favorites', true, false);
   }
 
   function unSaveAllPressedContinue() {
@@ -270,7 +286,7 @@ export default function ManageRelationshipsScreen() {
       await removePop(item.id);
       console.log('removePop ' + item.id);
     });
-    fetchPopBys('favorites', true);
+    fetchPopBys('favorites', true, false);
   }
 
   function tapAPlusFilter() {
@@ -295,9 +311,9 @@ export default function ManageRelationshipsScreen() {
 
   function getRouteButton() {
     if (showRoute) {
-      return routeX;
+      return routeCircle;
     }
-    return routeCircle;
+    return routeX;
   }
 
   function getUpArrowStyle() {
@@ -317,7 +333,7 @@ export default function ManageRelationshipsScreen() {
     return unsaveAll;
   }
 
-  function fetchPopBys(type: string, isMounted: boolean) {
+  function fetchPopBys(type: string, isMounted: boolean, showAlert: boolean) {
     console.log('type: ' + type);
     setIsLoading(true);
     getPopByRadiusData(type)
@@ -329,9 +345,11 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          //   console.log('length: ' + res.data.length);
         }
         setIsLoading(false);
+        if (showAlert) {
+          Alert.alert('Relationships are listed closest to farthest');
+        }
       })
       .catch((error) => console.error('failure ' + error));
   }
@@ -591,7 +609,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   mapViewLong: {
-    height: '80%',
+    height: '82%',
     width: '100%',
   },
   map: {

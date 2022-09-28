@@ -46,7 +46,6 @@ export function matchesSearch(person: PopByRadiusDataProps, search?: string) {
 }
 
 export function shortestRoute(data: PopByRadiusDataProps[]) {
-  console.log('count: ' + data);
   var i = 0;
   var j = 0;
   var optimalRoute = '';
@@ -68,7 +67,7 @@ export function shortestRoute(data: PopByRadiusDataProps[]) {
       );
     }
   }
-  console.log(graph);
+  // console.log(graph);
   for (var i = 0; i < data.length; i++) {
     if (i != sTSP) {
       vertex.push(i);
