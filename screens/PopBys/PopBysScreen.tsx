@@ -26,6 +26,7 @@ import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import { matchesSearch, milesBetween, shortestRoute } from './popByHelpers';
+import { or, ZoomOutRotate } from 'react-native-reanimated';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
@@ -191,12 +192,14 @@ export default function ManageRelationshipsScreen() {
   function handleShortestRoute(popByData: PopByRadiusDataProps[]) {
     var route = shortestRoute(popByData);
     console.log('shortest route: ' + route);
-    var orderedList = popByData;
-    orderedList[0] = popByData[0];
-    for (var i = 1; i < orderedList.length; i++) {
-      // orderedList[i] = popByData[route[i]];
+    var orderedList = [];
+    orderedList.push(popByData[0]);
+    for (var i = 1; i < popByData.length; i++) {
+      orderedList.push(popByData[route[i - 1]]);
     }
-    // console.log('orderedList: ' + orderedList);
+    for (var i = 0; i < orderedList.length; i++) {
+      console.log('list: ' + orderedList[i].firstName);
+    }
   }
 
   function handleClosestToFarthest() {
