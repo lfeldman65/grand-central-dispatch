@@ -58,19 +58,30 @@ export default function PodcastsScreen() {
   }, [isFocused]);
 
   function getAboutUsList(type: string, isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
     setIsLoading(true);
     getMedia(type)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
           if (type == 'moreLinks') {
             setMoreLinksData(res.data);
+            console.log('moreLinks: ' + res.data[0].id);
+            console.log('moreLinks: ' + res.data[1].id);
+            console.log('moreLinks: ' + res.data[2].id);
+            console.log('moreLinks: ' + res.data[3].id);
+            console.log('moreLinks: ' + res.data[4].id);
           } else {
             setSocialData(res.data);
+            console.log('moreLinks: ' + res.data[0].id);
+            console.log('moreLinks: ' + res.data[1].id);
+            console.log('moreLinks: ' + res.data[2].id);
+            console.log('moreLinks: ' + res.data[3].id);
+            console.log('moreLinks: ' + res.data[4].id);
+            console.log('moreLinks: ' + res.data[5].id);
           }
         }
         setIsLoading(false);
@@ -88,12 +99,9 @@ export default function PodcastsScreen() {
         <React.Fragment>
           <ScrollView>
             <View>
-              {moreLinksData.map(
-                (item, index) =>
-                  item.title != 'About Us' && (
-                    <AboutUsRow key={index} data={item} onPress={() => handleRowPress(item)} />
-                  )
-              )}
+              {moreLinksData.map((item, index) => (
+                <AboutUsRow key={index} data={item} onPress={() => handleRowPress(item)} />
+              ))}
             </View>
             <View>
               {socialData.map((item, index) => (
