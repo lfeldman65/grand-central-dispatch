@@ -333,7 +333,7 @@ export default function BizGoalsScreen1(props: any) {
       <Text style={styles.nameTitle}>What is the average commission you receive for each transactions?</Text>
       <View style={styles.mainContent}>
         <View style={styles.aveCommRow}>
-          <View style={styles.percentView}>
+          <View style={styles.dollarView}>
             <Text
               onPress={dollarPressed}
               style={dollarOrPercent == 'dollar' ? styles.dollarText : styles.dollarTextDim}
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
   },
   aveCommInputView: {
     backgroundColor: '#002341',
-    width: '80%',
+    width: '77%',
     height: 50,
     marginBottom: 20,
     justifyContent: 'center',
@@ -435,15 +435,16 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  percentView: {
-    backgroundColor: '#002341',
-    height: 50,
-    width: '5%',
-  },
   dollarView: {
     backgroundColor: '#002341',
     height: 50,
     width: '5%',
+  },
+  percentView: {
+    backgroundColor: '#002341',
+    height: 50,
+    width: '8%',
+    // paddingRight: 10,
   },
   dollarText: {
     fontSize: 20,
@@ -464,6 +465,7 @@ const styles = StyleSheet.create({
     color: '#02ABF7',
     marginTop: 12,
     opacity: 1.0,
+    paddingRight: 10,
   },
   percentTextDim: {
     fontSize: 20,
