@@ -129,6 +129,9 @@ export default function ManageRelationshipsScreen() {
     } else {
       fetchPopBys('favorites', isMounted, false);
     }
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   useEffect(() => {
