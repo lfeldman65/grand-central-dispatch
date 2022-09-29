@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button, TextInput, Alert } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
@@ -63,7 +63,7 @@ export default function BizGoalsScreen1(props: any) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [isFocused]);
 
   function initializeFields(
     desSal?: string,
@@ -123,6 +123,8 @@ export default function BizGoalsScreen1(props: any) {
         setAveCommission(removeLeadingDecimal(aveComm!));
         setAveCommissionBU(removeLeadingDecimal(aveComm!));
       }
+      setAveCommission(removeTrailingDecimal(aveComm));
+      setAveCommissionBU(removeTrailingDecimal(aveComm));
     }
   }
 

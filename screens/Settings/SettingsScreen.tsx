@@ -75,10 +75,11 @@ export default function SettingsScreen() {
   }
 
   function aboutUsPressed() {
-    console.log('about us');
+    navigation.navigate('AboutUsScreen');
   }
 
   function ratePressed() {
+    console.log('rate');
     Linking.openURL('https://apps.apple.com/us/app/referral-maker-crm/id1097338930');
   }
 

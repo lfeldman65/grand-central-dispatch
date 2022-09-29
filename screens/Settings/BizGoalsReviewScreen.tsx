@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useLayoutEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -13,6 +13,7 @@ import { removeTrailingDecimal, roundToInt } from './settingsHelpers';
 
 export default function BizGoalsReviewScreen(props: any) {
   const { route } = props;
+  // const { netIncome, taxRate, annualExpenses, aveAmount, agentBrokerSplit, aveComm, commissionType } = route.params;
   const isFocused = useIsFocused();
   const [summaryData, setSummaryData] = useState<BizGoalsSummaryDataProps>();
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -20,8 +21,7 @@ export default function BizGoalsReviewScreen(props: any) {
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Set Your Goals',
-
+      title: 'Goals Review',
       headerRight: () => (
         <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
           <Text style={styles.saveText}>Save</Text>
@@ -138,7 +138,7 @@ export default function BizGoalsReviewScreen(props: any) {
       <Text style={styles.nameTitle}>Notes</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyNotes}</Text>
       <View style={styles.dividingLine}></View>
-      <Text style={styles.nameTitle}>Pop-By</Text>
+      <Text style={styles.nameTitle}>Pop-Bys</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.weeklyPopBys}</Text>
       <View style={styles.dividingLine}></View>
       <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>Recommended Daily Activities</Text>
@@ -149,7 +149,7 @@ export default function BizGoalsReviewScreen(props: any) {
       <Text style={styles.nameTitle}>Notes</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.dailyNotes}</Text>
       <View style={styles.dividingLine}></View>
-      <Text style={styles.nameTitle}>Pop-By</Text>
+      <Text style={styles.nameTitle}>Pop-Bys</Text>
       <Text style={lightOrDark == 'dark' ? styles.dataDark : styles.dataLight}>{summaryData?.dailyPopBys}</Text>
       <View style={styles.dividingLine}></View>
     </ScrollView>

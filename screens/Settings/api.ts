@@ -57,7 +57,6 @@ export function updateBizGoals(
   averageSaleCommission: string,
   commissionType: string
 ): Promise<BizGoalsDataResponse> {
-  console.log('biz: ' + averageSaleCommission);
   return http.put('setup/goals', {
     body: {
       desiredSalary: desiredSalary,
