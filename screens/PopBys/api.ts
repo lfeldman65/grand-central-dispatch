@@ -6,16 +6,10 @@ import {
   PopCompleteResponse,
 } from './interfaces';
 
-export function getPopByRadiusData(tab: string): Promise<PopByRadiusDataResponse> {
-  var param = '';
-  if (tab == 'Near Me') {
-    param = 'nearby';
-  } else if (tab == 'Priority') {
-    param = 'priority';
-  } else if (tab == 'Saved') {
-    param = 'favorites';
-  }
-  return http.get(`popbys?currentLocation=33.1175%2C-117.25&lastItem=0&batchSize=50&radius=30&sortType=${param}`);
+export function getPopByRadiusData(param: string): Promise<PopByRadiusDataResponse> {
+  console.log('param: ' + param);
+  console.log(`popbys?currentLocation=33.1175%2C-117.25&lastItem=0&batchSize=50000&radius=30&sortType=${param}`);
+  return http.get(`popbys?currentLocation=33.1175%2C-117.25&lastItem=0&batchSize=50000&radius=30&sortType=${param}`);
 }
 
 export function savePop(guid: string): Promise<PopByFavoriteDataResponse> {

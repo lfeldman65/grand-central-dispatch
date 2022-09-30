@@ -25,7 +25,7 @@ import { storage } from '../../utils/storage';
 import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { matchesSearch } from './popByHelpers';
+import { matchesSearch, shortestRoute } from './popByHelpers';
 
 var newRoute: PopByRadiusDataProps[] = [];
 
@@ -129,9 +129,6 @@ export default function ManageRelationshipsScreen() {
     } else {
       fetchPopBys('favorites', isMounted, false);
     }
-    return () => {
-      isMounted = false;
-    };
   }, [isFocused]);
 
   useEffect(() => {
@@ -207,7 +204,16 @@ export default function ManageRelationshipsScreen() {
   }
 
   function handleShortestRoute(popByData: PopByRadiusDataProps[]) {
-    console.log('handle shortest route');
+    var route = shortestRoute(popByData);
+    newRoute = [];
+    newRoute.push(popByData[0]);
+    for (var i = 1; i < popByData.length; i++) {
+      newRoute.push(popByData[route[i - 1]]);
+    }
+    for (var i = 0; i < newRoute.length; i++) {
+      popByData[i] = newRoute[i];
+    }
+    Alert.alert('Relationships are listed to minimize the route distance');
   }
 
   function handleClosestToFarthest() {
