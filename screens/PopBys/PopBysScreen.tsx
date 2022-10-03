@@ -11,7 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useNavigation, useIsFocused, RouteProp, DarkTheme } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import PopByRow from './PopByRow';
@@ -22,7 +22,6 @@ import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { storage } from '../../utils/storage';
-import PopComplete from './PopCompleteScreen';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import { matchesSearch, shortestRoute } from './popByHelpers';
@@ -42,6 +41,9 @@ const pinC = require('./images/mapPinC.png');
 const pinD = require('./images/mapPinD.png');
 const triangleUp = require('./images/triangleUp.png');
 const triangleDown = require('./images/triangleDown.png');
+
+const chevronUp = require('../../images/chevron_blue_up.png');
+const chevronDown = require('../../images/chevron_blue_down.png');
 
 type TabType = 'Near Me' | 'Priority' | 'Saved'; // nearby, priority and favorites in API
 type MapLength = 'short' | 'medium' | 'long';
@@ -411,6 +413,7 @@ export default function ManageRelationshipsScreen() {
             style={styles.map}
             followsUserLocation={true}
             initialRegion={{ latitude: 33.1175, longitude: -117.25, latitudeDelta: 0.11, longitudeDelta: 0.06 }}
+            userInterfaceStyle={lightOrDark == 'dark' ? 'dark' : 'light'}
           >
             {popByData.map((person, index) =>
               matchesRankFilter(person.ranking) &&
@@ -446,13 +449,13 @@ export default function ManageRelationshipsScreen() {
           <View style={styles.searchRow}>
             <TouchableOpacity style={styles.upAndDownView} onPress={upPressed}>
               <View style={styles.upAndDownView}>
-                <Image source={triangleUp} style={getUpArrowStyle()} />
+                <Image source={chevronUp} style={getUpArrowStyle()} />
               </View>
             </TouchableOpacity>
             <View style={styles.searchView}>
               <Image source={searchGlass} style={styles.magGlass} />
               <TextInput
-                style={styles.textInput}
+                style={styles.searchTextInput}
                 placeholder="Search By Name or Address"
                 placeholderTextColor="white"
                 textAlign="left"
@@ -467,7 +470,7 @@ export default function ManageRelationshipsScreen() {
             </View>
             <TouchableOpacity style={styles.upAndDownView} onPress={downPressed}>
               <View style={styles.upAndDownView}>
-                <Image source={triangleDown} style={getDownArrowStyle()} />
+                <Image source={chevronDown} style={getDownArrowStyle()} />
               </View>
             </TouchableOpacity>
           </View>
@@ -532,10 +535,10 @@ export const styles = StyleSheet.create({
     width: '10%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+    //  backgroundColor: 'white',
   },
   searchView: {
-    backgroundColor: '#1a6295',
+    backgroundColor: '#02ABF7',
     paddingLeft: 10,
     flexDirection: 'row',
     width: '75%',
@@ -546,13 +549,13 @@ export const styles = StyleSheet.create({
     paddingLeft: 5,
     marginTop: 9,
   },
-  textInput: {
+  searchTextInput: {
     fontSize: 16,
     color: 'white',
     paddingLeft: 10,
   },
   closeXView: {
-    backgroundColor: '#1a6295',
+    backgroundColor: '#02ABF7',
     width: '5%',
     height: 40,
     paddingRight: 30,
@@ -594,13 +597,13 @@ export const styles = StyleSheet.create({
     height: 40,
   },
   upAndDownButtons: {
-    width: 24,
-    height: 24,
+    width: 25,
+    height: 15,
     opacity: 1.0,
   },
   upAndDownButtonsDim: {
-    width: 24,
-    height: 24,
+    width: 25,
+    height: 15,
     opacity: 0.4,
   },
   mapViewShort: {

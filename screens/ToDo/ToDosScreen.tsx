@@ -13,7 +13,6 @@ import ToDoRow from './ToDoRow';
 import globalStyles from '../../globalStyles';
 import AddToDo from './AddToDoScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-const chevron = require('../../images/chevron_blue.png');
 
 // AddNewToDoPressed
 // Invoke AddToDo, pass in title (string) onSave (function) setModalVisible (function)

@@ -24,7 +24,6 @@ import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { storage } from '../../utils/storage';
-const chevron = require('../../images/chevron_blue.png');
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 

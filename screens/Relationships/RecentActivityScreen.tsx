@@ -27,8 +27,6 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 
-const chevron = require('../../images/chevron_blue.png');
-
 //type FilterOptions = 'all' | 'calls' | 'notes' | 'popbys' | 'referrals' | 'other';
 
 // interface RolodexScreenProps {
