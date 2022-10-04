@@ -57,26 +57,23 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
 
   const handleAddPressed = () => {
     console.log('Add');
-    analytics.event(new Event('Transactions', 'Add Transaction'));
-    // if (tabSelected == 'calls') {
-    //   setModalCallsVisible(!modalCallsVisible);
-    // } else if (tabSelected == 'notes') {
-    //   setModalNotesVisible(!modalNotesVisible);
-    // } else if (tabSelected == 'popby') {
-    //   setModalPopVisible(!modalPopVisible);
-    // }
+    navigation.navigate('AddTxMenu');
+
+    //   analytics.event(new Event('Transactions', 'Add Transaction'));
   };
 
   function tabPressed(type: TabType) {
-    analytics.event(new Event('Real Estate Trans', type));
+    //   analytics.event(new Event('Real Estate Trans', type));
     setTabSelected(type);
-    //no need to call fetch data here, the useEffect will automatically call fetchData
   }
 
-  function fetchData(status: string, type: string) {
+  function fetchData(status: string, type: string, isMounted: boolean) {
     setIsLoading(true);
     getTransactionData(status, type)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -88,18 +85,36 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   }
 
   useEffect(() => {
-    getDarkOrLightMode();
+    let isMounted = true;
+    fetchData(tabSelected, 'Realtor', isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  //anytime that setTabSelected is called, fetchData will also be called
   useEffect(() => {
-    fetchData(tabSelected, 'Realtor');
-  }, [tabSelected]);
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchData(tabSelected, 'Realtor', true);
+    return () => {
+      isMounted = false;
+    };
+  }, [tabSelected]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -107,17 +122,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
     });
   });
 
-  useEffect(() => {
-    fetchData(tabSelected, 'Realtor');
-  }, [isFocused]);
-
-  function filterPressed() {
-    //console.log('filter press');
-    SheetManager.show(Sheets.filterSheet);
-  }
-
   function changeStatusPressed(dealId: number) {
-    //console.log('filter press');
     setCurrentId(dealId);
     SheetManager.show(Sheets.filterSheet);
   }
@@ -143,13 +148,13 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   function changeStatusSuccess() {
     console.log('changeStatusSuccess');
     setIsLoading(false);
-    fetchData(tabSelected, 'Realtor');
+    fetchData(tabSelected, 'Realtor', true);
   }
 
   function changeStatusFailure() {
     setIsLoading(false);
     console.log('changeStatusFailure');
-    fetchData(tabSelected, 'Realtor');
+    fetchData(tabSelected, 'Realtor', true);
   }
 
   return (

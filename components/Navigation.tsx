@@ -24,6 +24,10 @@ import VideoDetailsScreen from '../screens/Relationships/VideoDetailsScreen';
 import RealEstateTransactionsScreen from '../screens/Transactions/RealEstateTransactionsScreen';
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
+import AddTxMenu from '../screens/Transactions/AddTransactionMenu';
+import AddTxBuyer1 from '../screens/Transactions/AddTxBuyer1';
+// import AddTxBuyer2 from '../screens/Transactions/AddTxBuyer2';
+// import AddTxBuyer3 from '../screens/Transactions/AddTxBuyer3';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
@@ -148,6 +152,32 @@ export const RealTxStackNavigator = () => {
           headerBackVisible: true,
         }}
       />
+
+      <Stack.Screen
+        name="AddTxMenu"
+        component={AddTxMenu}
+        options={{
+          title: 'Add Transaction',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddTxBuyer1"
+        component={AddTxBuyer1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -180,6 +210,32 @@ export const LenderTxStackNavigator = () => {
           headerBackVisible: true,
         }}
       />
+
+      <Stack.Screen
+        name="AddTxMenu"
+        component={AddTxMenu}
+        options={{
+          title: 'Add Transaction',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddTxBuyer1"
+        component={AddTxBuyer1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -210,6 +266,32 @@ export const OtherTxStackNavigator = () => {
             backgroundColor: '#1A6295',
           },
           headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddTxMenu"
+        component={AddTxMenu}
+        options={{
+          title: 'Add Transaction',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddTxBuyer1"
+        component={AddTxBuyer1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
         }}
       />
     </Stack.Navigator>

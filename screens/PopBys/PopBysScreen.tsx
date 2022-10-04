@@ -39,8 +39,6 @@ const pinA = require('./images/mapPinA.png');
 const pinB = require('./images/mapPinB.png');
 const pinC = require('./images/mapPinC.png');
 const pinD = require('./images/mapPinD.png');
-const triangleUp = require('./images/triangleUp.png');
-const triangleDown = require('./images/triangleDown.png');
 
 const chevronUp = require('../../images/chevron_blue_up.png');
 const chevronDown = require('../../images/chevron_blue_down.png');
@@ -53,6 +51,7 @@ export default function ManageRelationshipsScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [popByData, setPopByData] = useState<PopByRadiusDataProps[]>([]);
+  const [infoText, setInfoText] = useState('Closest to farthest');
   const [showAPlus, setShowAPlus] = useState(true);
   const [showA, setShowA] = useState(true);
   const [showB, setShowB] = useState(true);
@@ -218,7 +217,8 @@ export default function ManageRelationshipsScreen() {
     for (var i = 0; i < newRoute.length; i++) {
       popByData[i] = newRoute[i];
     }
-    Alert.alert('Relationships are listed to minimize the route distance');
+    setInfoText('Minimized route distance');
+    //  Alert.alert('Relationships are listed to minimize the route distance');
   }
 
   function handleClosestToFarthest() {
@@ -353,7 +353,8 @@ export default function ManageRelationshipsScreen() {
         }
         setIsLoading(false);
         if (showAlert) {
-          Alert.alert('Relationships are listed closest to farthest');
+          setInfoText('Closest to farthest');
+          //  Alert.alert('Relationships are listed closest to farthest');
         }
       })
       .catch((error) => console.error('failure ' + error));
@@ -374,6 +375,21 @@ export default function ManageRelationshipsScreen() {
         <Text style={tabSelected == 'Saved' ? globalStyles.selected : globalStyles.unselected} onPress={savedPressed}>
           Saved
         </Text>
+      </View>
+
+      <View style={styles.searchView}>
+        <Image source={searchGlass} style={styles.magGlass} />
+        <TextInput
+          style={styles.searchTextInput}
+          placeholder="Search By Name or Address"
+          placeholderTextColor="white"
+          textAlign="left"
+          defaultValue={search}
+          onChangeText={(text) => setSearch(text)}
+        />
+        <TouchableOpacity onPress={clearSearchPressed}>
+          <Image source={closeButton} style={styles.closeX} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.actionAndFilterButtonView}>
@@ -446,30 +462,17 @@ export default function ManageRelationshipsScreen() {
         </View>
       ) : (
         <React.Fragment>
-          <View style={styles.searchRow}>
+          <View style={styles.upAndDownRow}>
             <TouchableOpacity style={styles.upAndDownView} onPress={upPressed}>
-              <View style={styles.upAndDownView}>
+              <View>
                 <Image source={chevronUp} style={getUpArrowStyle()} />
               </View>
             </TouchableOpacity>
-            <View style={styles.searchView}>
-              <Image source={searchGlass} style={styles.magGlass} />
-              <TextInput
-                style={styles.searchTextInput}
-                placeholder="Search By Name or Address"
-                placeholderTextColor="white"
-                textAlign="left"
-                defaultValue={search}
-                onChangeText={(text) => setSearch(text)}
-              />
-            </View>
-            <View style={styles.closeXView}>
-              <TouchableOpacity onPress={clearSearchPressed}>
-                <Image source={closeButton} style={styles.closeX} />
-              </TouchableOpacity>
+            <View style={lightOrDark == 'dark' ? styles.infoViewDark : styles.infoViewLight}>
+              <Text style={lightOrDark == 'dark' ? styles.infoTextDark : styles.infoTextLight}>{infoText}</Text>
             </View>
             <TouchableOpacity style={styles.upAndDownView} onPress={downPressed}>
-              <View style={styles.upAndDownView}>
+              <View>
                 <Image source={chevronDown} style={getDownArrowStyle()} />
               </View>
             </TouchableOpacity>
@@ -526,44 +529,74 @@ export default function ManageRelationshipsScreen() {
 }
 
 export const styles = StyleSheet.create({
+  searchView: {
+    backgroundColor: '#1a6295',
+    height: 40,
+    justifyContent: 'space-evenly',
+    paddingLeft: 10,
+    borderColor: 'white',
+    borderWidth: 0.5,
+    flexDirection: 'row',
+    marginTop: 1,
+    marginBottom: 1,
+  },
   searchRow: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    width: '100%',
+    height: 40,
+  },
+  searchTextInput: {
+    fontSize: 16,
+    color: 'white',
+    width: 300,
+  },
+  magGlass: {
+    width: 20,
+    height: 20,
+    marginTop: 9,
+  },
+  closeX: {
+    width: 15,
+    height: 15,
+    marginTop: 12,
+  },
+  upAndDownRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
     height: 40,
   },
   upAndDownView: {
     width: '10%',
     justifyContent: 'center',
     alignItems: 'center',
-    //  backgroundColor: 'white',
   },
-  searchView: {
-    backgroundColor: '#02ABF7',
+  infoViewDark: {
+    //  backgroundColor: 'black',
     paddingLeft: 10,
     flexDirection: 'row',
     width: '75%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  magGlass: {
-    width: 20,
-    height: 20,
-    paddingLeft: 5,
-    marginTop: 9,
-  },
-  searchTextInput: {
-    fontSize: 16,
-    color: 'white',
+  infoViewLight: {
+    //  backgroundColor: 'white',
     paddingLeft: 10,
+    flexDirection: 'row',
+    width: '75%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  closeXView: {
-    backgroundColor: '#02ABF7',
-    width: '5%',
-    height: 40,
-    paddingRight: 30,
+  infoTextDark: {
+    color: 'white',
+    paddingTop: 4,
+    fontSize: 16,
   },
-  closeX: {
-    width: 15,
-    height: 15,
-    marginTop: 12,
+  infoTextLight: {
+    color: 'black',
+    paddingTop: 4,
+    fontSize: 16,
   },
   actionAndFilterButtonView: {
     flexDirection: 'row',
@@ -615,7 +648,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   mapViewLong: {
-    height: '82%',
+    height: '77%',
     width: '100%',
   },
   map: {
