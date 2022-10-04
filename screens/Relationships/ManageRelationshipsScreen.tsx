@@ -67,12 +67,19 @@ export default function ManageRelationshipsScreen() {
   useEffect(() => {
     let isMounted = true;
     getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
     if (tabSelected == 'a-z') {
-      fetchRolodexPressed('alpha');
+      fetchRolodexPressed('alpha', isMounted);
     } else if (tabSelected == 'ranking') {
-      fetchRolodexPressed('ranking');
+      fetchRolodexPressed('ranking', isMounted);
     } else {
-      fetchGroupsPressed();
+      fetchGroupsPressed(isMounted);
     }
     return () => {
       isMounted = false;
@@ -82,25 +89,24 @@ export default function ManageRelationshipsScreen() {
   useEffect(() => {
     showFilterTitle();
     if (tabSelected == 'a-z') {
-      fetchRolodexPressed('alpha');
+      fetchRolodexPressed('alpha', true);
     } else if (tabSelected == 'ranking') {
-      fetchRolodexPressed('ranking');
+      fetchRolodexPressed('ranking', true);
     } else {
-      fetchGroupsPressed();
+      fetchGroupsPressed(true);
     }
   }, [isFilterRel]);
 
   useEffect(() => {
-    navigation.setOptions({ title: 'Relationships' });
     navigation.setOptions({
+      title: 'Relationships',
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
   }, [navigation]);
 
   useEffect(() => {
-    navigation.setOptions({ title: 'Relationships' });
-    fetchRolodexPressed(tabSelected);
+    fetchRolodexPressed(tabSelected, true);
     console.log(tabSelected);
   }, [isFilterRel]);
 
@@ -123,19 +129,19 @@ export default function ManageRelationshipsScreen() {
   function azPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'A-Z', 0));
     setTabSelected('a-z');
-    fetchRolodexPressed('alpha');
+    fetchRolodexPressed('alpha', true);
   }
 
   function rankingPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
     setTabSelected('ranking');
-    fetchRolodexPressed('ranking');
+    fetchRolodexPressed('ranking', true);
   }
 
   function groupsPressed() {
     analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
     setTabSelected('groups');
-    fetchGroupsPressed();
+    fetchGroupsPressed(true);
   }
 
   function filterPressed() {
@@ -149,10 +155,13 @@ export default function ManageRelationshipsScreen() {
     }
   }
 
-  function fetchRolodexPressed(type: string) {
+  function fetchRolodexPressed(type: string, isMounted: boolean) {
     setIsLoading(true);
     getRolodexData(type)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -164,10 +173,13 @@ export default function ManageRelationshipsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function fetchGroupsPressed() {
+  function fetchGroupsPressed(isMounted: boolean) {
     setIsLoading(true);
     getGroupsData()
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -180,7 +192,7 @@ export default function ManageRelationshipsScreen() {
   }
 
   function saveComplete() {
-    fetchRolodexPressed('alpha');
+    fetchRolodexPressed('alpha', true);
   }
 
   return (

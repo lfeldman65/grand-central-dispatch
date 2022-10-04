@@ -32,7 +32,11 @@ export default function LightOrDarkScreen(props: any) {
   useEffect(() => {
     navigation.setOptions({
       title: 'Light Or Dark Mode',
-      headerRight: () => <Button color="#fff" onPress={savePressed} title="Save" />,
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
+          <Text style={styles.saveText}>Save</Text>
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, lightOrDark]);
 
@@ -133,5 +137,12 @@ const styles = StyleSheet.create({
     marginBottom: 7,
     marginTop: 5,
     fontWeight: '500',
+  },
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
 });

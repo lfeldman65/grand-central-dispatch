@@ -33,7 +33,11 @@ export default function RelOrderScreen(props: any) {
   useEffect(() => {
     navigation.setOptions({
       title: 'Display Relationships A - Z',
-      headerRight: () => <Button color="#fff" onPress={savePressed} title="Save" />,
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
+          <Text style={styles.saveText}>Save</Text>
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, displayAZ]);
 
@@ -148,5 +152,12 @@ const styles = StyleSheet.create({
     marginBottom: 7,
     marginTop: 5,
     fontWeight: '500',
+  },
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
 });

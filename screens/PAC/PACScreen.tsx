@@ -107,7 +107,7 @@ export default function PACScreen(props: PACScreenProps) {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  });
+  }, [navigation]);
 
   useEffect(() => {
     let isMounted = true;

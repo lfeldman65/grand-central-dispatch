@@ -27,7 +27,11 @@ export default function ProfileScreen2(props: any) {
   useEffect(() => {
     navigation.setOptions({
       title: 'Mailing Address',
-      headerRight: () => <Button color="#fff" onPress={savePressed} title="Save" />,
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
+          <Text style={styles.saveText}>Save</Text>
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, firstName, lastName, company, street1, street2, city, state, zip, country]);
 
@@ -350,5 +354,12 @@ const styles = StyleSheet.create({
   filterView: {
     width: '100%',
     padding: 12,
+  },
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
 });
