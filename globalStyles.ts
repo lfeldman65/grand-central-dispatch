@@ -1,6 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  // Almost all
+
   containerDark: {
     backgroundColor: 'black',
     height: '100%',
@@ -9,6 +11,9 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
+
+  // Tab button on Pop-Bys, PAC, etc.
+
   tabButtonRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -36,7 +41,14 @@ export default StyleSheet.create({
     borderWidth: 2,
   },
 
+  // Helps placement of title and chevron
+
+  blankButton: {
+    marginLeft: '10%',
+  },
+
   // filters for To-Do's, Rolodex, etc
+
   filterRow: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -44,9 +56,9 @@ export default StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 1,
   },
-  blankButton: {
-    // Helps placement of title and chevron
-    marginLeft: '10%',
+  filterView: {
+    width: '100%',
+    marginBottom: 20,
   },
   filterText: {
     flexDirection: 'row',
@@ -60,8 +72,23 @@ export default StyleSheet.create({
     height: 12,
     width: 20,
   },
+  listItemCell: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  listItem: {
+    flex: 1,
+    marginVertical: 10,
+    borderRadius: 5,
+    fontSize: 20,
+    alignItems: 'center',
+    textAlign: 'center',
+    marginBottom: 60,
+  },
 
-  //
+  //  Add Buttons
+
   addButton: {
     marginTop: 5,
     backgroundColor: '#1A6295',
@@ -82,21 +109,5 @@ export default StyleSheet.create({
   bottomContainer: {
     backgroundColor: '#1A6295',
     height: 60,
-  },
-
-  // Drop-Down Menues
-  listItemCell: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  listItem: {
-    flex: 1,
-    marginVertical: 10,
-    borderRadius: 5,
-    fontSize: 20,
-    alignItems: 'center',
-    textAlign: 'center',
-    marginBottom: 30,
   },
 });
