@@ -57,14 +57,8 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
 
   const handleAddPressed = () => {
     console.log('Add');
-    analytics.event(new Event('Transactions', 'Add Transaction'));
-    // if (tabSelected == 'calls') {
-    //   setModalCallsVisible(!modalCallsVisible);
-    // } else if (tabSelected == 'notes') {
-    //   setModalNotesVisible(!modalNotesVisible);
-    // } else if (tabSelected == 'popby') {
-    //   setModalPopVisible(!modalPopVisible);
-    // }
+    //    analytics.event(new Event('Transactions', 'Add Transaction'));
+    navigation.navigate('AddTxMenu');
   };
 
   function tabPressed(type: TabType) {

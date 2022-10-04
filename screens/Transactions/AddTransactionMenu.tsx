@@ -93,13 +93,11 @@ export default function AddTransactionMenu(props: any) {
         </TouchableOpacity>
       )}
 
-      {profileData?.businessType.toLowerCase().includes('realtor') && (
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(4)}>
-          <View style={styles.buttonView}>
-            <Text style={styles.buttonText}>{'Lease/Referral Fee'}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(4)}>
+        <View style={styles.buttonView}>
+          <Text style={styles.buttonText}>{'Lease/Referral Fee'}</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
