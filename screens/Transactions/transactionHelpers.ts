@@ -153,7 +153,6 @@ export const styles = StyleSheet.create({
   textInput: {
     fontSize: 18,
     color: '#FFFFFF',
-    width: 300,
   },
   nameTitle: {
     color: 'white',

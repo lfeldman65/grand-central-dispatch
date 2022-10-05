@@ -27,13 +27,9 @@ export default function ChooseLeadSource(props: any) {
 
   const handleRowPress = (index: number) => {
     console.log('row pressed choose: ' + index);
-    setSelectedSource(dealOptions?.leadSources);
+    setSelectedSource(dealOptions?.leadSources[index]);
     setModalSourceVisible(false);
   };
-
-  function clearSearchPressed() {
-    setSearch('');
-  }
 
   function cancelPressed() {
     setModalSourceVisible(false);
