@@ -91,3 +91,17 @@ export interface TransactionDeleteResponse {
 export interface TransactionDeleteProps {
   message: string;
 }
+
+// Transaction Type in Postman
+
+export interface TransactionTypeDataResponse {
+  data: TransactionTypeDataProps;
+  error: string;
+  status: string;
+}
+export interface TransactionTypeDataProps {
+  userType: string;
+  statuses: string[];
+  leadSources: string[];
+  leadSourcesLender: string[];
+}

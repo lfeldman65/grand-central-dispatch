@@ -7,15 +7,10 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps, AttendeesProps } from '../ToDo/interfaces';
-import {
-  AddTxBuyerAndSellerSheets,
-  statusMenu,
-  typeMenu,
-  buyerLeadSourceMenu,
-  propertyAddressMenu,
-  styles,
-} from './transactionHelpers';
+import { TransactionTypeDataProps } from './interfaces';
+import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, propertyAddressMenu, styles } from './transactionHelpers';
 import ChooseRelationship from '../Goals/ChooseRelationship';
+import ChooseLeadSource from './ChooseLeadSource';
 
 export default function AddTxBuyer1(props: any) {
   const [status, setStatus] = useState('Potential');
@@ -29,13 +24,14 @@ export default function AddTxBuyer1(props: any) {
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
   const [modalRelVisible, setModalRelVisible] = useState(false);
+  const [modalSourceVisible, setModalSourceVisible] = useState(false);
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Buyer Details',
+      title: 'Buyer Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
           <Text style={styles.backAndNext}>Back</Text>
@@ -58,7 +54,7 @@ export default function AddTxBuyer1(props: any) {
   }
 
   function buyerSourcePressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.buyerSourceSheet);
+    setModalSourceVisible(!modalSourceVisible);
   }
 
   function buyerPressed() {
@@ -75,7 +71,6 @@ export default function AddTxBuyer1(props: any) {
   }
 
   function nextPressed() {
-    console.log('hereeeeee');
     if (!isDataValid()) {
       return;
     }
@@ -222,55 +217,28 @@ export default function AddTxBuyer1(props: any) {
       <TouchableOpacity onPress={buyerSourcePressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput}>{buyerLeadSource}</Text>
+            <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.textInput}>
+              {buyerLeadSource == null ? '' : buyerLeadSource}
+            </TextInput>
           </View>
         </View>
       </TouchableOpacity>
-
-      <ActionSheet // Buyer Lead Source
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('type buyer lead source')} // here
-        id={AddTxBuyerAndSellerSheets.buyerSourceSheet} // here
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={false}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.4}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
+      {modalSourceVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalSourceVisible}
+          onRequestClose={() => {
+            setModalRelVisible(!modalSourceVisible);
           }}
         >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={globalStyles.filterView}
-          >
-            <View>
-              {Object.entries(buyerLeadSourceMenu).map(([index, value]) => (
-                <TouchableOpacity // line above
-                  key={index}
-                  onPress={() => {
-                    SheetManager.hide(AddTxBuyerAndSellerSheets.buyerSourceSheet, null); // here
-                    console.log('type: ' + value);
-                    setBuyerLeadSource(value); // here
-                    // fetchData();
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{index}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
+          <ChooseLeadSource
+            title="Lead Source"
+            setModalSourceVisible={setModalSourceVisible}
+            setSelectedSource={setBuyerLeadSource}
+          />
+        </Modal>
+      )}
 
       <Text style={styles.nameTitle}>Buyer</Text>
       <TouchableOpacity onPress={buyerPressed}>

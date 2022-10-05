@@ -4,6 +4,7 @@ import {
   TxChangeStatusResponse,
   TransactionDetails,
   TransactionDeleteResponse,
+  TransactionTypeDataResponse,
 } from './interfaces';
 
 export function getTransactionData(status: string, type: string): Promise<TransactionDataResponse> {
@@ -26,3 +27,7 @@ export function deleteTx(dealID: number): Promise<TransactionDeleteResponse> {
   console.log(dealID);
   return http.delete(`dealDelete?id=${dealID}`);
 }
+
+export function getDealOptions(): Promise<TransactionTypeDataResponse> {
+  return http.get(`dealOptions`);
+} // back tick (`) only necessary for string interpolation
