@@ -27,8 +27,7 @@ import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsSc
 import AddTxMenu from '../screens/Transactions/AddTransactionMenu';
 import AddTxBuyer1 from '../screens/Transactions/AddTxBuyer1';
 import AddTxBuyer2 from '../screens/Transactions/AddTxBuyer2';
-// import AddTxBuyer2 from '../screens/Transactions/AddTxBuyer2';
-// import AddTxBuyer3 from '../screens/Transactions/AddTxBuyer3';
+import AddTxBuyer3 from '../screens/Transactions/AddTxBuyer3';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
@@ -192,6 +191,19 @@ export const RealTxStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="AddTxBuyer3"
+        component={AddTxBuyer3}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -263,6 +275,19 @@ export const LenderTxStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="AddTxBuyer3"
+        component={AddTxBuyer3}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -325,6 +350,19 @@ export const OtherTxStackNavigator = () => {
       <Stack.Screen
         name="AddTxBuyer2"
         component={AddTxBuyer2}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddTxBuyer3"
+        component={AddTxBuyer3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
