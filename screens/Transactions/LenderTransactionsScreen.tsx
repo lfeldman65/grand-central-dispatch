@@ -56,8 +56,9 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
   };
 
   const handleAddPressed = () => {
-    console.log('Add');
     //    analytics.event(new Event('Transactions', 'Add Transaction'));
+    storage.setItem('whoCalledTxMenu', 'LenderTransactions');
+    console.log('well here i am');
     navigation.navigate('AddTxMenu');
   };
 

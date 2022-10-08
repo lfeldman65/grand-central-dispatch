@@ -15,8 +15,8 @@ import globalStyles from '../../globalStyles';
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
-  const [socialData, setSocialData] = useState<AboutUsDataProps[]>([]);
-  const [moreLinksData, setMoreLinksData] = useState<AboutUsDataProps[]>([]);
+  const [aboutUsData, setAboutUsData] = useState<AboutUsDataProps[]>([]);
+  //  const [moreLinksData, setMoreLinksData] = useState<AboutUsDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
 
@@ -41,17 +41,17 @@ export default function PodcastsScreen() {
     };
   }, [isFocused]);
 
-  useEffect(() => {
-    let isMounted = true;
-    getAboutUsList('moreSocial', isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
+  // useEffect(() => {
+  //   let isMounted = true;
+  //   getAboutUsList('moreSocial', isMounted);
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;
-    getAboutUsList('moreLinks', isMounted);
+    getAboutUsList('aboutUs', isMounted);
     return () => {
       isMounted = false;
     };
@@ -67,22 +67,7 @@ export default function PodcastsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          if (type == 'moreLinks') {
-            setMoreLinksData(res.data);
-            console.log('moreLinks: ' + res.data[0].id);
-            console.log('moreLinks: ' + res.data[1].id);
-            console.log('moreLinks: ' + res.data[2].id);
-            console.log('moreLinks: ' + res.data[3].id);
-            console.log('moreLinks: ' + res.data[4].id);
-          } else {
-            setSocialData(res.data);
-            console.log('moreLinks: ' + res.data[0].id);
-            console.log('moreLinks: ' + res.data[1].id);
-            console.log('moreLinks: ' + res.data[2].id);
-            console.log('moreLinks: ' + res.data[3].id);
-            console.log('moreLinks: ' + res.data[4].id);
-            console.log('moreLinks: ' + res.data[5].id);
-          }
+          setAboutUsData(res.data);
         }
         setIsLoading(false);
       })
@@ -99,12 +84,7 @@ export default function PodcastsScreen() {
         <React.Fragment>
           <ScrollView>
             <View>
-              {moreLinksData.map((item, index) => (
-                <AboutUsRow key={index} data={item} onPress={() => handleRowPress(item)} />
-              ))}
-            </View>
-            <View>
-              {socialData.map((item, index) => (
+              {aboutUsData.map((item, index) => (
                 <AboutUsRow key={index} data={item} onPress={() => handleRowPress(item)} />
               ))}
             </View>
