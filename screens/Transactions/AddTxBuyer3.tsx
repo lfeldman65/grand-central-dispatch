@@ -42,6 +42,7 @@ export default function AddTxBuyer3(props: any) {
   const [miscAfterFees, setMiscAfterFees] = useState('');
   const [notes, setNotes] = useState('');
   const [lightOrDark, setIsLightOrDark] = useState('');
+  const [destination, setDestination] = useState('');
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function AddTxBuyer3(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, destination]);
 
   useEffect(() => {
     let isMounted = true;
@@ -67,6 +68,27 @@ export default function AddTxBuyer3(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDestination(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  async function getDestination(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    var dest = await storage.getItem('whoCalledTxMenu');
+    console.log('destination: ' + dest);
+    if (dest == null || dest == '') {
+      setDestination('RealEstateTransactions');
+    } else {
+      setDestination(dest);
+    }
+  }
 
   async function getDarkOrLightMode(isMounted: boolean) {
     if (!isMounted) {
@@ -81,7 +103,8 @@ export default function AddTxBuyer3(props: any) {
   }
 
   function completePressed() {
-    navigation.navigate('RealEstateTransactions');
+    console.log('destination: ' + destination);
+    navigation.navigate(destination);
   }
 
   function miscBeforeDollarOrPercentPressed() {
