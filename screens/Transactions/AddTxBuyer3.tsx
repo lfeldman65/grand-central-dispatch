@@ -29,8 +29,9 @@ export default function AddTxBuyer3(props: any) {
     closingDate,
     closingPrice,
     buyerComm,
-    dOrP1,
-    dOrP2,
+    dOrPBuyerComm,
+    addIncome,
+    dOrPAddIncome,
     myGrossComm,
   } = route.params;
   const isFocused = useIsFocused();

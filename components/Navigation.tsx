@@ -75,6 +75,19 @@ export const PopByStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="EditRelationshipScreen"
+        component={EditRelationshipScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -120,6 +133,19 @@ export const ToDoStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="EditRelationshipScreen"
+        component={EditRelationshipScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -132,6 +158,32 @@ export const RealTxStackNavigator = () => {
         component={RealEstateTransactionsScreen}
         options={{
           title: 'Real Estate Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="EditRelationshipScreen"
+        component={EditRelationshipScreen}
+        options={{
+          title: 'Details',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
@@ -703,6 +755,19 @@ export const VideoStackNavigator = () => {
             backgroundColor: '#1A6295',
           },
           headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="EditRelationshipScreen"
+        component={EditRelationshipScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
         }}
       />
     </Stack.Navigator>

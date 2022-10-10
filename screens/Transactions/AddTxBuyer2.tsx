@@ -47,6 +47,10 @@ export default function AddTxBuyer2(props: any) {
     calculateGrossCommission;
   }, [closingDate, buyerCommission, additionalIncome, dollarOrPercentBuyerComm, dollarOrPercentAddIncome]);
 
+  useEffect(() => {
+    calculateGrossCommission;
+  }, [isFocused]);
+
   function backPressed() {
     navigation.goBack();
   }
@@ -108,8 +112,9 @@ export default function AddTxBuyer2(props: any) {
       closingPrice: closingPrice,
       closingDate: closingDate.toDateString(),
       buyerComm: buyerCommission,
-      dOrP1: dollarOrPercentBuyerComm,
-      dOrP2: dollarOrPercentAddIncome,
+      dOrPBuyerComm: dollarOrPercentBuyerComm,
+      addIncome: additionalIncome,
+      dOrPAddIncome: dollarOrPercentAddIncome,
       myGrossComm: grossComm1,
     });
   }
