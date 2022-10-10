@@ -7,8 +7,7 @@ import { analytics } from '../../utils/analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { styles } from './transactionHelpers';
+import { styles, roundToInt } from './transactionHelpers';
 import { storage } from '../../utils/storage';
 
 var incomeAfterCosts = 0;
@@ -35,15 +34,13 @@ export default function AddTxBuyer3(props: any) {
     myGrossComm,
   } = route.params;
   const isFocused = useIsFocused();
-  const [dollarOrPercent1, setDollarOrPercent1] = useState('dollar');
-  const [dollarOrPercent2, setDollarOrPercent2] = useState('dollar');
-  const [dollarOrPercent3, setDollarOrPercent3] = useState('dollar');
+  const [dollarOrPercentB4, setDollarOrPercentB4] = useState('dollar');
+  const [dollarOrPercentAfter, setDollarOrPercentAfter] = useState('dollar');
   const [miscBeforeFees, setMiscBeforeFees] = useState('');
   const [myPortion, setMyPortion] = useState('');
   const [miscAfterFees, setMiscAfterFees] = useState('');
   const [notes, setNotes] = useState('');
   const [lightOrDark, setIsLightOrDark] = useState('');
-  const [destination, setDestination] = useState('');
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -60,7 +57,7 @@ export default function AddTxBuyer3(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, destination]);
+  }, [navigation]);
 
   useEffect(() => {
     let isMounted = true;
@@ -69,27 +66,6 @@ export default function AddTxBuyer3(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDestination(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDestination(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    var dest = await storage.getItem('whoCalledTxMenu');
-    console.log('destination: ' + dest);
-    if (dest == null || dest == '') {
-      setDestination('RealEstateTransactions');
-    } else {
-      setDestination(dest);
-    }
-  }
 
   async function getDarkOrLightMode(isMounted: boolean) {
     if (!isMounted) {
@@ -104,32 +80,22 @@ export default function AddTxBuyer3(props: any) {
   }
 
   function completePressed() {
-    console.log('dest2: ' + destination);
-    navigation.navigate(destination);
-    //  navigation.navigate('RealEstateTransactions');
+    navigation.navigate('RealEstateTransactions');
   }
 
   function miscBeforeDollarOrPercentPressed() {
-    if (dollarOrPercent1 == 'percentage') {
-      setDollarOrPercent1('dollar');
+    if (dollarOrPercentB4 == 'percent') {
+      setDollarOrPercentB4('dollar');
     } else {
-      setDollarOrPercent1('percentage');
-    }
-  }
-
-  function myPortionDollarOrPercentPressed() {
-    if (dollarOrPercent2 == 'percentage') {
-      setDollarOrPercent2('dollar');
-    } else {
-      setDollarOrPercent2('percentage');
+      setDollarOrPercentB4('percent');
     }
   }
 
   function miscAfterDollarOrPercentPressed() {
-    if (dollarOrPercent3 == 'percentage') {
-      setDollarOrPercent3('dollar');
+    if (dollarOrPercentAfter == 'percent') {
+      setDollarOrPercentAfter('dollar');
     } else {
-      setDollarOrPercent3('percentage');
+      setDollarOrPercentAfter('percent');
     }
   }
 
@@ -154,7 +120,7 @@ export default function AddTxBuyer3(props: any) {
       } else {
         afterSplitFees = parseFloat(miscAfterFees);
       }
-      if (dollarOrPercent1 == 'dollar') {
+      if (dollarOrPercentB4 == 'dollar') {
         incomeAfterCosts = incomeAfterCosts - beforeSplitFees;
       } else {
         incomeAfterCosts = incomeAfterCosts - (myGrossComm * beforeSplitFees) / 100;
@@ -162,12 +128,12 @@ export default function AddTxBuyer3(props: any) {
       console.log('income after costs: ' + incomeAfterCosts);
       console.log('myPortion: ' + myPortionOfSplit);
       incomeAfterCosts = (incomeAfterCosts * myPortionOfSplit) / 100;
-      if (dollarOrPercent3 == 'dollar') {
+      if (dollarOrPercentAfter == 'dollar') {
         incomeAfterCosts = incomeAfterCosts - afterSplitFees;
       } else {
         incomeAfterCosts = incomeAfterCosts - (incomeAfterCosts * afterSplitFees) / 100;
       }
-      return '$' + incomeAfterCosts.toString();
+      return '$' + roundToInt(incomeAfterCosts.toString());
     } catch {
       console.log('error');
     }
@@ -182,7 +148,7 @@ export default function AddTxBuyer3(props: any) {
             <View style={styles.percentView}>
               <Text
                 onPress={miscBeforeDollarOrPercentPressed}
-                style={dollarOrPercent1 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                style={dollarOrPercentB4 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
               >
                 $
               </Text>
@@ -201,7 +167,7 @@ export default function AddTxBuyer3(props: any) {
             <View style={styles.percentView}>
               <Text
                 onPress={miscBeforeDollarOrPercentPressed}
-                style={dollarOrPercent1 == 'percentage' ? styles.percentText : styles.percentTextDim}
+                style={dollarOrPercentB4 == 'percent' ? styles.percentText : styles.percentTextDim}
               >
                 %
               </Text>
@@ -213,12 +179,7 @@ export default function AddTxBuyer3(props: any) {
         <View style={styles.mainContent}>
           <View style={styles.dollarAndPercentRow}>
             <View style={styles.percentView}>
-              <Text
-                onPress={myPortionDollarOrPercentPressed}
-                style={dollarOrPercent2 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
-              >
-                $
-              </Text>
+              <Text style={styles.dollarTextDim}>$</Text>
             </View>
             <View style={styles.dollarAndPercentView}>
               <TextInput
@@ -232,12 +193,7 @@ export default function AddTxBuyer3(props: any) {
               />
             </View>
             <View style={styles.percentView}>
-              <Text
-                onPress={myPortionDollarOrPercentPressed}
-                style={dollarOrPercent2 == 'percentage' ? styles.percentText : styles.percentTextDim}
-              >
-                %
-              </Text>
+              <Text style={styles.percentText}>%</Text>
             </View>
           </View>
         </View>
@@ -248,7 +204,7 @@ export default function AddTxBuyer3(props: any) {
             <View style={styles.percentView}>
               <Text
                 onPress={miscAfterDollarOrPercentPressed}
-                style={dollarOrPercent3 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                style={dollarOrPercentAfter == 'dollar' ? styles.dollarText : styles.dollarTextDim}
               >
                 $
               </Text>
@@ -267,7 +223,7 @@ export default function AddTxBuyer3(props: any) {
             <View style={styles.percentView}>
               <Text
                 onPress={miscAfterDollarOrPercentPressed}
-                style={dollarOrPercent3 == 'percentage' ? styles.percentText : styles.percentTextDim}
+                style={dollarOrPercentAfter == 'percent' ? styles.percentText : styles.percentTextDim}
               >
                 %
               </Text>

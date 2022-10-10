@@ -194,7 +194,7 @@ export const styles = StyleSheet.create({
   percentView: {
     backgroundColor: '#002341',
     height: 50,
-    width: '5%',
+    width: '7%',
   },
   dollarView: {
     backgroundColor: '#002341',
@@ -203,7 +203,7 @@ export const styles = StyleSheet.create({
   },
   dollarAndPercentView: {
     backgroundColor: '#002341',
-    width: '80%',
+    width: '78%',
     height: 50,
     marginBottom: 20,
     justifyContent: 'center',

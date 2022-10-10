@@ -8,7 +8,7 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from './transactionHelpers';
 
 var grossComm1 = 0;
 
@@ -23,8 +23,8 @@ export default function AddTxBuyer2(props: any) {
   const [additionalIncome, setAdditionalIncome] = useState('');
   const [showDate, setShowDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
-  const [dollarOrPercent1, setDollarOrPercent1] = useState('dollar');
-  const [dollarOrPercent2, setDollarOrPercent2] = useState('dollar');
+  const [dollarOrPercentBuyerComm, setDollarOrPercentBuyerComm] = useState('percent');
+  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('dollar');
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function AddTxBuyer2(props: any) {
 
   useEffect(() => {
     calculateGrossCommission;
-  }, [closingDate, buyerCommission, additionalIncome, dollarOrPercent1, dollarOrPercent2]);
+  }, [closingDate, buyerCommission, additionalIncome, dollarOrPercentBuyerComm, dollarOrPercentAddIncome]);
 
   function backPressed() {
     navigation.goBack();
@@ -74,19 +74,19 @@ export default function AddTxBuyer2(props: any) {
         addIncomeFloat = parseFloat(additionalIncome);
       }
       console.log('localAddIncome:' + addIncomeFloat);
-      if (dollarOrPercent1 == 'dollar') {
+      if (dollarOrPercentBuyerComm == 'dollar') {
         buyerCommFloat = buyerCommFloat;
       } else {
         buyerCommFloat = (closingPriceFloat * buyerCommFloat) / 100;
       }
       console.log('buyerCommFloat:' + buyerCommFloat);
-      if (dollarOrPercent2 == 'dollar') {
+      if (dollarOrPercentAddIncome == 'dollar') {
         addIncomeFloat = addIncomeFloat;
       } else {
         addIncomeFloat = (closingPriceFloat * addIncomeFloat) / 100;
       }
       grossComm1 = buyerCommFloat + addIncomeFloat;
-      return '$' + grossComm1.toString();
+      return '$' + roundToInt(grossComm1.toString());
     } catch {
       console.log('error');
     }
@@ -108,25 +108,25 @@ export default function AddTxBuyer2(props: any) {
       closingPrice: closingPrice,
       closingDate: closingDate.toDateString(),
       buyerComm: buyerCommission,
-      dOrP1: dollarOrPercent1,
-      dOrP2: dollarOrPercent2,
+      dOrP1: dollarOrPercentBuyerComm,
+      dOrP2: dollarOrPercentAddIncome,
       myGrossComm: grossComm1,
     });
   }
 
   function buyerCommDollarOrPercentPressed() {
-    if (dollarOrPercent1 == 'percentage') {
-      setDollarOrPercent1('dollar');
+    if (dollarOrPercentBuyerComm == 'percent') {
+      setDollarOrPercentBuyerComm('dollar');
     } else {
-      setDollarOrPercent1('percentage');
+      setDollarOrPercentBuyerComm('percent');
     }
   }
 
   function addIncomeDollarOrPercentPressed() {
-    if (dollarOrPercent2 == 'percentage') {
-      setDollarOrPercent2('dollar');
+    if (dollarOrPercentAddIncome == 'percent') {
+      setDollarOrPercentAddIncome('dollar');
     } else {
-      setDollarOrPercent2('percentage');
+      setDollarOrPercentAddIncome('percent');
     }
   }
 
@@ -265,7 +265,7 @@ export default function AddTxBuyer2(props: any) {
             <View style={styles.percentView}>
               <Text
                 onPress={buyerCommDollarOrPercentPressed}
-                style={dollarOrPercent1 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                style={dollarOrPercentBuyerComm == 'dollar' ? styles.dollarText : styles.dollarTextDim}
               >
                 $
               </Text>
@@ -284,7 +284,7 @@ export default function AddTxBuyer2(props: any) {
             <View style={styles.percentView}>
               <Text
                 onPress={buyerCommDollarOrPercentPressed}
-                style={dollarOrPercent1 == 'percentage' ? styles.percentText : styles.percentTextDim}
+                style={dollarOrPercentBuyerComm == 'percent' ? styles.percentText : styles.percentTextDim}
               >
                 %
               </Text>
@@ -298,7 +298,7 @@ export default function AddTxBuyer2(props: any) {
             <View style={styles.percentView}>
               <Text
                 onPress={addIncomeDollarOrPercentPressed}
-                style={dollarOrPercent2 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                style={dollarOrPercentAddIncome == 'dollar' ? styles.dollarText : styles.dollarTextDim}
               >
                 $
               </Text>
@@ -317,7 +317,7 @@ export default function AddTxBuyer2(props: any) {
             <View style={styles.percentView}>
               <Text
                 onPress={addIncomeDollarOrPercentPressed}
-                style={dollarOrPercent2 == 'percentage' ? styles.percentText : styles.percentTextDim}
+                style={dollarOrPercentAddIncome == 'percent' ? styles.percentText : styles.percentTextDim}
               >
                 %
               </Text>
