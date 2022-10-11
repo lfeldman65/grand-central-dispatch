@@ -25,7 +25,7 @@ import RealEstateTransactionsScreen from '../screens/Transactions/RealEstateTran
 import LenderTransactionsScreen from '../screens/Transactions/LenderTransactionsScreen';
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
 import AddTxMenu from '../screens/Transactions/AddTransactionMenu';
-import AddTxBuyer1 from '../screens/Transactions/AddTxBuyer1';
+import BuyerOrSellerTx1 from '../screens/Transactions/BuyerOrSellerTx1';
 import AddTxBuyer2 from '../screens/Transactions/AddTxBuyer2';
 import AddTxBuyer3 from '../screens/Transactions/AddTxBuyer3';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
@@ -219,8 +219,8 @@ export const RealTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer1"
-        component={AddTxBuyer1}
+        name="BuyerOrSellerTx1"
+        component={BuyerOrSellerTx1}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -303,8 +303,8 @@ export const LenderTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer1"
-        component={AddTxBuyer1}
+        name="BuyerOrSellerTx1"
+        component={BuyerOrSellerTx1}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -387,8 +387,8 @@ export const OtherTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer1"
-        component={AddTxBuyer1}
+        name="BuyerOrSellerTx1"
+        component={BuyerOrSellerTx1}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',

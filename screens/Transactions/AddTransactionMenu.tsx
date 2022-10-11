@@ -15,9 +15,13 @@ export default function AddTransactionMenu(props: any) {
   function buttonPressed(index: number) {
     console.log('index: ' + index);
     if (index == 0) {
-      navigation.navigate('AddTxBuyer1');
+      navigation.navigate('BuyerOrSellerTx1', {
+        buyerOrSeller: 'Buyer',
+      });
     } else if (index == 1) {
-      console.log('Seller');
+      navigation.navigate('BuyerOrSellerTx1', {
+        buyerOrSeller: 'Seller',
+      });
     } else if (index == 2) {
       console.log('Buyer and Seller');
     } else if (index == 3) {
@@ -51,7 +55,7 @@ export default function AddTransactionMenu(props: any) {
           console.error(res.error);
         } else {
           setProfileData(res.data);
-          console.log('type: ' + res.data.businessType);
+          //  console.log('type: ' + res.data.businessType);
         }
       })
       .catch((error) => console.error('failure ' + error));
