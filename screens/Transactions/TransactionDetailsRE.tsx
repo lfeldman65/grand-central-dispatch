@@ -187,7 +187,7 @@ export default function TransactionDetailsRE(props: any) {
       {!isNullOrEmpty(data?.buyerCommission) && data?.buyerCommission != '0' && (
         <Text style={styles.header}>{"Buyer's Commission"}</Text>
       )}
-      {!isNullOrEmpty(data?.buyerCommission) && (
+      {!isNullOrEmpty(data?.buyerCommission) && data?.buyerCommission != '0' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
           {formatDollarOrPercent(data?.buyerCommission!, data?.buyerCommissionType!)}
         </Text>
