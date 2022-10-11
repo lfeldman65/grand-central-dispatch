@@ -12,7 +12,7 @@ import { storage } from '../../utils/storage';
 
 var incomeAfterCosts = 0;
 
-export default function AddTxBuyer3(props: any) {
+export default function BuyerOrSellerTx3(props: any) {
   const { route } = props;
   const {
     status,

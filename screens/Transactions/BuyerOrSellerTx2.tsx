@@ -12,7 +12,7 @@ import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from '
 
 var grossComm1 = 0;
 
-export default function AddTxBuyer2(props: any) {
+export default function BuyerOrSellerTx2(props: any) {
   const { route } = props;
   const { status, type, leadSource, buyer, address, street1, street2, city, state, zip } = route.params;
   const isFocused = useIsFocused();
@@ -97,7 +97,7 @@ export default function AddTxBuyer2(props: any) {
   }
 
   function nextPressed() {
-    navigation.navigate('AddTxBuyer3', {
+    navigation.navigate('BuyerOrSellerTx3', {
       status: status,
       type: type,
       leadSource: leadSource,

@@ -26,8 +26,8 @@ import LenderTransactionsScreen from '../screens/Transactions/LenderTransactions
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
 import AddTxMenu from '../screens/Transactions/AddTransactionMenu';
 import BuyerOrSellerTx1 from '../screens/Transactions/BuyerOrSellerTx1';
-import AddTxBuyer2 from '../screens/Transactions/AddTxBuyer2';
-import AddTxBuyer3 from '../screens/Transactions/AddTxBuyer3';
+import BuyerOrSellerTx2 from '../screens/Transactions/BuyerOrSellerTx2';
+import BuyerOrSellerTx3 from '../screens/Transactions/BuyerOrSellerTx3';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
@@ -232,8 +232,8 @@ export const RealTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer2"
-        component={AddTxBuyer2}
+        name="BuyerOrSellerTx2"
+        component={BuyerOrSellerTx2}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -245,8 +245,8 @@ export const RealTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer3"
-        component={AddTxBuyer3}
+        name="BuyerOrSellerTx3"
+        component={BuyerOrSellerTx3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -316,8 +316,8 @@ export const LenderTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer2"
-        component={AddTxBuyer2}
+        name="BuyerOrSellerTx2"
+        component={BuyerOrSellerTx2}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -329,8 +329,8 @@ export const LenderTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer3"
-        component={AddTxBuyer3}
+        name="BuyerOrSellerTx3"
+        component={BuyerOrSellerTx3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -400,8 +400,8 @@ export const OtherTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer2"
-        component={AddTxBuyer2}
+        name="BuyerOrSellerTx2"
+        component={BuyerOrSellerTx2}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -413,8 +413,8 @@ export const OtherTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="AddTxBuyer3"
-        component={AddTxBuyer3}
+        name="BuyerOrSellerTx3"
+        component={BuyerOrSellerTx3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',

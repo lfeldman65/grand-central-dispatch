@@ -76,7 +76,7 @@ export default function BuyerOrSellerTx(props: any) {
     if (!isDataValid()) {
       return;
     }
-    navigation.navigate('AddTxBuyer2', {
+    navigation.navigate('BuyerOrSellerTx2', {
       status: status,
       type: type,
       leadSource: buyerLeadSource,
