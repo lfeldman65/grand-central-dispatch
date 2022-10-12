@@ -45,11 +45,23 @@ export default function BuyerOrSellerTx2(props: any) {
       ),
     });
     //  console.log('seller2: ' + seller.lastName);
-    console.log('buyer2: ' + buyer.lastName);
-  }, [navigation, buyer, seller]);
+    // console.log('buyer2: ' + buyer.lastName);
+  }, [
+    navigation,
+    buyer,
+    seller,
+    closingDate,
+    probability,
+    closingPrice,
+    buyerCommission,
+    sellerCommission,
+    additionalIncome,
+    dollarOrPercentBuyerComm,
+    dollarOrPercentAddIncome,
+  ]);
 
   useEffect(() => {
-    calculateGrossCommission;
+    calculateGrossCommission; // branch
   }, [closingDate, buyerCommission, additionalIncome, dollarOrPercentBuyerComm, dollarOrPercentAddIncome]);
 
   function backPressed() {
@@ -72,19 +84,19 @@ export default function BuyerOrSellerTx2(props: any) {
       } else {
         buyerCommFloat = parseFloat(buyerCommission);
       }
-      console.log('localBuyerComm:' + buyerCommFloat);
+      //   console.log('localBuyerComm:' + buyerCommFloat);
       if (additionalIncome == '' || additionalIncome == null) {
         addIncomeFloat = 0;
       } else {
         addIncomeFloat = parseFloat(additionalIncome);
       }
-      console.log('localAddIncome:' + addIncomeFloat);
+      //  console.log('localAddIncome:' + addIncomeFloat);
       if (dollarOrPercentBuyerComm == 'dollar') {
         buyerCommFloat = buyerCommFloat;
       } else {
         buyerCommFloat = (closingPriceFloat * buyerCommFloat) / 100;
       }
-      console.log('buyerCommFloat:' + buyerCommFloat);
+      //  console.log('buyerCommFloat:' + buyerCommFloat);
       if (dollarOrPercentAddIncome == 'dollar') {
         addIncomeFloat = addIncomeFloat;
       } else {
@@ -112,7 +124,7 @@ export default function BuyerOrSellerTx2(props: any) {
       zip: zip,
       probability: probability,
       closingPrice: closingPrice,
-      closingDate: closingDate.toDateString(),
+      closingDate: closingDate.toISOString(),
       buyerComm: buyerCommission,
       dOrPBuyerComm: dollarOrPercentBuyerComm,
       addIncome: additionalIncome,
@@ -151,7 +163,7 @@ export default function BuyerOrSellerTx2(props: any) {
 
   const onDatePickerChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
-    console.log(currentDate);
+    console.log('picker:' + currentDate);
     setClosingDate(currentDate);
   };
 

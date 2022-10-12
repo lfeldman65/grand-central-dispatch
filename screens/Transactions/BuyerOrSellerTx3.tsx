@@ -65,6 +65,7 @@ export default function BuyerOrSellerTx3(props: any) {
 
   useEffect(() => {
     calculateIncome();
+    console.log('CLOSING DATE USE EFFECT: ' + closingDate);
   }, [isFocused]);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ export default function BuyerOrSellerTx3(props: any) {
   }
 
   function completePressed() {
-    console.log('notes: ' + notes);
+    console.log('CLOSING DATE: ' + closingDate);
     addOrEditTransaction(
       0,
       type,
@@ -109,8 +110,8 @@ export default function BuyerOrSellerTx3(props: any) {
       sellerLeadSource,
       probability,
       '', // list date
-      '2016-05-25T00:00:00Z', // closing date
-      //  closingDate.toString(),
+      //    '2016-05-25T00:00:000Z', // closing date
+      closingDate,
       '0', // list amount
       closingPrice, // 400000
       '', // rate type
@@ -188,8 +189,8 @@ export default function BuyerOrSellerTx3(props: any) {
       } else {
         incomeAfterCosts = incomeAfterCosts - (myGrossComm * beforeSplitFees) / 100;
       }
-      console.log('income after costs: ' + incomeAfterCosts);
-      console.log('myPortion: ' + myPortionOfSplit);
+      //  console.log('income after costs: ' + incomeAfterCosts);
+      //  console.log('myPortion: ' + myPortionOfSplit);
       incomeAfterCosts = (incomeAfterCosts * myPortionOfSplit) / 100;
       if (dollarOrPercentAfter == 'dollar') {
         incomeAfterCosts = incomeAfterCosts - afterSplitFees;
