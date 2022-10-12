@@ -7,7 +7,7 @@ import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
 import { isNullOrEmpty } from '../../utils/general';
 import { prettyDate } from '../../utils/general';
-import { Navigation } from 'react-native-feather';
+import { roundToInt } from './transactionHelpers';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -21,14 +21,43 @@ export default function TransactionDetailsRE(props: any) {
   const navigation = useNavigation();
 
   useEffect(() => {
-    getDarkOrLightMode();
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
+          <Text style={styles.saveText}>Edit</Text>
+        </TouchableOpacity>
+      ),
+    });
+    navigation.setOptions({ title: 'Transaction Details' });
+  }, [navigation]);
+
+  function editPressed() {
+    console.log('edit pressed');
+    navigation.navigate('BuyerOrSellerTx1', {
+      data: data,
+    });
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   useEffect(() => {
-    fetchDetails(dealID);
+    let isMounted = true;
+    fetchDetails(dealID, isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -86,10 +115,13 @@ export default function TransactionDetailsRE(props: any) {
       });
   }
 
-  function fetchDetails(dealID: string) {
+  function fetchDetails(dealID: string, isMounted: boolean) {
     setIsLoading(true);
     getTransactionDetails(dealID)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -188,10 +220,10 @@ export default function TransactionDetailsRE(props: any) {
         </Text>
       )}
 
-      {!isNullOrEmpty(data?.grossCommision) && <Text style={styles.header}>{'Additional Income'}</Text>}
-      {!isNullOrEmpty(data?.grossCommision) && (
+      {!isNullOrEmpty(data?.additionalIncome) && <Text style={styles.header}>{'Additional Income'}</Text>}
+      {!isNullOrEmpty(data?.additionalIncome) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.grossCommision!, 'dollar')}
+          {formatDollarOrPercent(data?.additionalIncome!, data?.additionalIncomeType!)}
         </Text>
       )}
 
@@ -199,7 +231,7 @@ export default function TransactionDetailsRE(props: any) {
         <View style={styles.boxRow}>
           <Text style={styles.largeHeader}>My Gross Commission</Text>
           <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
-            {formatDollarOrPercent(data?.grossCommision!, 'dollar')}
+            {formatDollarOrPercent(roundToInt(data?.grossCommision!), 'dollar')}
           </Text>
         </View>
       )}
@@ -316,5 +348,12 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     fontSize: 20,
+  },
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
 });

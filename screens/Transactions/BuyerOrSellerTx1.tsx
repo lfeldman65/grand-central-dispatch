@@ -11,11 +11,12 @@ import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, propertyAddressMenu, s
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseLeadSource from './ChooseLeadSource';
 
-export default function AddTxBuyer1(props: any) {
+export default function BuyerOrSellerTx1(props: any) {
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Buyer');
   const [buyerLeadSource, setBuyerLeadSource] = useState('Advertising');
   const [buyer, setBuyer] = useState<RolodexDataProps>();
+  const [seller, setSeller] = useState<RolodexDataProps>();
   const [address, setAddress] = useState('TBD');
   const [street1, setStreet1] = useState('');
   const [street2, setStreet2] = useState('');

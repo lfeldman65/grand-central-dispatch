@@ -13,7 +13,7 @@ import { addOrEditTransaction } from './api';
 
 var incomeAfterCosts = 0;
 
-export default function AddTxBuyer3(props: any) {
+export default function BuyerOrSellerTx3(props: any) {
   const { route } = props;
   const {
     status,
@@ -47,7 +47,7 @@ export default function AddTxBuyer3(props: any) {
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Transaction Details',
+      title: 'Real Estate Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
           <Text style={styles.backAndNext}>Back</Text>

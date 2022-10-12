@@ -12,7 +12,7 @@ import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from '
 
 var grossComm1 = 0;
 
-export default function AddTxBuyer2(props: any) {
+export default function BuyerOrSellerTx2(props: any) {
   const { route } = props;
   const { status, type, leadSource, buyer, street1, street2, city, state, zip } = route.params;
   const isFocused = useIsFocused();
@@ -29,7 +29,7 @@ export default function AddTxBuyer2(props: any) {
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Transaction Details',
+      title: 'Real Estate Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
           <Text style={styles.backAndNext}>Back</Text>
