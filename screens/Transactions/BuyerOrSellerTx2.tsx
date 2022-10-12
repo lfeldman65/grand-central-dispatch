@@ -44,7 +44,9 @@ export default function BuyerOrSellerTx2(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+    //  console.log('seller2: ' + seller.lastName);
+    console.log('buyer2: ' + buyer.lastName);
+  }, [navigation, buyer, seller]);
 
   useEffect(() => {
     calculateGrossCommission;

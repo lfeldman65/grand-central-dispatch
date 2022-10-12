@@ -47,7 +47,8 @@ export function addOrEditTransaction(
   state: string,
   zip: string,
   country: string,
-  leadSource: string,
+  buyerLeadSource: string,
+  sellerLeadSource: string,
   probabilityToClose: string,
   listDate: string,
   closingDate: string,
@@ -87,14 +88,14 @@ export function addOrEditTransaction(
     userID: buyer?.id ?? '',
     contactName: buyer?.firstName ?? '' + ' ' + buyer?.lastName ?? '',
     typeOfContact: 'Buyer',
-    leadSource: leadSource,
+    leadSource: buyerLeadSource,
   };
 
   var txSeller: TransactionContacts = {
     userID: seller?.id ?? '',
     contactName: seller?.firstName ?? '' + ' ' + seller?.lastName ?? '',
     typeOfContact: 'Seller',
-    leadSource: leadSource,
+    leadSource: sellerLeadSource,
   };
 
   var a = [];
@@ -108,7 +109,7 @@ export function addOrEditTransaction(
     a.push(txSeller);
   }
 
-  console.log('contacts: ' + (seller === undefined ? 'hello' : 'ddfd'));
+  console.log('contacts: ' + (seller === undefined ? 'hello' : seller?.lastName));
   return http.post('deal', {
     body: {
       id: id,
@@ -117,7 +118,7 @@ export function addOrEditTransaction(
       title: title,
       contacts: a,
       address: address,
-      leadSource: leadSource,
+      //  leadSource: leadSource,
       probabilityToClose: probabilityToClose,
       listDate: listDate,
       closingDate: closingDate,

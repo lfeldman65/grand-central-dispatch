@@ -49,7 +49,21 @@ export default function BuyerOrSellerTx1(props: any) {
       ),
     });
     console.log('buyer or seller: ' + buyerOrSeller);
-  }, [navigation, buyer, status, type, buyerLeadSource, address, street1, street2, city, state, zip]);
+  }, [
+    navigation,
+    buyer,
+    seller,
+    status,
+    type,
+    buyerLeadSource,
+    sellerLeadSource,
+    address,
+    street1,
+    street2,
+    city,
+    state,
+    zip,
+  ]);
 
   function statusMenuPressed() {
     SheetManager.show(AddTxBuyerAndSellerSheets.statusSheet);
@@ -108,6 +122,7 @@ export default function BuyerOrSellerTx1(props: any) {
   }
 
   function nextPressed() {
+    console.log('seller: ' + seller?.lastName);
     navigation.navigate('BuyerOrSellerTx2', {
       status: status,
       type: type,

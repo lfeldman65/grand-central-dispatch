@@ -61,7 +61,7 @@ export default function BuyerOrSellerTx3(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, notes]);
+  }, [navigation, notes, seller, buyer]);
 
   useEffect(() => {
     calculateIncome();
@@ -74,6 +74,7 @@ export default function BuyerOrSellerTx3(props: any) {
   useEffect(() => {
     let isMounted = true;
     getDarkOrLightMode(isMounted);
+    //  console.log('seller: ' + seller.lastName);
     return () => {
       isMounted = false;
     };
@@ -105,6 +106,7 @@ export default function BuyerOrSellerTx3(props: any) {
       zip,
       country,
       buyerLeadSource,
+      sellerLeadSource,
       probability,
       '', // list date
       '2016-05-25T00:00:00Z', // closing date
@@ -130,7 +132,7 @@ export default function BuyerOrSellerTx3(props: any) {
       'percent', // sell comm type 67
       notes, // notes 68
       buyer,
-      null
+      seller
     )
       .then((res) => {
         if (res.status == 'error') {
