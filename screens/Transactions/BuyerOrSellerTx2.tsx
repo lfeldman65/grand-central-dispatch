@@ -12,19 +12,19 @@ import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from '
 
 var grossComm1 = 0;
 
-export default function BuyerOrSellerTx2(props: any) {
+export default function AddTxBuyer2(props: any) {
   const { route } = props;
-  const { status, type, leadSource, buyer, address, street1, street2, city, state, zip } = route.params;
+  const { status, type, leadSource, buyer, street1, street2, city, state, zip } = route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
-  const [closingPrice, setClosingPrice] = useState('');
+  const [closingPrice, setClosingPrice] = useState('400000'); // remove
   const [closingDate, setClosingDate] = useState(new Date());
-  const [buyerCommission, setBuyerCommission] = useState('');
-  const [additionalIncome, setAdditionalIncome] = useState('');
+  const [buyerCommission, setBuyerCommission] = useState('20'); // remove
+  const [additionalIncome, setAdditionalIncome] = useState('10'); // remove
   const [showDate, setShowDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const [dollarOrPercentBuyerComm, setDollarOrPercentBuyerComm] = useState('percent');
-  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('dollar');
+  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('percent'); // revert
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -46,10 +46,6 @@ export default function BuyerOrSellerTx2(props: any) {
   useEffect(() => {
     calculateGrossCommission;
   }, [closingDate, buyerCommission, additionalIncome, dollarOrPercentBuyerComm, dollarOrPercentAddIncome]);
-
-  useEffect(() => {
-    calculateGrossCommission;
-  }, [isFocused]);
 
   function backPressed() {
     navigation.goBack();
@@ -102,7 +98,7 @@ export default function BuyerOrSellerTx2(props: any) {
       type: type,
       leadSource: leadSource,
       buyer: buyer,
-      address: address,
+      //   address: address,
       street1: street1,
       street2: street2,
       city: city,

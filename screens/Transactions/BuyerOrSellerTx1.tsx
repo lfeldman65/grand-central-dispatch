@@ -1,22 +1,19 @@
-import { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert } from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { Fragment, useEffect, useState, useRef } from 'react';
+import { Alert, Text, View, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps, AttendeesProps } from '../ToDo/interfaces';
-import { TransactionTypeDataProps } from './interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, propertyAddressMenu, styles } from './transactionHelpers';
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseLeadSource from './ChooseLeadSource';
 
-export default function BuyerOrSellerTx(props: any) {
-  const { route } = props;
-  const { buyerOrSeller } = route.params;
+export default function AddTxBuyer1(props: any) {
   const [status, setStatus] = useState('Potential');
-  const [type, setType] = useState(buyerOrSeller);
+  const [type, setType] = useState('Buyer');
   const [buyerLeadSource, setBuyerLeadSource] = useState('Advertising');
   const [buyer, setBuyer] = useState<RolodexDataProps>();
   const [address, setAddress] = useState('TBD');
@@ -33,7 +30,7 @@ export default function BuyerOrSellerTx(props: any) {
 
   useEffect(() => {
     navigation.setOptions({
-      title: 'Buyer or Seller 1',
+      title: 'Real Estate Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
           <Text style={styles.backAndNext}>Back</Text>
@@ -73,36 +70,21 @@ export default function BuyerOrSellerTx(props: any) {
   }
 
   function nextPressed() {
-    if (!isDataValid()) {
-      return;
-    }
-    navigation.navigate('BuyerOrSellerTx2', {
-      status: status,
-      type: type,
-      leadSource: buyerLeadSource,
-      buyer: buyer,
-      address: address,
-      street1: street1,
-      street2: street2,
-      city: city,
-      state: state,
-      zip: zip,
-    });
-  }
-
-  function isDataValid() {
-    console.log('buyer: ' + buyer);
     if (buyer == null) {
-      Alert.alert('Please enter a Buyer');
-      return false;
+      Alert.alert('Please choose a buyer');
+    } else {
+      navigation.navigate('BuyerOrSellerTx2', {
+        status: status,
+        type: type,
+        leadSource: buyerLeadSource,
+        buyer: buyer,
+        street1: street1,
+        street2: street2,
+        city: city,
+        state: state,
+        zip: zip,
+      });
     }
-    if (address == 'Enter Manually') {
-      if (street1 == null || street1 == '') {
-        Alert.alert('Please enter a Street');
-        return false;
-      }
-    }
-    return true;
   }
 
   return (
@@ -219,9 +201,7 @@ export default function BuyerOrSellerTx(props: any) {
       <TouchableOpacity onPress={buyerSourcePressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.textInput}>
-              {buyerLeadSource == null ? '' : buyerLeadSource}
-            </TextInput>
+            <Text style={styles.textInput}>{buyerLeadSource}</Text>
           </View>
         </View>
       </TouchableOpacity>

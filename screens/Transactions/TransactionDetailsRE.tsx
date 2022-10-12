@@ -130,33 +130,28 @@ export default function TransactionDetailsRE(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
       )}
 
-      {data?.address.street == 'TBD' && <Text style={styles.header}>{'Address'}</Text>}
-      {data?.address.street == 'TBD' && (
+      {data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}
+      {data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 1'}</Text>}
-      {data?.address.street != 'TBD' && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
-      )}
-
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 2'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street != '' && <Text style={styles.header}>{'Street 2'}</Text>}
+      {data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street2}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'City'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street != '' && <Text style={styles.header}>{'City'}</Text>}
+      {data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.city}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'State / Province'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street != '' && <Text style={styles.header}>{'State / Province'}</Text>}
+      {data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.state}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street != '' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
+      {data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.zip}</Text>
       )}
 

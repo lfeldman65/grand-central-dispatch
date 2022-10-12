@@ -9,22 +9,23 @@ import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { styles, roundToInt } from './transactionHelpers';
 import { storage } from '../../utils/storage';
+import { addOrEditTransaction } from './api';
 
 var incomeAfterCosts = 0;
 
-export default function BuyerOrSellerTx3(props: any) {
+export default function AddTxBuyer3(props: any) {
   const { route } = props;
   const {
     status,
     type,
     leadSource,
     buyer,
-    address,
     street1,
     street2,
     city,
     state,
     zip,
+    country,
     probability,
     closingDate,
     closingPrice,
@@ -36,13 +37,12 @@ export default function BuyerOrSellerTx3(props: any) {
   } = route.params;
   const isFocused = useIsFocused();
   const [dollarOrPercentB4, setDollarOrPercentB4] = useState('dollar');
+  const [miscBeforeFees, setMiscBeforeFees] = useState('2000'); // change to blank
+  const [myPortion, setMyPortion] = useState('50'); // revert to 100
+  const [miscAfterFees, setMiscAfterFees] = useState('1500'); // change to blank
   const [dollarOrPercentAfter, setDollarOrPercentAfter] = useState('dollar');
-  const [miscBeforeFees, setMiscBeforeFees] = useState('');
-  const [myPortion, setMyPortion] = useState('');
-  const [miscAfterFees, setMiscAfterFees] = useState('');
   const [notes, setNotes] = useState('');
   const [lightOrDark, setIsLightOrDark] = useState('');
-  const [destination, setDestination] = useState('');
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -59,7 +59,15 @@ export default function BuyerOrSellerTx3(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, destination]);
+  }, [navigation, notes]);
+
+  useEffect(() => {
+    calculateIncome();
+  }, [isFocused]);
+
+  useEffect(() => {
+    calculateIncome();
+  }, [dollarOrPercentB4, dollarOrPercentAfter, miscBeforeFees, myPortion, miscAfterFees]);
 
   useEffect(() => {
     let isMounted = true;
@@ -68,27 +76,6 @@ export default function BuyerOrSellerTx3(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDestination(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDestination(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    var dest = await storage.getItem('whoCalledTxMenu');
-    console.log('destination: ' + dest);
-    if (dest == null || dest == '') {
-      setDestination('RealEstateTransactions');
-    } else {
-      setDestination(dest);
-    }
-  }
 
   async function getDarkOrLightMode(isMounted: boolean) {
     if (!isMounted) {
@@ -103,8 +90,56 @@ export default function BuyerOrSellerTx3(props: any) {
   }
 
   function completePressed() {
-    console.log('destination: ' + destination);
-    navigation.navigate(destination);
+    console.log('notes: ' + notes);
+    addOrEditTransaction(
+      0,
+      type,
+      status,
+      'title',
+      street1,
+      street2,
+      city,
+      state,
+      zip,
+      country,
+      leadSource,
+      probability,
+      '', // list date
+      '2016-05-25T00:00:00Z', // closing date
+      //  closingDate.toString(),
+      '0', // list amount
+      closingPrice, // 400000
+      '', // rate type
+      miscBeforeFees, // 2000
+      dollarOrPercentB4,
+      miscAfterFees, // 1500
+      dollarOrPercentAfter, // dollar
+      myPortion, // 50
+      'percent',
+      myGrossComm, // 120000
+      calculateIncome() ?? '0', // 57500
+      addIncome,
+      dOrPAddIncome, // percent
+      '0', // interestRate 62
+      '', // loan Type 63
+      buyerComm, // buyer comm 64
+      dOrPBuyerComm, // buyer comm type 65
+      '0', // sell comm 66
+      'percent', // sell comm type 67
+      notes, // notes 68
+      buyer,
+      null
+    )
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+          console.error(res.error);
+        } else {
+          console.log('here ' + res.data.id);
+          navigation.navigate('RealEstateTransactions');
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   function miscBeforeDollarOrPercentPressed() {

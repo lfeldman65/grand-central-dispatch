@@ -105,3 +105,59 @@ export interface TransactionTypeDataProps {
   leadSources: string[];
   leadSourcesLender: string[];
 }
+
+// Add Transaction in Postman
+
+export interface AddOrEditTransactionDataResponse {
+  data: AddOrEditTransactionProps;
+  error: string;
+  status: string;
+}
+export interface AddOrEditTransactionProps {
+  id: number;
+  transactionType: string;
+  status: string;
+  title: string;
+  contacts: TransactionContacts[];
+  address: TransactionAddress;
+  leadSource: string;
+  probabilityToClose: string;
+  listDate: string;
+  closingDate: string;
+  listAmount: string;
+  projectedAmount: string;
+  rateType: string;
+  miscBeforeSplitFees: string;
+  miscBeforeSplitFeesType: string;
+  miscAfterSplitFees: string;
+  miscAfterSplitFeesType: string;
+  commissionPortion: string;
+  commissionPortionType: string;
+  grossCommision: string;
+  incomeAfterSplitFees: string;
+  additionalIncome: string;
+  additionalIncomeType: string;
+  interestRate: string;
+  loanType: string;
+  buyerCommission: string;
+  buyerCommissionType: string;
+  sellerCommission: string;
+  sellerCommissionType: string;
+  notes: string;
+}
+
+export interface TransactionContacts {
+  userID: string;
+  contactName: string;
+  typeOfContact: string;
+  leadSource: string;
+}
+
+export interface TransactionAddress {
+  street: string;
+  street2: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
