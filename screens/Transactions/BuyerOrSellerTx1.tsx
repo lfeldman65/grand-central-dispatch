@@ -12,9 +12,12 @@ import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseLeadSource from './ChooseLeadSource';
 
 export default function BuyerOrSellerTx1(props: any) {
+  const { route } = props;
+  const { buyerOrSeller } = route.params;
   const [status, setStatus] = useState('Potential');
-  const [type, setType] = useState('Buyer');
+  const [type, setType] = useState(buyerOrSeller);
   const [buyerLeadSource, setBuyerLeadSource] = useState('Advertising');
+  const [sellerLeadSource, setSellerLeadSource] = useState('Advertising');
   const [buyer, setBuyer] = useState<RolodexDataProps>();
   const [seller, setSeller] = useState<RolodexDataProps>();
   const [address, setAddress] = useState('TBD');
@@ -23,8 +26,10 @@ export default function BuyerOrSellerTx1(props: any) {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
-  const [modalRelVisible, setModalRelVisible] = useState(false);
-  const [modalSourceVisible, setModalSourceVisible] = useState(false);
+  const [modalBuyerVisible, setModalBuyerVisible] = useState(false);
+  const [modalBuyerSourceVisible, setModalBuyerSourceVisible] = useState(false);
+  const [modalSellerVisible, setModalSellerVisible] = useState(false);
+  const [modalSellerSourceVisible, setModalSellerSourceVisible] = useState(false);
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
@@ -43,6 +48,7 @@ export default function BuyerOrSellerTx1(props: any) {
         </TouchableOpacity>
       ),
     });
+    console.log('buyer or seller: ' + buyerOrSeller);
   }, [navigation, buyer, status, type, buyerLeadSource, address, street1, street2, city, state, zip]);
 
   function statusMenuPressed() {
@@ -54,12 +60,21 @@ export default function BuyerOrSellerTx1(props: any) {
   }
 
   function buyerSourcePressed() {
-    setModalSourceVisible(!modalSourceVisible);
+    setModalBuyerSourceVisible(!modalBuyerSourceVisible);
+  }
+
+  function sellerSourcePressed() {
+    setModalSellerSourceVisible(!modalSellerSourceVisible);
   }
 
   function buyerPressed() {
     console.log('Buyer Pressed');
-    setModalRelVisible(!modalRelVisible);
+    setModalBuyerVisible(!modalBuyerVisible);
+  }
+
+  function sellerPressed() {
+    console.log('Seller Pressed');
+    setModalSellerVisible(!modalSellerVisible);
   }
 
   function addressPressed() {
@@ -70,15 +85,19 @@ export default function BuyerOrSellerTx1(props: any) {
     navigation.goBack();
   }
 
-  function nextPressed() {
-    if (buyer == null) {
-      Alert.alert('Please choose a buyer');
+  function nextPressedOld() {
+    if (type.includes('Buyer') && buyer == null) {
+      Alert.alert('Please choose a Buyer');
+    } else if (type.includes('Seller') && seller == null) {
+      Alert.alert('Please choose a Seller');
     } else {
       navigation.navigate('BuyerOrSellerTx2', {
         status: status,
         type: type,
-        leadSource: buyerLeadSource,
+        buyerLeadSource: buyerLeadSource,
+        sellerLeadSource: sellerLeadSource,
         buyer: buyer,
+        seller: seller,
         street1: street1,
         street2: street2,
         city: city,
@@ -86,6 +105,22 @@ export default function BuyerOrSellerTx1(props: any) {
         zip: zip,
       });
     }
+  }
+
+  function nextPressed() {
+    navigation.navigate('BuyerOrSellerTx2', {
+      status: status,
+      type: type,
+      buyerLeadSource: buyerLeadSource,
+      sellerLeadSource: sellerLeadSource,
+      buyer: buyer,
+      seller: seller,
+      street1: street1,
+      street2: street2,
+      city: city,
+      state: state,
+      zip: zip,
+    });
   }
 
   return (
@@ -198,54 +233,114 @@ export default function BuyerOrSellerTx1(props: any) {
         </View>
       </ActionSheet>
 
-      <Text style={styles.nameTitle}>Buyer Lead Source</Text>
-      <TouchableOpacity onPress={buyerSourcePressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{buyerLeadSource}</Text>
+      {type.includes('Buyer') && <Text style={styles.nameTitle}>Buyer</Text>}
+      {type.includes('Buyer') && (
+        <TouchableOpacity onPress={buyerPressed}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={buyer == null ? styles.placeholderText : styles.textInput}>
+                {buyer == null ? '+ Add' : buyer?.firstName + ' ' + buyer?.lastName}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-      {modalSourceVisible && (
+        </TouchableOpacity>
+      )}
+      {modalBuyerVisible && (
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalSourceVisible}
+          visible={modalBuyerVisible}
           onRequestClose={() => {
-            setModalRelVisible(!modalSourceVisible);
+            setModalBuyerVisible(!modalBuyerVisible);
+          }}
+        >
+          <ChooseRelationship
+            title="Choose Relationship"
+            setModalRelVisible={setModalBuyerVisible}
+            setSelectedRel={setBuyer}
+          />
+        </Modal>
+      )}
+
+      {type.includes('Buyer') && <Text style={styles.nameTitle}>Buyer Lead Source</Text>}
+      {type.includes('Buyer') && (
+        <TouchableOpacity onPress={buyerSourcePressed}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>{buyerLeadSource}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+      {modalBuyerSourceVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalBuyerSourceVisible}
+          onRequestClose={() => {
+            setModalBuyerVisible(!modalBuyerSourceVisible);
           }}
         >
           <ChooseLeadSource
             title="Lead Source"
-            setModalSourceVisible={setModalSourceVisible}
+            setModalSourceVisible={setModalBuyerSourceVisible}
             setSelectedSource={setBuyerLeadSource}
           />
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Buyer</Text>
-      <TouchableOpacity onPress={buyerPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={buyer == null ? styles.placeholderText : styles.textInput}>
-              {buyer == null ? '+ Add' : buyer?.firstName + ' ' + buyer?.lastName}
-            </Text>
+      {type.includes('Seller') && <Text style={styles.nameTitle}>Seller</Text>}
+      {type.includes('Seller') && (
+        <TouchableOpacity onPress={sellerPressed}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={seller == null ? styles.placeholderText : styles.textInput}>
+                {seller == null ? '+ Add' : seller?.firstName + ' ' + seller?.lastName}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-      {modalRelVisible && (
+        </TouchableOpacity>
+      )}
+      {modalSellerVisible && (
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalRelVisible}
+          visible={modalSellerVisible}
           onRequestClose={() => {
-            setModalRelVisible(!modalRelVisible);
+            setModalSellerVisible(!modalSellerVisible);
           }}
         >
           <ChooseRelationship
             title="Choose Relationship"
-            setModalRelVisible={setModalRelVisible}
-            setSelectedRel={setBuyer}
+            setModalRelVisible={setModalSellerVisible}
+            setSelectedRel={setSeller}
+          />
+        </Modal>
+      )}
+
+      {type.includes('Seller') && <Text style={styles.nameTitle}>Seller Lead Source</Text>}
+      {type.includes('Seller') && (
+        <TouchableOpacity onPress={sellerSourcePressed}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>{sellerLeadSource}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+      {modalSellerSourceVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalSellerSourceVisible}
+          onRequestClose={() => {
+            setModalSellerVisible(!modalSellerSourceVisible);
+          }}
+        >
+          <ChooseLeadSource
+            title="Lead Source"
+            setModalSourceVisible={setModalSellerSourceVisible}
+            setSelectedSource={setSellerLeadSource}
           />
         </Modal>
       )}

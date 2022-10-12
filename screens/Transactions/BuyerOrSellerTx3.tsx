@@ -18,8 +18,10 @@ export default function BuyerOrSellerTx3(props: any) {
   const {
     status,
     type,
-    leadSource,
+    buyerLeadSource,
+    sellerLeadSource,
     buyer,
+    seller,
     street1,
     street2,
     city,
@@ -102,7 +104,7 @@ export default function BuyerOrSellerTx3(props: any) {
       state,
       zip,
       country,
-      leadSource,
+      buyerLeadSource,
       probability,
       '', // list date
       '2016-05-25T00:00:00Z', // closing date

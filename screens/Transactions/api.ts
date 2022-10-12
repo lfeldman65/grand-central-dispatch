@@ -86,14 +86,14 @@ export function addOrEditTransaction(
   var txBuyer: TransactionContacts = {
     userID: buyer?.id ?? '',
     contactName: buyer?.firstName ?? '' + ' ' + buyer?.lastName ?? '',
-    typeOfContact: transactionType,
+    typeOfContact: 'Buyer',
     leadSource: leadSource,
   };
 
   var txSeller: TransactionContacts = {
     userID: seller?.id ?? '',
     contactName: seller?.firstName ?? '' + ' ' + seller?.lastName ?? '',
-    typeOfContact: transactionType,
+    typeOfContact: 'Seller',
     leadSource: leadSource,
   };
 

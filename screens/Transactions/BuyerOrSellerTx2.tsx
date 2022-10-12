@@ -14,16 +14,19 @@ var grossComm1 = 0;
 
 export default function BuyerOrSellerTx2(props: any) {
   const { route } = props;
-  const { status, type, leadSource, buyer, street1, street2, city, state, zip } = route.params;
+  const { status, type, buyerLeadSource, sellerLeadSource, buyer, seller, street1, street2, city, state, zip } =
+    route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
   const [closingPrice, setClosingPrice] = useState('400000'); // remove
   const [closingDate, setClosingDate] = useState(new Date());
   const [buyerCommission, setBuyerCommission] = useState('20'); // remove
+  const [sellerCommission, setSellerCommission] = useState('15'); // remove
   const [additionalIncome, setAdditionalIncome] = useState('10'); // remove
   const [showDate, setShowDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const [dollarOrPercentBuyerComm, setDollarOrPercentBuyerComm] = useState('percent');
+  const [dollarOrPercentSellerComm, setDollarOrPercentSellerComm] = useState('percent');
   const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('percent'); // revert
   const navigation = useNavigation<any>();
 
@@ -96,9 +99,10 @@ export default function BuyerOrSellerTx2(props: any) {
     navigation.navigate('BuyerOrSellerTx3', {
       status: status,
       type: type,
-      leadSource: leadSource,
+      buyerLeadSource: buyerLeadSource,
+      sellerLeadSource: sellerLeadSource,
       buyer: buyer,
-      //   address: address,
+      seller: seller,
       street1: street1,
       street2: street2,
       city: city,
@@ -120,6 +124,14 @@ export default function BuyerOrSellerTx2(props: any) {
       setDollarOrPercentBuyerComm('dollar');
     } else {
       setDollarOrPercentBuyerComm('percent');
+    }
+  }
+
+  function sellerCommDollarOrPercentPressed() {
+    if (dollarOrPercentSellerComm == 'percent') {
+      setDollarOrPercentSellerComm('dollar');
+    } else {
+      setDollarOrPercentSellerComm('percent');
     }
   }
 
@@ -260,38 +272,75 @@ export default function BuyerOrSellerTx2(props: any) {
           />
         )}
 
-        <Text style={styles.nameTitle}>{"Buyer's Commission"}</Text>
-        <View style={styles.mainContent}>
-          <View style={styles.dollarAndPercentRow}>
-            <View style={styles.percentView}>
-              <Text
-                onPress={buyerCommDollarOrPercentPressed}
-                style={dollarOrPercentBuyerComm == 'dollar' ? styles.dollarText : styles.dollarTextDim}
-              >
-                $
-              </Text>
-            </View>
-            <View style={styles.dollarAndPercentView}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="+ Add"
-                placeholderTextColor="#AFB9C2"
-                textAlign="left"
-                onChangeText={(text) => setBuyerCommission(text)}
-                defaultValue={buyerCommission}
-                keyboardType="number-pad"
-              />
-            </View>
-            <View style={styles.percentView}>
-              <Text
-                onPress={buyerCommDollarOrPercentPressed}
-                style={dollarOrPercentBuyerComm == 'percent' ? styles.percentText : styles.percentTextDim}
-              >
-                %
-              </Text>
+        {type.includes('Buyer') && <Text style={styles.nameTitle}>{"Buyer's Commission"}</Text>}
+        {type.includes('Buyer') && (
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={buyerCommDollarOrPercentPressed}
+                  style={dollarOrPercentBuyerComm == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                >
+                  $
+                </Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setBuyerCommission(text)}
+                  defaultValue={buyerCommission}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={buyerCommDollarOrPercentPressed}
+                  style={dollarOrPercentBuyerComm == 'percent' ? styles.percentText : styles.percentTextDim}
+                >
+                  %
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
+        )}
+
+        {type.includes('Seller') && <Text style={styles.nameTitle}>{"Seller's Commission"}</Text>}
+        {type.includes('Seller') && (
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={sellerCommDollarOrPercentPressed}
+                  style={dollarOrPercentSellerComm == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                >
+                  $
+                </Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setSellerCommission(text)}
+                  defaultValue={sellerCommission}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={sellerCommDollarOrPercentPressed}
+                  style={dollarOrPercentSellerComm == 'percent' ? styles.percentText : styles.percentTextDim}
+                >
+                  %
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
 
         <Text style={styles.nameTitle}>Additional Income</Text>
         <View style={styles.mainContent}>
