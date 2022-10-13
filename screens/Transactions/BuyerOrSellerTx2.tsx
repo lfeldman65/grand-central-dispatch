@@ -1,5 +1,5 @@
 import { Fragment, useLayoutEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
+import { Alert, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
@@ -10,7 +10,7 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from './transactionHelpers';
 
-var grossComm1 = 0;
+var grossComm = 0;
 
 export default function BuyerOrSellerTx2(props: any) {
   const { route } = props;
@@ -18,16 +18,16 @@ export default function BuyerOrSellerTx2(props: any) {
     route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
-  const [closingPrice, setClosingPrice] = useState('400000'); // remove
+  const [closingPrice, setClosingPrice] = useState(''); // 400000
   const [closingDate, setClosingDate] = useState(new Date());
-  const [buyerCommission, setBuyerCommission] = useState('20'); // remove
-  const [sellerCommission, setSellerCommission] = useState('15'); // remove
-  const [additionalIncome, setAdditionalIncome] = useState('10'); // remove
+  const [buyerCommission, setBuyerCommission] = useState('0'); // 20
+  const [sellerCommission, setSellerCommission] = useState('0');
+  const [additionalIncome, setAdditionalIncome] = useState('0');
   const [showDate, setShowDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const [dollarOrPercentBuyerComm, setDollarOrPercentBuyerComm] = useState('percent');
   const [dollarOrPercentSellerComm, setDollarOrPercentSellerComm] = useState('percent');
-  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('percent'); // revert
+  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('dollar');
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -44,8 +44,6 @@ export default function BuyerOrSellerTx2(props: any) {
         </TouchableOpacity>
       ),
     });
-    //  console.log('seller2: ' + seller.lastName);
-    // console.log('buyer2: ' + buyer.lastName);
   }, [
     navigation,
     buyer,
@@ -57,12 +55,20 @@ export default function BuyerOrSellerTx2(props: any) {
     sellerCommission,
     additionalIncome,
     dollarOrPercentBuyerComm,
+    dollarOrPercentSellerComm,
     dollarOrPercentAddIncome,
   ]);
 
   useEffect(() => {
-    calculateGrossCommission; // branch
-  }, [closingDate, buyerCommission, additionalIncome, dollarOrPercentBuyerComm, dollarOrPercentAddIncome]);
+    calculateGrossCommission;
+  }, [
+    buyerCommission,
+    sellerCommission,
+    additionalIncome,
+    dollarOrPercentBuyerComm,
+    dollarOrPercentSellerComm,
+    dollarOrPercentAddIncome,
+  ]);
 
   function backPressed() {
     navigation.goBack();
@@ -71,6 +77,7 @@ export default function BuyerOrSellerTx2(props: any) {
   function calculateGrossCommission() {
     try {
       var buyerCommFloat = 0;
+      var sellerCommFloat = 0;
       var addIncomeFloat = 0;
       var closingPriceFloat = 0;
 
@@ -81,56 +88,72 @@ export default function BuyerOrSellerTx2(props: any) {
       }
       if (buyerCommission == '' || buyerCommission == null) {
         buyerCommFloat = 0;
+      } else if (!type.includes('Buyer')) {
+        buyerCommFloat = 0;
       } else {
         buyerCommFloat = parseFloat(buyerCommission);
       }
-      //   console.log('localBuyerComm:' + buyerCommFloat);
+      console.log('localBuyerComm:' + buyerCommFloat);
+      if (sellerCommission == '' || sellerCommission == null) {
+        sellerCommFloat = 0;
+      } else if (!type.includes('Seller')) {
+        sellerCommFloat = 0;
+      } else {
+        sellerCommFloat = parseFloat(sellerCommission);
+      }
+      console.log('localSellerComm:' + sellerCommFloat);
+
       if (additionalIncome == '' || additionalIncome == null) {
         addIncomeFloat = 0;
       } else {
         addIncomeFloat = parseFloat(additionalIncome);
       }
-      //  console.log('localAddIncome:' + addIncomeFloat);
-      if (dollarOrPercentBuyerComm == 'dollar') {
-        buyerCommFloat = buyerCommFloat;
-      } else {
+      console.log('localAddIncome:' + addIncomeFloat);
+      if (dollarOrPercentBuyerComm == 'percent') {
         buyerCommFloat = (closingPriceFloat * buyerCommFloat) / 100;
       }
-      //  console.log('buyerCommFloat:' + buyerCommFloat);
-      if (dollarOrPercentAddIncome == 'dollar') {
-        addIncomeFloat = addIncomeFloat;
-      } else {
+      if (dollarOrPercentSellerComm == 'percent') {
+        sellerCommFloat = (closingPriceFloat * sellerCommFloat) / 100;
+      }
+      if (dollarOrPercentAddIncome == 'percent') {
         addIncomeFloat = (closingPriceFloat * addIncomeFloat) / 100;
       }
-      grossComm1 = buyerCommFloat + addIncomeFloat;
-      return '$' + roundToInt(grossComm1.toString());
+      grossComm = buyerCommFloat + sellerCommFloat + addIncomeFloat;
+      return '$' + roundToInt(grossComm.toString()); // Should be $120000 with test values
     } catch {
       console.log('error');
     }
   }
 
   function nextPressed() {
-    navigation.navigate('BuyerOrSellerTx3', {
-      status: status,
-      type: type,
-      buyerLeadSource: buyerLeadSource,
-      sellerLeadSource: sellerLeadSource,
-      buyer: buyer,
-      seller: seller,
-      street1: street1,
-      street2: street2,
-      city: city,
-      state: state,
-      zip: zip,
-      probability: probability,
-      closingPrice: closingPrice,
-      closingDate: closingDate.toISOString(),
-      buyerComm: buyerCommission,
-      dOrPBuyerComm: dollarOrPercentBuyerComm,
-      addIncome: additionalIncome,
-      dOrPAddIncome: dollarOrPercentAddIncome,
-      myGrossComm: grossComm1,
-    });
+    if (closingPrice == '' || closingPrice == null) {
+      Alert.alert('Please enter a Projected Closing Price');
+    } else {
+      console.log('next seller comm: ' + sellerCommission);
+      console.log('next seller comm: ' + dollarOrPercentSellerComm);
+      navigation.navigate('BuyerOrSellerTx3', {
+        status: status,
+        type: type,
+        buyerLeadSource: buyerLeadSource,
+        sellerLeadSource: sellerLeadSource,
+        buyer: buyer,
+        seller: seller,
+        street1: street1,
+        street2: street2,
+        city: city,
+        state: state,
+        zip: zip,
+        probability: probability,
+        closingPrice: closingPrice,
+        closingDate: closingDate.toISOString(),
+        buyerComm: buyerCommission,
+        sellerComm: sellerCommission,
+        dOrPBuyerComm: dollarOrPercentBuyerComm,
+        addIncome: additionalIncome,
+        dOrPAddIncome: dollarOrPercentAddIncome,
+        myGrossComm: grossComm,
+      });
+    }
   }
 
   function buyerCommDollarOrPercentPressed() {

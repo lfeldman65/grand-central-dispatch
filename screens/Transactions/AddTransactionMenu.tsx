@@ -23,7 +23,9 @@ export default function AddTransactionMenu(props: any) {
         buyerOrSeller: 'Seller',
       });
     } else if (index == 2) {
-      console.log('Buyer and Seller');
+      navigation.navigate('BuyerOrSellerTx1', {
+        buyerOrSeller: 'Buyer & Seller',
+      });
     } else if (index == 3) {
       console.log('Purchase Loan and Refinance');
     } else if (index == 4) {

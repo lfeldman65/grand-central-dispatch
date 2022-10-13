@@ -99,7 +99,7 @@ export default function BuyerOrSellerTx1(props: any) {
     navigation.goBack();
   }
 
-  function nextPressedOld() {
+  function nextPressed() {
     if (type.includes('Buyer') && buyer == null) {
       Alert.alert('Please choose a Buyer');
     } else if (type.includes('Seller') && seller == null) {
@@ -119,23 +119,6 @@ export default function BuyerOrSellerTx1(props: any) {
         zip: zip,
       });
     }
-  }
-
-  function nextPressed() {
-    console.log('seller: ' + seller?.lastName);
-    navigation.navigate('BuyerOrSellerTx2', {
-      status: status,
-      type: type,
-      buyerLeadSource: buyerLeadSource,
-      sellerLeadSource: sellerLeadSource,
-      buyer: buyer,
-      seller: seller,
-      street1: street1,
-      street2: street2,
-      city: city,
-      state: state,
-      zip: zip,
-    });
   }
 
   return (
@@ -297,7 +280,7 @@ export default function BuyerOrSellerTx1(props: any) {
           }}
         >
           <ChooseLeadSource
-            title="Lead Source"
+            title="Buyer Lead Source"
             setModalSourceVisible={setModalBuyerSourceVisible}
             setSelectedSource={setBuyerLeadSource}
           />
@@ -353,7 +336,7 @@ export default function BuyerOrSellerTx1(props: any) {
           }}
         >
           <ChooseLeadSource
-            title="Lead Source"
+            title="Seller Lead Source"
             setModalSourceVisible={setModalSellerSourceVisible}
             setSelectedSource={setSellerLeadSource}
           />

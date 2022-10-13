@@ -32,16 +32,18 @@ export default function BuyerOrSellerTx3(props: any) {
     closingDate,
     closingPrice,
     buyerComm,
+    sellerComm,
     dOrPBuyerComm,
+    dOrPSellerComm,
     addIncome,
     dOrPAddIncome,
     myGrossComm,
   } = route.params;
   const isFocused = useIsFocused();
   const [dollarOrPercentB4, setDollarOrPercentB4] = useState('dollar');
-  const [miscBeforeFees, setMiscBeforeFees] = useState('2000'); // change to blank
-  const [myPortion, setMyPortion] = useState('50'); // revert to 100
-  const [miscAfterFees, setMiscAfterFees] = useState('1500'); // change to blank
+  const [miscBeforeFees, setMiscBeforeFees] = useState(''); // 2000
+  const [myPortion, setMyPortion] = useState('50'); // 50
+  const [miscAfterFees, setMiscAfterFees] = useState(''); // 1500
   const [dollarOrPercentAfter, setDollarOrPercentAfter] = useState('dollar');
   const [notes, setNotes] = useState('');
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -65,7 +67,7 @@ export default function BuyerOrSellerTx3(props: any) {
 
   useEffect(() => {
     calculateIncome();
-    console.log('CLOSING DATE USE EFFECT: ' + closingDate);
+    console.log('SELLER COMM: ' + sellerComm);
   }, [isFocused]);
 
   useEffect(() => {
@@ -75,7 +77,6 @@ export default function BuyerOrSellerTx3(props: any) {
   useEffect(() => {
     let isMounted = true;
     getDarkOrLightMode(isMounted);
-    //  console.log('seller: ' + seller.lastName);
     return () => {
       isMounted = false;
     };
@@ -110,8 +111,7 @@ export default function BuyerOrSellerTx3(props: any) {
       sellerLeadSource,
       probability,
       '', // list date
-      //    '2016-05-25T00:00:000Z', // closing date
-      closingDate,
+      closingDate, //  Test value '2016-05-25T00:00:000Z'
       '0', // list amount
       closingPrice, // 400000
       '', // rate type
@@ -121,17 +121,17 @@ export default function BuyerOrSellerTx3(props: any) {
       dollarOrPercentAfter, // dollar
       myPortion, // 50
       'percent',
-      myGrossComm, // 120000
-      calculateIncome() ?? '0', // 57500
+      myGrossComm,
+      calculateIncome() ?? '0',
       addIncome,
-      dOrPAddIncome, // percent
-      '0', // interestRate 62
-      '', // loan Type 63
-      buyerComm, // buyer comm 64
-      dOrPBuyerComm, // buyer comm type 65
-      '0', // sell comm 66
-      'percent', // sell comm type 67
-      notes, // notes 68
+      dOrPAddIncome,
+      '0',
+      '',
+      buyerComm,
+      dOrPBuyerComm,
+      sellerComm,
+      dOrPSellerComm,
+      notes,
       buyer,
       seller
     )
@@ -189,15 +189,13 @@ export default function BuyerOrSellerTx3(props: any) {
       } else {
         incomeAfterCosts = incomeAfterCosts - (myGrossComm * beforeSplitFees) / 100;
       }
-      //  console.log('income after costs: ' + incomeAfterCosts);
-      //  console.log('myPortion: ' + myPortionOfSplit);
       incomeAfterCosts = (incomeAfterCosts * myPortionOfSplit) / 100;
       if (dollarOrPercentAfter == 'dollar') {
         incomeAfterCosts = incomeAfterCosts - afterSplitFees;
       } else {
         incomeAfterCosts = incomeAfterCosts - (incomeAfterCosts * afterSplitFees) / 100;
       }
-      return '$' + roundToInt(incomeAfterCosts.toString());
+      return '$' + roundToInt(incomeAfterCosts.toString()); // Should be $57500 with test values
     } catch {
       console.log('error');
     }

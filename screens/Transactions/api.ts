@@ -100,16 +100,22 @@ export function addOrEditTransaction(
 
   var a = [];
 
-  if (buyer === undefined || buyer == null) {
+  // Have to check transaction type below in case someone enters
+  // a Buyer and Seller on screen 1 and then changes to just Buyer or just Seller
+
+  if (buyer === undefined || buyer == null || !transactionType.includes('Buyer')) {
+    console.log('BUYER UNDEFINED');
     a.push(txSeller);
-  } else if (seller === undefined || seller == null) {
+  } else if (seller === undefined || seller == null || !transactionType.includes('Seller')) {
+    console.log('SELLER UNDEFINED');
     a.push(txBuyer);
   } else {
+    console.log('BUYER: ' + txBuyer.contactName);
+    console.log('SELLER: ' + txSeller.contactName);
     a.push(txBuyer);
     a.push(txSeller);
   }
 
-  console.log('contacts: ' + (seller === undefined ? 'hello' : seller?.lastName));
   return http.post('deal', {
     body: {
       id: id,
@@ -118,7 +124,6 @@ export function addOrEditTransaction(
       title: title,
       contacts: a,
       address: address,
-      //  leadSource: leadSource,
       probabilityToClose: probabilityToClose,
       listDate: listDate,
       closingDate: closingDate,
