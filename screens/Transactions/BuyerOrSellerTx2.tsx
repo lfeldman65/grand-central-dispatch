@@ -43,7 +43,7 @@ export default function BuyerOrSellerTx2(props: any) {
       ),
       headerRight: () => (
         <TouchableOpacity onPress={nextPressed}>
-          <Text style={styles.backAndNext}>Next</Text>
+          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Next</Text>
         </TouchableOpacity>
       ),
     });
@@ -77,6 +77,19 @@ export default function BuyerOrSellerTx2(props: any) {
 
   function backPressed() {
     navigation.goBack();
+  }
+
+  function isDataValid() {
+    if (type.includes('Seller') && originalPrice == null) {
+      return false;
+    }
+    if (type.includes('Seller') && originalDate == null) {
+      return false;
+    }
+    if (closingPrice == '' || closingPrice == null) {
+      return false;
+    }
+    return true;
   }
 
   function calculateGrossCommission() {
@@ -131,11 +144,7 @@ export default function BuyerOrSellerTx2(props: any) {
   }
 
   function nextPressed() {
-    if (originalPrice == '' || originalPrice == null) {
-      Alert.alert('Please enter the Original List Price');
-    } else if (closingPrice == '' || closingPrice == null) {
-      Alert.alert('Please enter the Projected Closing Price');
-    } else {
+    if (isDataValid()) {
       console.log('next seller comm: ' + sellerCommission);
       console.log('next seller comm: ' + dollarOrPercentSellerComm);
       navigation.navigate('BuyerOrSellerTx3', {
@@ -283,36 +292,40 @@ export default function BuyerOrSellerTx2(props: any) {
             </View>
           </ActionSheet>
 
-          <Text style={styles.nameTitle}>{'Original List Price'}</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="+ Add"
-                placeholderTextColor="#AFB9C2"
-                textAlign="left"
-                onChangeText={(text) => setOriginalPrice(text)}
-                defaultValue={originalPrice}
-                keyboardType="number-pad"
-              />
-            </View>
-          </View>
-
-          <Text style={styles.nameTitle}>{'Original List Date'}</Text>
-          <TouchableOpacity onPress={showOriginalDatePicker}>
+          {type.includes('Seller') && <Text style={styles.nameTitle}>{'Original List Price'}</Text>}
+          {type.includes('Seller') && (
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
-                <Text style={styles.textInput}>
-                  {originalDate.toLocaleDateString('en-us', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    //   hour: 'numeric',
-                  })}
-                </Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setOriginalPrice(text)}
+                  defaultValue={originalPrice}
+                  keyboardType="number-pad"
+                />
               </View>
             </View>
-          </TouchableOpacity>
+          )}
+
+          {type.includes('Seller') && <Text style={styles.nameTitle}>{'Original List Date'}</Text>}
+          {type.includes('Seller') && (
+            <TouchableOpacity onPress={showOriginalDatePicker}>
+              <View style={styles.mainContent}>
+                <View style={styles.inputView}>
+                  <Text style={styles.textInput}>
+                    {originalDate.toLocaleDateString('en-us', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      //   hour: 'numeric',
+                    })}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
 
           {showOriginalDate && (
             <TouchableOpacity

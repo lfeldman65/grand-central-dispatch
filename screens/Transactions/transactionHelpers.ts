@@ -149,6 +149,12 @@ export const styles = StyleSheet.create({
   backAndNext: {
     color: 'white',
     fontSize: 18,
+    opacity: 1.0,
+  },
+  backAndNextDim: {
+    color: 'white',
+    fontSize: 18,
+    opacity: 0.4,
   },
   textInput: {
     fontSize: 18,

@@ -34,6 +34,10 @@ export default function BuyerOrSellerTx1(props: any) {
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
 
+  // useEffect(() => {
+  //   isDataValid();
+  // }, [buyer, seller, address]);
+
   useEffect(() => {
     navigation.setOptions({
       title: 'Real Estate Transaction',
@@ -44,7 +48,7 @@ export default function BuyerOrSellerTx1(props: any) {
       ),
       headerRight: () => (
         <TouchableOpacity onPress={nextPressed}>
-          <Text style={styles.backAndNext}>Next</Text>
+          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Next</Text>
         </TouchableOpacity>
       ),
     });
@@ -99,14 +103,21 @@ export default function BuyerOrSellerTx1(props: any) {
     navigation.goBack();
   }
 
-  function nextPressed() {
+  function isDataValid() {
     if (type.includes('Buyer') && buyer == null) {
-      Alert.alert('Please choose a Buyer');
-    } else if (type.includes('Seller') && seller == null) {
-      Alert.alert('Please choose a Seller');
-    } else if ((address == 'Enter Manually' && street1 == '') || street1 == null) {
-      Alert.alert('Please enter an address');
-    } else {
+      return false;
+    }
+    if (type.includes('Seller') && seller == null) {
+      return false;
+    }
+    if (address == 'Enter Manually' && (street1 == '' || street1 == null)) {
+      return false;
+    }
+    return true;
+  }
+
+  function nextPressed() {
+    if (isDataValid()) {
       navigation.navigate('BuyerOrSellerTx2', {
         status: status,
         type: type,
