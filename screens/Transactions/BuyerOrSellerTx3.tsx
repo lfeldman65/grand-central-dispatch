@@ -29,6 +29,8 @@ export default function BuyerOrSellerTx3(props: any) {
     zip,
     country,
     probability,
+    originalDate,
+    originalPrice,
     closingDate,
     closingPrice,
     buyerComm,
@@ -110,9 +112,9 @@ export default function BuyerOrSellerTx3(props: any) {
       buyerLeadSource,
       sellerLeadSource,
       probability,
-      '', // list date
+      originalDate,
       closingDate, //  Test value '2016-05-25T00:00:000Z'
-      '0', // list amount
+      originalPrice,
       closingPrice, // 400000
       '', // rate type
       miscBeforeFees, // 2000
@@ -203,111 +205,113 @@ export default function BuyerOrSellerTx3(props: any) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <Text style={styles.nameTitle}>Misc Before-Split Fees</Text>
-        <View style={styles.mainContent}>
-          <View style={styles.dollarAndPercentRow}>
-            <View style={styles.percentView}>
-              <Text
-                onPress={miscBeforeDollarOrPercentPressed}
-                style={dollarOrPercentB4 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
-              >
-                $
-              </Text>
+      <ScrollView>
+        <View style={styles.topContainer}>
+          <Text style={styles.nameTitle}>Misc Before-Split Fees</Text>
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={miscBeforeDollarOrPercentPressed}
+                  style={dollarOrPercentB4 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                >
+                  $
+                </Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setMiscBeforeFees(text)}
+                  defaultValue={miscBeforeFees}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={miscBeforeDollarOrPercentPressed}
+                  style={dollarOrPercentB4 == 'percent' ? styles.percentText : styles.percentTextDim}
+                >
+                  %
+                </Text>
+              </View>
             </View>
-            <View style={styles.dollarAndPercentView}>
+          </View>
+
+          <Text style={styles.nameTitle}>My Portion of the Broker Split</Text>
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.percentView}>
+                <Text style={styles.dollarTextDim}>$</Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setMyPortion(text)}
+                  defaultValue={myPortion}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}>
+                <Text style={styles.percentText}>%</Text>
+              </View>
+            </View>
+          </View>
+
+          <Text style={styles.nameTitle}>Misc After-Split Fees</Text>
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={miscAfterDollarOrPercentPressed}
+                  style={dollarOrPercentAfter == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                >
+                  $
+                </Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setMiscAfterFees(text)}
+                  defaultValue={miscAfterFees}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={miscAfterDollarOrPercentPressed}
+                  style={dollarOrPercentAfter == 'percent' ? styles.percentText : styles.percentTextDim}
+                >
+                  %
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <Text style={styles.nameTitle}>Notes</Text>
+          <View style={styles.mainContent}>
+            <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
               <TextInput
-                style={styles.textInput}
-                placeholder="+ Add"
+                style={lightOrDark == 'dark' ? styles.noteTextDark : styles.noteTextLight}
+                placeholder="Type Here"
                 placeholderTextColor="#AFB9C2"
                 textAlign="left"
-                onChangeText={(text) => setMiscBeforeFees(text)}
-                defaultValue={miscBeforeFees}
-                keyboardType="number-pad"
+                value={notes}
+                onChangeText={(text) => setNotes(text)}
               />
             </View>
-            <View style={styles.percentView}>
-              <Text
-                onPress={miscBeforeDollarOrPercentPressed}
-                style={dollarOrPercentB4 == 'percent' ? styles.percentText : styles.percentTextDim}
-              >
-                %
-              </Text>
-            </View>
           </View>
         </View>
-
-        <Text style={styles.nameTitle}>My Portion of the Broker Split</Text>
-        <View style={styles.mainContent}>
-          <View style={styles.dollarAndPercentRow}>
-            <View style={styles.percentView}>
-              <Text style={styles.dollarTextDim}>$</Text>
-            </View>
-            <View style={styles.dollarAndPercentView}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="+ Add"
-                placeholderTextColor="#AFB9C2"
-                textAlign="left"
-                onChangeText={(text) => setMyPortion(text)}
-                defaultValue={myPortion}
-                keyboardType="number-pad"
-              />
-            </View>
-            <View style={styles.percentView}>
-              <Text style={styles.percentText}>%</Text>
-            </View>
-          </View>
-        </View>
-
-        <Text style={styles.nameTitle}>Misc After-Split Fees</Text>
-        <View style={styles.mainContent}>
-          <View style={styles.dollarAndPercentRow}>
-            <View style={styles.percentView}>
-              <Text
-                onPress={miscAfterDollarOrPercentPressed}
-                style={dollarOrPercentAfter == 'dollar' ? styles.dollarText : styles.dollarTextDim}
-              >
-                $
-              </Text>
-            </View>
-            <View style={styles.dollarAndPercentView}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="+ Add"
-                placeholderTextColor="#AFB9C2"
-                textAlign="left"
-                onChangeText={(text) => setMiscAfterFees(text)}
-                defaultValue={miscAfterFees}
-                keyboardType="number-pad"
-              />
-            </View>
-            <View style={styles.percentView}>
-              <Text
-                onPress={miscAfterDollarOrPercentPressed}
-                style={dollarOrPercentAfter == 'percent' ? styles.percentText : styles.percentTextDim}
-              >
-                %
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <Text style={styles.nameTitle}>Notes</Text>
-        <View style={styles.mainContent}>
-          <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
-            <TextInput
-              style={lightOrDark == 'dark' ? styles.noteTextDark : styles.noteTextLight}
-              placeholder="Type Here"
-              placeholderTextColor="#AFB9C2"
-              textAlign="left"
-              value={notes}
-              onChangeText={(text) => setNotes(text)}
-            />
-          </View>
-        </View>
-      </View>
-
+        <View style={styles.bottom}></View>
+      </ScrollView>
       <View style={styles.bottomContainer}>
         <Text style={styles.summaryText}>Income After Broker's Split and Fees</Text>
         <Text style={styles.summaryText}>{calculateIncome()}</Text>

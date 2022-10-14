@@ -104,6 +104,8 @@ export default function BuyerOrSellerTx1(props: any) {
       Alert.alert('Please choose a Buyer');
     } else if (type.includes('Seller') && seller == null) {
       Alert.alert('Please choose a Seller');
+    } else if ((address == 'Enter Manually' && street1 == '') || street1 == null) {
+      Alert.alert('Please enter an address');
     } else {
       navigation.navigate('BuyerOrSellerTx2', {
         status: status,
