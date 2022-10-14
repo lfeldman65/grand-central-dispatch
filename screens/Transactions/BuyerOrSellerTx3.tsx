@@ -210,7 +210,7 @@ export default function BuyerOrSellerTx3(props: any) {
           <Text style={styles.nameTitle}>Misc Before-Split Fees</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
-              <View style={styles.percentView}>
+              <View style={styles.dollarView}>
                 <Text
                   onPress={miscBeforeDollarOrPercentPressed}
                   style={dollarOrPercentB4 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
@@ -243,7 +243,7 @@ export default function BuyerOrSellerTx3(props: any) {
           <Text style={styles.nameTitle}>My Portion of the Broker Split</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
-              <View style={styles.percentView}>
+              <View style={styles.dollarView}>
                 <Text style={styles.dollarTextDim}>$</Text>
               </View>
               <View style={styles.dollarAndPercentView}>
@@ -266,7 +266,7 @@ export default function BuyerOrSellerTx3(props: any) {
           <Text style={styles.nameTitle}>Misc After-Split Fees</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
-              <View style={styles.percentView}>
+              <View style={styles.dollarView}>
                 <Text
                   onPress={miscAfterDollarOrPercentPressed}
                   style={dollarOrPercentAfter == 'dollar' ? styles.dollarText : styles.dollarTextDim}

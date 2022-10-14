@@ -439,7 +439,7 @@ export default function BuyerOrSellerTx2(props: any) {
           {type.includes('Seller') && (
             <View style={styles.mainContent}>
               <View style={styles.dollarAndPercentRow}>
-                <View style={styles.percentView}>
+                <View style={styles.dollarView}>
                   <Text
                     onPress={sellerCommDollarOrPercentPressed}
                     style={dollarOrPercentSellerComm == 'dollar' ? styles.dollarText : styles.dollarTextDim}
@@ -473,7 +473,7 @@ export default function BuyerOrSellerTx2(props: any) {
           <Text style={styles.nameTitle}>Additional Income</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
-              <View style={styles.percentView}>
+              <View style={styles.dollarView}>
                 <Text
                   onPress={addIncomeDollarOrPercentPressed}
                   style={dollarOrPercentAddIncome == 'dollar' ? styles.dollarText : styles.dollarTextDim}
