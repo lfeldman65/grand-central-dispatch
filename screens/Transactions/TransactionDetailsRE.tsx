@@ -29,12 +29,13 @@ export default function TransactionDetailsRE(props: any) {
       ),
     });
     navigation.setOptions({ title: 'Transaction Details' });
-  }, [navigation]);
+  }, [navigation, data]);
 
   function editPressed() {
     console.log('edit pressed');
     navigation.navigate('BuyerOrSellerTx1', {
       data: data,
+      buyerOrSeller: data?.transactionType,
     });
   }
 
