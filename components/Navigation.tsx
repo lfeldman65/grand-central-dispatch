@@ -26,8 +26,8 @@ import LenderTransactionsScreen from '../screens/Transactions/LenderTransactions
 import OtherTransactionsScreen from '../screens/Transactions/OtherTransactionsScreen';
 import AddTxMenu from '../screens/Transactions/AddTransactionMenu';
 import AddOrEditRealtorTx1 from '../screens/Transactions/AddOrEditRealtorTx1';
-import BuyerOrSellerTx2 from '../screens/Transactions/AddOrEditRealtorTx2';
-import BuyerOrSellerTx3 from '../screens/Transactions/AddOrEditRealtorTx3';
+import AddOrEditRealtorTx2 from '../screens/Transactions/AddOrEditRealtorTx2';
+import AddOrEditRealtorTx3 from '../screens/Transactions/AddOrEditRealtorTx3';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
@@ -232,8 +232,8 @@ export const RealTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="BuyerOrSellerTx2"
-        component={BuyerOrSellerTx2}
+        name="AddOrEditRealtorTx2"
+        component={AddOrEditRealtorTx2}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -245,8 +245,8 @@ export const RealTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="BuyerOrSellerTx3"
-        component={BuyerOrSellerTx3}
+        name="AddOrEditRealtorTx3"
+        component={AddOrEditRealtorTx3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -316,8 +316,8 @@ export const LenderTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="BuyerOrSellerTx2"
-        component={BuyerOrSellerTx2}
+        name="AddOrEditRealtorTx2"
+        component={AddOrEditRealtorTx2}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -329,8 +329,8 @@ export const LenderTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="BuyerOrSellerTx3"
-        component={BuyerOrSellerTx3}
+        name="AddOrEditRealtorTx3"
+        component={AddOrEditRealtorTx3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -400,8 +400,8 @@ export const OtherTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="BuyerOrSellerTx2"
-        component={BuyerOrSellerTx2}
+        name="AddOrEditRealtorTx2"
+        component={AddOrEditRealtorTx2}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -413,8 +413,8 @@ export const OtherTxStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="BuyerOrSellerTx3"
-        component={BuyerOrSellerTx3}
+        name="AddOrEditRealtorTx3"
+        component={AddOrEditRealtorTx3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',

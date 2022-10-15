@@ -147,7 +147,7 @@ export default function AddOrEditRealtorTx2(props: any) {
     if (isDataValid()) {
       console.log('next seller comm: ' + sellerCommission);
       console.log('next seller comm: ' + dollarOrPercentSellerComm);
-      navigation.navigate('AddOrEditREaltorTx3', {
+      navigation.navigate('AddOrEditRealtorTx3', {
         status: status,
         type: type,
         buyerLeadSource: buyerLeadSource,
