@@ -33,7 +33,7 @@ export default function TransactionDetailsRE(props: any) {
 
   function editPressed() {
     console.log('edit pressed');
-    navigation.navigate('BuyerOrSellerTx1', {
+    navigation.navigate('AddOrEditRealtorTx1', {
       data: data,
       buyerOrSeller: data?.transactionType,
     });

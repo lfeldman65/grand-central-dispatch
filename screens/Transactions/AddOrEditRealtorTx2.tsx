@@ -12,7 +12,7 @@ import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from '
 
 var grossComm = 0;
 
-export default function BuyerOrSellerTx2(props: any) {
+export default function AddOrEditRealtorTx2(props: any) {
   const { route } = props;
   const { status, type, buyerLeadSource, sellerLeadSource, buyer, seller, street1, street2, city, state, zip } =
     route.params;
@@ -147,7 +147,7 @@ export default function BuyerOrSellerTx2(props: any) {
     if (isDataValid()) {
       console.log('next seller comm: ' + sellerCommission);
       console.log('next seller comm: ' + dollarOrPercentSellerComm);
-      navigation.navigate('BuyerOrSellerTx3', {
+      navigation.navigate('AddOrEditREaltorTx3', {
         status: status,
         type: type,
         buyerLeadSource: buyerLeadSource,

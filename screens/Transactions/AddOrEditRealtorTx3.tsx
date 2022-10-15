@@ -13,7 +13,7 @@ import { addOrEditTransaction } from './api';
 
 var incomeAfterCosts = 0;
 
-export default function BuyerOrSellerTx3(props: any) {
+export default function AddOrEditRealtorTx3(props: any) {
   const { route } = props;
   const {
     status,

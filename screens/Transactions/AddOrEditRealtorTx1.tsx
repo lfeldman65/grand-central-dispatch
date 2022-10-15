@@ -11,7 +11,7 @@ import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, propertyAddressMenu, s
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseLeadSource from './ChooseLeadSource';
 
-export default function BuyerOrSellerTx1(props: any) {
+export default function AddOrEditRealtorTx1(props: any) {
   const { route } = props;
   const { buyerOrSeller } = route.params;
   const [status, setStatus] = useState('Potential');
@@ -33,10 +33,6 @@ export default function BuyerOrSellerTx1(props: any) {
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
-
-  // useEffect(() => {
-  //   isDataValid();
-  // }, [buyer, seller, address]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -118,7 +114,7 @@ export default function BuyerOrSellerTx1(props: any) {
 
   function nextPressed() {
     if (isDataValid()) {
-      navigation.navigate('BuyerOrSellerTx2', {
+      navigation.navigate('AddOrEditRealtorTx2', {
         status: status,
         type: type,
         buyerLeadSource: buyerLeadSource,
