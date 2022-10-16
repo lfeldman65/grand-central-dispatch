@@ -216,6 +216,20 @@ export const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 29,
   },
+  numberAndPercentView: {
+    backgroundColor: '#002341',
+    width: '83%',
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    paddingLeft: 10,
+    fontSize: 29,
+  },
+  justPercentView: {
+    backgroundColor: '#002341',
+    height: 50,
+    width: '7%',
+  },
   dollarText: {
     fontSize: 20,
     color: '#02ABF7',

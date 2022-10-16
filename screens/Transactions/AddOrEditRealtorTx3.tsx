@@ -243,10 +243,7 @@ export default function AddOrEditRealtorTx3(props: any) {
           <Text style={styles.nameTitle}>My Portion of the Broker Split</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
-              <View style={styles.dollarView}>
-                <Text style={styles.dollarTextDim}>$</Text>
-              </View>
-              <View style={styles.dollarAndPercentView}>
+              <View style={styles.numberAndPercentView}>
                 <TextInput
                   style={styles.textInput}
                   placeholder="+ Add"
@@ -257,7 +254,7 @@ export default function AddOrEditRealtorTx3(props: any) {
                   keyboardType="number-pad"
                 />
               </View>
-              <View style={styles.percentView}>
+              <View style={styles.justPercentView}>
                 <Text style={styles.percentText}>%</Text>
               </View>
             </View>

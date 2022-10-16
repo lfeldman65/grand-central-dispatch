@@ -4,6 +4,7 @@ import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
+import globalStyles from '../../globalStyles';
 import { getProfileData } from '../Settings/api';
 import { ProfileDataProps } from '../Settings/interfaces';
 
@@ -19,17 +20,9 @@ export default function AddTransactionMenu(props: any) {
         buyerOrSeller: 'Buyer',
       });
     } else if (index == 1) {
-      navigation.navigate('AddOrEditRealtorTx1', {
-        buyerOrSeller: 'Seller',
-      });
+      console.log('Lender Transaction');
     } else if (index == 2) {
-      navigation.navigate('AddOrEditRealtorTx1', {
-        buyerOrSeller: 'Buyer & Seller',
-      });
-    } else if (index == 3) {
-      console.log('Purchase Loan and Refinance');
-    } else if (index == 4) {
-      console.log('Lease and Referral Fee');
+      console.log('Other Transaction');
     }
   }
 
@@ -57,7 +50,7 @@ export default function AddTransactionMenu(props: any) {
           console.error(res.error);
         } else {
           setProfileData(res.data);
-          //  console.log('type: ' + res.data.businessType);
+          console.log('type: ' + res.data.businessType);
         }
       })
       .catch((error) => console.error('failure ' + error));
@@ -70,38 +63,22 @@ export default function AddTransactionMenu(props: any) {
       {profileData?.businessType.includes('realtor') && (
         <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(0)}>
           <View style={styles.buttonView}>
-            <Text style={styles.buttonText}>{'Buyer'}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-
-      {profileData?.businessType.includes('realtor') && (
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(1)}>
-          <View style={styles.buttonView}>
-            <Text style={styles.buttonText}>{'Seller'}</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-
-      {profileData?.businessType.includes('realtor') && (
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(2)}>
-          <View style={styles.buttonView}>
-            <Text style={styles.buttonText}>{'Buyer & Seller'}</Text>
+            <Text style={styles.buttonText}>{'Realtor Transactions'}</Text>
           </View>
         </TouchableOpacity>
       )}
 
       {profileData?.businessType.toLowerCase().includes('lender') && (
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(3)}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(1)}>
           <View style={styles.buttonView}>
-            <Text style={styles.buttonText}>{'Purchase Loan/Refinance'}</Text>
+            <Text style={styles.buttonText}>{'Lender Transactions'}</Text>
           </View>
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(4)}>
+      <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(2)}>
         <View style={styles.buttonView}>
-          <Text style={styles.buttonText}>{'Lease/Referral Fee'}</Text>
+          <Text style={styles.buttonText}>{'Other Transactions'}</Text>
         </View>
       </TouchableOpacity>
     </View>
