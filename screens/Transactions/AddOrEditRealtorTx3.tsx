@@ -35,10 +35,10 @@ export default function AddOrEditRealtorTx3(props: any) {
     closingPrice,
     buyerComm,
     sellerComm,
-    dOrPBuyerComm,
-    dOrPSellerComm,
+    dollarOrPercentBuyerComm,
+    dollarOrPercentSellerComm,
+    dollarOrPercentAddIncome,
     addIncome,
-    dOrPAddIncome,
     myGrossComm,
   } = route.params;
   const isFocused = useIsFocused();
@@ -69,7 +69,12 @@ export default function AddOrEditRealtorTx3(props: any) {
 
   useEffect(() => {
     calculateIncome();
+    console.log('Buyer COMM: ' + buyerComm);
+    console.log('buyer COMM Type: ' + dollarOrPercentBuyerComm);
     console.log('SELLER COMM: ' + sellerComm);
+    console.log('SELLER COMM Type: ' + dollarOrPercentSellerComm);
+    console.log('additional COMM: ' + addIncome);
+    console.log('additional COMM Type: ' + dollarOrPercentAddIncome);
   }, [isFocused]);
 
   useEffect(() => {
@@ -126,13 +131,13 @@ export default function AddOrEditRealtorTx3(props: any) {
       myGrossComm,
       calculateIncome() ?? '0',
       addIncome,
-      dOrPAddIncome,
+      dollarOrPercentAddIncome,
       '0',
       '',
       buyerComm,
-      dOrPBuyerComm,
+      dollarOrPercentBuyerComm,
       sellerComm,
-      dOrPSellerComm,
+      dollarOrPercentBuyerComm,
       notes,
       buyer,
       seller

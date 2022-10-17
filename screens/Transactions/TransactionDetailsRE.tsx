@@ -127,7 +127,7 @@ export default function TransactionDetailsRE(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          //   console.log(res);
+          console.log(res);
         }
         setIsLoading(false);
       })
@@ -141,26 +141,108 @@ export default function TransactionDetailsRE(props: any) {
       <Text style={styles.header}>{'Status'}</Text>
       <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.status}</Text>
 
-      {!isNullOrEmpty(data?.contacts[0].userID) && <Text style={styles.header}>Buyer</Text>}
-      {data?.contacts.map((item, index) => (
-        <TouchableOpacity onPress={() => handlePersonPressed(index)}>
+      {data?.transactionType == 'Buyer' && !isNullOrEmpty(data?.contacts[0].userID) && (
+        <Text style={styles.header}>Buyer</Text>
+      )}
+      {data?.transactionType == 'Buyer' && (
+        <TouchableOpacity onPress={() => handlePersonPressed(0)}>
           <View style={styles.referralAndSpouseRow}>
             <View style={styles.referralAndSpouseText}>
-              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{item.contactName}</Text>
+              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+                {data?.contacts[0].contactName}
+              </Text>
             </View>
-
-            {!isNullOrEmpty(data?.contacts[index].userID) && (
+            {!isNullOrEmpty(data?.contacts[0].userID) && (
               <View style={styles.chevronBox}>
                 <Image source={chevron} style={styles.chevron} />
               </View>
             )}
           </View>
         </TouchableOpacity>
-      ))}
-
-      {!isNullOrEmpty(data?.contacts[0].leadSource) && <Text style={styles.header}>{'Lead Source'}</Text>}
-      {!isNullOrEmpty(data?.contacts[0].leadSource) && (
+      )}
+      {data?.transactionType == 'Buyer' && !isNullOrEmpty(data?.contacts[0].leadSource) && (
+        <Text style={styles.header}>{'Buyer Lead Source'}</Text>
+      )}
+      {data?.transactionType == 'Buyer' && !isNullOrEmpty(data?.contacts[0].leadSource) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
+      )}
+
+      {data?.transactionType == 'Seller' && !isNullOrEmpty(data?.contacts[0].userID) && (
+        <Text style={styles.header}>Seller</Text>
+      )}
+      {data?.transactionType == 'Seller' && (
+        <TouchableOpacity onPress={() => handlePersonPressed(0)}>
+          <View style={styles.referralAndSpouseRow}>
+            <View style={styles.referralAndSpouseText}>
+              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+                {data?.contacts[0].contactName}
+              </Text>
+            </View>
+            {!isNullOrEmpty(data?.contacts[0].userID) && (
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      )}
+      {data?.transactionType == 'Seller' && !isNullOrEmpty(data?.contacts[0].leadSource) && (
+        <Text style={styles.header}>{'Seller Lead Source'}</Text>
+      )}
+      {data?.transactionType == 'Seller' && !isNullOrEmpty(data?.contacts[0].leadSource) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
+      )}
+
+      {data?.transactionType == 'Buyer & Seller' && !isNullOrEmpty(data?.contacts[0].userID) && (
+        <Text style={styles.header}>Buyer</Text>
+      )}
+      {data?.transactionType == 'Buyer & Seller' && (
+        <TouchableOpacity onPress={() => handlePersonPressed(1)}>
+          <View style={styles.referralAndSpouseRow}>
+            <View style={styles.referralAndSpouseText}>
+              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+                {data?.contacts[1].contactName}
+              </Text>
+            </View>
+            {!isNullOrEmpty(data?.contacts[1].userID) && (
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      )}
+      {data?.transactionType == 'Buyer & Seller' && !isNullOrEmpty(data?.contacts[1].leadSource) && (
+        <Text style={styles.header}>{'Buyer Lead Source'}</Text>
+      )}
+      {data?.transactionType == 'Buyer & Seller' && !isNullOrEmpty(data?.contacts[1].leadSource) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[1].leadSource}</Text>
+      )}
+
+      {data?.transactionType == 'Buyer & Seller' && !isNullOrEmpty(data?.contacts[0].userID) && (
+        <Text style={styles.header}>Seller</Text>
+      )}
+      {data?.transactionType == 'Buyer & Seller' && (
+        <TouchableOpacity onPress={() => handlePersonPressed(0)}>
+          <View style={styles.referralAndSpouseRow}>
+            <View style={styles.referralAndSpouseText}>
+              <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
+                {data?.contacts[0].contactName}
+              </Text>
+            </View>
+            {!isNullOrEmpty(data?.contacts[0].userID) && (
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      )}
+      {data?.transactionType == 'Buyer & Seller' && !isNullOrEmpty(data?.contacts[0].leadSource) && (
+        <Text style={styles.header}>{'Seller Lead Source'}</Text>
+      )}
+      {data?.transactionType == 'Buyer & Seller' && !isNullOrEmpty(data?.contacts[0].leadSource) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[1].leadSource}</Text>
       )}
 
       {data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}
@@ -168,23 +250,23 @@ export default function TransactionDetailsRE(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 
-      {data?.address.street != '' && <Text style={styles.header}>{'Street 2'}</Text>}
-      {data?.address.street != '' && (
+      {data?.address.street2 != '' && <Text style={styles.header}>{'Street 2'}</Text>}
+      {data?.address.street2 != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street2}</Text>
       )}
 
-      {data?.address.street != '' && <Text style={styles.header}>{'City'}</Text>}
-      {data?.address.street != '' && (
+      {data?.address.city != '' && <Text style={styles.header}>{'City'}</Text>}
+      {data?.address.city != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.city}</Text>
       )}
 
-      {data?.address.street != '' && <Text style={styles.header}>{'State / Province'}</Text>}
-      {data?.address.street != '' && (
+      {data?.address.state != '' && <Text style={styles.header}>{'State / Province'}</Text>}
+      {data?.address.state != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.state}</Text>
       )}
 
-      {data?.address.street != '' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
-      {data?.address.street != '' && (
+      {data?.address.zip != '' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
+      {data?.address.zip != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.zip}</Text>
       )}
 

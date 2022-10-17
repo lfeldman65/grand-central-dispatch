@@ -111,7 +111,7 @@ export default function AddOrEditRealtorTx2(props: any) {
       } else {
         buyerCommFloat = parseFloat(buyerCommission);
       }
-      console.log('localBuyerComm:' + buyerCommFloat);
+      //  console.log('localBuyerComm:' + buyerCommFloat);
       if (sellerCommission == '' || sellerCommission == null) {
         sellerCommFloat = 0;
       } else if (!type.includes('Seller')) {
@@ -119,14 +119,14 @@ export default function AddOrEditRealtorTx2(props: any) {
       } else {
         sellerCommFloat = parseFloat(sellerCommission);
       }
-      console.log('localSellerComm:' + sellerCommFloat);
+      //   console.log('localSellerComm:' + sellerCommFloat);
 
       if (additionalIncome == '' || additionalIncome == null) {
         addIncomeFloat = 0;
       } else {
         addIncomeFloat = parseFloat(additionalIncome);
       }
-      console.log('localAddIncome:' + addIncomeFloat);
+      //   console.log('localAddIncome:' + addIncomeFloat);
       if (dollarOrPercentBuyerComm == 'percent') {
         buyerCommFloat = (closingPriceFloat * buyerCommFloat) / 100;
       }
@@ -147,6 +147,8 @@ export default function AddOrEditRealtorTx2(props: any) {
     if (isDataValid()) {
       console.log('next seller comm: ' + sellerCommission);
       console.log('next seller comm: ' + dollarOrPercentSellerComm);
+      console.log('next buyer comm: ' + buyerCommission);
+      console.log('next buyer comm: ' + dollarOrPercentBuyerComm);
       navigation.navigate('AddOrEditRealtorTx3', {
         status: status,
         type: type,
@@ -166,9 +168,10 @@ export default function AddOrEditRealtorTx2(props: any) {
         closingDate: closingDate.toISOString(),
         buyerComm: buyerCommission,
         sellerComm: sellerCommission,
-        dOrPBuyerComm: dollarOrPercentBuyerComm,
+        dollarOrPercentBuyerComm: dollarOrPercentBuyerComm,
+        dollarOrPercentSellerComm: dollarOrPercentSellerComm,
         addIncome: additionalIncome,
-        dOrPAddIncome: dollarOrPercentAddIncome,
+        dollarOrPercentAddIncome: dollarOrPercentAddIncome,
         myGrossComm: grossComm,
       });
     }
