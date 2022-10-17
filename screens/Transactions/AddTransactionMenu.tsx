@@ -20,7 +20,9 @@ export default function AddTransactionMenu(props: any) {
         buyerOrSeller: 'Buyer',
       });
     } else if (index == 1) {
-      console.log('Lender Transaction');
+      navigation.navigate('AddOrEditLenderTx1', {
+        loanOrRefi: 'Purchase Loan',
+      });
     } else if (index == 2) {
       console.log('Other Transaction');
     }
