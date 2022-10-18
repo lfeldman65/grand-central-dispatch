@@ -86,18 +86,18 @@ export default function AddOrEditLenderTx1(props: any) {
 
   function nextPressed() {
     if (isDataValid()) {
-      navigation.navigate('PurchaseLoanOrRefinance2', {
-        status: status,
-        type: type,
-        leadSource: borrowerLeadSource,
-        borrower: borrower,
-        address: address,
-        street1: street1,
-        street2: street2,
-        city: city,
-        state: state,
-        zip: zip,
-      });
+      // navigation.navigate('AddOrEditLenderTx2', {
+      //   status: status,
+      //   type: type,
+      //   leadSource: borrowerLeadSource,
+      //   borrower: borrower,
+      //   address: address,
+      //   street1: street1,
+      //   street2: street2,
+      //   city: city,
+      //   state: state,
+      //   zip: zip,
+      // });
     }
   }
 
