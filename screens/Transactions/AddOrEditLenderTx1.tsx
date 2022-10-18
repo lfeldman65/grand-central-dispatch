@@ -22,6 +22,7 @@ export default function AddOrEditLenderTx1(props: any) {
   const { loanOrRefi } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState(loanOrRefi);
+  const [seller, setSeller] = useState<RolodexDataProps>();
   const [borrower, setBorrower] = useState<RolodexDataProps>();
   const [borrowerLeadSource, setBorrowerLeadSource] = useState('Advertising');
   const [address, setAddress] = useState('TBD');
@@ -50,7 +51,7 @@ export default function AddOrEditLenderTx1(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, status, type, borrower, borrowerLeadSource, address, street1, street2, city, state, zip]);
+  }, [navigation, status, type, borrower, seller, borrowerLeadSource, address, street1, street2, city, state, zip]);
 
   function statusMenuPressed() {
     SheetManager.show(AddTxBuyerAndSellerSheets.statusSheet);
@@ -86,18 +87,19 @@ export default function AddOrEditLenderTx1(props: any) {
 
   function nextPressed() {
     if (isDataValid()) {
-      // navigation.navigate('AddOrEditLenderTx2', {
-      //   status: status,
-      //   type: type,
-      //   leadSource: borrowerLeadSource,
-      //   borrower: borrower,
-      //   address: address,
-      //   street1: street1,
-      //   street2: street2,
-      //   city: city,
-      //   state: state,
-      //   zip: zip,
-      // });
+      navigation.navigate('AddOrEditLenderTx2', {
+        status: status,
+        type: type,
+        leadSource: borrowerLeadSource,
+        borrower: borrower,
+        seller: seller,
+        address: address,
+        street1: street1,
+        street2: street2,
+        city: city,
+        state: state,
+        zip: zip,
+      });
     }
   }
 

@@ -29,23 +29,23 @@ export default function AddOrEditRealtorTx3(props: any) {
     zip,
     country,
     probability,
-    originalDate,
     originalPrice,
-    closingDate,
+    originalDate,
     closingPrice,
+    closingDate,
     buyerComm,
     sellerComm,
     dollarOrPercentBuyerComm,
     dollarOrPercentSellerComm,
     dollarOrPercentAddIncome,
-    addIncome,
-    myGrossComm,
+    additionalIncome,
+    grossComm,
   } = route.params;
   const isFocused = useIsFocused();
   const [dollarOrPercentB4, setDollarOrPercentB4] = useState('dollar');
-  const [miscBeforeFees, setMiscBeforeFees] = useState(''); // 2000
+  const [miscBeforeFees, setMiscBeforeFees] = useState('2000'); // 2000
   const [myPortion, setMyPortion] = useState('50'); // 50
-  const [miscAfterFees, setMiscAfterFees] = useState(''); // 1500
+  const [miscAfterFees, setMiscAfterFees] = useState('1500'); // 1500
   const [dollarOrPercentAfter, setDollarOrPercentAfter] = useState('dollar');
   const [notes, setNotes] = useState('');
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -73,7 +73,7 @@ export default function AddOrEditRealtorTx3(props: any) {
     console.log('buyer COMM Type: ' + dollarOrPercentBuyerComm);
     console.log('SELLER COMM: ' + sellerComm);
     console.log('SELLER COMM Type: ' + dollarOrPercentSellerComm);
-    console.log('additional COMM: ' + addIncome);
+    console.log('additional COMM: ' + additionalIncome);
     console.log('additional COMM Type: ' + dollarOrPercentAddIncome);
   }, [isFocused]);
 
@@ -121,23 +121,23 @@ export default function AddOrEditRealtorTx3(props: any) {
       closingDate, //  Test value '2016-05-25T00:00:000Z'
       originalPrice,
       closingPrice, // 400000
-      '', // rate type
+      'Fixed', // rate type
       miscBeforeFees, // 2000
       dollarOrPercentB4,
       miscAfterFees, // 1500
       dollarOrPercentAfter, // dollar
       myPortion, // 50
       'percent',
-      myGrossComm,
+      grossComm,
       calculateIncome() ?? '0',
-      addIncome,
+      additionalIncome,
       dollarOrPercentAddIncome,
       '0',
-      '',
+      '1st',
       buyerComm,
       dollarOrPercentBuyerComm,
       sellerComm,
-      dollarOrPercentBuyerComm,
+      dollarOrPercentSellerComm,
       notes,
       buyer,
       seller
@@ -172,10 +172,11 @@ export default function AddOrEditRealtorTx3(props: any) {
 
   function calculateIncome() {
     try {
+      console.log('gross comm: ' + grossComm);
       var beforeSplitFees = 0;
       var myPortionOfSplit = 0;
       var afterSplitFees = 0;
-      incomeAfterCosts = myGrossComm;
+      incomeAfterCosts = grossComm;
       if (miscBeforeFees == '' || miscBeforeFees == null) {
         beforeSplitFees = 0;
       } else {
@@ -194,7 +195,7 @@ export default function AddOrEditRealtorTx3(props: any) {
       if (dollarOrPercentB4 == 'dollar') {
         incomeAfterCosts = incomeAfterCosts - beforeSplitFees;
       } else {
-        incomeAfterCosts = incomeAfterCosts - (myGrossComm * beforeSplitFees) / 100;
+        incomeAfterCosts = incomeAfterCosts - (grossComm * beforeSplitFees) / 100;
       }
       incomeAfterCosts = (incomeAfterCosts * myPortionOfSplit) / 100;
       if (dollarOrPercentAfter == 'dollar') {

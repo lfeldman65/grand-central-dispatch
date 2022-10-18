@@ -5,9 +5,8 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import globalStyles from '../../globalStyles';
 import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
-import { isNullOrEmpty } from '../../utils/general';
-import { prettyDate } from '../../utils/general';
-// import { Navigation } from 'react-native-feather';
+import { prettyDate, isNullOrEmpty } from '../../utils/general';
+import { roundToInt } from './transactionHelpers';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -127,33 +126,33 @@ export default function TransactionDetailsLender(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
       )}
 
-      {data?.address.street == 'TBD' && <Text style={styles.header}>{'Address'}</Text>}
-      {data?.address.street == 'TBD' && (
+      {data?.address.street == '' && <Text style={styles.header}>{'Address'}</Text>}
+      {data?.address.street == '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 1'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}
+      {data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 2'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street2 != '' && <Text style={styles.header}>{'Street 2'}</Text>}
+      {data?.address.street2 != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street2}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'City'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.city != '' && <Text style={styles.header}>{'City'}</Text>}
+      {data?.address.city != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.city}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'State / Province'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.state != '' && <Text style={styles.header}>{'State / Province'}</Text>}
+      {data?.address.state != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.state}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.zip != '' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
+      {data?.address.zip != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.zip}</Text>
       )}
 
@@ -186,7 +185,7 @@ export default function TransactionDetailsLender(props: any) {
         </Text>
       )}
 
-      {!isNullOrEmpty(data?.sellerCommission) && <Text style={styles.header}>{"Seller's Commission"}</Text>}
+      {!isNullOrEmpty(data?.sellerCommission) && <Text style={styles.header}>{'Origination Fees'}</Text>}
       {!isNullOrEmpty(data?.sellerCommission) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
           {formatDollarOrPercent(data?.sellerCommission!, data?.sellerCommissionType!)}
@@ -203,7 +202,7 @@ export default function TransactionDetailsLender(props: any) {
       {!isNullOrEmpty(data?.grossCommision) && <Text style={styles.header}>{'Additional Income'}</Text>}
       {!isNullOrEmpty(data?.grossCommision) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.grossCommision!, 'dollar')}
+          {formatDollarOrPercent(roundToInt(data?.additionalIncome!), data?.additionalIncomeType!)}
         </Text>
       )}
 
@@ -211,7 +210,7 @@ export default function TransactionDetailsLender(props: any) {
         <View style={styles.boxRow}>
           <Text style={styles.largeHeader}>My Gross Commission</Text>
           <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
-            {formatDollarOrPercent(data?.grossCommision!, 'dollar')}
+            {formatDollarOrPercent(roundToInt(data?.grossCommision!), 'dollar')}
           </Text>
         </View>
       )}
@@ -240,7 +239,7 @@ export default function TransactionDetailsLender(props: any) {
       <View style={styles.boxRow}>
         <Text style={styles.largeHeader}>{"Income After Broker's Split and Fees"}</Text>
         <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
-          {formatDollarOrPercent(data?.incomeAfterSplitFees!, 'dollar')}
+          {formatDollarOrPercent(roundToInt(data?.incomeAfterSplitFees!), 'dollar')}
         </Text>
       </View>
 

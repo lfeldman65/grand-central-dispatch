@@ -66,7 +66,7 @@ export function addOrEditTransaction(
   additionalIncome: string,
   additionalIncomeType: string,
   interestRate: string,
-  loanType: string,
+  loanType: string, // 1st (Loan Description in app)
   buyerCommission: string,
   buyerCommissionType: string,
   sellerCommission: string,
@@ -75,7 +75,6 @@ export function addOrEditTransaction(
   buyer?: RolodexDataProps | null | undefined,
   seller?: RolodexDataProps | null | undefined
 ): Promise<AddOrEditTransactionDataResponse> {
-  console.log('notes ' + notes);
   var address: TransactionAddress = {
     street: street,
     street2: street2,
@@ -84,6 +83,7 @@ export function addOrEditTransaction(
     zip: zip,
     country: country,
   };
+
   var txBuyer: TransactionContacts = {
     userID: buyer?.id ?? '',
     contactName: buyer?.firstName ?? '' + ' ' + buyer?.lastName ?? '',
@@ -103,10 +103,10 @@ export function addOrEditTransaction(
   // Have to check transaction type below in case someone enters
   // a Buyer and Seller on screen 1 and then changes to just Buyer or just Seller
 
-  if (buyer === undefined || buyer == null || !transactionType.includes('Buyer')) {
+  if (buyer === undefined || buyer == null) {
     console.log('BUYER UNDEFINED');
     a.push(txSeller);
-  } else if (seller === undefined || seller == null || !transactionType.includes('Seller')) {
+  } else if (seller === undefined || seller == null) {
     console.log('SELLER UNDEFINED');
     a.push(txBuyer);
   } else {

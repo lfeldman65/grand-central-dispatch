@@ -30,8 +30,9 @@ import AddOrEditRealtorTx2 from '../screens/Transactions/AddOrEditRealtorTx2';
 import AddOrEditRealtorTx3 from '../screens/Transactions/AddOrEditRealtorTx3';
 import AddOrEditLenderTx1 from '../screens/Transactions/AddOrEditLenderTx1';
 import AddOrEditLenderTx2 from '../screens/Transactions/AddOrEditLenderTx2';
-
+import AddOrEditLenderTx3 from '../screens/Transactions/AddOrEditLenderTx3';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
+import TransactionDetailsLender from '../screens/Transactions/TransactionDetailsLender';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
 import BizGoals from '../screens/Settings/BizGoalsScreen';
@@ -285,6 +286,19 @@ export const RealTxStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="AddOrEditLenderTx3"
+        component={AddOrEditLenderTx3}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -306,8 +320,34 @@ export const LenderTxStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="EditRelationshipScreen"
+        component={EditRelationshipScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
         name="LenderTxDetails"
-        component={TransactionDetailsRE}
+        component={TransactionDetailsLender}
         options={{
           title: 'Transaction Details',
           headerTintColor: 'white',
@@ -386,6 +426,19 @@ export const LenderTxStackNavigator = () => {
       <Stack.Screen
         name="AddOrEditLenderTx2"
         component={AddOrEditLenderTx2}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditLenderTx3"
+        component={AddOrEditLenderTx3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',
@@ -496,6 +549,19 @@ export const OtherTxStackNavigator = () => {
       <Stack.Screen
         name="AddOrEditLenderTx2"
         component={AddOrEditLenderTx2}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditLenderTx3"
+        component={AddOrEditLenderTx3}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',

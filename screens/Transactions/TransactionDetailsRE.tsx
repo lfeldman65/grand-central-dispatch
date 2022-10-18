@@ -306,7 +306,7 @@ export default function TransactionDetailsRE(props: any) {
       {!isNullOrEmpty(data?.additionalIncome) && <Text style={styles.header}>{'Additional Income'}</Text>}
       {!isNullOrEmpty(data?.additionalIncome) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.additionalIncome!, data?.additionalIncomeType!)}
+          {formatDollarOrPercent(roundToInt(data?.additionalIncome!), data?.additionalIncomeType!)}
         </Text>
       )}
 

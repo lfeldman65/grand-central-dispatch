@@ -45,12 +45,12 @@ export const loanTypeMenu = {
   Other: 'Other',
 };
 
-export const loanTypeDescriptionMenu = {
-  '1st': '1st',
-  '2nd': '2nd',
-  '3rd': '3rd',
-  Equity: 'Equity', // not done
-};
+// export const loanTypeDescriptionMenu = {
+//   '1st': '1st',
+//   '2nd': '2nd',
+//   '3rd': '3rd',
+//   Equity: 'Equity', // not done
+// };
 
 export const buyerLeadSourceMenu = {
   // not done, maybe api

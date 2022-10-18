@@ -18,19 +18,19 @@ export default function AddOrEditRealtorTx2(props: any) {
     route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
-  const [closingPrice, setClosingPrice] = useState(''); // 400000
+  const [closingPrice, setClosingPrice] = useState('400000'); // 400000
   const [closingDate, setClosingDate] = useState(new Date());
   const [originalDate, setOriginalDate] = useState(new Date());
   const [originalPrice, setOriginalPrice] = useState(''); // 400000
-  const [buyerCommission, setBuyerCommission] = useState('0'); // 20
+  const [buyerCommission, setBuyerCommission] = useState('20'); // 20
   const [sellerCommission, setSellerCommission] = useState('0');
-  const [additionalIncome, setAdditionalIncome] = useState('0');
+  const [additionalIncome, setAdditionalIncome] = useState('10'); // 10
   const [showOriginalDate, setShowOriginalDate] = useState(false);
   const [showClosingDate, setShowClosingDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const [dollarOrPercentBuyerComm, setDollarOrPercentBuyerComm] = useState('percent');
   const [dollarOrPercentSellerComm, setDollarOrPercentSellerComm] = useState('percent');
-  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('dollar');
+  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('percent'); // percent
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -62,11 +62,14 @@ export default function AddOrEditRealtorTx2(props: any) {
     dollarOrPercentBuyerComm,
     dollarOrPercentSellerComm,
     dollarOrPercentAddIncome,
+    grossComm,
   ]);
 
   useEffect(() => {
     calculateGrossCommission;
+    isDataValid;
   }, [
+    closingPrice,
     buyerCommission,
     sellerCommission,
     additionalIncome,
@@ -161,6 +164,7 @@ export default function AddOrEditRealtorTx2(props: any) {
         city: city,
         state: state,
         zip: zip,
+        country: 'USA',
         probability: probability,
         originalPrice: originalPrice,
         originalDate: originalDate.toISOString(),
@@ -170,9 +174,9 @@ export default function AddOrEditRealtorTx2(props: any) {
         sellerComm: sellerCommission,
         dollarOrPercentBuyerComm: dollarOrPercentBuyerComm,
         dollarOrPercentSellerComm: dollarOrPercentSellerComm,
-        addIncome: additionalIncome,
+        additionalIncome: additionalIncome,
         dollarOrPercentAddIncome: dollarOrPercentAddIncome,
-        myGrossComm: grossComm,
+        grossComm: grossComm,
       });
     }
   }
