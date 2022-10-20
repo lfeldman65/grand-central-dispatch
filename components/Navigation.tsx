@@ -31,6 +31,8 @@ import AddOrEditRealtorTx3 from '../screens/Transactions/AddOrEditRealtorTx3';
 import AddOrEditLenderTx1 from '../screens/Transactions/AddOrEditLenderTx1';
 import AddOrEditLenderTx2 from '../screens/Transactions/AddOrEditLenderTx2';
 import AddOrEditLenderTx3 from '../screens/Transactions/AddOrEditLenderTx3';
+import AddOrEditOtherTx1 from '../screens/Transactions/AddOrEditOtherTx1';
+import AddOrEditOtherTx2 from '../screens/Transactions/AddOrEditOtherTx2';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import TransactionDetailsLender from '../screens/Transactions/TransactionDetailsLender';
 import Profile1 from '../screens/Settings/ProfileScreen1';
@@ -299,6 +301,32 @@ export const RealTxStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="AddOrEditOtherTx1"
+        component={AddOrEditOtherTx1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditOtherTx2"
+        component={AddOrEditOtherTx2}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -448,6 +476,32 @@ export const LenderTxStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="AddOrEditOtherTx1"
+        component={AddOrEditOtherTx1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditOtherTx2"
+        component={AddOrEditOtherTx2}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -562,6 +616,32 @@ export const OtherTxStackNavigator = () => {
       <Stack.Screen
         name="AddOrEditLenderTx3"
         component={AddOrEditLenderTx3}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditOtherTx1"
+        component={AddOrEditOtherTx1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditOtherTx2"
+        component={AddOrEditOtherTx2}
         options={{
           title: 'Buyer Details',
           headerTintColor: 'white',

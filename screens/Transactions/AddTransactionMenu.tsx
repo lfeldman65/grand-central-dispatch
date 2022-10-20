@@ -24,7 +24,7 @@ export default function AddTransactionMenu(props: any) {
         loanOrRefi: 'Purchase Loan',
       });
     } else if (index == 2) {
-      console.log('Other Transaction');
+      navigation.navigate('AddOrEditOtherTx1');
     }
   }
 

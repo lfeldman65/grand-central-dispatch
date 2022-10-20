@@ -14,7 +14,7 @@ import { addOrEditTransaction } from './api';
 
 var incomeAfterCosts = 0;
 
-export default function PurchaseLoanOrRefinance3(props: any) {
+export default function AddOrEditLenderTx3(props: any) {
   const { route } = props;
   const {
     status,
@@ -89,8 +89,224 @@ export default function PurchaseLoanOrRefinance3(props: any) {
   }
 
   function completePressed() {
-    console.log('complete pressed');
+    console.log('NOTES: ' + notes);
+    addOrEditTransaction(
+      0,
+      type,
+      status,
+      'titleNA',
+      street1,
+      street2,
+      city,
+      state,
+      zip,
+      'USANA',
+      leadSource,
+      'SellerLeadSourceNA',
+      probability,
+      applicationDate, // listDate in API
+      closingDate, //  Test value '2016-05-25T00:00:000Z'
+      '100', // list amount (Not used, but must be a number string)
+      closingPrice, // projectedAmount
+      rateType, // Loan Type in App
+      miscBeforeFees,
+      dollarOrPercentB4,
+      miscAfterFees,
+      dollarOrPercentAfter,
+      myPortion,
+      'percent',
+      '100', // gross comm
+      '100', // income after
+      additionalIncome,
+      dOrPAdditionalIncome,
+      interestRate,
+      rateTypeDesc, // Loan Description in app, loanType in Postman
+      buyerCommission,
+      dOrPBuyerCommission,
+      originationFees, // sellerCommission
+      dOrPOriginationFees, // sellerCommissionType
+      notes,
+      borrower,
+      seller
+    )
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+          console.error(res.error);
+        } else {
+          console.log('here ' + res.data.id);
+          navigation.navigate('RealEstateTransactions');
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
-  return <View style={styles.container}></View>;
+  function miscBeforeDollarOrPercentPressed() {
+    if (dollarOrPercentB4 == 'percent') {
+      setDollarOrPercentB4('dollar');
+    } else {
+      setDollarOrPercentB4('percent');
+    }
+  }
+
+  function miscAfterDollarOrPercentPressed() {
+    if (dollarOrPercentAfter == 'percent') {
+      setDollarOrPercentAfter('dollar');
+    } else {
+      setDollarOrPercentAfter('percent');
+    }
+  }
+
+  function calculateIncome() {
+    try {
+      var beforeSplitFees = 0;
+      var myPortionOfSplit = 0;
+      var afterSplitFees = 0;
+      incomeAfterCosts = myGrossComm;
+      if (miscBeforeFees == '' || miscBeforeFees == null) {
+        beforeSplitFees = 0;
+      } else {
+        beforeSplitFees = parseFloat(miscBeforeFees);
+      }
+      if (myPortion == '' || myPortion == null) {
+        myPortionOfSplit = 0;
+      } else {
+        myPortionOfSplit = parseFloat(myPortion);
+      }
+      if (miscAfterFees == '' || miscAfterFees == null) {
+        afterSplitFees = 0;
+      } else {
+        afterSplitFees = parseFloat(miscAfterFees);
+      }
+      if (dollarOrPercentB4 == 'dollar') {
+        incomeAfterCosts = incomeAfterCosts - beforeSplitFees;
+      } else {
+        incomeAfterCosts = incomeAfterCosts - (myGrossComm * beforeSplitFees) / 100;
+      }
+      console.log('income after costs: ' + incomeAfterCosts);
+      console.log('myPortion: ' + myPortionOfSplit);
+      incomeAfterCosts = (incomeAfterCosts * myPortionOfSplit) / 100;
+      if (dollarOrPercentAfter == 'dollar') {
+        incomeAfterCosts = incomeAfterCosts - afterSplitFees;
+      } else {
+        incomeAfterCosts = incomeAfterCosts - (incomeAfterCosts * afterSplitFees) / 100;
+      }
+      return '$' + roundToInt(incomeAfterCosts.toString());
+    } catch {
+      console.log('error');
+    }
+  }
+
+  return (
+    <View style={styles.container}>
+      <ScrollView>
+        <View style={styles.topContainer}>
+          <Text style={styles.nameTitle}>Misc Before-Split Fees</Text>
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={miscBeforeDollarOrPercentPressed}
+                  style={dollarOrPercentB4 == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                >
+                  $
+                </Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setMiscBeforeFees(text)}
+                  defaultValue={miscBeforeFees}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={miscBeforeDollarOrPercentPressed}
+                  style={dollarOrPercentB4 == 'percent' ? styles.percentText : styles.percentTextDim}
+                >
+                  %
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <Text style={styles.nameTitle}>My Portion of the Broker Split</Text>
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.numberAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setMyPortion(text)}
+                  defaultValue={myPortion}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.justPercentView}>
+                <Text style={styles.percentText}>%</Text>
+              </View>
+            </View>
+          </View>
+
+          <Text style={styles.nameTitle}>Misc After-Split Fees</Text>
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={miscAfterDollarOrPercentPressed}
+                  style={dollarOrPercentAfter == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                >
+                  $
+                </Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setMiscAfterFees(text)}
+                  defaultValue={miscAfterFees}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}>
+                <Text
+                  onPress={miscAfterDollarOrPercentPressed}
+                  style={dollarOrPercentAfter == 'percent' ? styles.percentText : styles.percentTextDim}
+                >
+                  %
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <Text style={styles.nameTitle}>Notes</Text>
+          <View style={styles.mainContent}>
+            <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
+              <TextInput
+                style={lightOrDark == 'dark' ? styles.noteTextDark : styles.noteTextLight}
+                placeholder="Type Here"
+                placeholderTextColor="#AFB9C2"
+                textAlign="left"
+                value={notes}
+                onChangeText={(text) => setNotes(text)}
+              />
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+
+      <View style={styles.bottomContainer}>
+        <Text style={styles.summaryText}>Income After Broker's Split and Fees</Text>
+        <Text style={styles.summaryText}>{calculateIncome()}</Text>
+      </View>
+    </View>
+  );
 }

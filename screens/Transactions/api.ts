@@ -103,17 +103,15 @@ export function addOrEditTransaction(
   // Have to check transaction type below in case someone enters
   // a Buyer and Seller on screen 1 and then changes to just Buyer or just Seller
 
-  if (buyer === undefined || buyer == null) {
-    console.log('BUYER UNDEFINED');
+  if (seller != null && seller.id != '' && transactionType.includes('Seller')) {
     a.push(txSeller);
-  } else if (seller === undefined || seller == null) {
-    console.log('SELLER UNDEFINED');
+  }
+  if (
+    buyer != null &&
+    buyer.id != '' &&
+    (transactionType.includes('Buyer') || transactionType.includes('Purchase') || transactionType.includes('Refinance'))
+  ) {
     a.push(txBuyer);
-  } else {
-    console.log('BUYER: ' + txBuyer.contactName);
-    console.log('SELLER: ' + txSeller.contactName);
-    a.push(txBuyer);
-    a.push(txSeller);
   }
 
   return http.post('deal', {
