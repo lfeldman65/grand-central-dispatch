@@ -342,16 +342,22 @@ export default function AddOrEditLenderTx2(props: any) {
 
           <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
           <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="+ Add"
-                placeholderTextColor="#AFB9C2"
-                textAlign="left"
-                onChangeText={(text) => setClosingPrice(text)}
-                defaultValue={closingPrice}
-                keyboardType="number-pad"
-              />
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.dollarView}>
+                <Text style={styles.dollarText}>$</Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setClosingPrice(text)}
+                  defaultValue={closingPrice}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}></View>
             </View>
           </View>
 
