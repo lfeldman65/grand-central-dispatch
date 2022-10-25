@@ -104,7 +104,7 @@ export interface TransactionTypeDataProps {
   statuses: string[];
   leadSources: string[];
   leadSourcesLender: string[];
-  loanType: string[]; // Loan Description in App
+  transactionType: string[];
 }
 
 // Add Transaction in Postman

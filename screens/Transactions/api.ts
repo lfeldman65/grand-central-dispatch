@@ -47,8 +47,7 @@ export function addOrEditTransaction(
   state: string,
   zip: string,
   country: string,
-  buyerLeadSource: string,
-  sellerLeadSource: string,
+  leadSource: string,
   probabilityToClose: string,
   listDate: string,
   closingDate: string,
@@ -66,7 +65,7 @@ export function addOrEditTransaction(
   additionalIncome: string,
   additionalIncomeType: string,
   interestRate: string,
-  loanType: string, // 1st (Loan Description in app)
+  loanType: string,
   buyerCommission: string,
   buyerCommissionType: string,
   sellerCommission: string,
@@ -75,6 +74,7 @@ export function addOrEditTransaction(
   buyer?: RolodexDataProps | null | undefined,
   seller?: RolodexDataProps | null | undefined
 ): Promise<AddOrEditTransactionDataResponse> {
+  console.log('buyer comm ' + buyerCommission);
   var address: TransactionAddress = {
     street: street,
     street2: street2,
@@ -83,37 +83,32 @@ export function addOrEditTransaction(
     zip: zip,
     country: country,
   };
-
   var txBuyer: TransactionContacts = {
     userID: buyer?.id ?? '',
     contactName: buyer?.firstName ?? '' + ' ' + buyer?.lastName ?? '',
-    typeOfContact: 'Buyer',
-    leadSource: buyerLeadSource,
+    typeOfContact: transactionType,
+    leadSource: leadSource,
   };
 
   var txSeller: TransactionContacts = {
     userID: seller?.id ?? '',
     contactName: seller?.firstName ?? '' + ' ' + seller?.lastName ?? '',
-    typeOfContact: 'Seller',
-    leadSource: sellerLeadSource,
+    typeOfContact: transactionType,
+    leadSource: leadSource,
   };
 
   var a = [];
 
-  // Have to check transaction type below in case someone enters
-  // a Buyer and Seller on screen 1 and then changes to just Buyer or just Seller
-
-  if (seller != null && seller.id != '' && transactionType.includes('Seller')) {
+  if (buyer === undefined || buyer == null) {
+    a.push(txSeller);
+  } else if (seller === undefined || seller == null) {
+    a.push(txBuyer);
+  } else {
+    a.push(txBuyer);
     a.push(txSeller);
   }
-  if (
-    buyer != null &&
-    buyer.id != '' &&
-    (transactionType.includes('Buyer') || transactionType.includes('Purchase') || transactionType.includes('Refinance'))
-  ) {
-    a.push(txBuyer);
-  }
 
+  console.log('contacts: ' + (seller === undefined ? 'hello' : 'ddfd'));
   return http.post('deal', {
     body: {
       id: id,
@@ -122,6 +117,7 @@ export function addOrEditTransaction(
       title: title,
       contacts: a,
       address: address,
+      leadSource: leadSource,
       probabilityToClose: probabilityToClose,
       listDate: listDate,
       closingDate: closingDate,
