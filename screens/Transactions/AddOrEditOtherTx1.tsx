@@ -16,7 +16,7 @@ const closeButton = require('../../images/button_close_white.png');
 export default function AddOrEditOtherTx1(props: any) {
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Lease');
-  const [txTitle, setTxTitle] = useState('10.25');
+  const [txTitle, setTxTitle] = useState('');
   const [whoInvolved, setWhoInvolved] = useState<RolodexDataProps>();
   const [address, setAddress] = useState('TBD');
   const [street1, setStreet1] = useState('577');
@@ -40,7 +40,7 @@ export default function AddOrEditOtherTx1(props: any) {
       ),
       headerRight: () => (
         <TouchableOpacity onPress={nextPressed}>
-          <Text style={styles.backAndNext}>Next</Text>
+          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Next</Text>
         </TouchableOpacity>
       ),
     });
@@ -67,18 +67,27 @@ export default function AddOrEditOtherTx1(props: any) {
     navigation.goBack();
   }
 
+  function isDataValid() {
+    if (txTitle == '') {
+      return false;
+    }
+    return true;
+  }
+
   function nextPressed() {
-    navigation.navigate('AddOrEditOtherTx2', {
-      status: status,
-      title: txTitle,
-      type: type,
-      street1: street1,
-      street2: street2,
-      city: city,
-      state: state,
-      zip: zip,
-      whoInvolved: whoInvolved,
-    });
+    if (isDataValid()) {
+      navigation.navigate('AddOrEditOtherTx2', {
+        status: status,
+        title: txTitle,
+        type: type,
+        street1: street1,
+        street2: street2,
+        city: city,
+        state: state,
+        zip: zip,
+        whoInvolved: whoInvolved,
+      });
+    }
   }
 
   return (

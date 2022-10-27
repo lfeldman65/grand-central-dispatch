@@ -10,7 +10,7 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactionHelpers';
 import { storage } from '../../utils/storage';
-import { addOrEditTransaction } from './api';
+import { addOrEditOtherTransaction } from './api';
 
 var grossComm1 = 0;
 
@@ -37,7 +37,7 @@ export default function AddOrEditOtherTx2(props: any) {
       ),
       headerRight: () => (
         <TouchableOpacity onPress={completePressed}>
-          <Text style={styles.backAndNext}>Next</Text>
+          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Complete</Text>
         </TouchableOpacity>
       ),
     });
@@ -55,6 +55,13 @@ export default function AddOrEditOtherTx2(props: any) {
     navigation.goBack();
   }
 
+  function isDataValid() {
+    if (closingPrice == '') {
+      return false;
+    }
+    return true;
+  }
+
   async function getDarkOrLightMode(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -65,7 +72,7 @@ export default function AddOrEditOtherTx2(props: any) {
 
   function completePressed() {
     console.log('CLOSING DATE: ' + closingDate);
-    addOrEditTransaction(
+    addOrEditOtherTransaction(
       0,
       type,
       status,
@@ -92,7 +99,7 @@ export default function AddOrEditOtherTx2(props: any) {
           console.error(res.error);
         } else {
           console.log('here ' + res.data.id);
-          navigation.navigate('OtherTransactions');
+          navigation.navigate('RealEstateTransactions');
         }
       })
       .catch((error) => console.error('failure ' + error));
