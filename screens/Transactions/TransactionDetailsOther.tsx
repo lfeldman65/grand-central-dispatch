@@ -103,8 +103,10 @@ export default function TransactionDetailsOther(props: any) {
       <Text style={styles.header}>{'Transaction Type'}</Text>
       <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.transactionType}</Text>
 
-      {!isNullOrEmpty(data?.title) && <Text style={styles.header}>{'Transaction Title'}</Text>}
-      <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.title}</Text>
+      {data?.title != '' && <Text style={styles.header}>{'Transaction Title'}</Text>}
+      {data?.title != '' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.title}</Text>
+      )}
 
       <Text style={styles.header}>{'Status'}</Text>
       <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.status}</Text>
@@ -126,38 +128,28 @@ export default function TransactionDetailsOther(props: any) {
         </TouchableOpacity>
       ))}
 
-      {!isNullOrEmpty(data?.contacts[0].leadSource) && <Text style={styles.header}>{'Lead Source'}</Text>}
-      {!isNullOrEmpty(data?.contacts[0].leadSource) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
-      )}
-
-      {data?.address.street == 'TBD' && <Text style={styles.header}>{'Address'}</Text>}
-      {data?.address.street == 'TBD' && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
-      )}
-
       {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 1'}</Text>}
       {data?.address.street != 'TBD' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 2'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street2 != '' && <Text style={styles.header}>{'Street 2'}</Text>}
+      {data?.address.street2 != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street2}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'City'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.city != '' && <Text style={styles.header}>{'City'}</Text>}
+      {data?.address.city != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.city}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'State / Province'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.state != '' && <Text style={styles.header}>{'State / Province'}</Text>}
+      {data?.address.state != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.state}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.zip != '' && <Text style={styles.header}>{'Zip / Postal Code'}</Text>}
+      {data?.address.zip != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.zip}</Text>
       )}
 
@@ -174,83 +166,6 @@ export default function TransactionDetailsOther(props: any) {
       {!isNullOrEmpty(data?.closingDate) && <Text style={styles.header}>{'Closing Date (Projected)'}</Text>}
       {!isNullOrEmpty(data?.closingDate) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.closingDate!)}</Text>
-      )}
-
-      {!isNullOrEmpty(data?.interestRate) && <Text style={styles.header}>{'Interest Rate'}</Text>}
-      {!isNullOrEmpty(data?.interestRate) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.interestRate!, 'percent')}
-        </Text>
-      )}
-
-      {!isNullOrEmpty(data?.loanType) && <Text style={styles.header}>{'Loan Type'}</Text>}
-      {!isNullOrEmpty(data?.loanType) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {data?.rateType + ' ' + data?.loanType}
-        </Text>
-      )}
-
-      {!isNullOrEmpty(data?.sellerCommission) && <Text style={styles.header}>{"Seller's Commission"}</Text>}
-      {!isNullOrEmpty(data?.sellerCommission) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.sellerCommission!, data?.sellerCommissionType!)}
-        </Text>
-      )}
-
-      {!isNullOrEmpty(data?.buyerCommission) && <Text style={styles.header}>{"Buyer's Commission"}</Text>}
-      {!isNullOrEmpty(data?.buyerCommission) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.buyerCommission!, data?.buyerCommissionType!)}
-        </Text>
-      )}
-
-      {!isNullOrEmpty(data?.grossCommision) && <Text style={styles.header}>{'Additional Income'}</Text>}
-      {!isNullOrEmpty(data?.grossCommision) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.grossCommision!, 'dollar')}
-        </Text>
-      )}
-
-      {!isNullOrEmpty(data?.grossCommision) && (
-        <View style={styles.boxRow}>
-          <Text style={styles.largeHeader}>My Gross Commission</Text>
-          <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
-            {formatDollarOrPercent(data?.grossCommision!, 'dollar')}
-          </Text>
-        </View>
-      )}
-
-      {!isNullOrEmpty(data?.miscBeforeSplitFees) && <Text style={styles.header}>{'Misc Before-Split Fees'}</Text>}
-      {!isNullOrEmpty(data?.miscBeforeSplitFees) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.miscBeforeSplitFees!, data?.miscBeforeSplitFeesType!)}
-        </Text>
-      )}
-
-      {!isNullOrEmpty(data?.commissionPortion) && <Text style={styles.header}>{'My Portion of the Broker Split'}</Text>}
-      {!isNullOrEmpty(data?.commissionPortion) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.commissionPortion!, data?.commissionPortionType!)}
-        </Text>
-      )}
-
-      {!isNullOrEmpty(data?.miscAfterSplitFees) && <Text style={styles.header}>{'Misc After-Split Fees'}</Text>}
-      {!isNullOrEmpty(data?.miscAfterSplitFees) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.miscAfterSplitFees!, data?.miscAfterSplitFeesType!)}
-        </Text>
-      )}
-
-      <View style={styles.boxRow}>
-        <Text style={styles.largeHeader}>{"Income After Broker's Split and Fees"}</Text>
-        <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
-          {formatDollarOrPercent(data?.incomeAfterSplitFees!, 'dollar')}
-        </Text>
-      </View>
-
-      {!isNullOrEmpty(data?.notes) && <Text style={styles.header}>{'Notes'}</Text>}
-      {!isNullOrEmpty(data?.notes) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.notes}</Text>
       )}
 
       <Text></Text>

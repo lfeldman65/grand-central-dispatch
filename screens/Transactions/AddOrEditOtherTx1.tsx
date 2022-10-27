@@ -16,11 +16,11 @@ const closeButton = require('../../images/button_close_white.png');
 export default function AddOrEditOtherTx1(props: any) {
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Lease');
-  const [txTitle, setTxTitle] = useState('');
+  const [txTitle, setTxTitle] = useState('10.25');
   const [whoInvolved, setWhoInvolved] = useState<RolodexDataProps>();
   const [address, setAddress] = useState('TBD');
-  const [street1, setStreet1] = useState('');
-  const [street2, setStreet2] = useState('');
+  const [street1, setStreet1] = useState('577');
+  const [street2, setStreet2] = useState('202');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
@@ -44,7 +44,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, status, type, txTitle, whoInvolved, address, street1, street2, city, state, zip]);
+  }, [navigation, status, type, txTitle, whoInvolved, street1, street2, city, state, zip]);
 
   function handleWhoPressed() {
     console.log('who pressed');
@@ -70,8 +70,8 @@ export default function AddOrEditOtherTx1(props: any) {
   function nextPressed() {
     navigation.navigate('AddOrEditOtherTx2', {
       status: status,
+      title: txTitle,
       type: type,
-      address: address,
       street1: street1,
       street2: street2,
       city: city,

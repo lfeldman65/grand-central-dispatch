@@ -35,6 +35,7 @@ import AddOrEditOtherTx1 from '../screens/Transactions/AddOrEditOtherTx1';
 import AddOrEditOtherTx2 from '../screens/Transactions/AddOrEditOtherTx2';
 import TransactionDetailsRE from '../screens/Transactions/TransactionDetailsRE';
 import TransactionDetailsLender from '../screens/Transactions/TransactionDetailsLender';
+import TransactionDetailsOther from '../screens/Transactions/TransactionDetailsOther';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
 import BizGoals from '../screens/Settings/BizGoalsScreen';
@@ -523,8 +524,21 @@ export const OtherTxStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
         name="OtherTxDetails"
-        component={TransactionDetailsRE}
+        component={TransactionDetailsOther}
         options={{
           title: 'Transaction Details',
           headerTintColor: 'white',

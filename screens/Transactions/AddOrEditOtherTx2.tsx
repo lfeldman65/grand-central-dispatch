@@ -10,8 +10,21 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactionHelpers';
 import { storage } from '../../utils/storage';
+import { addOrEditTransaction } from './api';
 
-export default function AddOrEditOtherTx2() {
+var grossComm1 = 0;
+
+export default function AddOrEditOtherTx2(props: any) {
+  const { route } = props;
+  const { status, type, title, whoInvolved, street1, street2, city, state, zip } = route.params;
+  const isFocused = useIsFocused();
+  const [probability, setProbability] = useState('Uncertain');
+  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [closingPrice, setClosingPrice] = useState('');
+  const [closingDate, setClosingDate] = useState(new Date());
+  const [notes, setNotes] = useState('');
+  const [showDate, setShowDate] = useState(false);
+  const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -23,20 +36,217 @@ export default function AddOrEditOtherTx2() {
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity onPress={nextPressed}>
+        <TouchableOpacity onPress={completePressed}>
           <Text style={styles.backAndNext}>Next</Text>
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [navigation, probability, closingDate, closingPrice, notes]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
 
   function backPressed() {
     navigation.goBack();
   }
 
-  function nextPressed() {
-    navigation.navigate('RealEstateTransactions');
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
   }
 
-  return <View style={styles.container}></View>;
+  function completePressed() {
+    console.log('CLOSING DATE: ' + closingDate);
+    addOrEditTransaction(
+      0,
+      type,
+      status,
+      title,
+      street1,
+      street2,
+      city,
+      state,
+      zip,
+      'USA',
+      probability,
+      closingDate.toISOString(),
+      closingPrice,
+      '100', // commission portion
+      'percent', // commission portion type
+      closingPrice, // same as additional income
+      'dollar',
+      notes,
+      whoInvolved
+    )
+      .then((res) => {
+        if (res.status == 'error') {
+          console.log(res);
+          console.error(res.error);
+        } else {
+          console.log('here ' + res.data.id);
+          navigation.navigate('OtherTransactions');
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function probabilityPressed() {
+    SheetManager.show(AddTxBuyerAndSellerSheets.probabilitySheet);
+  }
+
+  const onDatePickerChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setClosingDate(currentDate);
+  };
+
+  const showDateMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowDate(true);
+  };
+
+  const showDateTopPicker = () => {
+    console.log('show date picker top');
+    showDateMode('date');
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <Text style={styles.nameTitle}>Probability to Close</Text>
+        <TouchableOpacity onPress={probabilityPressed}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>{probability}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <ActionSheet // Status
+          initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('probability sheet')} // here
+          id={AddTxBuyerAndSellerSheets.probabilitySheet} // here
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={false}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.4}
+        >
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={globalStyles.filterView}
+            >
+              <View>
+                {Object.entries(probabilityMenu).map(([index, value]) => (
+                  <TouchableOpacity // line above
+                    key={index}
+                    onPress={() => {
+                      SheetManager.hide(AddTxBuyerAndSellerSheets.probabilitySheet, null); // here
+                      console.log('filter: ' + value);
+                      setProbability(value); // here
+                      // fetchData();
+                    }}
+                    style={globalStyles.listItemCell}
+                  >
+                    <Text style={globalStyles.listItem}>{index}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </ActionSheet>
+
+        <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setClosingPrice(text)}
+              defaultValue={closingPrice}
+              keyboardType="number-pad"
+            />
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>{'Closing Date (Projected)'}</Text>
+        <TouchableOpacity onPress={showDateTopPicker}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {closingDate.toLocaleDateString('en-us', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  //   hour: 'numeric',
+                })}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        {showDate && (
+          <TouchableOpacity
+            onPress={() => {
+              setShowDate(false);
+            }}
+          >
+            <Text style={styles.closePicker}>Close</Text>
+          </TouchableOpacity>
+        )}
+
+        {showDate && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={closingDate}
+            mode={'date'}
+            is24Hour={true}
+            onChange={onDatePickerChange}
+            display="spinner"
+            textColor="white"
+          />
+        )}
+
+        <Text style={styles.nameTitle}>Notes</Text>
+        <View style={styles.mainContent}>
+          <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
+            <TextInput
+              style={lightOrDark == 'dark' ? styles.noteTextDark : styles.noteTextLight}
+              placeholder="Type Here"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              value={notes}
+              onChangeText={(text) => setNotes(text)}
+            />
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.bottomContainer}>
+        <Text style={styles.summaryText}>My Gross Commission</Text>
+        <Text style={styles.summaryText}>{closingPrice}</Text>
+      </View>
+    </View>
+  );
 }
