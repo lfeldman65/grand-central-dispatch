@@ -40,11 +40,12 @@ export default function AddOrEditRealtorTx3(props: any) {
     dollarOrPercentAddIncome,
     additionalIncome,
     grossComm,
+    data,
   } = route.params;
   const isFocused = useIsFocused();
   const [dollarOrPercentB4, setDollarOrPercentB4] = useState('dollar');
-  const [miscBeforeFees, setMiscBeforeFees] = useState('2000'); // 2000
-  const [myPortion, setMyPortion] = useState('50'); // 50
+  const [miscBeforeFees, setMiscBeforeFees] = useState(''); // 2000
+  const [myPortion, setMyPortion] = useState(''); // 50
   const [miscAfterFees, setMiscAfterFees] = useState('1500'); // 1500
   const [dollarOrPercentAfter, setDollarOrPercentAfter] = useState('dollar');
   const [notes, setNotes] = useState('');
@@ -65,16 +66,21 @@ export default function AddOrEditRealtorTx3(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, notes, seller, buyer]);
+  }, [
+    navigation,
+    dollarOrPercentB4,
+    miscBeforeFees,
+    myPortion,
+    miscAfterFees,
+    dollarOrPercentAfter,
+    notes,
+    seller,
+    buyer,
+  ]);
 
   useEffect(() => {
     calculateIncome();
-    console.log('Buyer COMM: ' + buyerComm);
-    console.log('buyer COMM Type: ' + dollarOrPercentBuyerComm);
-    console.log('SELLER COMM: ' + sellerComm);
-    console.log('SELLER COMM Type: ' + dollarOrPercentSellerComm);
-    console.log('additional COMM: ' + additionalIncome);
-    console.log('additional COMM Type: ' + dollarOrPercentAddIncome);
+    console.log('SCREEN3: ' + data?.id!);
   }, [isFocused]);
 
   useEffect(() => {
@@ -97,6 +103,30 @@ export default function AddOrEditRealtorTx3(props: any) {
     setIsLightOrDark(dOrlight ?? 'light');
   }
 
+  useEffect(() => {
+    let isMounted = true;
+    populateDataIfEdit(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  function populateDataIfEdit(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    if (data != null && data.id != '') {
+      setMiscBeforeFees(data?.miscBeforeSplitFees);
+      setDollarOrPercentB4(data?.miscBeforeSplitFeesType);
+      setMiscAfterFees(data?.miscAfterSplitFees);
+      setDollarOrPercentAfter(data?.miscAfterSplitFeesType);
+      setMyPortion(data?.commissionPortion);
+      setNotes(data?.notes);
+    } else {
+      console.log('ADDTXMODE');
+    }
+  }
+
   function backPressed() {
     navigation.goBack();
   }
@@ -104,7 +134,7 @@ export default function AddOrEditRealtorTx3(props: any) {
   function completePressed() {
     console.log('CLOSING DATE: ' + closingDate);
     addOrEditTransaction(
-      0,
+      data == null ? 0 : data?.id,
       type,
       status,
       'title',
