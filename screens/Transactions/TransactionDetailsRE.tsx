@@ -35,7 +35,6 @@ export default function TransactionDetailsRE(props: any) {
     console.log('edit pressed');
     navigation.navigate('AddOrEditRealtorTx1', {
       data: data,
-      buyerOrSeller: data?.transactionType,
     });
   }
 
@@ -127,7 +126,8 @@ export default function TransactionDetailsRE(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          console.log(res);
+          console.log(res.data.contacts[0].contactName);
+          console.log(res.data.contacts[0].leadSource);
         }
         setIsLoading(false);
       })
@@ -242,7 +242,7 @@ export default function TransactionDetailsRE(props: any) {
         <Text style={styles.header}>{'Seller Lead Source'}</Text>
       )}
       {data?.transactionType == 'Buyer & Seller' && !isNullOrEmpty(data?.contacts[0].leadSource) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[1].leadSource}</Text>
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
       )}
 
       {data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}

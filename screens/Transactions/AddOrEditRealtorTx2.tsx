@@ -14,16 +14,16 @@ var grossComm = 0;
 
 export default function AddOrEditRealtorTx2(props: any) {
   const { route } = props;
-  const { status, type, buyerLeadSource, sellerLeadSource, buyer, seller, street1, street2, city, state, zip } =
+  const { status, type, buyerLeadSource, sellerLeadSource, buyer, seller, street1, street2, city, state, zip, data } =
     route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
   const [closingPrice, setClosingPrice] = useState('400000'); // 400000
   const [closingDate, setClosingDate] = useState(new Date());
   const [originalDate, setOriginalDate] = useState(new Date());
-  const [originalPrice, setOriginalPrice] = useState(''); // 400000
+  const [originalPrice, setOriginalPrice] = useState('500000'); // 500000
   const [buyerCommission, setBuyerCommission] = useState('20'); // 20
-  const [sellerCommission, setSellerCommission] = useState('0');
+  const [sellerCommission, setSellerCommission] = useState('');
   const [additionalIncome, setAdditionalIncome] = useState('10'); // 10
   const [showOriginalDate, setShowOriginalDate] = useState(false);
   const [showClosingDate, setShowClosingDate] = useState(false);
@@ -66,7 +66,11 @@ export default function AddOrEditRealtorTx2(props: any) {
   ]);
 
   useEffect(() => {
-    calculateGrossCommission;
+    calculateGrossCommission();
+  }, [isFocused]);
+
+  useEffect(() => {
+    calculateGrossCommission();
     isDataValid;
   }, [
     closingPrice,
@@ -77,6 +81,55 @@ export default function AddOrEditRealtorTx2(props: any) {
     dollarOrPercentSellerComm,
     dollarOrPercentAddIncome,
   ]);
+
+  useEffect(() => {
+    let isMounted = true;
+    populateDataIfEdit(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  function populateDataIfEdit(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    if (data != null && data.id != '') {
+      setProbability(data?.probabilityToClose);
+      if (data?.transactionType.includes('Seller') && data?.listAmount != '') {
+        setOriginalPrice(data?.listAmount);
+      }
+      if (data?.transactionType.includes('Seller') && data?.listDate != null) {
+        console.log('LISTDATE: ' + data?.listDate);
+        setOriginalDate(new Date(data?.listDate));
+        //console.log('list date ' + data?.listDate);
+      }
+      if (data?.closingPrice != '') {
+        setClosingPrice(data?.projectedAmount);
+      }
+      if (data?.closingDate != null) {
+        console.log('CLOSINGDATE: ' + data?.closingDate);
+        setClosingDate(new Date(data?.closingDate));
+      }
+      populateCommissionAndAdditionalIncome(data?.transactionType!);
+    } else {
+      console.log('ADDTXMODE');
+    }
+  }
+
+  function populateCommissionAndAdditionalIncome(typeTX: string) {
+    console.log('TXTYPE: ' + typeTX);
+    if (typeTX.includes('Seller')) {
+      setSellerCommission(data?.sellerCommission);
+      setDollarOrPercentSellerComm(data?.sellerCommissionType);
+    }
+    if (typeTX.includes('Buyer')) {
+      setBuyerCommission(data?.buyerCommission);
+      setDollarOrPercentBuyerComm(data?.buyerCommissionType);
+    }
+    setAdditionalIncome(data?.additionalIncome);
+    setDollarOrPercentAddIncome(data?.additionalIncomeType);
+  }
 
   function backPressed() {
     navigation.goBack();
@@ -152,6 +205,8 @@ export default function AddOrEditRealtorTx2(props: any) {
       console.log('next seller comm: ' + dollarOrPercentSellerComm);
       console.log('next buyer comm: ' + buyerCommission);
       console.log('next buyer comm: ' + dollarOrPercentBuyerComm);
+      console.log('closing date: ' + closingDate.toISOString());
+
       navigation.navigate('AddOrEditRealtorTx3', {
         status: status,
         type: type,
@@ -177,6 +232,7 @@ export default function AddOrEditRealtorTx2(props: any) {
         additionalIncome: additionalIncome,
         dollarOrPercentAddIncome: dollarOrPercentAddIncome,
         grossComm: grossComm,
+        data: data,
       });
     }
   }
@@ -302,16 +358,22 @@ export default function AddOrEditRealtorTx2(props: any) {
           {type.includes('Seller') && <Text style={styles.nameTitle}>{'Original List Price'}</Text>}
           {type.includes('Seller') && (
             <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="+ Add"
-                  placeholderTextColor="#AFB9C2"
-                  textAlign="left"
-                  onChangeText={(text) => setOriginalPrice(text)}
-                  defaultValue={originalPrice}
-                  keyboardType="number-pad"
-                />
+              <View style={styles.dollarAndPercentRow}>
+                <View style={styles.dollarView}>
+                  <Text style={styles.dollarText}>$</Text>
+                </View>
+                <View style={styles.dollarAndPercentView}>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="+ Add"
+                    placeholderTextColor="#AFB9C2"
+                    textAlign="left"
+                    onChangeText={(text) => setOriginalPrice(text)}
+                    defaultValue={originalPrice}
+                    keyboardType="number-pad"
+                  />
+                </View>
+                <View style={styles.percentView}></View>
               </View>
             </View>
           )}
@@ -326,6 +388,7 @@ export default function AddOrEditRealtorTx2(props: any) {
                       year: 'numeric',
                       month: 'short',
                       day: 'numeric',
+                      //timeZone: 'UTC'
                       //   hour: 'numeric',
                     })}
                   </Text>
@@ -385,6 +448,7 @@ export default function AddOrEditRealtorTx2(props: any) {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
+                    //timeZone: 'UTC'
                     //   hour: 'numeric',
                   })}
                 </Text>

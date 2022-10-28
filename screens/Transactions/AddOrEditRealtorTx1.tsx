@@ -143,6 +143,8 @@ export default function AddOrEditRealtorTx1(props: any) {
 
   function populateTypeAndSources(typeTX: string) {
     if (typeTX == 'Buyer & Seller') {
+      //  console.log('HERE2112: ' + data?.contacts[0].leadSource);
+      //  console.log('HERE2112: ' + data?.contacts[1].leadSource);
       setSellerLeadSource(data?.contacts[0].leadSource);
       setBuyerLeadSource(data?.contacts[1].leadSource);
     } else if (typeTX == 'Buyer') {
