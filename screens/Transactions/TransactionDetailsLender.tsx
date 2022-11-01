@@ -20,14 +20,43 @@ export default function TransactionDetailsLender(props: any) {
   const navigation = useNavigation();
 
   useEffect(() => {
-    getDarkOrLightMode();
+    navigation.setOptions({
+      title: 'Transaction Details',
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
+          <Text style={styles.saveText}>Edit</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, data]);
+
+  function editPressed() {
+    console.log('edit pressed');
+    navigation.navigate('AddOrEditLenderTx1', {
+      data: data,
+      //  buyerOrSeller: data?.transactionType,
+    });
+  }
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   useEffect(() => {
-    fetchDetails(dealID);
+    let isMounted = true;
+    fetchDetails(dealID, isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -82,10 +111,13 @@ export default function TransactionDetailsLender(props: any) {
       });
   }
 
-  function fetchDetails(dealID: string) {
+  function fetchDetails(dealID: string, isMounted: boolean) {
     setIsLoading(true);
     getTransactionDetails(dealID)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -126,13 +158,8 @@ export default function TransactionDetailsLender(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
       )}
 
-      {data?.address.street == '' && <Text style={styles.header}>{'Address'}</Text>}
-      {data?.address.street == '' && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
-      )}
-
-      {data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}
-      {data?.address.street != '' && (
+      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 1'}</Text>}
+      {data?.address.street != 'TBD' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 
@@ -159,6 +186,18 @@ export default function TransactionDetailsLender(props: any) {
       {!isNullOrEmpty(data?.probabilityToClose) && <Text style={styles.header}>{'Probability to Close'}</Text>}
       {!isNullOrEmpty(data?.probabilityToClose) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.probabilityToClose}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
+        <Text style={styles.header}>{'Original List Price'}</Text>
+      )}
+      {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{'$' + data?.listAmount}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.listDate) && <Text style={styles.header}>{'Original List Date'}</Text>}
+      {!isNullOrEmpty(data?.listDate) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.listDate!)}</Text>
       )}
 
       {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Closing Price (Projected)'}</Text>}
@@ -327,5 +366,12 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     fontSize: 20,
+  },
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
 });

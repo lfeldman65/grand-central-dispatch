@@ -15,18 +15,20 @@ var grossComm1 = 0;
 
 export default function AddOrEditLenderTx2(props: any) {
   const { route } = props;
-  const { status, type, leadSource, borrower, seller, address, street1, street2, city, state, zip } = route.params;
+  const { status, type, leadSource, borrower, seller, address, street1, street2, city, state, zip, data } =
+    route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
+  const [originalPrice, setOriginalPrice] = useState('200000'); // 500000
   const [applicationDate, setApplicationDate] = useState(new Date());
   const [closingDate, setClosingDate] = useState(new Date());
-  const [closingPrice, setClosingPrice] = useState('500000');
-  const [interestRate, setInterestRate] = useState('3.5');
+  const [closingPrice, setClosingPrice] = useState('400000');
+  const [interestRate, setInterestRate] = useState('2');
   const [rateType, setRateType] = useState('Fixed'); // Loan Type in app
   const [rateTypeDesc, setRateTypeDesc] = useState('1st'); //
-  const [originationFees, setOriginationFees] = useState('95'); // sellerCommission in Postman
-  const [buyerCommission, setBuyerCommission] = useState('15');
-  const [additionalIncome, setAdditionalIncome] = useState('100');
+  const [originationFees, setOriginationFees] = useState('90'); // sellerCommission in Postman
+  const [buyerCommission, setBuyerCommission] = useState('10');
+  const [additionalIncome, setAdditionalIncome] = useState('200');
   const [showApplicationDate, setShowApplicationDate] = useState(false);
   const [showClosingDate, setShowClosingDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
@@ -55,6 +57,7 @@ export default function AddOrEditLenderTx2(props: any) {
     navigation,
     probability,
     applicationDate,
+    originalPrice,
     closingPrice,
     closingDate,
     interestRate,
@@ -72,6 +75,35 @@ export default function AddOrEditLenderTx2(props: any) {
   ]);
 
   useEffect(() => {
+    let isMounted = true;
+    populateDataIfEdit(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  function populateDataIfEdit(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    if (data != null && data.id != '') {
+      setProbability(data?.probabilityToClose);
+      setOriginalPrice(data?.listAmount);
+      setApplicationDate(new Date(data?.listDate));
+      setClosingPrice(data?.projectedAmount);
+      setClosingDate(new Date(data?.closingDate));
+      setInterestRate(data?.interestRate);
+      setRateType(data?.rateType);
+      setRateTypeDesc(data?.loanType);
+      setOriginationFees(data?.sellerCommission);
+      setBuyerCommission(data?.buyerCommission);
+      setAdditionalIncome(data?.additionalIncome);
+    } else {
+      console.log('ADDTXMODE');
+    }
+  }
+
+  useEffect(() => {
     calculateGrossCommission;
     isDataValid;
   }, [
@@ -83,6 +115,10 @@ export default function AddOrEditLenderTx2(props: any) {
     dOrPBuyerCommission,
     dOrPAdditionalIncome,
   ]);
+
+  useEffect(() => {
+    calculateGrossCommission();
+  }, [isFocused]);
 
   function backPressed() {
     navigation.goBack();
@@ -113,19 +149,19 @@ export default function AddOrEditLenderTx2(props: any) {
       } else {
         buyerCommFloat = parseFloat(buyerCommission);
       }
-      console.log('BUYER COMM: ' + buyerCommFloat);
+      //  console.log('BUYER COMM: ' + buyerCommFloat);
       if (originationFees == '' || originationFees == null) {
         origFeesFloat = 0;
       } else {
         origFeesFloat = parseFloat(originationFees);
       }
-      console.log('ORIG FEES: ' + origFeesFloat);
+      //   console.log('ORIG FEES: ' + origFeesFloat);
       if (additionalIncome == '' || additionalIncome == null) {
         addIncomeFloat = 0;
       } else {
         addIncomeFloat = parseFloat(additionalIncome);
       }
-      console.log('ADD INCOME: ' + additionalIncome);
+      //S   console.log('ADD INCOME: ' + additionalIncome);
       if (dOrPBuyerCommission == 'percent') {
         buyerCommFloat = (closingPriceFloat * buyerCommFloat) / 100;
         console.log('BUYER COMM 2: ' + buyerCommFloat);
@@ -160,8 +196,9 @@ export default function AddOrEditLenderTx2(props: any) {
         state: state,
         zip: zip,
         probability: probability,
-        closingPrice: closingPrice,
+        originalPrice: originalPrice,
         applicationDate: applicationDate.toISOString(),
+        closingPrice: closingPrice,
         closingDate: closingDate.toISOString(),
         interestRate: interestRate,
         buyerCommission: buyerCommission,
@@ -173,6 +210,7 @@ export default function AddOrEditLenderTx2(props: any) {
         rateType: rateType, // Loan Type in App
         rateTypeDesc: rateTypeDesc, // Loan Desc in App
         myGrossComm: grossComm1,
+        data: data,
       });
     }
   }
@@ -303,6 +341,27 @@ export default function AddOrEditLenderTx2(props: any) {
             </View>
           </ActionSheet>
 
+          <Text style={styles.nameTitle}>{'Original List Price'}</Text>
+          <View style={styles.mainContent}>
+            <View style={styles.dollarAndPercentRow}>
+              <View style={styles.dollarView}>
+                <Text style={styles.dollarText}>$</Text>
+              </View>
+              <View style={styles.dollarAndPercentView}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  textAlign="left"
+                  onChangeText={(text) => setOriginalPrice(text)}
+                  defaultValue={originalPrice}
+                  keyboardType="number-pad"
+                />
+              </View>
+              <View style={styles.percentView}></View>
+            </View>
+          </View>
+
           <Text style={styles.nameTitle}>{'Loan Application Date'}</Text>
           <TouchableOpacity onPress={showApplicationDatePicker}>
             <View style={styles.mainContent}>
@@ -342,22 +401,16 @@ export default function AddOrEditLenderTx2(props: any) {
 
           <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
           <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.dollarView}>
-                <Text style={styles.dollarText}>$</Text>
-              </View>
-              <View style={styles.dollarAndPercentView}>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="+ Add"
-                  placeholderTextColor="#AFB9C2"
-                  textAlign="left"
-                  onChangeText={(text) => setClosingPrice(text)}
-                  defaultValue={closingPrice}
-                  keyboardType="number-pad"
-                />
-              </View>
-              <View style={styles.percentView}></View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                textAlign="left"
+                onChangeText={(text) => setClosingPrice(text)}
+                defaultValue={closingPrice}
+                keyboardType="number-pad"
+              />
             </View>
           </View>
 
