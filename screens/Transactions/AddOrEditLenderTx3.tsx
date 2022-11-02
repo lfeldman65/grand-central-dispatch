@@ -165,7 +165,7 @@ export default function AddOrEditLenderTx3(props: any) {
           console.error(res.error);
         } else {
           console.log('here ' + res.data.id);
-          navigation.navigate('LenderTransactions');
+          navigation.navigate('RealEstateTransactions');
         }
       })
       .catch((error) => console.error('failure ' + error));

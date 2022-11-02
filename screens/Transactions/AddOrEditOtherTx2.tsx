@@ -99,7 +99,7 @@ export default function AddOrEditOtherTx2(props: any) {
           console.error(res.error);
         } else {
           console.log('here ' + res.data.id);
-          navigation.navigate('RealEstateTransactions');
+          //  navigation.navigate('OtherTransactions');
         }
       })
       .catch((error) => console.error('failure ' + error));
