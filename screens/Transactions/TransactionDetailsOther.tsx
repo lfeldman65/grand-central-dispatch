@@ -111,7 +111,9 @@ export default function TransactionDetailsOther(props: any) {
       <Text style={styles.header}>{'Status'}</Text>
       <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.status}</Text>
 
-      {!isNullOrEmpty(data?.contacts[0].userID) && <Text style={styles.header}>{"Who's Involved"}</Text>}
+      {!isNullOrEmpty(data?.contacts) && !isNullOrEmpty(data?.contacts[0].userID) && (
+        <Text style={styles.header}>{"Who's Involved"}</Text>
+      )}
       {data?.contacts.map((item, index) => (
         <TouchableOpacity onPress={() => handlePersonPressed(index)}>
           <View style={styles.textAndChevronRow}>
