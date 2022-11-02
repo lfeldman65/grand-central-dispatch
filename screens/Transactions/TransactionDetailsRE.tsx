@@ -22,13 +22,13 @@ export default function TransactionDetailsRE(props: any) {
 
   useEffect(() => {
     navigation.setOptions({
+      title: 'Transaction Details',
       headerRight: () => (
         <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
           <Text style={styles.saveText}>Edit</Text>
         </TouchableOpacity>
       ),
     });
-    navigation.setOptions({ title: 'Transaction Details' });
   }, [navigation, data]);
 
   function editPressed() {

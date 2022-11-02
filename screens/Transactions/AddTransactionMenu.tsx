@@ -16,15 +16,11 @@ export default function AddTransactionMenu(props: any) {
   function buttonPressed(index: number) {
     console.log('index: ' + index);
     if (index == 0) {
-      navigation.navigate('AddOrEditRealtorTx1', {
-        buyerOrSeller: 'Buyer',
-      });
+      navigation.navigate('AddOrEditRealtorTx1', {});
     } else if (index == 1) {
-      navigation.navigate('AddOrEditLenderTx1', {
-        loanOrRefi: 'Purchase Loan',
-      });
+      navigation.navigate('AddOrEditLenderTx1', {});
     } else if (index == 2) {
-      navigation.navigate('AddOrEditOtherTx1');
+      navigation.navigate('AddOrEditOtherTx1', {});
     }
   }
 

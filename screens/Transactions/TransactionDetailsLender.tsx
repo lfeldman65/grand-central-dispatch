@@ -102,7 +102,7 @@ export default function TransactionDetailsLender(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res);
+          //  console.log(res);
           navigation.goBack();
         }
       })
@@ -122,7 +122,7 @@ export default function TransactionDetailsLender(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          console.log(res);
+          //   console.log(res);
         }
         setIsLoading(false);
       })

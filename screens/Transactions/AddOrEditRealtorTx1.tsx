@@ -7,7 +7,6 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { TransactionContacts } from './interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, propertyAddressMenu, styles } from './transactionHelpers';
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseLeadSource from './ChooseLeadSource';

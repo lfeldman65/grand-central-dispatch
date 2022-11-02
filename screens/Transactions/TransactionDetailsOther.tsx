@@ -7,7 +7,6 @@ import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
 import { isNullOrEmpty } from '../../utils/general';
 import { prettyDate } from '../../utils/general';
-//import { Navigation } from 'react-native-feather';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -21,14 +20,43 @@ export default function TransactionDetailsOther(props: any) {
   const navigation = useNavigation();
 
   useEffect(() => {
-    getDarkOrLightMode();
+    navigation.setOptions({
+      title: 'Transaction Details',
+      headerRight: () => (
+        <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
+          <Text style={styles.saveText}>Edit</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, data]);
+
+  function editPressed() {
+    console.log('EDITDATAID: ' + data?.id);
+    navigation.navigate('AddOrEditOtherTx1', {
+      data: data,
+    });
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   useEffect(() => {
-    fetchDetails(dealID);
+    let isMounted = true;
+    fetchDetails(dealID, isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -59,11 +87,6 @@ export default function TransactionDetailsOther(props: any) {
     });
   }
 
-  function formatDollarOrPercent(amount: string, type: string) {
-    if (type == 'percent') return amount + '%';
-    return '$' + amount;
-  }
-
   function deleteTrans(dealID: number) {
     setIsLoading(true);
     console.log('delete Pressed');
@@ -83,15 +106,18 @@ export default function TransactionDetailsOther(props: any) {
       });
   }
 
-  function fetchDetails(dealID: string) {
+  function fetchDetails(dealID: string, isMounted: boolean) {
     setIsLoading(true);
     getTransactionDetails(dealID)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
           setData(res.data);
-          console.log(res);
+          //   console.log(res);
         }
         setIsLoading(false);
       })
@@ -130,8 +156,8 @@ export default function TransactionDetailsOther(props: any) {
         </TouchableOpacity>
       ))}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 1'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street != 'TBD' && data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}
+      {data?.address.street != 'TBD' && data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 
@@ -168,6 +194,11 @@ export default function TransactionDetailsOther(props: any) {
       {!isNullOrEmpty(data?.closingDate) && <Text style={styles.header}>{'Closing Date (Projected)'}</Text>}
       {!isNullOrEmpty(data?.closingDate) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.closingDate!)}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.notes) && <Text style={styles.header}>{'Notes'}</Text>}
+      {!isNullOrEmpty(data?.notes) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.notes}</Text>
       )}
 
       <Text></Text>
@@ -254,5 +285,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     flexDirection: 'row',
+  },
+  saveButton: {
+    padding: 5,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 18,
   },
 });

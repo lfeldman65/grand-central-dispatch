@@ -11,16 +11,16 @@ import { AddTxBuyerAndSellerSheets, statusMenu, propertyAddressMenu, styles } fr
 import ChooseOtherTxType from './ChooseOtherTxType';
 import ChooseRelationship from '../Goals/ChooseRelationship';
 
-const closeButton = require('../../images/button_close_white.png');
-
 export default function AddOrEditOtherTx1(props: any) {
+  const { route } = props;
+  const { data } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Lease');
   const [txTitle, setTxTitle] = useState('');
   const [whoInvolved, setWhoInvolved] = useState<RolodexDataProps>();
   const [address, setAddress] = useState('TBD');
-  const [street1, setStreet1] = useState('577');
-  const [street2, setStreet2] = useState('202');
+  const [street1, setStreet1] = useState('');
+  const [street2, setStreet2] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
@@ -44,7 +44,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, status, type, txTitle, whoInvolved, street1, street2, city, state, zip]);
+  }, [navigation, status, type, txTitle, whoInvolved, street1, street2, city, state, zip, data]);
 
   function handleWhoPressed() {
     console.log('who pressed');
@@ -71,6 +71,9 @@ export default function AddOrEditOtherTx1(props: any) {
     if (txTitle == '') {
       return false;
     }
+    if (whoInvolved == null) {
+      return false;
+    }
     return true;
   }
 
@@ -86,6 +89,7 @@ export default function AddOrEditOtherTx1(props: any) {
         state: state,
         zip: zip,
         whoInvolved: whoInvolved,
+        data: data,
       });
     }
   }

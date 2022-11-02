@@ -12,11 +12,9 @@ import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactio
 import { storage } from '../../utils/storage';
 import { addOrEditOtherTransaction } from './api';
 
-var grossComm1 = 0;
-
 export default function AddOrEditOtherTx2(props: any) {
   const { route } = props;
-  const { status, type, title, whoInvolved, street1, street2, city, state, zip } = route.params;
+  const { data, status, type, title, whoInvolved, street1, street2, city, state, zip } = route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -41,15 +39,7 @@ export default function AddOrEditOtherTx2(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, probability, closingDate, closingPrice, notes]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
+  }, [navigation, probability, closingDate, closingPrice, notes, data]);
 
   function backPressed() {
     navigation.goBack();
@@ -62,18 +52,10 @@ export default function AddOrEditOtherTx2(props: any) {
     return true;
   }
 
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
   function completePressed() {
     console.log('CLOSING DATE: ' + closingDate);
     addOrEditOtherTransaction(
-      0,
+      data == null ? 0 : data?.id,
       type,
       status,
       title,
@@ -184,16 +166,22 @@ export default function AddOrEditOtherTx2(props: any) {
 
         <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
         <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="+ Add"
-              placeholderTextColor="#AFB9C2"
-              textAlign="left"
-              onChangeText={(text) => setClosingPrice(text)}
-              defaultValue={closingPrice}
-              keyboardType="number-pad"
-            />
+          <View style={styles.dollarAndPercentRow}>
+            <View style={styles.dollarView}>
+              <Text style={styles.dollarText}>$</Text>
+            </View>
+            <View style={styles.dollarAndPercentView}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                textAlign="left"
+                onChangeText={(text) => setClosingPrice(text)}
+                defaultValue={closingPrice}
+                keyboardType="number-pad"
+              />
+            </View>
+            <View style={styles.percentView}></View>
           </View>
         </View>
 
@@ -251,7 +239,7 @@ export default function AddOrEditOtherTx2(props: any) {
       </View>
 
       <View style={styles.bottomContainer}>
-        <Text style={styles.summaryText}>My Gross Commission</Text>
+        <Text style={styles.summaryText}>Additional Income</Text>
         <Text style={styles.summaryText}>{closingPrice}</Text>
       </View>
     </View>
