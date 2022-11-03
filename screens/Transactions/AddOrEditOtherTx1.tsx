@@ -19,8 +19,8 @@ export default function AddOrEditOtherTx1(props: any) {
   const [txTitle, setTxTitle] = useState('');
   const [whoInvolved, setWhoInvolved] = useState<RolodexDataProps>();
   const [address, setAddress] = useState('TBD');
-  const [street1, setStreet1] = useState('');
-  const [street2, setStreet2] = useState('');
+  const [street1, setStreet1] = useState('577');
+  const [street2, setStreet2] = useState('202');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zip, setZip] = useState('');
@@ -46,9 +46,59 @@ export default function AddOrEditOtherTx1(props: any) {
     });
   }, [navigation, status, type, txTitle, whoInvolved, street1, street2, city, state, zip, data]);
 
+  useEffect(() => {
+    let isMounted = true;
+    populateDataIfEdit(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  function populateDataIfEdit(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    if (data != null && data?.id != '') {
+      setStatus(data?.status);
+      setType(data?.transactionType);
+      setTxTitle(data?.title);
+      populateWho();
+      populateAddress();
+    } else {
+      console.log('ADDTXMODE');
+    }
+  }
+
   function handleWhoPressed() {
     console.log('who pressed');
     setModalRelVisible(!modalRelVisible);
+  }
+
+  function populateWho() {
+    if (data != null && data?.contacts[0] != null) {
+      var txWho: RolodexDataProps = {
+        id: data?.contacts[0].userID,
+        firstName: data.contacts[0].contactName,
+        lastName: '',
+        ranking: '',
+        contactTypeID: '',
+        employerName: '',
+        qualified: false,
+        selected: false,
+      };
+      setWhoInvolved(txWho);
+    }
+  }
+
+  function populateAddress() {
+    if (data != null && data?.address != null && data?.address.street != '') {
+      setAddress('Enter Manually');
+      setStreet1(data?.address.street);
+      setStreet2(data?.address.street2);
+      setCity(data?.address.city);
+      setState(data?.address.state);
+      setZip(data?.address.zip);
+    }
   }
 
   function statusMenuPressed() {
@@ -79,18 +129,18 @@ export default function AddOrEditOtherTx1(props: any) {
 
   function nextPressed() {
     if (isDataValid()) {
-      navigation.navigate('AddOrEditOtherTx2', {
-        status: status,
-        title: txTitle,
-        type: type,
-        street1: street1,
-        street2: street2,
-        city: city,
-        state: state,
-        zip: zip,
-        whoInvolved: whoInvolved,
-        data: data,
-      });
+      // navigation.navigate('AddOrEditOtherTx2', {
+      //   status: status,
+      //   title: txTitle,
+      //   type: type,
+      //   street1: street1,
+      //   street2: street2,
+      //   city: city,
+      //   state: state,
+      //   zip: zip,
+      //   whoInvolved: whoInvolved,
+      //   data: data,
+      // });
     }
   }
 
