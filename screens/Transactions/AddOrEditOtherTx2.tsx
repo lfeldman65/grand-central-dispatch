@@ -41,6 +41,38 @@ export default function AddOrEditOtherTx2(props: any) {
     });
   }, [navigation, probability, closingDate, closingPrice, notes, data]);
 
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    console.log('TYPE:' + type);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
+    populateDataIfEdit(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  function populateDataIfEdit(isMounted: boolean) {
+    console.log('guid: ' + data?.id);
+    if (!isMounted) {
+      return;
+    }
+    if (data != null && data.id != '') {
+      setProbability(data?.probabilityToClose);
+      setClosingPrice(data?.projectedAmount);
+      setClosingDate(new Date(data?.closingDate));
+      setNotes(data?.notes);
+    } else {
+      console.log('ADDTXMODE');
+    }
+  }
+
   function backPressed() {
     navigation.goBack();
   }
@@ -50,6 +82,14 @@ export default function AddOrEditOtherTx2(props: any) {
       return false;
     }
     return true;
+  }
+
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    const dOrlight = await storage.getItem('darkOrLight');
+    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   function completePressed() {
@@ -81,7 +121,7 @@ export default function AddOrEditOtherTx2(props: any) {
           console.error(res.error);
         } else {
           console.log('here ' + res.data.id);
-          navigation.navigate('RealEstateTransactions');
+          navigation.navigate('OtherTransactions');
         }
       })
       .catch((error) => console.error('failure ' + error));

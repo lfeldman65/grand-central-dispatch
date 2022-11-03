@@ -129,18 +129,18 @@ export default function AddOrEditOtherTx1(props: any) {
 
   function nextPressed() {
     if (isDataValid()) {
-      // navigation.navigate('AddOrEditOtherTx2', {
-      //   status: status,
-      //   title: txTitle,
-      //   type: type,
-      //   street1: street1,
-      //   street2: street2,
-      //   city: city,
-      //   state: state,
-      //   zip: zip,
-      //   whoInvolved: whoInvolved,
-      //   data: data,
-      // });
+      navigation.navigate('AddOrEditOtherTx2', {
+        status: status,
+        title: txTitle,
+        type: type,
+        street1: street1,
+        street2: street2,
+        city: city,
+        state: state,
+        zip: zip,
+        whoInvolved: whoInvolved,
+        data: data,
+      });
     }
   }
 
