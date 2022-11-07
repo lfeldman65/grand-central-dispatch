@@ -11,7 +11,7 @@ import { Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
 import { analytics } from '../../utils/analytics';
 import { loginToApp, getProfileData } from './api';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native'; // branch
 
 let deviceWidth = Dimensions.get('window').width;
 
