@@ -99,7 +99,6 @@ export default function TransactionDetailsRE(props: any) {
   function deleteTrans(dealID: number) {
     setIsLoading(true);
     console.log('delete Pressed');
-    //navigation.goBack();
     deleteTx(dealID)
       .then((res) => {
         console.log(res);
@@ -126,8 +125,7 @@ export default function TransactionDetailsRE(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          console.log(res.data.contacts[0].contactName);
-          console.log(res.data.contacts[0].leadSource);
+          //  console.log(res);
         }
         setIsLoading(false);
       })
@@ -193,9 +191,9 @@ export default function TransactionDetailsRE(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
       )}
 
-      {data?.transactionType == 'Buyer & Seller' && !isNullOrEmpty(data?.contacts[0].userID) && (
-        <Text style={styles.header}>Buyer</Text>
-      )}
+      {data?.transactionType == 'Buyer & Seller' &&
+        !isNullOrEmpty(data?.contacts[0].userID) &&
+        !isNullOrEmpty(data?.contacts[1].userID) && <Text style={styles.header}>Buyer</Text>}
       {data?.transactionType == 'Buyer & Seller' && (
         <TouchableOpacity onPress={() => handlePersonPressed(1)}>
           <View style={styles.referralAndSpouseRow}>
@@ -273,6 +271,18 @@ export default function TransactionDetailsRE(props: any) {
       {!isNullOrEmpty(data?.probabilityToClose) && <Text style={styles.header}>{'Probability to Close'}</Text>}
       {!isNullOrEmpty(data?.probabilityToClose) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.probabilityToClose}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
+        <Text style={styles.header}>{'Original List Price'}</Text>
+      )}
+      {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{'$' + data?.listAmount}</Text>
+      )}
+
+      {!isNullOrEmpty(data?.listDate) && <Text style={styles.header}>{'Original List Date'}</Text>}
+      {!isNullOrEmpty(data?.listDate) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.listDate!)}</Text>
       )}
 
       {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Closing Price (Projected)'}</Text>}
