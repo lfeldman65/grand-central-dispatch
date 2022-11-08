@@ -280,7 +280,7 @@ export default function AddOrEditOtherTx2(props: any) {
 
       <View style={styles.bottomContainer}>
         <Text style={styles.summaryText}>Additional Income</Text>
-        <Text style={styles.summaryText}>{closingPrice}</Text>
+        <Text style={styles.summaryText}>{'$' + closingPrice}</Text>
       </View>
     </View>
   );
