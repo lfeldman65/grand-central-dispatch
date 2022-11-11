@@ -68,6 +68,8 @@ export default function LoginScreen() {
           } else {
             storage.setItem('hasBombBomb', 'false');
           }
+          console.log('LOGINTYPE: ' + res.data.businessType);
+          storage.setItem('businessType', res.data.businessType);
         }
         setIsLoading(false);
       })

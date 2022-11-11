@@ -178,7 +178,7 @@ export default function DashboardScreen() {
     <>
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={styles.row}>
-          <View style={styles.pair}>
+          <View style={styles.topPair}>
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
@@ -194,7 +194,7 @@ export default function DashboardScreen() {
             {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Calls</Text>}
           </View>
 
-          <View style={styles.pair}>
+          <View style={styles.topPair}>
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
@@ -210,7 +210,7 @@ export default function DashboardScreen() {
             {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Notes</Text>}
           </View>
 
-          <View style={styles.pair}>
+          <View style={styles.topPair}>
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
@@ -325,9 +325,16 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'space-between',
   },
+  topPair: {
+    flex: 1,
+    marginTop: '10%',
+    padding: 8,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   pair: {
     flex: 1,
-    marginTop: 20,
+    marginTop: '20%',
     padding: 8,
     flexDirection: 'column',
     alignItems: 'center',

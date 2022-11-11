@@ -21,5 +21,6 @@ export interface ProfileDataResponse {
 
 export interface ProfileProps {
   hasBombBombPermission: boolean;
+  businessType: string;
   firstName: string;
 }

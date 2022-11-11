@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Modal } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Modal, Linking } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
@@ -28,6 +28,26 @@ export default function PACDetailScreen(props: any) {
   function postponePressed() {
     analytics.event(new Event('PAC Detail', 'Postpone', '0'));
     postponeEvent(contactId, type);
+  }
+
+  function handlePhonePressed(type: string) {
+    if (type == 'mobile') {
+      Linking.openURL(`tel:${data?.mobile}`);
+    } else if (type == 'office') {
+      Linking.openURL(`tel:${data?.officePhone}`);
+    } else {
+      Linking.openURL(`tel:${data?.homePhone}`);
+    }
+  }
+
+  function goToRelDetails() {
+    console.log('PAC: ' + data?.id);
+    navigation.navigate('RelDetails', {
+      contactId: data?.id,
+      firstName: data?.firstName,
+      lastName: data?.lastName,
+      rankFromAbove: data?.ranking,
+    });
   }
 
   useEffect(() => {
@@ -73,7 +93,7 @@ export default function PACDetailScreen(props: any) {
     openMap({ query: completeAddress(address) });
   }
 
-  function cityStateZip(address?: AddressProps) {
+  function formatCityStateZip(address?: AddressProps) {
     var cityStateZip = '';
     if (!isNullOrEmpty(address?.city)) {
       cityStateZip = address?.city!;
@@ -95,7 +115,7 @@ export default function PACDetailScreen(props: any) {
     if (!isNullOrEmpty(address?.street2)) {
       completeAddress = completeAddress + ' ' + address?.street2!;
     }
-    return completeAddress + cityStateZip(address);
+    return completeAddress + formatCityStateZip(address);
   }
 
   function contactName() {
@@ -174,16 +194,39 @@ export default function PACDetailScreen(props: any) {
   return (
     <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
       <View style={lightOrDark == 'dark' ? stylesDetail.topContainerDark : stylesDetail.topContainerLight}>
-        <Text style={stylesDetail.personName}>{contactName()}</Text>
+        <TouchableOpacity
+          onPress={() => {
+            goToRelDetails();
+          }}
+        >
+          <Text style={stylesDetail.personName}>{contactName()}</Text>
+        </TouchableOpacity>
 
-        {!isNullOrEmpty(data?.mobile) && <Text style={stylesDetail.sectionTitle}>{'Mobile Phone'}</Text>}
-        {!isNullOrEmpty(data?.mobile) && <Text style={stylesDetail.phoneNumber}>{data?.mobile}</Text>}
+        <TouchableOpacity
+          onPress={() => {
+            handlePhonePressed('mobile');
+          }}
+        >
+          {!isNullOrEmpty(data?.mobile) && <Text style={stylesDetail.sectionTitle}>{'Mobile Phone'}</Text>}
+          {!isNullOrEmpty(data?.mobile) && <Text style={stylesDetail.phoneNumber}>{data?.mobile}</Text>}
+        </TouchableOpacity>
 
-        {!isNullOrEmpty(data?.officePhone) && <Text style={stylesDetail.sectionTitle}>{'Office Phone'}</Text>}
-        {!isNullOrEmpty(data?.officePhone) && <Text style={stylesDetail.phoneNumber}>{data?.officePhone}</Text>}
-
-        {!isNullOrEmpty(data?.homePhone) && <Text style={stylesDetail.sectionTitle}>{'Home Phone'}</Text>}
-        {!isNullOrEmpty(data?.homePhone) && <Text style={stylesDetail.phoneNumber}>{data?.homePhone}</Text>}
+        <TouchableOpacity
+          onPress={() => {
+            handlePhonePressed('office');
+          }}
+        >
+          {!isNullOrEmpty(data?.officePhone) && <Text style={stylesDetail.sectionTitle}>{'Office Phone'}</Text>}
+          {!isNullOrEmpty(data?.officePhone) && <Text style={stylesDetail.phoneNumber}>{data?.officePhone}</Text>}
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handlePhonePressed('home');
+          }}
+        >
+          {!isNullOrEmpty(data?.homePhone) && <Text style={stylesDetail.sectionTitle}>{'Home Phone'}</Text>}
+          {!isNullOrEmpty(data?.homePhone) && <Text style={stylesDetail.phoneNumber}>{data?.homePhone}</Text>}
+        </TouchableOpacity>
 
         <View style={styles.popbyRow}>
           {!isNullOrEmpty(data?.address.street) && <Text style={stylesDetail.sectionTitle}>Location</Text>}
@@ -195,7 +238,7 @@ export default function PACDetailScreen(props: any) {
         </View>
 
         {!isNullOrEmpty(data?.address.street) && (
-          <Text style={lightOrDark == 'dark' ? stylesDetail.cityStateZipTextDark : stylesDetail.cityStateZipTextLight}>
+          <Text style={lightOrDark == 'dark' ? stylesDetail.standardTextDark : stylesDetail.standardTextLight}>
             {data?.address.street}
           </Text>
         )}
@@ -204,9 +247,9 @@ export default function PACDetailScreen(props: any) {
             {data?.address.street2}
           </Text>
         )}
-        {!isNullOrEmpty(cityStateZip(data?.address)) && (
+        {!isNullOrEmpty(data?.address) && (
           <Text style={lightOrDark == 'dark' ? stylesDetail.cityStateZipTextDark : stylesDetail.cityStateZipTextLight}>
-            {cityStateZip(data?.address)}
+            {formatCityStateZip(data?.address)}
           </Text>
         )}
 

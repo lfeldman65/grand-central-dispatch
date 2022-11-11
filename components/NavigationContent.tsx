@@ -29,20 +29,27 @@ function CustomDrawerContent(props: any) {
     transactions: false,
   });
   const [hasBombBomb, setHasBombBomb] = useState(false);
+  const [businessType, setBusinessType] = useState('unknown');
 
-  async function handleMenuExpand(type: string) {
+  async function handleRelMenuExpand() {
     var hasBombBombString = await storage.getItem('hasBombBomb');
     if (hasBombBombString == 'true') {
       setHasBombBomb(true);
     } else {
       setHasBombBomb(false);
     }
-    if (type === 'Rolodex') {
-      setExpanded({ ...expanded, relationships: !expanded.relationships });
+    setExpanded({ ...expanded, relationships: !expanded.relationships });
+  }
+
+  async function handleTxMenuExpand() {
+    var bizType = await storage.getItem('businessType');
+    console.log('BIZTYPE:' + bizType);
+    if (bizType == null) {
+      setBusinessType('realtorAndLender');
+    } else {
+      setBusinessType(bizType);
     }
-    if (type === 'transactions') {
-      setExpanded({ ...expanded, transactions: !expanded.transactions });
-    }
+    setExpanded({ ...expanded, transactions: !expanded.transactions });
   }
 
   const trackPressed = (screenName: string) => {
@@ -96,7 +103,7 @@ function CustomDrawerContent(props: any) {
             <Text style={styles.menuItemText}>Priority Action Center</Text>
           </View>
         </TouchableOpacity>
-        <TouchableWithoutFeedback onPress={() => handleMenuExpand('Rolodex')}>
+        <TouchableWithoutFeedback onPress={() => handleRelMenuExpand()}>
           <View style={styles.menuItem}>
             <Image source={relIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Relationships</Text>
@@ -132,7 +139,7 @@ function CustomDrawerContent(props: any) {
             </TouchableOpacity>
           )}
         </Collapsible>
-        <TouchableWithoutFeedback onPress={() => handleMenuExpand('transactions')}>
+        <TouchableWithoutFeedback onPress={() => handleTxMenuExpand()}>
           <View style={styles.menuItem}>
             <Image source={transIcon} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Transactions</Text>
@@ -147,18 +154,22 @@ function CustomDrawerContent(props: any) {
           </View>
         </TouchableWithoutFeedback>
         <Collapsible collapsed={!expanded.transactions}>
-          <TouchableOpacity onPress={() => pressed('RETransactionsMenu')}>
-            <View style={styles.menuItem}>
-              <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
-              <Text style={styles.menuItemText}>Real Estate Transactions</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => pressed('LenderTransactionsMenu')}>
-            <View style={styles.menuItem}>
-              <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
-              <Text style={styles.menuItemText}>Lender Transactions</Text>
-            </View>
-          </TouchableOpacity>
+          {(businessType.includes('realtor') || businessType.includes('Realtor')) && (
+            <TouchableOpacity onPress={() => pressed('RETransactionsMenu')}>
+              <View style={styles.menuItem}>
+                <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
+                <Text style={styles.menuItemText}>Real Estate Transactions</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          {(businessType.includes('Lender') || businessType.includes('lender')) && (
+            <TouchableOpacity onPress={() => pressed('LenderTransactionsMenu')}>
+              <View style={styles.menuItem}>
+                <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />
+                <Text style={styles.menuItemText}>Lender Transactions</Text>
+              </View>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={() => pressed('OtherTransactionsMenu')}>
             <View style={styles.menuItem}>
               <Image source={transIcon} style={[styles.menuIcon, styles.hidden]} />

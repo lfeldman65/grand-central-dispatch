@@ -710,6 +710,32 @@ export const PACStackNavigator = () => {
           headerBackVisible: true,
         }}
       />
+
+      <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: '',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="EditRelationshipScreen"
+        component={EditRelationshipScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -957,6 +983,19 @@ export const RecentActivityStackNavigator = () => {
       <Stack.Screen
         name="RelDetails"
         component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="EditRelationshipScreen"
+        component={EditRelationshipScreen}
         options={{
           title: 'Details',
           headerTintColor: 'white',

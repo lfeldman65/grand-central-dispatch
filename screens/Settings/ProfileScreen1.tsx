@@ -8,6 +8,7 @@ import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { getProfileData } from './api';
 import { bizTypeMenu, timeZoneMenu } from './settingsHelpers';
+import { storage } from '../../utils/storage';
 
 const rmLogo = require('../../images/logoWide.png');
 
@@ -52,6 +53,12 @@ export default function ProfileScreen1(props: any) {
   function convertToParam(pretty: string) {
     if (pretty == 'Both') {
       return 'realtorAndLender';
+    }
+    if (pretty == 'Realtor') {
+      return 'realtor';
+    }
+    if (pretty == 'Lender') {
+      return 'lender';
     }
     return pretty;
   }
@@ -102,7 +109,8 @@ export default function ProfileScreen1(props: any) {
   }
 
   function nextPressed() {
-    console.log('biz type:' + convertToParam(bizType));
+    // console.log('biz type:' + convertToParam(bizType));
+    storage.setItem('businessType', convertToParam(bizType));
     navigation.navigate('Profile2', {
       email: email,
       businessType: convertToParam(bizType),
