@@ -11,6 +11,7 @@ import { getGoalData, trackAction } from './api';
 import { storage } from '../../utils/storage';
 import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
+import DarkOrLightScreen from '../../utils/darkOrLight';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
@@ -21,7 +22,7 @@ export default function GoalsScreen() {
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
   const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('light');
   const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
 
@@ -41,13 +42,7 @@ export default function GoalsScreen() {
     fetchGoals(true);
   }
 
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
+
 
   function styleForProgress(goalData: GoalDataProps) {
     var barColor = '#1398f5';
@@ -260,22 +255,22 @@ export default function GoalsScreen() {
     };
   }, [isFocused]);
 
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   if (isLoading) {
     return (
+      <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}  ></DarkOrLightScreen>
+
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="#AAA" />
       </View>
+      </>
     );
   } else {
     return (
+      <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}  ></DarkOrLightScreen>
+
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={globalStyles.tabButtonRow}>
           <Text
@@ -343,6 +338,7 @@ export default function GoalsScreen() {
           </Modal>
         )}
       </View>
+      </>
     );
   }
 }

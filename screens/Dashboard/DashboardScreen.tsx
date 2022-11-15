@@ -8,7 +8,6 @@ import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import { storage } from '../../utils/storage';
 import DarkOrLightScreen from '../../utils/darkOrLight';
-import { Appearance } from 'react-native';
 
 
 const callImage = require('../Dashboard/images/quickCalls.png');
@@ -57,12 +56,6 @@ export default function DashboardScreen() {
     getLandingPage();
   }, []);
 
-  useEffect(() => {
-    let isMounted = true;
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   function navigateToLandingPage(landingPage?: string) {
     console.log('landing page:' + landingPage);
