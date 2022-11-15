@@ -31,10 +31,10 @@ interface PACCallsRowProps {
   data: PACDataProps;
   onPress(): void;
   refresh(): void;
+  lightOrDark: string;
 }
 
 export default function PACCallsRow(props: PACCallsRowProps) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -75,22 +75,6 @@ export default function PACCallsRow(props: PACCallsRowProps) {
   function completeFailure() {
     setIsLoading(false);
     console.log('complete failure');
-  }
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   function handlePhonePressed(phoneNumber: string) {
@@ -138,15 +122,15 @@ export default function PACCallsRow(props: PACCallsRowProps) {
       renderLeftActions={renderLeftActions}
     >
       <TouchableOpacity onPress={props.onPress}>
-        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-          <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+        <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
             {props.data.contactName}
           </Text>
-          <Text style={lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
             {'Ranking: ' + props.data.ranking}
           </Text>
 
-          <Text style={lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
             {'Last Call: ' + props.data.lastCallDate}
           </Text>
 
