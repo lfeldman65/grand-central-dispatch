@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, useColorScheme } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Event } from 'expo-analytics';
 import * as Sentry from 'sentry-expo';
 import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import { storage } from '../../utils/storage';
-import { getDarkOrLightMode,lightOrDark } from '../../utils/darkOrLight';
+import DarkOrLightScreen from '../../utils/darkOrLight';
 import { Appearance } from 'react-native';
 
 
@@ -35,14 +35,9 @@ interface DashboardNavigationProps {
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
-  const [dummy, setDummy] = useState(false);
+  const [lightOrDark, setLightOrDark] = useState('light');
   const isFocused = useIsFocused();
- 
-  Appearance.addChangeListener(({ colorScheme }) => {
-    setTimeout(function(){
-      getDarkOrLightMode().then(() => setDummy(!dummy));
-    }, 100);
-});
+  
 
   function SentryTest() {
     console.log('sentry test');
@@ -64,12 +59,6 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     let isMounted = true;
-
-    setTimeout(function(){
-      getDarkOrLightMode().then(() => setDummy(!dummy));
-    }, 100);
-    
-    
     return () => {
       isMounted = false;
     };
@@ -182,7 +171,7 @@ export default function DashboardScreen() {
 
   return (
     <>
-
+    <DarkOrLightScreen setLightOrDark={setLightOrDark}  ></DarkOrLightScreen>
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={styles.row}>
           <View style={styles.topPair}>
@@ -322,6 +311,7 @@ export default function DashboardScreen() {
           </View>
         </View>
       </View>
+      
     </>
   );
 }
