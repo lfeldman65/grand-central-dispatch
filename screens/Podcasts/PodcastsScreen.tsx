@@ -12,7 +12,7 @@ import PodcastsRow from './PodcastsRow';
 import PodcastPlayer from './PodcastPlayer';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
-import DarkOrLightScreen from '../../utils/DarkOrLight';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();

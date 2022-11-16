@@ -12,7 +12,8 @@ export default function DarkOrLightScreen(props) {
 
   const onThemeChange = ({ colorScheme }) => {
     console.log('onThemeChange', colorScheme);
-    //dispatch(changeTheme(colorScheme));
+    console.log('lightOrDarkLocal ' + lightOrDarkLocal);
+
     if (lightOrDarkLocal == 'automatic') {
       setLightOrDark(colorScheme);
     } else {
@@ -21,6 +22,7 @@ export default function DarkOrLightScreen(props) {
   };
 
   useEffect(() => {
+    console.log('useEffect in DarkOrLight');
     getDarkOrLightMode();
     Appearance.addChangeListener(onThemeChange);
     return () => {

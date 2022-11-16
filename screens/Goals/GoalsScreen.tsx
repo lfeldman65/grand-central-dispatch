@@ -11,7 +11,7 @@ import { getGoalData, trackAction } from './api';
 import { storage } from '../../utils/storage';
 import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
-import DarkOrLightScreen from '../../utils/DarkOrLight';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
