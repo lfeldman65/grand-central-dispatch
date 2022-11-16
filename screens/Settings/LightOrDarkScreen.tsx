@@ -17,12 +17,10 @@ import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { lightOrDarkRows, prettyText } from './settingsHelpers'; // branch
+import { lightOrDarkRows, prettyText } from './settingsHelpers';
 
 export default function LightOrDarkScreen(props: any) {
   const [lightOrDark, setIsLightOrDark] = useState(lightOrDarkRows[0]);

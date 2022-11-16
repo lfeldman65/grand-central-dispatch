@@ -7,11 +7,11 @@ import { useIsFocused } from '@react-navigation/native';
 import { PodcastDataProps } from './interfaces';
 const logo = require('../Podcasts/images/podcastMini.png');
 //const chevron = require('../../images/chevron_blue_right.png');
-import { storage } from '../../utils/storage';
 
 interface PodcastsRowProps {
   data: PodcastDataProps;
   onPress(): void;
+  lightOrDark: string;
 }
 
 function makeTitlePretty(title: string) {
@@ -49,33 +49,16 @@ function pad0IfNeeded(part: string) {
 }
 
 export default function PodcastsRow(props: PodcastsRowProps) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.imageBox}>
           <Image source={logo} style={styles.logoImage} />
         </View>
         <View style={styles.textBox}>
-          <Text style={lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
             {makeTitlePretty(props.data.title)}
           </Text>
           <Text style={styles.timeText}>{makeTimePretty(props.data.duration)}</Text>

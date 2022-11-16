@@ -11,7 +11,7 @@ import { getGoalData, trackAction } from './api';
 import { storage } from '../../utils/storage';
 import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
-import DarkOrLightScreen from '../../utils/darkOrLight';
+import DarkOrLightScreen from '../../utils/DarkOrLight';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
@@ -22,7 +22,7 @@ export default function GoalsScreen() {
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
   const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lightOrDark, setLightOrDark] = useState('light');
+  const [lightOrDark, setLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
 
@@ -41,8 +41,6 @@ export default function GoalsScreen() {
     setWinTheDaySelected(false);
     fetchGoals(true);
   }
-
-
 
   function styleForProgress(goalData: GoalDataProps) {
     var barColor = '#1398f5';
@@ -255,89 +253,88 @@ export default function GoalsScreen() {
     };
   }, [isFocused]);
 
-
   if (isLoading) {
     return (
       <>
-      <DarkOrLightScreen setLightOrDark={setLightOrDark}  ></DarkOrLightScreen>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#AAA" />
-      </View>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#AAA" />
+        </View>
       </>
     );
   } else {
     return (
       <>
-      <DarkOrLightScreen setLightOrDark={setLightOrDark}  ></DarkOrLightScreen>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
 
-      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-        <View style={globalStyles.tabButtonRow}>
-          <Text
-            style={winTheDaySelected == true ? globalStyles.selected : globalStyles.unselected}
-            onPress={winTheDayPressed}
-          >
-            Win the Day
-          </Text>
-          <Text
-            style={winTheDaySelected == false ? globalStyles.selected : globalStyles.unselected}
-            onPress={winTheWeekPressed}
-          >
-            Win the Week
-          </Text>
-        </View>
-
-        <Text style={lightOrDark == 'dark' ? styles.goalTitleDark : styles.goalTitleLight}>Goal</Text>
-
-        <ScrollView>
-          {goalList.map(
-            (item, index) =>
-              shouldDisplayGoal(item.goal) && (
-                <View key={index}>
-                  <TouchableOpacity onPress={() => handleLinkPress(index)}>
-                    <Text style={styleForGoalTitle(index)}>
-                      {titleFor(item.goal)} ({activityCount(item)})
-                    </Text>
-                  </TouchableOpacity>
-                  <View style={styles.progress}>
-                    <View style={styles.grayRectangle}></View>
-                    <Image
-                      source={
-                        barPercentage(item) >= 1.0 ? (winTheDaySelected == true ? dayTrophy : weekTrophy) : noTrophy
-                      }
-                      style={styles.trophy}
-                    />
-                    <Text style={lightOrDark == 'dark' ? styles.goalTargetDark : styles.goalTargetLight}>
-                      {goalTargetDisplay(item.goal)}
-                    </Text>
-                  </View>
-                  <View style={styles.progress}>
-                    <View style={styleForProgress(item)}></View>
-                  </View>
-                </View>
-              )
-          )}
-          <View style={lightOrDark == 'dark' ? styles.hackDark : styles.hackLight}></View>
-        </ScrollView>
-
-        <TouchableOpacity style={styles.bottomContainer} onPress={() => trackActivityPressed()}>
-          <View style={styles.trackActivityButton}>
-            <Text style={styles.buttonText}>Track Activity</Text>
+        <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+          <View style={globalStyles.tabButtonRow}>
+            <Text
+              style={winTheDaySelected == true ? globalStyles.selected : globalStyles.unselected}
+              onPress={winTheDayPressed}
+            >
+              Win the Day
+            </Text>
+            <Text
+              style={winTheDaySelected == false ? globalStyles.selected : globalStyles.unselected}
+              onPress={winTheWeekPressed}
+            >
+              Win the Week
+            </Text>
           </View>
-        </TouchableOpacity>
-        {modalVisible && (
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <TrackActivity trackTitle="Track Activity Goal" onSave={saveComplete} setModalVisible={setModalVisible} />
-          </Modal>
-        )}
-      </View>
+
+          <Text style={lightOrDark == 'dark' ? styles.goalTitleDark : styles.goalTitleLight}>Goal</Text>
+
+          <ScrollView>
+            {goalList.map(
+              (item, index) =>
+                shouldDisplayGoal(item.goal) && (
+                  <View key={index}>
+                    <TouchableOpacity onPress={() => handleLinkPress(index)}>
+                      <Text style={styleForGoalTitle(index)}>
+                        {titleFor(item.goal)} ({activityCount(item)})
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={styles.progress}>
+                      <View style={styles.grayRectangle}></View>
+                      <Image
+                        source={
+                          barPercentage(item) >= 1.0 ? (winTheDaySelected == true ? dayTrophy : weekTrophy) : noTrophy
+                        }
+                        style={styles.trophy}
+                      />
+                      <Text style={lightOrDark == 'dark' ? styles.goalTargetDark : styles.goalTargetLight}>
+                        {goalTargetDisplay(item.goal)}
+                      </Text>
+                    </View>
+                    <View style={styles.progress}>
+                      <View style={styleForProgress(item)}></View>
+                    </View>
+                  </View>
+                )
+            )}
+            <View style={lightOrDark == 'dark' ? styles.hackDark : styles.hackLight}></View>
+          </ScrollView>
+
+          <TouchableOpacity style={styles.bottomContainer} onPress={() => trackActivityPressed()}>
+            <View style={styles.trackActivityButton}>
+              <Text style={styles.buttonText}>Track Activity</Text>
+            </View>
+          </TouchableOpacity>
+          {modalVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}
+            >
+              <TrackActivity trackTitle="Track Activity Goal" onSave={saveComplete} setModalVisible={setModalVisible} />
+            </Modal>
+          )}
+        </View>
       </>
     );
   }

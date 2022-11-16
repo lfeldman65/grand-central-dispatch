@@ -12,23 +12,16 @@ import PodcastsRow from './PodcastsRow';
 import PodcastPlayer from './PodcastPlayer';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
+import DarkOrLightScreen from '../../utils/DarkOrLight';
 
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const [data, setData] = useState<PodcastDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const [modalPlayerVisible, setModalPlayerVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   const handleRowPress = (index: number) => {
     analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
@@ -42,14 +35,6 @@ export default function PodcastsScreen() {
       headerLeft: () => <MenuIcon />,
     });
   }, [navigation]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;
@@ -78,34 +63,46 @@ export default function PodcastsScreen() {
   }
 
   return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#AAA" />
-        </View>
-      ) : (
-        <React.Fragment>
-          <ScrollView>
-            <View>
-              {data.map((item, index) => (
-                <PodcastsRow key={index} data={item} onPress={() => handleRowPress(index)} />
-              ))}
-            </View>
-          </ScrollView>
-        </React.Fragment>
-      )}
-      {modalPlayerVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalPlayerVisible}
-          onRequestClose={() => {
-            setModalPlayerVisible(!modalPlayerVisible);
-          }}
-        >
-          <PodcastPlayer selectedIndex={selectedIndex} dataList={data} setModalPlayerVisible={setModalPlayerVisible} />
-        </Modal>
-      )}
-    </View>
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+        {isLoading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#AAA" />
+          </View>
+        ) : (
+          <React.Fragment>
+            <ScrollView>
+              <View>
+                {data.map((item, index) => (
+                  <PodcastsRow
+                    key={index}
+                    data={item}
+                    lightOrDark={lightOrDark}
+                    onPress={() => handleRowPress(index)}
+                  />
+                ))}
+              </View>
+            </ScrollView>
+          </React.Fragment>
+        )}
+        {modalPlayerVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalPlayerVisible}
+            onRequestClose={() => {
+              setModalPlayerVisible(!modalPlayerVisible);
+            }}
+          >
+            <PodcastPlayer
+              selectedIndex={selectedIndex}
+              dataList={data}
+              setModalPlayerVisible={setModalPlayerVisible}
+            />
+          </Modal>
+        )}
+      </View>
+    </>
   );
 }

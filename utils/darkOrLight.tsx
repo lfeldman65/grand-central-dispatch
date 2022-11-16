@@ -2,51 +2,45 @@ import { Button, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-na
 
 import { useColorScheme } from 'react-native';
 import { useEffect, useState } from 'react';
-import { storage } from './storage'
+import { storage } from './storage';
 import { Appearance } from 'react-native';
 
+var lightOrDarkLocal = 'automatic';
+
 export default function DarkOrLightScreen(props) {
+  const { setLightOrDark } = props;
 
-    const {setLightOrDark} = props;
-
-    const onThemeChange = ({ colorScheme }) => {
-        console.log("onThemeChange", colorScheme)
-        //dispatch(changeTheme(colorScheme));
-        setLightOrDark(colorScheme);
+  const onThemeChange = ({ colorScheme }) => {
+    console.log('onThemeChange', colorScheme);
+    //dispatch(changeTheme(colorScheme));
+    if (lightOrDarkLocal == 'automatic') {
+      setLightOrDark(colorScheme);
+    } else {
+      setLightOrDark(lightOrDarkLocal);
     }
+  };
 
+  useEffect(() => {
+    getDarkOrLightMode();
+    Appearance.addChangeListener(onThemeChange);
+    return () => {
+      Appearance.removeChangeListener(onThemeChange);
+    };
+  }, []);
 
-    useEffect(() => {
-
-        getDarkOrLightMode();
-
-        Appearance.addChangeListener(onThemeChange);
-        return () => {
-          Appearance.removeChangeListener(onThemeChange);
-        };
-      }, []);
-
-    
-    async function getDarkOrLightMode() {
-        var d = await storage.getItem('darkOrLight');
-        
-        //if it's null, it's automatic
-        if ((d == null) || (d == undefined) || (d == 'automatic')) {
-            var dd = Appearance.getColorScheme();
-            setLightOrDark(dd);
-        }
-        else {
-            setLightOrDark(d);
-        }
+  async function getDarkOrLightMode() {
+    var d = await storage.getItem('darkOrLight');
+    if (d == null || d == undefined || d == 'automatic') {
+      console.log('THEME: ' + d);
+      var dd = Appearance.getColorScheme();
+      console.log('APPEARANCE: ' + dd);
+      lightOrDarkLocal = 'automatic';
+      setLightOrDark(dd);
+    } else {
+      lightOrDarkLocal = d;
+      setLightOrDark(d);
     }
+  }
 
-    return (
-        <View >
-         
-        </View>
-      );
+  return <View></View>;
 }
-
-
-
-
