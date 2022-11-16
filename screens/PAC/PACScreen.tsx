@@ -15,7 +15,7 @@ import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
-import DarkOrLightScreen from '../../utils/darkOrLight';
+import DarkOrLightScreen from '../../utils/DarkOrLight';
 
 type TabType = 'calls' | 'notes' | 'popby';
 

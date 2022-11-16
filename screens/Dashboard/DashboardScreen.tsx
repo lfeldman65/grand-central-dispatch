@@ -7,8 +7,7 @@ import * as Sentry from 'sentry-expo';
 import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import { storage } from '../../utils/storage';
-import DarkOrLightScreen from '../../utils/darkOrLight';
-
+import DarkOrLightScreen from '../../utils/DarkOrLight';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -36,7 +35,6 @@ export default function DashboardScreen() {
   const navigation = useNavigation();
   const [lightOrDark, setLightOrDark] = useState('light');
   const isFocused = useIsFocused();
-  
 
   function SentryTest() {
     console.log('sentry test');
@@ -44,7 +42,6 @@ export default function DashboardScreen() {
     throw new Error('My first Sentry error!');
     Sentry.Native.captureException(new Error('Oops!'));
   }
-
 
   useEffect(() => {
     navigation.setOptions({
@@ -55,7 +52,6 @@ export default function DashboardScreen() {
   useEffect(() => {
     getLandingPage();
   }, []);
-
 
   function navigateToLandingPage(landingPage?: string) {
     console.log('landing page:' + landingPage);
@@ -164,7 +160,7 @@ export default function DashboardScreen() {
 
   return (
     <>
-    <DarkOrLightScreen setLightOrDark={setLightOrDark}  ></DarkOrLightScreen>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={styles.row}>
           <View style={styles.topPair}>
@@ -304,7 +300,6 @@ export default function DashboardScreen() {
           </View>
         </View>
       </View>
-      
     </>
   );
 }
