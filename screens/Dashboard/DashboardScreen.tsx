@@ -1,12 +1,14 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, useColorScheme } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Event } from 'expo-analytics';
 import * as Sentry from 'sentry-expo';
 import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import { storage } from '../../utils/storage';
+import DarkOrLightScreen from '../../utils/darkOrLight';
+
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -32,8 +34,9 @@ interface DashboardNavigationProps {
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('light');
   const isFocused = useIsFocused();
+  
 
   function SentryTest() {
     console.log('sentry test');
@@ -42,14 +45,6 @@ export default function DashboardScreen() {
     Sentry.Native.captureException(new Error('Oops!'));
   }
 
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    console.log('dark or light: ' + dOrlight);
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   useEffect(() => {
     navigation.setOptions({
@@ -61,13 +56,6 @@ export default function DashboardScreen() {
     getLandingPage();
   }, []);
 
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   function navigateToLandingPage(landingPage?: string) {
     console.log('landing page:' + landingPage);
@@ -176,6 +164,7 @@ export default function DashboardScreen() {
 
   return (
     <>
+    <DarkOrLightScreen setLightOrDark={setLightOrDark}  ></DarkOrLightScreen>
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={styles.row}>
           <View style={styles.topPair}>
@@ -315,6 +304,7 @@ export default function DashboardScreen() {
           </View>
         </View>
       </View>
+      
     </>
   );
 }

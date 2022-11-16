@@ -22,7 +22,7 @@ import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/types
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { lightOrDarkRows, prettyText } from './settingsHelpers';
+import { lightOrDarkRows, prettyText } from './settingsHelpers'; // branch
 
 export default function LightOrDarkScreen(props: any) {
   const [lightOrDark, setIsLightOrDark] = useState(lightOrDarkRows[0]);

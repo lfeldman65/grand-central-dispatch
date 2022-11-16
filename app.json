@@ -5,6 +5,7 @@
     "version": "3.4.2",
     "orientation": "portrait",
     "icon": "./images/icon.png",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./images/splash.png",
       "resizeMode": "contain",

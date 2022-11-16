@@ -15,6 +15,7 @@ import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
+import DarkOrLightScreen from '../../utils/darkOrLight';
 
 type TabType = 'calls' | 'notes' | 'popby';
 
@@ -31,7 +32,7 @@ export default function PACScreen(props: PACScreenProps) {
   const [modalCallsVisible, setModalCallsVisible] = useState(false);
   const [modalNotesVisible, setModalNotesVisible] = useState(false);
   const [modalPopVisible, setModalPopVisible] = useState(false);
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('light');
 
   const [data, setData] = useState<PACDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -95,27 +96,11 @@ export default function PACScreen(props: PACScreenProps) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
   }, [navigation]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;
@@ -126,101 +111,105 @@ export default function PACScreen(props: PACScreenProps) {
   }, [isFocused]);
 
   return (
-    <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
-      <View style={globalStyles.tabButtonRow}>
-        <Text style={tabSelected == 'calls' ? globalStyles.selected : globalStyles.unselected} onPress={callsPressed}>
-          Calls
-        </Text>
-        <Text style={tabSelected == 'notes' ? globalStyles.selected : globalStyles.unselected} onPress={notesPressed}>
-          Notes
-        </Text>
-        <Text style={tabSelected == 'popby' ? globalStyles.selected : globalStyles.unselected} onPress={popPressed}>
-          Pop-By
-        </Text>
-      </View>
-
-      {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#AAA" />
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={lightOrDark == 'dark' ? styles.containerDark : styles.containerLight}>
+        <View style={globalStyles.tabButtonRow}>
+          <Text style={tabSelected == 'calls' ? globalStyles.selected : globalStyles.unselected} onPress={callsPressed}>
+            Calls
+          </Text>
+          <Text style={tabSelected == 'notes' ? globalStyles.selected : globalStyles.unselected} onPress={notesPressed}>
+            Notes
+          </Text>
+          <Text style={tabSelected == 'popby' ? globalStyles.selected : globalStyles.unselected} onPress={popPressed}>
+            Pop-By
+          </Text>
         </View>
-      ) : (
-        <React.Fragment>
-          <ScrollView>
-            {data.map((item, index) => (
-              <View key={index}>
-                {tabSelected == 'calls' ? (
-                  <PACCallsRow
-                    key={index}
-                    data={item}
-                    onPress={() => handleRowPress(index)}
-                    refresh={() => callsPressed()}
-                  />
-                ) : null}
-                {tabSelected == 'notes' ? (
-                  <PACNotesRow
-                    key={index}
-                    data={item}
-                    onPress={() => handleRowPress(index)}
-                    refresh={() => notesPressed()}
-                  />
-                ) : null}
-                {tabSelected == 'popby' ? (
-                  <PACPopRow
-                    key={index}
-                    data={item}
-                    onPress={() => handleRowPress(index)}
-                    refresh={() => popPressed()}
-                  />
-                ) : null}
+
+        {isLoading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#AAA" />
+          </View>
+        ) : (
+          <React.Fragment>
+            <ScrollView>
+              {data.map((item, index) => (
+                <View key={index}>
+                  {tabSelected == 'calls' ? (
+                    <PACCallsRow
+                      key={index}
+                      data={item}
+                      onPress={() => handleRowPress(index)}
+                      refresh={() => callsPressed()}
+                      lightOrDark={lightOrDark}
+                    />
+                  ) : null}
+                  {tabSelected == 'notes' ? (
+                    <PACNotesRow
+                      key={index}
+                      data={item}
+                      onPress={() => handleRowPress(index)}
+                      refresh={() => notesPressed()}
+                    />
+                  ) : null}
+                  {tabSelected == 'popby' ? (
+                    <PACPopRow
+                      key={index}
+                      data={item}
+                      onPress={() => handleRowPress(index)}
+                      refresh={() => popPressed()}
+                    />
+                  ) : null}
+                </View>
+              ))}
+            </ScrollView>
+            <TouchableOpacity style={styles.bottomContainer} onPress={() => handleIdeasPressed()}>
+              <View style={styles.ideasButton}>
+                <Text style={styles.ideasText}>{'View Ideas'}</Text>
               </View>
-            ))}
-          </ScrollView>
-          <TouchableOpacity style={styles.bottomContainer} onPress={() => handleIdeasPressed()}>
-            <View style={styles.ideasButton}>
-              <Text style={styles.ideasText}>{'View Ideas'}</Text>
-            </View>
-          </TouchableOpacity>
-          {modalCallsVisible && (
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalCallsVisible}
-              onRequestClose={() => {
-                //  Alert.alert('Modal has been closed.');
-                setModalCallsVisible(!modalCallsVisible);
-              }}
-            >
-              <IdeasCalls setModalCallsVisible={setModalCallsVisible} />
-            </Modal>
-          )}
-          {modalNotesVisible && (
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalNotesVisible}
-              onRequestClose={() => {
-                //  Alert.alert('Modal has been closed.');
-                setModalNotesVisible(!modalNotesVisible);
-              }}
-            >
-              <IdeasNotes setModalNotesVisible={setModalNotesVisible} />
-            </Modal>
-          )}
-          {modalPopVisible && (
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalPopVisible}
-              onRequestClose={() => {
-                //  Alert.alert('Modal has been closed.');
-                setModalNotesVisible(!modalPopVisible);
-              }}
-            >
-              <IdeasPop setModalPopVisible={setModalPopVisible} />
-            </Modal>
-          )}
-        </React.Fragment>
-      )}
-    </View>
+            </TouchableOpacity>
+            {modalCallsVisible && (
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalCallsVisible}
+                onRequestClose={() => {
+                  //  Alert.alert('Modal has been closed.');
+                  setModalCallsVisible(!modalCallsVisible);
+                }}
+              >
+                <IdeasCalls setModalCallsVisible={setModalCallsVisible} />
+              </Modal>
+            )}
+            {modalNotesVisible && (
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalNotesVisible}
+                onRequestClose={() => {
+                  //  Alert.alert('Modal has been closed.');
+                  setModalNotesVisible(!modalNotesVisible);
+                }}
+              >
+                <IdeasNotes setModalNotesVisible={setModalNotesVisible} />
+              </Modal>
+            )}
+            {modalPopVisible && (
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalPopVisible}
+                onRequestClose={() => {
+                  //  Alert.alert('Modal has been closed.');
+                  setModalNotesVisible(!modalPopVisible);
+                }}
+              >
+                <IdeasPop setModalPopVisible={setModalPopVisible} />
+              </Modal>
+            )}
+          </React.Fragment>
+        )}
+      </View>
+    </>
   );
 }
