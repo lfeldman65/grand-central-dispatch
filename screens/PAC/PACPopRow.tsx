@@ -14,11 +14,11 @@ interface PACRowProps {
   data: PACDataProps;
   onPress(): void;
   refresh(): void;
+  lightOrDark: string;
 }
 
 export default function PACPopRow(props: PACRowProps) {
   const [saveShown, setSaveShown] = useState(!props.data.isFavorite);
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
@@ -60,15 +60,6 @@ export default function PACPopRow(props: PACRowProps) {
     setIsLoading(false);
     console.log('complete failure');
   }
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
 
   function handlePhonePressed(phoneNumber: string) {
     Linking.openURL(`tel:${phoneNumber}`);
@@ -211,9 +202,9 @@ export default function PACPopRow(props: PACRowProps) {
       renderLeftActions={renderLeftActions}
     >
       <TouchableOpacity onPress={props.onPress}>
-        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+        <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <View style={styles.popbyRow}>
-            <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
               {props.data.contactName}
             </Text>
             {props.data.street1 != null && (
@@ -224,7 +215,7 @@ export default function PACPopRow(props: PACRowProps) {
           </View>
 
           <View style={styles.popbyRow}>
-            <Text style={lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
               {'Ranking: ' + props.data.ranking}
             </Text>
             {props.data.street1 && (
@@ -235,7 +226,7 @@ export default function PACPopRow(props: PACRowProps) {
           </View>
 
           <View style={styles.popbyRow}>
-            <Text style={lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
               {'Last Pop-By: ' + props.data.lastPopByDate}
             </Text>
             {props.data.street1 && (
@@ -246,17 +237,17 @@ export default function PACPopRow(props: PACRowProps) {
           </View>
 
           {props.data.street1 != null && (
-            <Text style={lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
               {props.data.street1}
             </Text>
           )}
           {props.data.street2 != null && (
-            <Text style={lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
               {props.data.street2}
             </Text>
           )}
           {props.data.city != null && (
-            <Text style={lightOrDark == 'dark' ? styles.cityStateZipTextDark : styles.cityStateZipTextLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.cityStateZipTextDark : styles.cityStateZipTextLight}>
               {props.data.city + ' ' + props.data.state + ' ' + props.data.zip}
             </Text>
           )}

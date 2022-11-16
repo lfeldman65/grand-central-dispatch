@@ -9,34 +9,17 @@ const closeDark = require('../../images/button_close_white.png');
 const closeLight = require('../../images/button_close_black.png');
 
 export default function IdeasCallsScreen(props: any) {
-  const { setModalCallsVisible } = props;
+  const { lightOrDark, setModalCallsVisible } = props;
   const [section0Selected, setSection0Selected] = useState(false);
   const [section1Selected, setSection1Selected] = useState(false);
   const [section2Selected, setSection2Selected] = useState(false);
   const [section3Selected, setSection3Selected] = useState(false);
   const [section4Selected, setSection4Selected] = useState(false);
   const [section5Selected, setSection5Selected] = useState(false);
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   function CancelPressed() {
     setModalCallsVisible(false);
-  }
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   function handleSectionTap(sectionIndex: number) {

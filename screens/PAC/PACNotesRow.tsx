@@ -12,10 +12,10 @@ interface PACNotesRowProps {
   data: PACDataProps;
   onPress(): void;
   refresh(): void;
+  lightOrDark: string;
 }
 
 export default function PACNotesRow(props: PACNotesRowProps) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
@@ -55,15 +55,6 @@ export default function PACNotesRow(props: PACNotesRowProps) {
   function completeFailure() {
     setIsLoading(false);
     console.log('complete failure');
-  }
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   const renderRightActions = () => {
@@ -106,30 +97,30 @@ export default function PACNotesRow(props: PACNotesRowProps) {
       renderLeftActions={renderLeftActions}
     >
       <TouchableOpacity onPress={props.onPress}>
-        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-          <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+        <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
             {props.data.contactName}
           </Text>
-          <Text style={lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
             {'Ranking: ' + props.data.ranking}
           </Text>
 
-          <Text style={lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
             {'Last Note Sent: ' + props.data.lastNoteDate}
           </Text>
 
           {props.data.street1 != null && (
-            <Text style={lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
               {props.data.street1}
             </Text>
           )}
           {props.data.street2 != null && (
-            <Text style={lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.streetTextDark : styles.streetTextLight}>
               {props.data.street2}
             </Text>
           )}
           {props.data.city != null && (
-            <Text style={lightOrDark == 'dark' ? styles.cityStateZipTextDark : styles.cityStateZipTextLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.cityStateZipTextDark : styles.cityStateZipTextLight}>
               {props.data.city + ' ' + props.data.state + ' ' + props.data.zip}
             </Text>
           )}

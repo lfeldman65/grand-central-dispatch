@@ -10,19 +10,19 @@ import { styles } from './styles';
 import { storage } from '../../utils/storage';
 import { isNullOrEmpty } from '../../utils/general';
 import { AddressProps, ContactDetailDataProps } from './interfaces';
-import { add } from 'react-native-reanimated';
+// import { add } from 'react-native-reanimated';
 import { completeAction, postponeAction } from './postponeAndComplete';
 
 let deviceHeight = Dimensions.get('window').height;
 
 export default function PACDetailScreen(props: any) {
   const { route } = props;
-  const { contactId, type, ranking, lastCallDate, lastNoteDate, lastPopByDate } = route.params;
+  const { contactId, type, ranking, lastCallDate, lastNoteDate, lastPopByDate, lightOrDark } = route.params;
   const navigation = useNavigation();
   const [data, setData] = useState<ContactDetailDataProps>();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  // const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
   function postponePressed() {
@@ -48,22 +48,6 @@ export default function PACDetailScreen(props: any) {
       lastName: data?.lastName,
       rankFromAbove: data?.ranking,
     });
-  }
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   function lastDate() {
@@ -281,7 +265,12 @@ export default function PACDetailScreen(props: any) {
             setModalVisible(!modalVisible);
           }}
         >
-          <PacComplete contactName={contactName()} onSave={saveComplete} setModalVisible={setModalVisible} />
+          <PacComplete
+            lightOrDark={lightOrDark}
+            contactName={contactName()}
+            onSave={saveComplete}
+            setModalVisible={setModalVisible}
+          />
         </Modal>
       )}
     </View>

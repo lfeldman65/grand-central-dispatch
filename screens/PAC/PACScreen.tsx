@@ -14,7 +14,6 @@ import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
-import { storage } from '../../utils/storage';
 import DarkOrLightScreen from '../../utils/darkOrLight';
 
 type TabType = 'calls' | 'notes' | 'popby';
@@ -46,6 +45,7 @@ export default function PACScreen(props: PACScreenProps) {
       lastCallDate: data[index]['lastCallDate'],
       lastNoteDate: data[index]['lastNoteDate'],
       lastPopByDate: data[index]['lastPopByDate'],
+      lightOrDark: lightOrDark,
     });
   };
 
@@ -150,6 +150,7 @@ export default function PACScreen(props: PACScreenProps) {
                       data={item}
                       onPress={() => handleRowPress(index)}
                       refresh={() => notesPressed()}
+                      lightOrDark={lightOrDark}
                     />
                   ) : null}
                   {tabSelected == 'popby' ? (
@@ -158,6 +159,7 @@ export default function PACScreen(props: PACScreenProps) {
                       data={item}
                       onPress={() => handleRowPress(index)}
                       refresh={() => popPressed()}
+                      lightOrDark={lightOrDark}
                     />
                   ) : null}
                 </View>
@@ -178,7 +180,7 @@ export default function PACScreen(props: PACScreenProps) {
                   setModalCallsVisible(!modalCallsVisible);
                 }}
               >
-                <IdeasCalls setModalCallsVisible={setModalCallsVisible} />
+                <IdeasCalls lightOrDark={lightOrDark} setModalCallsVisible={setModalCallsVisible} />
               </Modal>
             )}
             {modalNotesVisible && (
@@ -191,7 +193,7 @@ export default function PACScreen(props: PACScreenProps) {
                   setModalNotesVisible(!modalNotesVisible);
                 }}
               >
-                <IdeasNotes setModalNotesVisible={setModalNotesVisible} />
+                <IdeasNotes lightOrDark={lightOrDark} setModalNotesVisible={setModalNotesVisible} />
               </Modal>
             )}
             {modalPopVisible && (
@@ -204,7 +206,7 @@ export default function PACScreen(props: PACScreenProps) {
                   setModalNotesVisible(!modalPopVisible);
                 }}
               >
-                <IdeasPop setModalPopVisible={setModalPopVisible} />
+                <IdeasPop lightOrDark={lightOrDark} setModalPopVisible={setModalPopVisible} />
               </Modal>
             )}
           </React.Fragment>

@@ -5,9 +5,9 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function PACCompleteScreen(props: any) {
-  const { onSave, setModalVisible, contactName } = props;
+  const { onSave, setModalVisible, contactName, lightOrDark } = props;
   const [note, onNoteChange] = useState('');
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  // const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
   function SavePressed() {
@@ -16,22 +16,6 @@ export default function PACCompleteScreen(props: any) {
   }
   function CancelPressed() {
     setModalVisible(false);
-  }
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   return (
