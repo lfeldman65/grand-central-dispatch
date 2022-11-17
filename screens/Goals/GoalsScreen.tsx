@@ -275,7 +275,6 @@ export default function GoalsScreen() {
     return (
       <>
         <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-
         <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
           <View style={globalStyles.tabButtonRow}>
             <Text
