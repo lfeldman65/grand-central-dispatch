@@ -25,9 +25,9 @@ export default function EditToDoScreen(props: any) {
     attendeeFromParent,
     notesFromParent,
     onSave,
+    lightOrDark,
   } = props;
   const [newTitle, setNewTitle] = useState('');
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [showTopDate, setShowTopDate] = useState(false);
   const [newDate, setNewDate] = useState(new Date());
@@ -52,14 +52,6 @@ export default function EditToDoScreen(props: any) {
     console.log(currentMode);
     setShowTopDate(true);
   };
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   useEffect(() => {
     setNewTitle(titleFromParent);
@@ -128,14 +120,6 @@ export default function EditToDoScreen(props: any) {
         }
       })
       .catch((error) => console.error('failure ' + error));
-  }
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   return (
@@ -270,6 +254,7 @@ export default function EditToDoScreen(props: any) {
             title="Attendees"
             setModalAttendeesVisible={setModalAttendeesVisible}
             setSelectedAttendees={handleSelectedAttendees}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}

@@ -14,20 +14,11 @@ import EditToDo from './EditToDoScreen';
 export default function ToDoDetails(props: any) {
   const navigation = useNavigation();
   const { route } = props;
-  const { toDoID } = route.params;
+  const { toDoID, lightOrDark } = route.params;
   const isFocused = useIsFocused();
   const [data, setdata] = useState<ToDoDetailsDataProps>();
   const [isLoading, setIsLoading] = useState(true);
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;
@@ -46,14 +37,6 @@ export default function ToDoDetails(props: any) {
       ),
     });
   }, [navigation]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function editPressed() {
     console.log('edit pressed');
@@ -222,6 +205,7 @@ export default function ToDoDetails(props: any) {
             notesFromParent={data?.notes}
             onSave={saveComplete}
             setModalVisible={setModalVisible}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}

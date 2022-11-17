@@ -11,8 +11,7 @@ const backArrow = require('../../images/white_arrow_left.png');
 const searchGlass = require('../../images/whiteSearch.png');
 
 export default function ChooseRelationship(props: any) {
-  const { title, setModalRelVisible, setSelectedRel } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { title, setModalRelVisible, setSelectedRel, lightOrDark } = props;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
@@ -48,22 +47,6 @@ export default function ChooseRelationship(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function fetchRolodexSearch(type: string) {
     setIsLoading(true);
@@ -133,7 +116,7 @@ export default function ChooseRelationship(props: any) {
       <ScrollView>
         <View>
           {dataRolodex.map((item, index) => (
-            <RelationshipRow key={index} data={item} onPress={() => handleRowPress(index)} />
+            <RelationshipRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
           ))}
         </View>
       </ScrollView>

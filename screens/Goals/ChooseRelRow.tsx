@@ -13,6 +13,7 @@ const rankD = require('../Relationships/images/rankD.png');
 interface AtoZRowProps {
   data: RolodexDataProps;
   onPress(): void;
+  lightOrDark: string;
 }
 
 function chooseImage(rank: string) {
@@ -31,30 +32,13 @@ function displayName(first: string, last: string, type: string, employer: string
 }
 
 export default function ChooseRelRow(props: AtoZRowProps) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
-        <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+        <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
           {displayName(
             props.data.firstName,
             props.data.lastName,

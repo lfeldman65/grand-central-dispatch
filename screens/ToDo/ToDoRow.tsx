@@ -13,7 +13,6 @@ import {
 import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
-//import styles from './styles';
 import { analytics } from '../../utils/analytics';
 import { ToDoDataProps } from './interfaces';
 import { storage } from '../../utils/storage';
@@ -25,41 +24,28 @@ const chevron = require('../../images/chevron_blue_right.png');
 interface ToDoRowProps {
   data: ToDoDataProps;
   onPress(): void;
+  lightOrDark: string;
 }
 
 export default function ToDoRow(props: ToDoRowProps) {
   const isFocused = useIsFocused();
-  const [lightOrDark, setIsLightOrDark] = useState('');
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
+  //  const [props.lightOrDark, setIsprops.lightOrDark] = useState('');
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.imageBox}>
           {props.data.isCampaign && <Image source={bullsEye} style={styles.bullsEyeImage} />}
         </View>
-        <View style={lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
-          <Text style={lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>{props.data.title}</Text>
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.notes}</Text>
+        <View style={props.lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
+            {props.data.title}
+          </Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.notes}</Text>
         </View>
         <View style={styles.dateColumn}>
-          <View style={lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
-            <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+          <View style={props.lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
               {'Due: ' + prettyDate(props.data.dueDate)}
             </Text>
             {props.data.priority && <Text style={styles.priorityText}>High Priority</Text>}

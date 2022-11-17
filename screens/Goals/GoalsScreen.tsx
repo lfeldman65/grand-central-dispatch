@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  Modal,
+  LogBox,
+} from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -8,7 +18,6 @@ import { analytics } from '../../utils/analytics';
 import { isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
 import { getGoalData, trackAction } from './api';
-import { storage } from '../../utils/storage';
 import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
@@ -257,7 +266,6 @@ export default function GoalsScreen() {
     return (
       <>
         <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#AAA" />
         </View>
@@ -331,7 +339,12 @@ export default function GoalsScreen() {
                 setModalVisible(!modalVisible);
               }}
             >
-              <TrackActivity trackTitle="Track Activity Goal" onSave={saveComplete} setModalVisible={setModalVisible} />
+              <TrackActivity
+                lightOrDark={lightOrDark}
+                trackTitle="Track Activity Goal"
+                onSave={saveComplete}
+                setModalVisible={setModalVisible}
+              />
             </Modal>
           )}
         </View>

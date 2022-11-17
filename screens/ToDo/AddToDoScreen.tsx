@@ -40,8 +40,7 @@ import { untilTypeMenu } from './toDoHelpersAndMenus';
 import { reminderMenu } from './toDoHelpersAndMenus';
 
 export default function AddToDoScreen(props: any) {
-  const { setModalVisible, title, onSave } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { setModalVisible, title, onSave, lightOrDark } = props;
   const [toDoTitle, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -133,14 +132,6 @@ export default function AddToDoScreen(props: any) {
 
   useEffect(() => {
     let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
     getCurrentDay(isMounted);
     return () => {
       isMounted = false;
@@ -156,14 +147,6 @@ export default function AddToDoScreen(props: any) {
       setYearlyFrequency(frequencyYearMenu['Every Year']);
     }
   }, [recurrence]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function handleAttendeesPressed() {
     console.log('attendees pressed');
@@ -1070,6 +1053,7 @@ export default function AddToDoScreen(props: any) {
               title="Attendees"
               setModalAttendeesVisible={setModalAttendeesVisible}
               setSelectedAttendees={handleSelectedAttendees}
+              lightOrDark={lightOrDark}
             />
           </Modal>
         )}

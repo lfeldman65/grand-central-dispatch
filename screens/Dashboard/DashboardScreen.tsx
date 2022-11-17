@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, useColorScheme } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, LogBox } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useState, useRef } from 'react';
@@ -7,7 +7,6 @@ import * as Sentry from 'sentry-expo';
 import globalStyles from '../../globalStyles';
 import { analytics } from '../../utils/analytics';
 import { storage } from '../../utils/storage';
-import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { Appearance } from 'react-native';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
@@ -54,6 +53,7 @@ export default function DashboardScreen() {
   useEffect(() => {
     console.log('dashboard screen use effect');
     getLandingPage();
+    LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
   }, []);
 
   useEffect(() => {

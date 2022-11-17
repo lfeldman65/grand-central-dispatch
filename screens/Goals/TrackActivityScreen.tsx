@@ -8,13 +8,11 @@ import ChooseRelationship from '../Goals/ChooseRelationship';
 import { RolodexDataProps, RelProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
-
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
-  const { onSave, setModalVisible, trackTitle } = props;
+  const { onSave, setModalVisible, trackTitle, lightOrDark } = props;
   const [note, onNoteChange] = useState('Some notes 25');
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [relationship, setRelationship] = useState<RolodexDataProps>();
   const [goal, setGoal] = useState('Calls Made');
   const [date, setDate] = useState(new Date());
@@ -24,6 +22,10 @@ export default function TrackActivityScreen(props: any) {
   const [showDate, setShowDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const isFocused = useIsFocused();
+
+  useEffect(() => {
+    console.log('TRACKACTIVITY: ' + lightOrDark);
+  }, [isFocused]);
 
   const Sheets = {
     goalSheet: 'filter_sheet_goals',
@@ -80,15 +82,6 @@ export default function TrackActivityScreen(props: any) {
 
   function cancelPressed() {
     setModalVisible(false);
-  }
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   return (
@@ -263,6 +256,7 @@ export default function TrackActivityScreen(props: any) {
             title="Choose Relationship"
             setModalRelVisible={setModalRelVisible}
             setSelectedRel={setRelationship}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}

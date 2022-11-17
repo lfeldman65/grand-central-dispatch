@@ -9,20 +9,17 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getRolodexData, getRolodexSearch } from './api';
 import { RolodexDataProps } from './interfaces';
 import AttendeeRow from './AttendeeRow';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
 
 const closeButton = require('../../images/button_close_white.png');
 const backArrow = require('../../images/white_arrow_left.png');
 const searchGlass = require('../../images/whiteSearch.png');
 
 export default function AttendeeScreen(props: any) {
-  const { title, setModalAttendeesVisible, setSelectedAttendees } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { title, setModalAttendeesVisible, setSelectedAttendees, lightOrDark } = props;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
@@ -44,21 +41,6 @@ export default function AttendeeScreen(props: any) {
     setModalAttendeesVisible(false);
   }
 
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
   useEffect(() => {
     console.log('search: ' + search);
     if (search != '') {
@@ -141,7 +123,13 @@ export default function AttendeeScreen(props: any) {
         <ScrollView>
           <View>
             {dataRolodex.map((item, index) => (
-              <AttendeeRow relFromAbove={search} key={index} data={item} onPress={() => handleRowPress(index)} />
+              <AttendeeRow
+                relFromAbove={search}
+                lightOrDark={lightOrDark}
+                key={index}
+                data={item}
+                onPress={() => handleRowPress(index)}
+              />
             ))}
           </View>
         </ScrollView>
