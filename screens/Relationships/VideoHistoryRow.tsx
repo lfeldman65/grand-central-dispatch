@@ -17,11 +17,13 @@ import { analytics } from '../../utils/analytics';
 import { VideoSummaryDataProps } from './interfaces';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+
 const chevron = require('../../images/chevron_blue_right.png');
 
 interface VideoHistoryRowProps {
   data: VideoSummaryDataProps;
   onPress(): void;
+  lightOrDark: string;
 }
 
 function makeTextPretty(name: string, count: number) {
@@ -32,23 +34,13 @@ function makeTextPretty(name: string, count: number) {
 }
 
 export default function VideoHistoryRow(props: VideoHistoryRowProps) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.textBox}>
-          <Text style={lightOrDark == 'dark' ? styles.activityTextDark : styles.activityTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.activityTextDark : styles.activityTextLight}>
             {makeTextPretty(props.data.videoTitle, props.data.viewCount)}
           </Text>
         </View>

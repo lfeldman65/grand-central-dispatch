@@ -29,7 +29,6 @@ interface ToDoRowProps {
 
 export default function ToDoRow(props: ToDoRowProps) {
   const isFocused = useIsFocused();
-  //  const [props.lightOrDark, setIsprops.lightOrDark] = useState('');
 
   return (
     <TouchableOpacity onPress={props.onPress}>

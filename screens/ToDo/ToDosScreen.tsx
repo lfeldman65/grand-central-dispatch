@@ -143,96 +143,90 @@ export default function ToDosScreen() {
         <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
 
         <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-          {isLoading ? (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <ActivityIndicator size="large" color="#AAA" />
-            </View>
-          ) : (
-            <React.Fragment>
-              <View style={globalStyles.filterRow}>
-                <TouchableOpacity onPress={filterPressed}>
-                  <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
-                </TouchableOpacity>
-              </View>
-
-              <ScrollView>
-                <View>
-                  {dataActivity.map((item, index) => (
-                    <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
-                  ))}
-                </View>
-              </ScrollView>
-
-              <TouchableOpacity style={styles.bottomContainer} onPress={() => addNewToDoPressed()}>
-                <View style={styles.ideasButton}>
-                  <Text style={styles.ideasText}>{'Add New To-Do'}</Text>
-                </View>
+          <React.Fragment>
+            <View style={globalStyles.filterRow}>
+              <TouchableOpacity onPress={filterPressed}>
+                <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
               </TouchableOpacity>
+            </View>
 
-              {modalVisible && (
-                <Modal
-                  animationType="slide"
-                  transparent={true}
-                  visible={modalVisible}
-                  onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                  }}
-                >
-                  <AddToDo
-                    title={'New To-Do'}
-                    lightOrDark={lightOrDark}
-                    onSave={saveComplete}
-                    setModalVisible={setModalVisible}
-                  />
-                </Modal>
-              )}
-              <ActionSheet
-                initialOffsetFromBottom={10}
-                onBeforeShow={(data) => console.log('action sheet')}
-                id={Sheets.filterSheet}
-                ref={actionSheetRef}
-                statusBarTranslucent
-                bounceOnOpen={true}
-                drawUnderStatusBar={true}
-                bounciness={4}
-                gestureEnabled={true}
-                bottomOffset={40}
-                defaultOverlayOpacity={0.3}
+            <ScrollView>
+              <View>
+                {dataActivity.map((item, index) => (
+                  <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+                ))}
+              </View>
+            </ScrollView>
+
+            <TouchableOpacity style={styles.bottomContainer} onPress={() => addNewToDoPressed()}>
+              <View style={styles.ideasButton}>
+                <Text style={styles.ideasText}>{'Add New To-Do'}</Text>
+              </View>
+            </TouchableOpacity>
+
+            {modalVisible && (
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  setModalVisible(!modalVisible);
+                }}
               >
-                <View
-                  style={{
-                    paddingHorizontal: 12,
+                <AddToDo
+                  title={'New To-Do'}
+                  lightOrDark={lightOrDark}
+                  onSave={saveComplete}
+                  setModalVisible={setModalVisible}
+                />
+              </Modal>
+            )}
+            <ActionSheet
+              initialOffsetFromBottom={10}
+              onBeforeShow={(data) => console.log('action sheet')}
+              id={Sheets.filterSheet}
+              ref={actionSheetRef}
+              statusBarTranslucent
+              bounceOnOpen={true}
+              drawUnderStatusBar={true}
+              bounciness={4}
+              gestureEnabled={true}
+              bottomOffset={40}
+              defaultOverlayOpacity={0.3}
+            >
+              <View
+                style={{
+                  paddingHorizontal: 12,
+                }}
+              >
+                <ScrollView
+                  nestedScrollEnabled
+                  onMomentumScrollEnd={() => {
+                    actionSheetRef.current?.handleChildScrollEnd();
                   }}
+                  style={styles.scrollview}
                 >
-                  <ScrollView
-                    nestedScrollEnabled
-                    onMomentumScrollEnd={() => {
-                      actionSheetRef.current?.handleChildScrollEnd();
-                    }}
-                    style={styles.scrollview}
-                  >
-                    <View>
-                      {Object.entries(filters).map(([index, value]) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => {
-                            SheetManager.hide(Sheets.filterSheet, null);
-                            setFilterSetting(value);
-                            // fetchData();
-                          }}
-                          style={globalStyles.listItemCell}
-                        >
-                          <Text style={globalStyles.listItem}>{index}</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
+                  <View>
+                    {Object.entries(filters).map(([index, value]) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          SheetManager.hide(Sheets.filterSheet, null);
+                          setFilterSetting(value);
+                          // fetchData();
+                        }}
+                        style={globalStyles.listItemCell}
+                      >
+                        <Text style={globalStyles.listItem}>{index}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
 
-                    {/*  Add a Small Footer at Bottom */}
-                  </ScrollView>
-                </View>
-              </ActionSheet>
-            </React.Fragment>
-          )}
+                  {/*  Add a Small Footer at Bottom */}
+                </ScrollView>
+              </View>
+            </ActionSheet>
+          </React.Fragment>
         </View>
       </>
     );

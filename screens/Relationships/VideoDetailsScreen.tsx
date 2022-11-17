@@ -24,29 +24,16 @@ import RecentActivityRow from './RecentActivityRow';
 import VideoDetailsRow from './VideoDetailsRow';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
-// interface RolodexScreenProps {
-//   route: RouteProp<any>;
-// }
-
-//export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
 export default function VideoDetailsScreen(props: any) {
   const { route } = props;
   const { videoGuid, videoTitle } = route.params;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
   const [dataVid, setDataVid] = useState<VideoDetailsDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   const handleRowPress = (index: number) => {
     //  analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
@@ -80,6 +67,39 @@ export default function VideoDetailsScreen(props: any) {
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#AAA" />
+        </View>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+        <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+          <React.Fragment>
+            <ScrollView>
+              <View>
+                {dataVid.map((item, index) => (
+                  <VideoDetailsRow
+                    key={index}
+                    data={item}
+                    lightOrDark={lightOrDark}
+                    onPress={() => handleRowPress(index)}
+                  />
+                ))}
+              </View>
+            </ScrollView>
+          </React.Fragment>
+        </View>
+      </>
+    );
   }
 
   return (

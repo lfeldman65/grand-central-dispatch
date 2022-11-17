@@ -26,14 +26,8 @@ import RecentActivityRow from './RecentActivityRow';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
-//type FilterOptions = 'all' | 'calls' | 'notes' | 'popbys' | 'referrals' | 'other';
-
-// interface RolodexScreenProps {
-//   route: RouteProp<any>;
-// }
-
-//export default function ManageRelationshipsScreen(props: RolodexScreenProps) {
 export default function RecentActivityScreenScreen() {
   let deviceWidth = Dimensions.get('window').width;
 
@@ -46,21 +40,14 @@ export default function RecentActivityScreenScreen() {
     Other: 'other',
   };
 
-  // const [tabSelected, setTabSelected] = useState(props.route.params?.defaultTab ?? 'A-Z');
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const [filterSetting, setFilterSetting] = useState('all');
-
   const [dataActivity, setdataActivity] = useState<RecentActivityDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
 
   const actionSheetRef = useRef<ActionSheet>(null);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   const Sheets = {
     filterSheet: 'filter_sheet_id',
@@ -75,18 +62,18 @@ export default function RecentActivityScreenScreen() {
       lastName: '',
     });
   };
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  }, []);
+  }, [navigation, lightOrDark]);
 
   useEffect(() => {
     fetchData();
   }, [filterSetting]);
 
   useEffect(() => {
-    getDarkOrLightMode();
     fetchData();
   }, [isFocused]);
 
@@ -128,87 +115,92 @@ export default function RecentActivityScreenScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  // function saveComplete() {
-  //   console.log('Save Complete');
-  // }
-
-  return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      {isLoading ? (
+  if (isLoading) {
+    return (
+      <>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#AAA" />
         </View>
-      ) : (
-        <React.Fragment>
-          <View style={globalStyles.filterRow}>
-            <TouchableOpacity onPress={filterPressed}>
-              <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
-            </TouchableOpacity>
-          </View>
-
-          <ScrollView>
-            <View>
-              {dataActivity.map((item, index) => (
-                <RecentActivityRow
-                  //  filterFromAbove={filterSetting}
-                  key={index}
-                  data={item}
-                  onPress={() => handleRowPress(index)}
-                />
-              ))}
+      </>
+    );
+  } else {
+    return (
+      <>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+        <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+          <React.Fragment>
+            <View style={globalStyles.filterRow}>
+              <TouchableOpacity onPress={filterPressed}>
+                <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
+              </TouchableOpacity>
             </View>
-          </ScrollView>
-          <ActionSheet
-            initialOffsetFromBottom={10}
-            onBeforeShow={(data) => console.log('action sheet')}
-            id={Sheets.filterSheet}
-            ref={actionSheetRef}
-            statusBarTranslucent
-            bounceOnOpen={true}
-            drawUnderStatusBar={true}
-            bounciness={4}
-            gestureEnabled={true}
-            bottomOffset={40}
-            defaultOverlayOpacity={0.3}
-          >
-            <View
-              style={{
-                paddingHorizontal: 12,
-              }}
+
+            <ScrollView>
+              <View>
+                {dataActivity.map((item, index) => (
+                  <RecentActivityRow
+                    //  filterFromAbove={filterSetting}
+                    key={index}
+                    data={item}
+                    lightOrDark={lightOrDark}
+                    onPress={() => handleRowPress(index)}
+                  />
+                ))}
+              </View>
+            </ScrollView>
+            <ActionSheet
+              initialOffsetFromBottom={10}
+              onBeforeShow={(data) => console.log('action sheet')}
+              id={Sheets.filterSheet}
+              ref={actionSheetRef}
+              statusBarTranslucent
+              bounceOnOpen={true}
+              drawUnderStatusBar={true}
+              bounciness={4}
+              gestureEnabled={true}
+              bottomOffset={40}
+              defaultOverlayOpacity={0.3}
             >
-              <ScrollView
-                nestedScrollEnabled
-                onMomentumScrollEnd={() => {
-                  actionSheetRef.current?.handleChildScrollEnd();
+              <View
+                style={{
+                  paddingHorizontal: 12,
                 }}
-                style={styles.scrollview}
               >
-                <View>
-                  {Object.entries(filters).map(([key, value]) => (
-                    <TouchableOpacity
-                      key={key}
-                      onPress={() => {
-                        SheetManager.hide(Sheets.filterSheet, null);
-                        setFilterSetting(value);
-                        // fetchData();
-                      }}
-                      style={globalStyles.listItemCell}
-                    >
-                      {/*  you can style the text in listItem */}
-                      <Text style={globalStyles.listItem}>{key}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                <ScrollView
+                  nestedScrollEnabled
+                  onMomentumScrollEnd={() => {
+                    actionSheetRef.current?.handleChildScrollEnd();
+                  }}
+                  style={styles.scrollview}
+                >
+                  <View>
+                    {Object.entries(filters).map(([key, value]) => (
+                      <TouchableOpacity
+                        key={key}
+                        onPress={() => {
+                          SheetManager.hide(Sheets.filterSheet, null);
+                          setFilterSetting(value);
+                          // fetchData();
+                        }}
+                        style={globalStyles.listItemCell}
+                      >
+                        {/*  you can style the text in listItem */}
+                        <Text style={globalStyles.listItem}>{key}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
 
-                {/*  Add a Small Footer at Bottom */}
-                <View style={styles.footer} />
-              </ScrollView>
-            </View>
-          </ActionSheet>
-        </React.Fragment>
-      )}
-    </View>
-  );
+                  {/*  Add a Small Footer at Bottom */}
+                  <View style={styles.footer} />
+                </ScrollView>
+              </View>
+            </ActionSheet>
+          </React.Fragment>
+        </View>
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

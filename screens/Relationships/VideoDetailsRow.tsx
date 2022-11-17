@@ -12,20 +12,11 @@ const chevron = require('../../images/chevron_blue_right.png');
 interface VideoDetailsRowProps {
   data: VideoDetailsDataProps;
   onPress(): void;
+  lightOrDark: string;
 }
 
 export default function VideoDetailRows(props: VideoDetailsRowProps) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function prettyDate(uglyDate: string) {
     console.log(uglyDate);
@@ -39,9 +30,9 @@ export default function VideoDetailRows(props: VideoDetailsRowProps) {
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.textBox}>
-          <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
             {props.data.fullName + ' watched this video'}
           </Text>
           <Text style={styles.dateText}>{prettyDate(props.data.dateViewed)}</Text>

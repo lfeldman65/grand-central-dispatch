@@ -24,9 +24,10 @@ import RecentActivityRow from './RecentActivityRow';
 import VideoHistoryRow from './VideoHistoryRow';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function VideoHistoryScreen() {
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
   const [dataVid, setDataVid] = useState<VideoSummaryDataProps[]>([]);
@@ -42,19 +43,13 @@ export default function VideoHistoryScreen() {
     });
   };
 
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  });
+  }, [navigation]);
 
   useEffect(() => {
-    getDarkOrLightMode();
     getThatData();
   }, [isFocused]);
 
@@ -75,25 +70,38 @@ export default function VideoHistoryScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      {isLoading ? (
+  if (isLoading) {
+    return (
+      <>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#AAA" />
         </View>
-      ) : (
-        <React.Fragment>
-          <ScrollView>
-            <View>
-              {dataVid.map((item, index) => (
-                <VideoHistoryRow key={index} data={item} onPress={() => handleRowPress(index)} />
-              ))}
-            </View>
-          </ScrollView>
-        </React.Fragment>
-      )}
-    </View>
-  );
+      </>
+    );
+  } else {
+    return (
+      <>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+        <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+          <React.Fragment>
+            <ScrollView>
+              <View>
+                {dataVid.map((item, index) => (
+                  <VideoHistoryRow
+                    key={index}
+                    data={item}
+                    lightOrDark={lightOrDark}
+                    onPress={() => handleRowPress(index)}
+                  />
+                ))}
+              </View>
+            </ScrollView>
+          </React.Fragment>
+        </View>
+      </>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

@@ -30,6 +30,7 @@ const chevron = require('../../images/chevron_blue_right.png');
 interface RecentActivityRowProps {
   data: RecentActivityDataProps;
   onPress(): void;
+  lightOrDark: string;
 }
 
 function chooseImage(activityType: string) {
@@ -53,31 +54,24 @@ function prettyType(uglyType: string) {
 
 export default function RecentActivityRow(props: RecentActivityRowProps) {
   const isFocused = useIsFocused();
-  const [lightOrDark, setIsLightOrDark] = useState('');
 
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.imageBox}>
           <Image source={chooseImage(props.data.ActivityType)} style={styles.recentImage} />
-          <Text style={lightOrDark == 'dark' ? styles.activityTextDark : styles.activityTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.activityTextDark : styles.activityTextLight}>
             {prettyType(props.data.ActivityType)}
           </Text>
         </View>
-        <View style={lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
-          <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>{props.data.Name}</Text>
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+        <View style={props.lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
+            {props.data.Name}
+          </Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
             {props.data.ActivityDate}
           </Text>
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.Notes}</Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.Notes}</Text>
         </View>
         <View style={styles.chevronBox}>
           <Image source={chevron} style={styles.chevron} />
