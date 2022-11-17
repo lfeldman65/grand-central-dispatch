@@ -50,6 +50,7 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
     console.log(data[index].id);
     navigation.navigate('OtherTxDetails', {
       dealID: data[index].id,
+      lightOrDark: lightOrDark,
     });
   };
 

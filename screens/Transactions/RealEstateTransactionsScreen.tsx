@@ -42,7 +42,6 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   const [isLoading, setIsLoading] = useState(true);
   const actionSheetRef = useRef<ActionSheet>(null);
   const [statusChoice, setStatusChoice] = useState('potential');
-
   const [currentId, setCurrentId] = useState(0);
 
   const handleRowPress = (index: number) => {
@@ -50,6 +49,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
     console.log(data[index].id);
     navigation.navigate('RealEstateTxDetails', {
       dealID: data[index].id,
+      lightOrDark: lightOrDark,
     });
   };
 

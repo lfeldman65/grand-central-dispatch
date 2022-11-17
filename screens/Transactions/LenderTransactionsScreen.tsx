@@ -49,6 +49,7 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
     console.log(data[index].id);
     navigation.navigate('LenderTxDetails', {
       dealID: data[index].id,
+      lightOrDark: lightOrDark,
     });
   };
 

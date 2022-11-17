@@ -12,8 +12,7 @@ const chevron = require('../../images/chevron_blue_right.png');
 
 export default function TransactionDetailsLender(props: any) {
   const { route } = props;
-  const { dealID } = route.params;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { dealID, lightOrDark } = route.params;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<TransactionDetailsProps>();
@@ -37,13 +36,6 @@ export default function TransactionDetailsLender(props: any) {
       //  buyerOrSeller: data?.transactionType,
     });
   }
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,14 +44,6 @@ export default function TransactionDetailsLender(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function deletePressed() {
     Alert.alert(
