@@ -53,13 +53,12 @@ export default function DashboardScreen() {
   useEffect(() => {
     console.log('dashboard screen use effect');
     getLandingPage();
-    LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+    console.disableYellowBox = true;
+    //  LogBox.ignoreLogs(['Console Warning']); // Ignore log notification by message
   }, []);
 
   useEffect(() => {
     console.log('dashboard screen ISFOCUSED use effect');
-
-    console.log('useEffect in DarkOrLight');
     getDarkOrLightMode();
     Appearance.addChangeListener(onThemeChange);
     return () => {

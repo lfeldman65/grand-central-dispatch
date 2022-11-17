@@ -83,18 +83,6 @@ export const probabilityMenu = {
   Certain: 'Certain',
 };
 
-export function prettyText(uglyText: string) {
-  if (uglyText == 'automatic') {
-    return 'Automatic';
-  }
-  if (uglyText == 'light') {
-    return 'Light';
-  }
-  if (uglyText == 'dark') {
-    return 'Dark';
-  }
-}
-
 export function removeTrailingDecimal(value: string) {
   // i.e. 3129.27 -> 3129
   if (value == null || value == '') {

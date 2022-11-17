@@ -23,9 +23,10 @@ import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { displayAZRows } from './settingsHelpers';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function RelOrderScreen(props: any) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const [displayAZ, setDisplayAZ] = useState('First Last');
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
@@ -43,27 +44,11 @@ export default function RelOrderScreen(props: any) {
 
   useEffect(() => {
     let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
     getCurrentDisplayAZ(isMounted);
     return () => {
       isMounted = false;
     };
   }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function savePressed() {
     console.log('save pressed display: ' + displayAZ);
@@ -86,29 +71,34 @@ export default function RelOrderScreen(props: any) {
   }
 
   return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      {displayAZRows.map((item, index) => (
-        <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-          <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>{displayAZRows[index]}</Text>
-          <View style={styles.checkView}>
-            <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-              size={25}
-              textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-              fillColor="#37C0FF"
-              unfillColor="white"
-              iconStyle={{ borderColor: 'gray' }}
-              text=""
-              textContainerStyle={{ marginLeft: 10 }}
-              disableBuiltInState={true}
-              isChecked={displayAZ == displayAZRows[index]}
-              onPress={(isChecked: boolean) => {
-                setDisplayAZ(displayAZRows[index]);
-              }}
-            />
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+        {displayAZRows.map((item, index) => (
+          <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+            <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>
+              {displayAZRows[index]}
+            </Text>
+            <View style={styles.checkView}>
+              <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+                size={25}
+                textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+                fillColor="#37C0FF"
+                unfillColor="white"
+                iconStyle={{ borderColor: 'gray' }}
+                text=""
+                textContainerStyle={{ marginLeft: 10 }}
+                disableBuiltInState={true}
+                isChecked={displayAZ == displayAZRows[index]}
+                onPress={(isChecked: boolean) => {
+                  setDisplayAZ(displayAZRows[index]);
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ))}
-    </View>
+        ))}
+      </View>
+    </>
   );
 }
 

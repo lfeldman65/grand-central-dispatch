@@ -23,9 +23,10 @@ import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { notificationRowsWithVid, notificationRowsNoVid } from './settingsHelpers';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function NotificationsScreen(props: any) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [notifCall, setNotifCall] = useState(true);
   const [notifToDo, setNotifToDo] = useState(true);
@@ -49,27 +50,11 @@ export default function NotificationsScreen(props: any) {
 
   useEffect(() => {
     let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
     getCurrentNotifs(isMounted);
     return () => {
       isMounted = false;
     };
   }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function savePressed() {
     var state = 'False';
@@ -235,69 +220,72 @@ export default function NotificationsScreen(props: any) {
   }
 
   return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      <View style={globalStyles.tabButtonRow}>
-        <Text style={styles.selected} onPress={selectAllPressed}>
-          Select All
-        </Text>
-        <Text style={styles.selected} onPress={deselectAllPressed}>
-          Deselect All
-        </Text>
-      </View>
-      {hasBombBomb &&
-        notificationRowsWithVid.map((item, index) => (
-          <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-            <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>
-              {notificationRowsWithVid[index]}
-            </Text>
-            <View style={styles.checkView}>
-              <BouncyCheckbox
-                size={25}
-                textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-                fillColor="#37C0FF"
-                unfillColor="white"
-                iconStyle={{ borderColor: 'gray' }}
-                text=""
-                textContainerStyle={{ marginLeft: 10 }}
-                disableBuiltInState={true}
-                isChecked={isNotifChecked(index)}
-                onPress={(isChecked: boolean) => {
-                  console.log('isChecked: ' + isChecked);
-                  console.log('index: ' + index);
-                  handleCheck(index);
-                }}
-              />
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+        <View style={globalStyles.tabButtonRow}>
+          <Text style={styles.selected} onPress={selectAllPressed}>
+            Select All
+          </Text>
+          <Text style={styles.selected} onPress={deselectAllPressed}>
+            Deselect All
+          </Text>
+        </View>
+        {hasBombBomb &&
+          notificationRowsWithVid.map((item, index) => (
+            <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+              <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>
+                {notificationRowsWithVid[index]}
+              </Text>
+              <View style={styles.checkView}>
+                <BouncyCheckbox
+                  size={25}
+                  textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+                  fillColor="#37C0FF"
+                  unfillColor="white"
+                  iconStyle={{ borderColor: 'gray' }}
+                  text=""
+                  textContainerStyle={{ marginLeft: 10 }}
+                  disableBuiltInState={true}
+                  isChecked={isNotifChecked(index)}
+                  onPress={(isChecked: boolean) => {
+                    console.log('isChecked: ' + isChecked);
+                    console.log('index: ' + index);
+                    handleCheck(index);
+                  }}
+                />
+              </View>
             </View>
-          </View>
-        ))}
+          ))}
 
-      {!hasBombBomb &&
-        notificationRowsNoVid.map((item, index) => (
-          <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-            <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>
-              {notificationRowsNoVid[index]}
-            </Text>
-            <View style={styles.checkView}>
-              <BouncyCheckbox
-                size={25}
-                textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-                fillColor="#37C0FF"
-                unfillColor="white"
-                iconStyle={{ borderColor: 'gray' }}
-                text=""
-                textContainerStyle={{ marginLeft: 10 }}
-                disableBuiltInState={true}
-                isChecked={isNotifChecked(index)}
-                onPress={(isChecked: boolean) => {
-                  console.log('isChecked: ' + isChecked);
-                  console.log('index: ' + index);
-                  handleCheck(index);
-                }}
-              />
+        {!hasBombBomb &&
+          notificationRowsNoVid.map((item, index) => (
+            <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+              <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>
+                {notificationRowsNoVid[index]}
+              </Text>
+              <View style={styles.checkView}>
+                <BouncyCheckbox
+                  size={25}
+                  textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+                  fillColor="#37C0FF"
+                  unfillColor="white"
+                  iconStyle={{ borderColor: 'gray' }}
+                  text=""
+                  textContainerStyle={{ marginLeft: 10 }}
+                  disableBuiltInState={true}
+                  isChecked={isNotifChecked(index)}
+                  onPress={(isChecked: boolean) => {
+                    console.log('isChecked: ' + isChecked);
+                    console.log('index: ' + index);
+                    handleCheck(index);
+                  }}
+                />
+              </View>
             </View>
-          </View>
-        ))}
-    </View>
+          ))}
+      </View>
+    </>
   );
 }
 

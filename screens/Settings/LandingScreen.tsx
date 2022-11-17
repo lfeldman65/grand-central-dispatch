@@ -23,9 +23,10 @@ import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { landingPages } from './settingsHelpers';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function LandingScreen(props: any) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const [landingPage, setLandingPage] = useState(landingPages[0]);
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
@@ -43,27 +44,11 @@ export default function LandingScreen(props: any) {
 
   useEffect(() => {
     let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
     getCurrentLandingPage(isMounted);
     return () => {
       isMounted = false;
     };
   }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   async function getCurrentLandingPage(isMounted: boolean) {
     if (!isMounted) {
@@ -86,29 +71,34 @@ export default function LandingScreen(props: any) {
   }
 
   return (
-    <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      {landingPages.map((item, index) => (
-        <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-          <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>{landingPages[index]}</Text>
-          <View style={styles.checkView}>
-            <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-              size={25}
-              textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-              fillColor="#37C0FF"
-              unfillColor="white"
-              iconStyle={{ borderColor: 'gray' }}
-              text=""
-              textContainerStyle={{ marginLeft: 10 }}
-              disableBuiltInState={true}
-              isChecked={landingPage == landingPages[index]}
-              onPress={(isChecked: boolean) => {
-                setLandingPage(landingPages[index]);
-              }}
-            />
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <ScrollView style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+        {landingPages.map((item, index) => (
+          <View key={index} style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+            <Text style={lightOrDark == 'dark' ? styles.rowTitleDark : styles.rowTitleLight}>
+              {landingPages[index]}
+            </Text>
+            <View style={styles.checkView}>
+              <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+                size={25}
+                textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+                fillColor="#37C0FF"
+                unfillColor="white"
+                iconStyle={{ borderColor: 'gray' }}
+                text=""
+                textContainerStyle={{ marginLeft: 10 }}
+                disableBuiltInState={true}
+                isChecked={landingPage == landingPages[index]}
+                onPress={(isChecked: boolean) => {
+                  setLandingPage(landingPages[index]);
+                }}
+              />
+            </View>
           </View>
-        </View>
-      ))}
-    </ScrollView>
+        ))}
+      </ScrollView>
+    </>
   );
 }
 

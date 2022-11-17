@@ -8,11 +8,11 @@ import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native
 import { AboutUsDataProps } from './interfaces';
 const logo = require('../Podcasts/images/podcastMini.png');
 //const chevron = require('../../images/chevron_blue_right.png');
-import { storage } from '../../utils/storage';
 
 interface AboutUsRowProps {
   data: AboutUsDataProps;
   onPress(): void;
+  lightOrDark: string;
 }
 
 function modifyTitle(oldTitle: string) {
@@ -24,33 +24,17 @@ function modifySubtext(oldSubtext: string) {
 }
 
 export default function AboutUsRow(props: AboutUsRowProps) {
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const isFocused = useIsFocused();
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.imageBox}>
           <Image source={logo} style={styles.logoImage} />
         </View>
         <View style={styles.textBox}>
-          <Text style={lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
             {modifyTitle(props.data.title)}
           </Text>
           <Text style={styles.timeText}>{modifySubtext(props.data.authorName)}</Text>

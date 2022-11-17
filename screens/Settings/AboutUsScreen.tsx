@@ -9,45 +9,20 @@ import { AboutUsDataProps } from './interfaces';
 import { analytics } from '../../utils/analytics';
 import React from 'react';
 import AboutUsRow from './AboutUsRow';
-import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const [aboutUsData, setAboutUsData] = useState<AboutUsDataProps[]>([]);
-  //  const [moreLinksData, setMoreLinksData] = useState<AboutUsDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lightOrDark, setIsLightOrDark] = useState('');
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
+  const [lightOrDark, setLightOrDark] = useState('');
 
   const handleRowPress = (item: AboutUsDataProps) => {
     // analytics.event(new Event('About Us', 'Row', 'Press', 0));
     Linking.openURL(item.url);
   };
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   getAboutUsList('moreSocial', isMounted);
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;
@@ -75,23 +50,26 @@ export default function PodcastsScreen() {
   }
 
   return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#AAA" />
-        </View>
-      ) : (
-        <React.Fragment>
-          <ScrollView>
-            <View>
-              {aboutUsData.map((item, index) => (
-                <AboutUsRow key={index} data={item} onPress={() => handleRowPress(item)} />
-              ))}
-            </View>
-          </ScrollView>
-        </React.Fragment>
-      )}
-    </View>
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+        {isLoading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#AAA" />
+          </View>
+        ) : (
+          <React.Fragment>
+            <ScrollView>
+              <View>
+                {aboutUsData.map((item, index) => (
+                  <AboutUsRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(item)} />
+                ))}
+              </View>
+            </ScrollView>
+          </React.Fragment>
+        )}
+      </View>
+    </>
   );
 }
 

@@ -10,7 +10,6 @@ import { styles } from './styles';
 import { storage } from '../../utils/storage';
 import { isNullOrEmpty } from '../../utils/general';
 import { AddressProps, ContactDetailDataProps } from './interfaces';
-// import { add } from 'react-native-reanimated';
 import { completeAction, postponeAction } from './postponeAndComplete';
 
 let deviceHeight = Dimensions.get('window').height;
@@ -22,7 +21,6 @@ export default function PACDetailScreen(props: any) {
   const [data, setData] = useState<ContactDetailDataProps>();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  // const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
   function postponePressed() {
