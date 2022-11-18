@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Animated } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import { storage } from '../utils/storage';
+import * as Analytics from 'expo-firebase-analytics'; 
 
 // Hamburger Menu test
 const rmLogo = require('../images/logoWide.png');
@@ -18,9 +18,7 @@ const todoIcon = require('../images/menuToDo.png');
 const calendarIcon = require('../images/menuCalendar.png');
 const podcastIcon = require('../images/menuPodcasts.png');
 const settingsIcon = require('../images/menuSettings.png');
-
 const chevron = require('../images/chevron_white.png');
-import { analytics } from '../utils/analytics';
 
 function CustomDrawerContent(props: any) {
   const { navigation } = props;
@@ -55,10 +53,12 @@ function CustomDrawerContent(props: any) {
   const trackPressed = (screenName: string) => {
     console.log(screenName);
 
-    analytics
-      .event(new Event('Menu Item Pressed', screenName, '0'))
-      .then(() => console.log('button success'))
-      .catch((e) => console.log(e.message));
+    Analytics.logEvent('Menu_Item_Pressed', {
+      contentType: 'text', 
+      itemId: 'button success', 
+      method: 'trackPressed'
+    });
+  
   };
 
   //****** there are 2 ways to create a function

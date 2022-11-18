@@ -9,9 +9,9 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
-import { analytics } from '../../utils/analytics';
+import * as Analytics from 'expo-firebase-analytics';
 import { loginToApp, getProfileData } from './api';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native'; // branch
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -95,10 +95,12 @@ export default function LoginScreen() {
     setIsLoading(true);
     console.log(userName);
     console.log(password);
-    analytics
-      .event(new Event('Login', 'Login Button', 'Pressed', 0))
-      .then(() => console.log('button success'))
-      .catch((e) => console.log(e.message));
+
+    Analytics.logEvent('Login_Button_Press', {
+      contentType: 'text',
+      itemId: 'Login Button Press',
+      method: 'HandleLoginPress',
+    });
 
     if (userName == '' || password == '') {
       Alert.alert('Please enter a Username and Password');
@@ -113,6 +115,7 @@ export default function LoginScreen() {
           console.log(res);
           saveCredentials(res.data.token);
           fetchProfile();
+
           navigation.navigate('Home');
         }
         setIsLoading(false);
@@ -165,10 +168,11 @@ export default function LoginScreen() {
           textContainerStyle={{ marginLeft: 10 }}
           style={styles.checkBox}
           onPress={() => {
-            analytics
-              .event(new Event('Login', 'Remember Me', 'Pressed', 0))
-              .then(() => setRememberCheck(!rememberChecked))
-              .catch((e) => console.log(e.message));
+            Analytics.logEvent('Remember_Me_Press', {
+              contentType: 'text',
+              itemId: 'Remember Me Button Press',
+              method: 'HandleRememberMePressed',
+            });
           }}
         />
 
