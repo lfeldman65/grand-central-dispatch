@@ -13,8 +13,11 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.referralmaker.referralmaker",
       "buildNumber": "42",
@@ -29,8 +32,23 @@
       }
     },
     "web": {
-      "favicon": "./images/favicon.png"
+      "favicon": "./images/favicon.png",
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyAUfCXO4U5oUZ9GClgqn-bqv-kxiWuIQTQ",
+          "measurementId": "G-FPEK1GJFRT"
+        }}
     },
-    "plugins": ["sentry-expo"]
+    "plugins": [
+      "sentry-expo",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ]
   }
 }

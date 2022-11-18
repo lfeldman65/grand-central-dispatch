@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { Event } from 'expo-analytics';
 import * as Sentry from 'sentry-expo';
 import globalStyles from '../../globalStyles';
-import { analytics } from '../../utils/analytics';
 import { storage } from '../../utils/storage';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
