@@ -9,7 +9,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
-import * as Analytics from 'expo-firebase-analytics'; 
+import * as Analytics from 'expo-firebase-analytics';
 import { loginToApp, getProfileData } from './api';
 import { useNavigation, useIsFocused } from '@react-navigation/native'; // branch
 
@@ -95,9 +95,9 @@ export default function LoginScreen() {
     console.log(password);
 
     Analytics.logEvent('Login_Button_Press', {
-      contentType: 'text', 
-      itemId: 'Login Button Press', 
-      method: 'HandleLoginPress'
+      contentType: 'text',
+      itemId: 'Login Button Press',
+      method: 'HandleLoginPress',
     });
 
     if (userName == '' || password == '') {
@@ -166,10 +166,11 @@ export default function LoginScreen() {
           textContainerStyle={{ marginLeft: 10 }}
           style={styles.checkBox}
           onPress={() => {
-            analytics
-              .event(new Event('Login', 'Remember Me', 'Pressed', 0))
-              .then(() => setRememberCheck(!rememberChecked))
-              .catch((e) => console.log(e.message));
+            Analytics.logEvent('Remember_Me_Press', {
+              contentType: 'text',
+              itemId: 'Remember Me Button Press',
+              method: 'HandleRememberMePressed',
+            });
           }}
         />
 
