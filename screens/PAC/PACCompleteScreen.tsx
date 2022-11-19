@@ -1,17 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function PACCompleteScreen(props: any) {
   const { onSave, setModalVisible, contactName, lightOrDark } = props;
   const [note, onNoteChange] = useState('');
-  // const [lightOrDark, setIsLightOrDark] = useState('');
-  const isFocused = useIsFocused();
 
   function SavePressed() {
-    // setModalVisible(false);
     onSave(note);
   }
   function CancelPressed() {
@@ -33,11 +28,10 @@ export default function PACCompleteScreen(props: any) {
       </View>
 
       <View style={styles.mainContent}>
-        <Text style={styles.notesText}>Notes</Text>
-
-        <View style={lightOrDark == 'dark' ? styles.inputViewDark : styles.inputViewLight}>
+        <Text style={styles.notesLabel}>Notes</Text>
+        <View style={styles.inputView}>
           <TextInput
-            style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
+            style={styles.noteText}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -80,7 +74,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginRight: '10%',
   },
-  notesText: {
+  notesLabel: {
     color: 'white',
     fontSize: 16,
     marginTop: 30,
@@ -89,9 +83,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 20,
   },
-  inputViewDark: {
+  inputView: {
     marginTop: 10,
-    backgroundColor: 'black',
+    backgroundColor: '#002341',
     width: '90%',
     height: '50%',
     marginBottom: 2,
@@ -99,24 +93,9 @@ const styles = StyleSheet.create({
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  inputViewLight: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: '90%',
-    height: '50%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  textInputDark: {
+  noteText: {
     paddingTop: 5,
     fontSize: 18,
     color: 'white',
-  },
-  textInputLight: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'black',
   },
 });

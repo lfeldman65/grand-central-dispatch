@@ -244,9 +244,9 @@ export const styles = StyleSheet.create({
     marginTop: 12,
     opacity: 0.4,
   },
-  notesViewDark: {
+  noteView: {
     marginTop: 10,
-    backgroundColor: 'black',
+    backgroundColor: '#002341',
     width: '90%',
     height: '80%',
     marginBottom: 2,
@@ -254,25 +254,10 @@ export const styles = StyleSheet.create({
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  notesViewLight: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: '90%',
-    height: '80%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  noteTextDark: {
+  noteText: {
     paddingTop: 5,
     fontSize: 18,
     color: 'white',
-  },
-  noteTextLight: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'black',
   },
   bottom: {
     height: 1000, // leave room for keyboard

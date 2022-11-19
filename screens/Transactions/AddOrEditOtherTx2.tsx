@@ -1,9 +1,7 @@
-import { Fragment, useLayoutEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
+import { useState } from 'react';
+import { Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -265,9 +263,9 @@ export default function AddOrEditOtherTx2(props: any) {
 
         <Text style={styles.nameTitle}>Notes</Text>
         <View style={styles.mainContent}>
-          <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
+          <View style={styles.noteView}>
             <TextInput
-              style={lightOrDark == 'dark' ? styles.noteTextDark : styles.noteTextLight}
+              style={styles.noteText}
               placeholder="Type Here"
               placeholderTextColor="#AFB9C2"
               textAlign="left"

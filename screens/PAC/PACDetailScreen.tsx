@@ -2,12 +2,10 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Modal, Linking } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { Event } from 'expo-analytics';
-import { analytics } from '../../utils/analytics';
 import PacComplete from './PACCompleteScreen';
 import { completePAC, getPACDetails } from './api';
 import openMap from 'react-native-open-maps';
 import { styles } from './styles';
-import { storage } from '../../utils/storage';
 import { isNullOrEmpty } from '../../utils/general';
 import { AddressProps, ContactDetailDataProps } from './interfaces';
 import { completeAction, postponeAction } from './postponeAndComplete';
@@ -24,7 +22,7 @@ export default function PACDetailScreen(props: any) {
   const isFocused = useIsFocused();
 
   function postponePressed() {
-    analytics.event(new Event('PAC Detail', 'Postpone', '0'));
+    //   analytics.event(new Event('PAC Detail', 'Postpone', '0'));
     postponeEvent(contactId, type);
   }
 

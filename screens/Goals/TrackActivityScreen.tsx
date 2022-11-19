@@ -232,9 +232,9 @@ export default function TrackActivityScreen(props: any) {
 
       <Text style={styles.fieldTitle}>Notes</Text>
       <View style={styles.mainContent}>
-        <View style={lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>
+        <View style={styles.notesView}>
           <TextInput
-            style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
+            style={styles.notesInput}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -272,11 +272,6 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
-  },
-  addRel: {
-    fontSize: 18,
-    color: 'silver',
-    width: 300,
   },
   checkBox: {
     marginTop: 12,
@@ -332,18 +327,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginRight: '10%',
   },
-  notesText: {
-    color: 'white',
-    fontSize: 16,
-    marginTop: 30,
-    fontWeight: '500',
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-    marginLeft: 20,
-  },
-  notesDark: {
+  notesView: {
     marginTop: 10,
-    backgroundColor: 'black',
+    backgroundColor: '#002341',
     width: '90%',
     height: '50%',
     marginBottom: 2,
@@ -351,25 +337,10 @@ const styles = StyleSheet.create({
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  notesLight: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: '90%',
-    height: '50%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  textInputDark: {
+  notesInput: {
     paddingTop: 5,
     fontSize: 18,
     color: 'white',
-  },
-  textInputLight: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'black',
   },
   filterView: {
     width: '100%',

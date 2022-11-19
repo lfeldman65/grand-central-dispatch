@@ -3,9 +3,8 @@ import { useState, useEffect } from 'react';
 import { styles } from './styles';
 import { saveAsFavorite } from './api';
 import openMap from 'react-native-open-maps';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { PACDataProps } from './interfaces';
-import { storage } from '../../utils/storage';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
@@ -21,7 +20,6 @@ export default function PACPopRow(props: PACRowProps) {
   const [saveShown, setSaveShown] = useState(!props.data.isFavorite);
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const isFocused = useIsFocused();
   const navigation = useNavigation();
 
   async function completePressed() {

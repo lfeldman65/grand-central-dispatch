@@ -1,29 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Linking,
-  ScrollView,
-  ActivityIndicator,
-  TouchableHighlight,
-  Animated,
-  Button,
-  Modal,
-} from 'react-native';
-import MenuIcon from '../../components/menuIcon';
+import { Text, View, TouchableOpacity, Linking, Modal } from 'react-native';
 import { useState, useEffect } from 'react';
-import { Event } from 'expo-analytics';
 import { styles } from './styles';
-import globalStyles from '../../globalStyles';
-import { analytics } from '../../utils/analytics';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { RectButton } from 'react-native-gesture-handler';
 import { PACDataProps } from './interfaces';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
 import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
 
@@ -35,10 +14,8 @@ interface PACCallsRowProps {
 }
 
 export default function PACCallsRow(props: PACCallsRowProps) {
-  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation();
 
   async function completePressed() {
     console.log('complete pressed');

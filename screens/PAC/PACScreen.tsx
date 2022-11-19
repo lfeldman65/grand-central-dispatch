@@ -7,14 +7,12 @@ import PACCallsRow from './PACCallsRow';
 import PACNotesRow from './PACNotesRow';
 import PACPopRow from './PACPopRow';
 import { styles } from './styles';
-import { analytics } from '../../utils/analytics';
 import { getPACData } from './api';
 import { PACDataProps } from './interfaces';
 import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
-import { storage } from '../../utils/storage';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 type TabType = 'calls' | 'notes' | 'popby';
@@ -24,8 +22,6 @@ interface PACScreenProps {
 }
 
 export default function PACScreen(props: PACScreenProps) {
-  // console.log('route param defaultTab', props.route.params?.defaultTab);
-
   const [tabSelected, setTabSelected] = useState<TabType>(props.route.params?.defaultTab ?? 'calls');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -33,12 +29,11 @@ export default function PACScreen(props: PACScreenProps) {
   const [modalNotesVisible, setModalNotesVisible] = useState(false);
   const [modalPopVisible, setModalPopVisible] = useState(false);
   const [lightOrDark, setLightOrDark] = useState('light');
-
   const [data, setData] = useState<PACDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    analytics.event(new Event('PAC', 'Go To Details'));
+    // analytics.event(new Event('PAC', 'Go To Details'));
     navigation.navigate('PACDetail', {
       contactId: data[index]['contactId'],
       type: data[index]['type'],
@@ -52,7 +47,7 @@ export default function PACScreen(props: PACScreenProps) {
 
   const handleIdeasPressed = () => {
     console.log('Ideas');
-    analytics.event(new Event('PAC', 'View Ideas'));
+    //  analytics.event(new Event('PAC', 'View Ideas'));
     if (tabSelected == 'calls') {
       setModalCallsVisible(!modalCallsVisible);
     } else if (tabSelected == 'notes') {
@@ -63,19 +58,19 @@ export default function PACScreen(props: PACScreenProps) {
   };
 
   function callsPressed() {
-    analytics.event(new Event('PAC', 'Calls Tab'));
+    //   analytics.event(new Event('PAC', 'Calls Tab'));
     setTabSelected('calls');
     fetchData('calls', true);
   }
 
   function notesPressed() {
-    analytics.event(new Event('PAC', 'Notes Tab'));
+    //  analytics.event(new Event('PAC', 'Notes Tab'));
     setTabSelected('notes');
     fetchData('notes', true);
   }
 
   function popPressed() {
-    analytics.event(new Event('PAC', 'Pop-By Tab'));
+    //   analytics.event(new Event('PAC', 'Pop-By Tab'));
     setTabSelected('popby');
     fetchData('popby', true);
   }

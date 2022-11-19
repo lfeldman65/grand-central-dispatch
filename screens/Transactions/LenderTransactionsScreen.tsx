@@ -5,7 +5,6 @@ import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native
 import { Event } from 'expo-analytics';
 import TransactionRow from './TransactionRow';
 import { styles } from './styles';
-import { analytics } from '../../utils/analytics';
 import { getTransactionData } from './api';
 import { TransactionDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';

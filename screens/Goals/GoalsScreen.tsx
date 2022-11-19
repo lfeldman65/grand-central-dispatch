@@ -14,7 +14,6 @@ import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
-import { analytics } from '../../utils/analytics';
 import { isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
 import { getGoalData, trackAction } from './api';
@@ -46,7 +45,7 @@ export default function GoalsScreen() {
   }
 
   function winTheWeekPressed() {
-    analytics.event(new Event('Goals', 'Win the Week Pressed'));
+    //  analytics.event(new Event('Goals', 'Win the Week Pressed'));
     setWinTheDaySelected(false);
     fetchGoals(true);
   }
@@ -161,7 +160,7 @@ export default function GoalsScreen() {
   const handleLinkPress = (index: number) => {
     switch (index) {
       case 0:
-        analytics.event(new Event('Goals', 'Calls Pressed'));
+        //  analytics.event(new Event('Goals', 'Calls Pressed'));
         navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
@@ -169,7 +168,7 @@ export default function GoalsScreen() {
         });
         break;
       case 1:
-        analytics.event(new Event('Goals', 'Notes Pressed'));
+        //  analytics.event(new Event('Goals', 'Notes Pressed'));
         navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
@@ -177,7 +176,7 @@ export default function GoalsScreen() {
         });
         break;
       case 2:
-        analytics.event(new Event('Goals', 'Pop-Bys Pressed'));
+        //   analytics.event(new Event('Goals', 'Pop-Bys Pressed'));
         navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
@@ -185,7 +184,7 @@ export default function GoalsScreen() {
         });
         break;
       case 3:
-        analytics.event(new Event('Goals', 'Database Additions Pressed'));
+        //   analytics.event(new Event('Goals', 'Database Additions Pressed'));
         //  navigation.navigate('Pop-Bys');  // Add new relationship
         break;
     }

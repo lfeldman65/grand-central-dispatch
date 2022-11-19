@@ -2,8 +2,7 @@ import { Text, View, TouchableOpacity, Modal } from 'react-native';
 import { styles } from './styles';
 import { PACDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { postponeAction, completeAction } from './postponeAndComplete';
 import PacComplete from './PACCompleteScreen';
@@ -18,7 +17,6 @@ interface PACNotesRowProps {
 export default function PACNotesRow(props: PACNotesRowProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const isFocused = useIsFocused();
 
   async function completePressed() {
     console.log('complete pressed');
