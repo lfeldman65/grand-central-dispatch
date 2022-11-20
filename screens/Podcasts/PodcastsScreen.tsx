@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import { getPodcastData } from './api';
 import { PodcastDataProps } from './interfaces';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
 import PodcastsRow from './PodcastsRow';
 import PodcastPlayer from './PodcastPlayer';
@@ -24,7 +23,7 @@ export default function PodcastsScreen() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleRowPress = (index: number) => {
-    analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
+    //  analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
     console.log('Row Pressed');
     setSelectedIndex(index);
     setModalPlayerVisible(!modalPlayerVisible);

@@ -1027,9 +1027,9 @@ export default function AddToDoScreen(props: any) {
 
         <Text style={styles.nameTitle}>Notes</Text>
         <View style={styles.mainContent}>
-          <View style={lightOrDark == 'dark' ? styles.inputViewDark : styles.inputViewLight}>
+          <View style={styles.notesView}>
             <TextInput
-              style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
+              style={styles.notesText}
               placeholder="Type Here"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
@@ -1123,16 +1123,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 29,
   },
-  untilView: {
-    backgroundColor: '#002341',
-    width: '42%',
-    height: 50,
-    marginBottom: 20,
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    fontSize: 29,
-  },
   weekRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -1141,25 +1131,20 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
   },
-  weekView: {
+  notesView: {
+    marginTop: 10,
     backgroundColor: '#002341',
     width: '90%',
-    height: 50,
-    marginBottom: 20,
-    alignItems: 'baseline',
-    justifyContent: 'center',
+    height: '50%',
+    marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
+    alignItems: 'flex-start',
   },
-  notesView: {
-    backgroundColor: 'white',
-    width: '90%',
-    height: 50,
-    marginBottom: 20,
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    fontSize: 29,
+  notesText: {
+    paddingTop: 5,
+    fontSize: 18,
+    color: 'white',
   },
   textInput: {
     fontSize: 18,
@@ -1195,35 +1180,5 @@ const styles = StyleSheet.create({
     marginTop: 12,
     left: 20,
     marginBottom: 25,
-  },
-  inputViewDark: {
-    marginTop: 10,
-    backgroundColor: 'black',
-    width: '90%',
-    height: '50%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  inputViewLight: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: '90%',
-    height: '50%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  textInputDark: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'white',
-  },
-  textInputLight: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'black',
   },
 });
