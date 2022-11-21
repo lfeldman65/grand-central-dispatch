@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
   },
   userNameView: {
     flexDirection: 'column',
-    width: '60%',
+    width: '70%',
     marginLeft: 5,
     textAlign: 'left',
   },

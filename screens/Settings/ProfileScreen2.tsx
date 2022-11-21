@@ -3,11 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button, TextInput
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { Analytics, PageHit, Event } from 'expo-analytics';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
-import globalStyles from '../../globalStyles';
 import { getProfileData, editProfileData } from './api';
-import { ProfileDataProps } from './interfaces';
 
 export default function ProfileScreen2(props: any) {
   const { route } = props;
