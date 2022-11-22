@@ -1,4 +1,4 @@
-import { Text, View, Image, TouchableOpacity, StyleSheet, Alert, Linking } from 'react-native';
+import { Text, View, Image, TouchableOpacity, StyleSheet, Alert, Linking, AppState } from 'react-native';
 import { AppointmentDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
@@ -36,16 +36,16 @@ export default function AppointmentRow(props: ApptRowProps) {
 
         <View style={styles.titleAndTimeRow}>
           <Text style={lightOrDark == 'dark' ? styles.appTitleDark : styles.appTitleLight}>{props.data.title}</Text>
-          <Text style={lightOrDark == 'dark' ? styles.timeDark : styles.timeLight}>
-            {prettyTime(props.data.startTime)}
-          </Text>
+          <Text>{new Date(props.data.startTime).toLocaleTimeString()}</Text>
         </View>
 
         {props.data.notes != '' && (
           <Text style={lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>{props.data.notes}</Text>
         )}
 
-        {/* <Text>{appID}</Text> */}
+        {/* <Text>{appID}</Text>
+        <Text>{new Date(props.data.startTime).toLocaleTimeString()}</Text>
+        <Text>{props.data.startTime}</Text> */}
       </View>
     </TouchableOpacity>
   );

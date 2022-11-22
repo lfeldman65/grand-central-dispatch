@@ -11,6 +11,9 @@ import {
   Image,
   PermissionsAndroid,
 } from 'react-native';
+
+import { Moment, MomentInput } from 'moment';
+import CalendarPicker, { DateChangedCallback } from 'react-native-calendar-picker';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -23,17 +26,23 @@ import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { storage } from '../../utils/storage';
 import AddAppointmentScreen from './AddAppointmentScreen';
+import { getDayNumber, getMonthNumber, getYear } from './calendarHelpers';
+import moment from 'moment';
 
 export default function CalendarScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState<AppointmentDataProps[]>([]);
-
+  const [startDate, setStartDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setIsLightOrDark] = useState('');
 
-  async function getDarkOrLightMode() {
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
   }
@@ -50,24 +59,40 @@ export default function CalendarScreen() {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  }, []);
+  }, [navigation]);
 
   useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => <MenuIcon />,
-    });
-    getDarkOrLightMode();
-    fetchAppointments('9', '2022');
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [isFocused]);
+
+  useEffect(() => {
+    let isMounted = true;
+    var day = getDayNumber(startDate.toString());
+    var month = getMonthNumber(startDate.toString());
+    var year = getYear(startDate.toString());
+    console.log('MONTH: ' + month);
+    console.log('YEAR: ' + year);
+    fetchAppointments(day, month, year, isMounted); // '00' returns every day in month
+    return () => {
+      isMounted = false;
+    };
   }, [isFocused]);
 
   function addAppointmentPressed() {
     setModalVisible(true);
   }
 
-  function fetchAppointments(month: string, year: string) {
+  function fetchAppointments(day: string, month: string, year: string, isMounted: boolean) {
     setIsLoading(true);
-    getAppointments(month, year)
+    getAppointments(day, month, year)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -80,12 +105,30 @@ export default function CalendarScreen() {
   }
 
   function saveComplete() {
-    fetchAppointments('9', '2022');
+    // fetchAppointments('9', '2022', true);
+  }
+
+  function onDateChange(date: Moment, type: 'START_DATE' | 'END_DATE') {
+    console.log('calendar date: ' + date.toString());
+    console.log('start date: ' + type);
+    let month = getMonthNumber(date.toString());
+    let year = getYear(date.toString());
+    let day = getDayNumber(date.toString());
+    fetchAppointments(day, month, year, true);
   }
 
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      <View style={styles.calendarView}></View>
+      <View style={styles.calendarView}>
+        <CalendarPicker
+          todayBackgroundColor="#02ABF7"
+          todayTextStyle={styles.todayText}
+          selectedDayColor="gray"
+          selectedDayTextColor="white"
+          textStyle={lightOrDark == 'dark' ? styles.calendarTextDark : styles.calendarTextLight}
+          onDateChange={onDateChange}
+        />
+      </View>
 
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -124,9 +167,17 @@ export default function CalendarScreen() {
 }
 const styles = StyleSheet.create({
   calendarView: {
-    height: '50%',
+    height: '40%',
     width: '100%',
-    backgroundColor: 'red',
+  },
+  todayText: {
+    color: 'white',
+  },
+  calendarTextDark: {
+    color: 'white',
+  },
+  calendarTextLight: {
+    color: 'black',
   },
   bottomContainer: {
     backgroundColor: '#1A6295',

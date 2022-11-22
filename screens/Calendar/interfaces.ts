@@ -100,3 +100,28 @@ export interface AttendeesProps {
   name: string;
   id: string;
 }
+
+// Add Appointment in Postman
+
+export interface AddAppointmentDataResponse {
+  data: AddAppointmentDataProps;
+  error: string;
+  status: string;
+}
+
+export interface AddAppointmentDataProps {
+  id: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  notes: string;
+  recurrence: RecurrenceProps;
+  reminder: ReminderProps;
+  attendees: AttendeesProps[];
+}
+
+export interface AddAppointmentReminder {
+  daysBefore: number;
+  type: string;
+}
