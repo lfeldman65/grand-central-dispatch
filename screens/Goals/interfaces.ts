@@ -20,6 +20,19 @@ export interface GoalDataResponse {
   status: string;
 }
 
+// Goals Concise in Postman
+
+export interface GoalDataConciseProps {
+  id: string;
+  title: string;
+}
+
+export interface GoalDataConciseResponse {
+  data: GoalDataConciseProps[];
+  error: string;
+  status: string;
+}
+
 // Track Action in Postman
 
 export interface TrackDataProps {
@@ -53,7 +66,7 @@ export interface RolodexDataResponse {
 
 // For Track Activity
 
-export interface RelProps {
-  name: string;
-  id: string;
-}
+// export interface RelProps {
+//   name: string;
+//   id: string;
+// }

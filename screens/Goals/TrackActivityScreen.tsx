@@ -5,44 +5,38 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import ChooseRelationship from '../Goals/ChooseRelationship';
-import { RolodexDataProps, RelProps } from './interfaces';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import globalStyles from '../../globalStyles';
+import ChooseGoal from '../Goals/ChooseGoalScreen';
+import { RolodexDataProps, GoalDataConciseProps } from './interfaces';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
   const { onSave, setModalVisible, trackTitle, lightOrDark } = props;
-  const [note, onNoteChange] = useState('Some notes 25');
+  const [note, onNoteChange] = useState('');
   const [relationship, setRelationship] = useState<RolodexDataProps>();
-  const [goal, setGoal] = useState('Calls Made');
+  const [goal, setGoal] = useState<GoalDataConciseProps>();
   const [date, setDate] = useState(new Date());
   const [subject, setSubject] = useState('');
   const [askedReferral, setAskedReferral] = useState(false);
   const [modalRelVisible, setModalRelVisible] = useState(false);
+  const [modalGoalVisible, setModalGoalVisible] = useState(false);
   const [showDate, setShowDate] = useState(false);
-  const actionSheetRef = useRef<ActionSheet>(null);
   const isFocused = useIsFocused();
 
   useEffect(() => {
     console.log('TRACKACTIVITY: ' + lightOrDark);
+    var initialGoal: GoalDataConciseProps = {
+      id: '1',
+      title: 'Calls Made',
+    };
+    setGoal(initialGoal);
   }, [isFocused]);
-
-  const Sheets = {
-    goalSheet: 'filter_sheet_goals',
-  };
-
-  const activityGoalMenu = {
-    'Calls Made': 'Calls Made',
-    'Notes Written': 'Notes Written',
-    'Pop-Bys': 'Pop-Bys',
-  };
 
   function handleRelPressed() {
     setModalRelVisible(!modalRelVisible);
   }
 
   function handleGoalPressed() {
-    SheetManager.show(Sheets.goalSheet);
+    setModalGoalVisible(!modalGoalVisible);
   }
 
   function showDatePicker() {
@@ -52,22 +46,8 @@ export default function TrackActivityScreen(props: any) {
   const onDatePickerChange = (event: any, selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
-    setShowDate(false);
     setDate(currentDate);
   };
-
-  function makeParam(menuItem: string) {
-    if (menuItem == 'Calls Made') {
-      return '1';
-    }
-    if (menuItem == 'Notes Written') {
-      return '2';
-    }
-    if (menuItem == 'Pop-Bys') {
-      return '3';
-    }
-    return '4';
-  }
 
   function savePressed() {
     if (relationship?.id == null) {
@@ -75,9 +55,8 @@ export default function TrackActivityScreen(props: any) {
       return;
     }
     setModalVisible(false);
-    var goalId = makeParam(goal);
-    console.log('id: ' + relationship?.id);
-    onSave(relationship?.id, goalId, subject, date, askedReferral, note);
+    console.log('GOALID: ' + goal?.id);
+    onSave(relationship?.id, goal?.id.toString(), subject, date.toISOString(), askedReferral, note);
   }
 
   function cancelPressed() {
@@ -113,54 +92,12 @@ export default function TrackActivityScreen(props: any) {
       <TouchableOpacity onPress={handleGoalPressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput}>{goal}</Text>
+            <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+              {goal == null ? 'Calls Made' : goal.title}
+            </TextInput>
           </View>
         </View>
       </TouchableOpacity>
-
-      <ActionSheet
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('recurrence sheet')}
-        id={Sheets.goalSheet}
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={true}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.3}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={styles.filterView}
-          >
-            <View>
-              {Object.entries(activityGoalMenu).map(([key, value]) => (
-                <TouchableOpacity
-                  key={key}
-                  onPress={() => {
-                    SheetManager.hide(Sheets.goalSheet, null);
-                    console.log('goal: ' + value);
-                    setGoal(value);
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{key}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
 
       <Text style={styles.fieldTitle}>Subject</Text>
       <View style={styles.mainContent}>
@@ -234,7 +171,7 @@ export default function TrackActivityScreen(props: any) {
       <View style={styles.mainContent}>
         <View style={styles.notesView}>
           <TextInput
-            style={styles.notesInput}
+            style={styles.notesText}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -260,6 +197,23 @@ export default function TrackActivityScreen(props: any) {
           />
         </Modal>
       )}
+      {modalGoalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalGoalVisible}
+          onRequestClose={() => {
+            setModalGoalVisible(!modalGoalVisible);
+          }}
+        >
+          <ChooseGoal
+            title="Choose Goal"
+            setModalGoalVisible={setModalGoalVisible}
+            setSelectedGoal={setGoal}
+            lightOrDark={lightOrDark}
+          />
+        </Modal>
+      )}
       <View style={styles.bottom}></View>
     </ScrollView>
   );
@@ -272,6 +226,11 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
+  },
+  addRel: {
+    fontSize: 18,
+    color: 'silver',
+    width: 300,
   },
   checkBox: {
     marginTop: 12,
@@ -337,14 +296,10 @@ const styles = StyleSheet.create({
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  notesInput: {
+  notesText: {
     paddingTop: 5,
     fontSize: 18,
     color: 'white',
-  },
-  filterView: {
-    width: '100%',
-    padding: 12,
   },
   bottom: {
     height: 600,

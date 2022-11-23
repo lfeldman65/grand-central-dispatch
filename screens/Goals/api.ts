@@ -1,9 +1,13 @@
 import { sub } from 'react-native-reanimated';
 import { http } from '../../utils/http';
-import { TrackDataResponse, GoalDataResponse, RolodexDataResponse } from './interfaces';
+import { TrackDataResponse, GoalDataResponse, GoalDataConciseResponse, RolodexDataResponse } from './interfaces';
 
 export function getGoalData(): Promise<GoalDataResponse> {
   return http.get('activityGoalsWins');
+}
+
+export function getGoalDataConcise(): Promise<GoalDataConciseResponse> {
+  return http.get('activityGoals');
 }
 
 export function trackAction(
@@ -14,12 +18,12 @@ export function trackAction(
   referral: boolean,
   notes: string
 ): Promise<TrackDataResponse> {
-  console.log('guid: ' + guid);
-  console.log('goalID: ' + goalId);
-  console.log('subject: ' + subject);
-  console.log('date: ' + date);
-  console.log('referral: ' + referral);
-  console.log('notes: ' + notes);
+  console.log('API guid: ' + guid);
+  console.log('API goalID: ' + goalId);
+  console.log('API subject: ' + subject);
+  console.log('API date: ' + date);
+  console.log('API referral: ' + referral);
+  console.log('API notes: ' + notes);
 
   return http.post(`activityGoalsTrack/${guid}`, {
     body: { goalId: goalId, subject: subject, date: date, referral: referral, notes: notes },

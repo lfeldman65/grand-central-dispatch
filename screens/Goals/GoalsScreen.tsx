@@ -201,15 +201,16 @@ export default function GoalsScreen() {
           console.error(res.error);
         } else {
           setGoalList(res.data);
+          console.log(res.data);
         }
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
 
-  function saveComplete(guid: string, goal: string, subject: string, date: string, askedRef: boolean, note: string) {
+  function saveComplete(guid: string, goalId: string, subject: string, date: string, askedRef: boolean, note: string) {
     setIsLoading(true);
-    trackActivityAPI(guid, goal, subject, date, askedRef, note, trackSuccess, trackFailure);
+    trackActivityAPI(guid, goalId, subject, date, askedRef, note, trackSuccess, trackFailure);
   }
 
   function trackActivityAPI(
@@ -222,6 +223,9 @@ export default function GoalsScreen() {
     onSuccess: any,
     onFailure: any
   ) {
+    console.log('CONTACTID: ' + contactId);
+    console.log('GOALID: ' + goalId);
+
     trackAction(contactId, goalId, subject, date, referral, note)
       .then((res) => {
         console.log(res);
@@ -230,6 +234,7 @@ export default function GoalsScreen() {
           onFailure();
         } else {
           onSuccess();
+          fetchGoals(true);
         }
       })
       .catch((error) => {
@@ -240,6 +245,7 @@ export default function GoalsScreen() {
 
   function trackSuccess() {
     setIsLoading(false);
+    fetchGoals(true);
   }
 
   function trackFailure() {
@@ -251,7 +257,7 @@ export default function GoalsScreen() {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  });
+  }, [navigation]);
 
   useEffect(() => {
     let isMounted = true;
@@ -274,6 +280,7 @@ export default function GoalsScreen() {
     return (
       <>
         <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+
         <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
           <View style={globalStyles.tabButtonRow}>
             <Text
@@ -342,6 +349,7 @@ export default function GoalsScreen() {
                 trackTitle="Track Activity Goal"
                 onSave={saveComplete}
                 setModalVisible={setModalVisible}
+                data={goalList}
               />
             </Modal>
           )}
