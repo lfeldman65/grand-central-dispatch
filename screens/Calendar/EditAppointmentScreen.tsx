@@ -186,7 +186,15 @@ export default function EditAppointmentScreen(props: any) {
       <TouchableOpacity onPress={showFromDatePicker}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput}>{newFromDate.toISOString()}</Text>
+            <Text style={styles.textInput}>
+              {newFromDate.toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+              })}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -216,7 +224,15 @@ export default function EditAppointmentScreen(props: any) {
       <TouchableOpacity onPress={showToDatePicker}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput}>{newToDate.toISOString()}</Text>
+            <Text style={styles.textInput}>
+              {newToDate.toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+              })}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>

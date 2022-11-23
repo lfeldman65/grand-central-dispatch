@@ -12,6 +12,7 @@ import PopBysScreen from '../screens/PopBys/PopBysScreen';
 import ToDoScreen from '../screens/ToDo/ToDosScreen';
 import ToDoDetails from '../screens/ToDo/ToDoDetails';
 import CalendarScreen from '../screens/Calendar/CalendarScreen';
+import ApptDetails from '../screens/Calendar/AppointmentDetails';
 import PodcastScreen from '../screens/Podcasts/PodcastsScreen';
 import SettingsScreen from '../screens/Settings/SettingsScreen';
 import ManageRelationshipsScreen from '../screens/Relationships/ManageRelationshipsScreen';
@@ -1067,6 +1068,51 @@ export const VideoStackNavigator = () => {
   );
 };
 
+export const CalendarStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="CalendarScreen2"
+        component={CalendarScreen}
+        options={{
+          title: 'Calendar',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="ApptDetails"
+        component={ApptDetails}
+        options={{
+          title: 'Appointment Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="RelDetails"
+        component={RelationshipDetailsScreen}
+        options={{
+          title: 'Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const HomeStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -1201,14 +1247,10 @@ export const HomeStackNavigator = () => {
 
       <Stack.Screen
         name="CalendarScreen"
-        component={CalendarScreen}
+        component={CalendarStackNavigator}
         options={{
-          title: 'Calendar',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
           headerBackVisible: false,
+          headerShown: false,
         }}
       />
 
