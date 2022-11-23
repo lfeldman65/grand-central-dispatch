@@ -2006,7 +2006,16 @@
   "resolved" "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.5.tgz"
   "version" "15.7.5"
 
-"@types/react-native@~0.64.12":
+"@types/react-native-calendar-picker@^7.0.2":
+  "integrity" "sha512-vM97SJXE0sgNEMKV6uH7KfkbuJRe1v/0EuyHjqRHe2WVhKDG/3qYklAtO1aQTs29wYzpA2hN+0ZvMIOOQsUi/w=="
+  "resolved" "https://registry.npmjs.org/@types/react-native-calendar-picker/-/react-native-calendar-picker-7.0.2.tgz"
+  "version" "7.0.2"
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+    "moment" ">=2.0.0"
+
+"@types/react-native@*", "@types/react-native@~0.64.12":
   "integrity" "sha512-qgqOJub7BYsAkcg3VSL3w63cgJdLoMmAX6TSTAPL53heCzUkIdtpWqjyNRH0n7jPjxPGG1Qmsv6GSUh7IfyqRg=="
   "resolved" "https://registry.npmjs.org/@types/react-native/-/react-native-0.64.24.tgz"
   "version" "0.64.24"

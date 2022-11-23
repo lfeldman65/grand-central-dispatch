@@ -1159,9 +1159,9 @@ export default function AddAppointmentScreen(props: any) {
 
         <Text style={styles.nameTitle}>Notes</Text>
         <View style={styles.mainContent}>
-          <View style={lightOrDark == 'dark' ? styles.inputViewDark : styles.inputViewLight}>
+          <View style={styles.notesView}>
             <TextInput
-              style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
+              style={styles.notesInput}
               placeholder="Type Here"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
@@ -1294,16 +1294,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: 29,
   },
-  notesView: {
-    backgroundColor: 'white',
-    width: '90%',
-    height: 50,
-    marginBottom: 20,
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    fontSize: 29,
-  },
   textInput: {
     fontSize: 18,
     color: '#FFFFFF',
@@ -1339,9 +1329,9 @@ const styles = StyleSheet.create({
     left: 20,
     marginBottom: 25,
   },
-  inputViewDark: {
+  notesView: {
     marginTop: 10,
-    backgroundColor: 'black',
+    backgroundColor: '#002341',
     width: '90%',
     height: '50%',
     marginBottom: 2,
@@ -1349,17 +1339,7 @@ const styles = StyleSheet.create({
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  inputViewLight: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: '90%',
-    height: '50%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  textInputDark: {
+  notesInput: {
     paddingTop: 5,
     fontSize: 18,
     color: 'white',

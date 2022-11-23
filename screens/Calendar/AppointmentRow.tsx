@@ -2,45 +2,37 @@ import { Text, View, Image, TouchableOpacity, StyleSheet, Alert, Linking, AppSta
 import { AppointmentDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { storage } from '../../utils/storage';
-import { getAppointments } from './api';
 import { prettyDate, prettyTime } from '../../utils/general';
 
 interface ApptRowProps {
   data: AppointmentDataProps;
   onPress(): void;
   appID: string;
+  lightOrDark: string;
 }
 
 export default function AppointmentRow(props: ApptRowProps) {
-  const { appID } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  // const { appID } = props;
+  // const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [isFavorite, setIsFavorite] = useState('False');
 
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-        <Text style={lightOrDark == 'dark' ? styles.timeDark : styles.timeLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+        <Text style={props.lightOrDark == 'dark' ? styles.timeDark : styles.timeLight}>
           {prettyDate(props.data.startTime)}
         </Text>
 
         <View style={styles.titleAndTimeRow}>
-          <Text style={lightOrDark == 'dark' ? styles.appTitleDark : styles.appTitleLight}>{props.data.title}</Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.appTitleDark : styles.appTitleLight}>
+            {props.data.title}
+          </Text>
           <Text>{new Date(props.data.startTime).toLocaleTimeString()}</Text>
         </View>
 
         {props.data.notes != '' && (
-          <Text style={lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>{props.data.notes}</Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>{props.data.notes}</Text>
         )}
 
         {/* <Text>{appID}</Text>

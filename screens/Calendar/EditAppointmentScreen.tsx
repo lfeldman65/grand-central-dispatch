@@ -23,7 +23,6 @@ export default function EditAppointmentScreen(props: any) {
     onSave,
   } = props;
   const [newTitle, setNewTitle] = useState('');
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [showFromDate, setShowFromDate] = useState(false);
   const [newFromDate, setNewFromDate] = useState(new Date());
   const [showToDate, setShowToDate] = useState(false);
@@ -33,14 +32,6 @@ export default function EditAppointmentScreen(props: any) {
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
   const [attendee, setAttendees] = useState<RolodexDataProps[]>([]);
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   useEffect(() => {
     setNewTitle(titleFromParent);
@@ -76,14 +67,6 @@ export default function EditAppointmentScreen(props: any) {
         }
       })
       .catch((error) => console.error('failure ' + error));
-  }
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   const showFromDatePicker = () => {
@@ -295,9 +278,9 @@ export default function EditAppointmentScreen(props: any) {
 
       <Text style={styles.nameTitle}>Notes</Text>
       <View style={styles.mainContent}>
-        <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
+        <View style={styles.notesView}>
           <TextInput
-            style={lightOrDark == 'dark' ? styles.notesTextDark : styles.notesTextLight}
+            style={styles.notesText}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -402,9 +385,9 @@ export const styles = StyleSheet.create({
     width: 10,
     height: 10,
   },
-  notesViewDark: {
+  notesView: {
     marginTop: 10,
-    backgroundColor: 'black',
+    backgroundColor: '#002341',
     width: '90%',
     height: '70%',
     marginBottom: 2,
@@ -412,24 +395,9 @@ export const styles = StyleSheet.create({
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  notesViewLight: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: '90%',
-    height: '70%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  notesTextDark: {
+  notesText: {
     paddingTop: 5,
     fontSize: 18,
     color: 'white',
-  },
-  notesTextLight: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'black',
   },
 });

@@ -15,11 +15,10 @@ import EditAppointment from './EditAppointmentScreen';
 export default function AppointmentDetails(props: any) {
   const navigation = useNavigation();
   const { route } = props;
-  const { apptID } = route.params;
+  const { apptID, lightOrDark } = route.params;
   const isFocused = useIsFocused();
   const [apptData, setApptData] = useState<AppointmentDataProps>();
   const [isLoading, setIsLoading] = useState(true);
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -34,27 +33,11 @@ export default function AppointmentDetails(props: any) {
 
   useEffect(() => {
     let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
     fetchData(isMounted);
     return () => {
       isMounted = false;
     };
   }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function editPressed() {
     console.log('edit pressed');
