@@ -1,15 +1,29 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Dimensions,
+  Modal,
+  ScrollView,
+  ActivityIndicator,
+  Image,
+  PermissionsAndroid,
+} from 'react-native';
+
 import { Moment, MomentInput } from 'moment';
 import CalendarPicker, { DateChangedCallback } from 'react-native-calendar-picker';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
+import { Event } from 'expo-analytics';
 import AppointmentRow from './AppointmentRow';
 import { getAppointments } from './api';
 import { AppointmentDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
+import { storage } from '../../utils/storage';
 import AddAppointmentScreen from './AddAppointmentScreen';
 import { getDayNumber, getMonthNumber, getYear } from './calendarHelpers';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
@@ -17,6 +31,7 @@ import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 export default function CalendarScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
+  const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState<AppointmentDataProps[]>([]);
   const [startDate, setStartDate] = useState(new Date());
@@ -25,7 +40,6 @@ export default function CalendarScreen() {
 
   const handleRowPress = (index: number) => {
     console.log('appointment row press');
-    console.log('LIGHTORDARK: ' + lightOrDark);
     //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
     navigation.navigate('ApptDetails', {
       apptID: data[index].id,
@@ -44,7 +58,7 @@ export default function CalendarScreen() {
     var day = getDayNumber(startDate.toString());
     var month = getMonthNumber(startDate.toString());
     var year = getYear(startDate.toString());
-    console.log('MONTH: ' + month);
+    console.log('MONTH2112: ' + month);
     console.log('YEAR: ' + year);
     fetchAppointments(day, month, year, isMounted); // '00' returns every day in month
     return () => {
@@ -75,7 +89,13 @@ export default function CalendarScreen() {
   }
 
   function saveComplete() {
-    // fetchAppointments('9', '2022', true);
+    console.log('SAVECOMPLETE');
+    var day = getDayNumber(startDate.toString());
+    var month = getMonthNumber(startDate.toString());
+    var year = getYear(startDate.toString());
+    console.log('MONTH2112: ' + month);
+    console.log('YEAR: ' + year);
+    fetchAppointments(day, month, year, true); // '00' returns every day in month
   }
 
   function onDateChange(date: Moment, type: 'START_DATE' | 'END_DATE') {
@@ -87,75 +107,63 @@ export default function CalendarScreen() {
     fetchAppointments(day, month, year, true);
   }
 
-  if (isLoading) {
-    return (
-      <>
-        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#AAA" />
+  return (
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+        <View style={styles.calendarView}>
+          <CalendarPicker
+            todayBackgroundColor="#02ABF7"
+            todayTextStyle={styles.todayText}
+            selectedDayColor="gray"
+            selectedDayTextColor="white"
+            textStyle={lightOrDark == 'dark' ? styles.calendarTextDark : styles.calendarTextLight}
+            onDateChange={onDateChange}
+          />
         </View>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-        <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-          <View style={styles.calendarView}>
-            <CalendarPicker
-              todayBackgroundColor="#02ABF7"
-              todayTextStyle={styles.todayText}
-              selectedDayColor="gray"
-              selectedDayTextColor="white"
-              textStyle={lightOrDark == 'dark' ? styles.calendarTextDark : styles.calendarTextLight}
-              onDateChange={onDateChange}
-            />
+
+        {isLoading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#AAA" />
           </View>
-
-          {isLoading ? (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <ActivityIndicator size="large" color="#AAA" />
-            </View>
-          ) : (
-            <React.Fragment>
-              <ScrollView>
-                <View>
-                  {data.map((item, index) => (
-                    <AppointmentRow
-                      appID={item.id}
-                      key={index}
-                      lightOrDark={lightOrDark}
-                      data={item}
-                      onPress={() => handleRowPress(index)}
-                    />
-                  ))}
-                </View>
-              </ScrollView>
-            </React.Fragment>
-          )}
-          <TouchableOpacity style={styles.bottomContainer} onPress={() => addAppointmentPressed()}>
-            <View style={styles.addButton}>
-              <Text style={styles.addText}>{'Add Appointment'}</Text>
-            </View>
-          </TouchableOpacity>
-          {modalVisible && (
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <AddAppointmentScreen title={'New Appointment'} onSave={saveComplete} setModalVisible={setModalVisible} />
-            </Modal>
-          )}
-        </View>
-      </>
-    );
-  }
+        ) : (
+          <React.Fragment>
+            <ScrollView>
+              <View>
+                {data.map((item, index) => (
+                  <AppointmentRow
+                    appID={item.id}
+                    key={index}
+                    data={item}
+                    lightOrDark={lightOrDark}
+                    onPress={() => handleRowPress(index)}
+                  />
+                ))}
+              </View>
+            </ScrollView>
+          </React.Fragment>
+        )}
+        <TouchableOpacity style={styles.bottomContainer} onPress={() => addAppointmentPressed()}>
+          <View style={styles.addButton}>
+            <Text style={styles.addText}>{'Add Appointment'}</Text>
+          </View>
+        </TouchableOpacity>
+        {modalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <AddAppointmentScreen title={'New Appointment'} onSave={saveComplete} setModalVisible={setModalVisible} />
+          </Modal>
+        )}
+      </View>
+    </>
+  );
 }
-
 const styles = StyleSheet.create({
   calendarView: {
     height: '40%',

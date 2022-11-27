@@ -318,7 +318,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: '12%',
   },
   mainContent: {
     alignItems: 'center',
