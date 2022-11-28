@@ -63,6 +63,16 @@ export default function TrackActivityScreen(props: any) {
     setModalVisible(false);
   }
 
+  function isDataValid() {
+    if (relationship?.id == null) {
+      return false;
+    }
+    if (subject == null || subject == '') {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topRow}>
@@ -73,7 +83,7 @@ export default function TrackActivityScreen(props: any) {
         <Text style={styles.pageTitle}>{trackTitle}</Text>
 
         <TouchableOpacity onPress={savePressed}>
-          <Text style={styles.saveButton}>Save</Text>
+          <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
       </View>
 
@@ -285,6 +295,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginRight: '10%',
+    opacity: 1.0,
+  },
+  saveButtonDim: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginRight: '10%',
+    opacity: 0.4,
   },
   notesView: {
     marginTop: 10,
