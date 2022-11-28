@@ -13,6 +13,7 @@ export default function TrackActivityScreen(props: any) {
   const { onSave, setModalVisible, trackTitle, lightOrDark } = props;
   const [note, onNoteChange] = useState('');
   const [relationship, setRelationship] = useState<RolodexDataProps>();
+  const [referral, setReferral] = useState<RolodexDataProps>();
   const [goal, setGoal] = useState<GoalDataConciseProps>();
   const [date, setDate] = useState(new Date());
   const [subject, setSubject] = useState('');
@@ -48,6 +49,10 @@ export default function TrackActivityScreen(props: any) {
     console.log(currentDate);
     setDate(currentDate);
   };
+
+  function removeReferralPressed() {}
+
+  function addReferralPressed() {}
 
   function savePressed() {
     if (relationship?.id == null) {
@@ -122,6 +127,26 @@ export default function TrackActivityScreen(props: any) {
           />
         </View>
       </View>
+
+      {/* {false && (
+        <View style={styles.textAndButtonRow}>
+          <Text style={styles.fieldTitle}>{'Who did ' + relationship?.firstName + ' refer?'}</Text>
+          <TouchableOpacity style={styles.inlineButtons} onPress={removeReferralPressed}>
+            <Text style={styles.inlineButtons}>Remove</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {false && (
+        <TouchableOpacity onPress={addReferralPressed}>
+          <View style={styles.textInput}>
+            <Text>{referral?.firstName}</Text>
+            {(referral == null || referral?.id == '' || referral?.id == null) && (
+              <Text style={styles.addText}>+ Add</Text>
+            )}
+          </View>
+        </TouchableOpacity>
+      )} */}
 
       <Text style={styles.fieldTitle}>Date</Text>
       <TouchableOpacity onPress={showDatePicker}>
@@ -236,6 +261,24 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
+  },
+  textAndButtonRow: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+  },
+  addText: {
+    fontSize: 16,
+    color: '#AFB9C2',
+    marginLeft: 20,
+    marginBottom: 10,
+  },
+  inlineButtons: {
+    color: '#F99055',
+    fontSize: 16,
+    textAlign: 'right',
+    marginRight: 10,
+    marginBottom: 5,
   },
   addRel: {
     fontSize: 18,
