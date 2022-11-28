@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
   },
   goalTargetDark: {
     width: 20,
-    height: 32,
+    height: 20,
     color: 'white',
     fontSize: 16,
     textAlign: 'right',
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
   },
   goalTargetLight: {
     width: 20,
-    height: 32,
+    height: 20,
     color: 'black',
     fontSize: 16,
     textAlign: 'right',
