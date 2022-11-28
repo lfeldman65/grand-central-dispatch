@@ -17,7 +17,7 @@ export default function TrackActivityScreen(props: any) {
   const [goal, setGoal] = useState<GoalDataConciseProps>();
   const [date, setDate] = useState(new Date());
   const [subject, setSubject] = useState('');
-  const [askedReferral, setAskedReferral] = useState(false);
+  const [askedReferral, setAskedReferral] = useState(true);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
   const [showDate, setShowDate] = useState(false);
@@ -194,6 +194,7 @@ export default function TrackActivityScreen(props: any) {
         unfillColor="#004F89"
         iconStyle={{ borderColor: 'white' }}
         text="I asked for a referral"
+        isChecked={askedReferral}
         textContainerStyle={{ marginLeft: 10 }}
         style={styles.checkBox}
         onPress={(isChecked: boolean) => {
