@@ -7,6 +7,8 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseGoal from '../Goals/ChooseGoalScreen';
 import { RolodexDataProps, GoalDataConciseProps } from './interfaces';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+import globalStyles from '../../globalStyles';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
@@ -15,15 +17,52 @@ export default function TrackActivityScreen(props: any) {
   const [relationship, setRelationship] = useState<RolodexDataProps>();
   const [referral, setReferral] = useState<RolodexDataProps>();
   const [goal, setGoal] = useState<GoalDataConciseProps>();
-  const [refType, setRefType] = useState(3);
+  const [refType, setRefType] = useState('1');
   const [date, setDate] = useState(new Date());
   const [subject, setSubject] = useState('');
   const [askedReferral, setAskedReferral] = useState(true);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
   const [modalRefVisible, setModalRefVisible] = useState(false);
+  const [refInPast, setRefInPast] = useState(false);
   const [showDate, setShowDate] = useState(false);
+  const actionSheetRef = useRef<ActionSheet>(null);
   const isFocused = useIsFocused();
+
+  const filters = {
+    'x gave me referral y': 'x gave me referral y',
+    'y was referred to me by x': 'y was referred to me by x',
+    'I gave x referral y': 'I gave x referral y',
+  };
+
+  const Sheets = {
+    filterSheet: 'filter_sheet_id',
+  };
+
+  function convertToText(refType: string) {
+    if (refType == '1') {
+      return 'x gave me referral y';
+    }
+    if (refType == '2') {
+      return 'y was referred to me by x';
+    }
+    if (refType == '3') {
+      return 'I gave x referral y';
+    }
+  }
+
+  function convertToString(filterItem: string) {
+    if (filterItem == 'x gave me referral y') {
+      return '1';
+    }
+    if (filterItem == 'y was referred to me by x') {
+      return '2';
+    }
+    if (filterItem == 'I gave x referral y') {
+      return '3';
+    }
+    return '4';
+  }
 
   useEffect(() => {
     console.log('TRACKACTIVITY: ' + lightOrDark);
@@ -35,7 +74,7 @@ export default function TrackActivityScreen(props: any) {
   }, [isFocused]);
 
   function getReferralTitle() {
-    if (refType == 1) {
+    if (refType == '1') {
       if (relationship?.id == '' || relationship?.id == null) {
         return 'This relationship gave me a referral:';
       }
@@ -44,7 +83,7 @@ export default function TrackActivityScreen(props: any) {
       }
       return relationship?.firstName + ' gave me a referral named ' + referral?.firstName;
     }
-    if (refType == 2) {
+    if (refType == '2') {
       if (relationship?.id == '' || relationship?.id == null) {
         return 'This relationship gave me a referral:';
       }
@@ -53,7 +92,7 @@ export default function TrackActivityScreen(props: any) {
       }
       return referral?.firstName + ' was referred to me by ' + relationship?.firstName;
     }
-    if (refType == 3) {
+    if (refType == '3') {
       if (relationship?.id == '' || relationship?.id == null) {
         return 'I gave this relationship a referral:';
       }
@@ -69,8 +108,11 @@ export default function TrackActivityScreen(props: any) {
   }
 
   function addReferralPressed() {
-    console.log('add referral pressed');
     setModalRefVisible(!modalRefVisible);
+  }
+
+  function referralTypePressed() {
+    SheetManager.show(Sheets.filterSheet);
   }
 
   function handleGoalPressed() {
@@ -97,8 +139,8 @@ export default function TrackActivityScreen(props: any) {
     onSave(
       relationship?.id,
       referral?.id,
-      refType == 3,
-      refType != 3,
+      refType == '3',
+      refType != '3',
       goal?.id.toString(),
       subject,
       date.toISOString(),
@@ -156,7 +198,20 @@ export default function TrackActivityScreen(props: any) {
         </View>
       </TouchableOpacity>
 
-      {goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>{getReferralTitle()}</Text>}
+      {goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>Referral Type</Text>}
+      {goal?.title.includes('Referral') && (
+        <TouchableOpacity onPress={referralTypePressed}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+                {convertToText(refType)}
+              </TextInput>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>Referral:</Text>}
       {goal?.title.includes('Referral') && (
         <TouchableOpacity onPress={addReferralPressed}>
           <View style={styles.mainContent}>
@@ -201,6 +256,23 @@ export default function TrackActivityScreen(props: any) {
             />
           </View>
         </View>
+      )}
+
+      {goal?.title.includes('Referral') && (
+        <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+          size={25}
+          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+          fillColor="#37C0FF"
+          unfillColor="#004F89"
+          iconStyle={{ borderColor: 'white' }}
+          text="This referral occured in the past"
+          textContainerStyle={{ marginLeft: 10 }}
+          style={styles.checkBox}
+          onPress={(isChecked: boolean) => {
+            console.log(isChecked);
+            setRefInPast(!refInPast);
+          }}
+        />
       )}
 
       <Text style={styles.fieldTitle}>Date</Text>
@@ -288,6 +360,51 @@ export default function TrackActivityScreen(props: any) {
           />
         </Modal>
       )}
+      <ActionSheet
+        initialOffsetFromBottom={10}
+        onBeforeShow={(data) => console.log('action sheet')}
+        id={Sheets.filterSheet}
+        ref={actionSheetRef}
+        statusBarTranslucent
+        bounceOnOpen={true}
+        drawUnderStatusBar={true}
+        bounciness={4}
+        gestureEnabled={true}
+        bottomOffset={40}
+        defaultOverlayOpacity={0.3}
+      >
+        <View
+          style={{
+            paddingHorizontal: 12,
+          }}
+        >
+          <ScrollView
+            nestedScrollEnabled
+            onMomentumScrollEnd={() => {
+              actionSheetRef.current?.handleChildScrollEnd();
+            }}
+            style={styles.scrollview}
+          >
+            <View>
+              {Object.entries(filters).map(([index, value]) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    SheetManager.hide(Sheets.filterSheet, null);
+                    setRefType(convertToString(value));
+                    // fetchData();
+                  }}
+                  style={globalStyles.listItemCell}
+                >
+                  <Text style={globalStyles.listItem}>{index}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/*  Add a Small Footer at Bottom */}
+          </ScrollView>
+        </View>
+      </ActionSheet>
       {modalGoalVisible && (
         <Modal
           animationType="slide"
@@ -314,6 +431,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#004F89',
+  },
+  scrollview: {
+    width: '100%',
+    padding: 12,
   },
   mainContent: {
     alignItems: 'center',

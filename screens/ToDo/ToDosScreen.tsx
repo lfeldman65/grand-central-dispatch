@@ -7,7 +7,6 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
 import { getToDoData } from './api';
 import { ToDoDataProps } from './interfaces';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
 import ToDoRow from './ToDoRow';
 import globalStyles from '../../globalStyles';
@@ -81,7 +80,7 @@ export default function ToDosScreen() {
   }
 
   function filterPressed() {
-    analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));
+    // analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));
     SheetManager.show(Sheets.filterSheet);
   }
 
