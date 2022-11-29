@@ -58,7 +58,7 @@ export default function ChooseGoalScreen(props: any) {
           <Image source={backArrow} style={styles.backArrow} />
         </TouchableOpacity>
 
-        <Text style={styles.nameLabel}>{'       ' + title}</Text>
+        <Text style={styles.nameLabel}>{title}</Text>
 
         <TouchableOpacity>
           <Text style={styles.saveButton}>{'        '}</Text>
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
-    marginRight: '10%',
+    //  marginRight: '10%',
   },
   notesText: {
     color: 'white',

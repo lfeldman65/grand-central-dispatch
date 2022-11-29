@@ -12,19 +12,31 @@ interface GoalProps {
 export default function ChooseGoalRow(props: GoalProps) {
   const isFocused = useIsFocused();
 
+  function formatTitle(ugly: string) {
+    if (ugly == 'Referrals Given') {
+      return 'Referrals Tracked';
+    }
+    if (ugly == 'Notes Made') {
+      return 'Notes Written';
+    }
+    return ugly;
+  }
+
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-        <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
-          {props.data.title}
-        </Text>
-      </View>
+      {props.data.title != 'New Contacts' && props.data.title != 'Referrals Received' && (
+        <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.goalDark : styles.goalLight}>
+            {formatTitle(props.data.title)}
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
 
 export const styles = StyleSheet.create({
-  personNameDark: {
+  goalDark: {
     color: 'white',
     fontSize: 18,
     textAlign: 'left',
@@ -33,7 +45,7 @@ export const styles = StyleSheet.create({
     marginTop: 5,
     fontWeight: '500',
   },
-  personNameLight: {
+  goalLight: {
     color: 'black',
     fontSize: 18,
     textAlign: 'left',

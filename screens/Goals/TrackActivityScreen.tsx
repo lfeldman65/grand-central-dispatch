@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
-import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -30,9 +29,9 @@ export default function TrackActivityScreen(props: any) {
   const isFocused = useIsFocused();
 
   const filters = {
-    'x gave me referral y': 'x gave me referral y',
-    'y was referred to me by x': 'y was referred to me by x',
-    'I gave x referral y': 'I gave x referral y',
+    'Relationship gave me referral Referral': 'Relationship gave me referral Referral',
+    'Relationship was referred to me by Referrer': 'Relationship was referred to me by Referrer',
+    'I gave Relationship referral Referral': 'I gave Relationship referral Referral',
   };
 
   const Sheets = {
@@ -41,24 +40,24 @@ export default function TrackActivityScreen(props: any) {
 
   function convertToText(refType: string) {
     if (refType == '1') {
-      return 'x gave me referral y';
+      return relationship?.firstName + ' referred ' + referral?.firstName;
     }
     if (refType == '2') {
-      return 'y was referred to me by x';
+      return 'Relationship was referred to me by Referrer';
     }
     if (refType == '3') {
-      return 'I gave x referral y';
+      return 'I gave Relationship referral Referral';
     }
   }
 
   function convertToString(filterItem: string) {
-    if (filterItem == 'x gave me referral y') {
+    if (filterItem == 'Relationship gave me referral Referral') {
       return '1';
     }
-    if (filterItem == 'y was referred to me by x') {
+    if (filterItem == 'Relationship was referred to me by Referrer') {
       return '2';
     }
-    if (filterItem == 'I gave x referral y') {
+    if (filterItem == 'I gave Relationship referral Referral') {
       return '3';
     }
     return '4';
@@ -211,7 +210,9 @@ export default function TrackActivityScreen(props: any) {
         </TouchableOpacity>
       )}
 
-      {goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>Referral:</Text>}
+      {goal?.title.includes('Referral') && (
+        <Text style={styles.fieldTitle}>{refType == '2' ? 'Referrer:' : 'Referral:'}</Text>
+      )}
       {goal?.title.includes('Referral') && (
         <TouchableOpacity onPress={addReferralPressed}>
           <View style={styles.mainContent}>
