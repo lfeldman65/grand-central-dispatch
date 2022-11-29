@@ -21,7 +21,6 @@ import GroupsRow from './GroupsRow';
 import { getGroupsData, getRolodexData } from './api';
 import { GroupsDataProps, RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { storage } from '../../utils/storage';
 
@@ -122,31 +121,31 @@ export default function ManageRelationshipsScreen() {
   }
 
   function handleAddRelPressed() {
-    analytics.event(new Event('Relationships', 'Add Relationship', 'Press', 0));
+    //  analytics.event(new Event('Relationships', 'Add Relationship', 'Press', 0));
     setModalVisible(true);
   }
 
   function azPressed() {
-    analytics.event(new Event('Manage Relationships', 'Tab Button', 'A-Z', 0));
+    //   analytics.event(new Event('Manage Relationships', 'Tab Button', 'A-Z', 0));
     setTabSelected('a-z');
     fetchRolodexPressed('alpha', true);
   }
 
   function rankingPressed() {
-    analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
+    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
     setTabSelected('ranking');
     fetchRolodexPressed('ranking', true);
   }
 
   function groupsPressed() {
-    analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
+    //   analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
     setTabSelected('groups');
     fetchGroupsPressed(true);
   }
 
   function filterPressed() {
     console.log('filter');
-    analytics.event(new Event('Manage Relationships', 'Filter', 'Press', 0));
+    //   analytics.event(new Event('Manage Relationships', 'Filter', 'Press', 0));
     if (isFilterRel) {
       setIsFilterRel(false);
     } else {

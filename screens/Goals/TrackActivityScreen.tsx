@@ -15,11 +15,13 @@ export default function TrackActivityScreen(props: any) {
   const [relationship, setRelationship] = useState<RolodexDataProps>();
   const [referral, setReferral] = useState<RolodexDataProps>();
   const [goal, setGoal] = useState<GoalDataConciseProps>();
+  const [refType, setRefType] = useState(3);
   const [date, setDate] = useState(new Date());
   const [subject, setSubject] = useState('');
   const [askedReferral, setAskedReferral] = useState(true);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
+  const [modalRefVisible, setModalRefVisible] = useState(false);
   const [showDate, setShowDate] = useState(false);
   const isFocused = useIsFocused();
 
@@ -32,8 +34,43 @@ export default function TrackActivityScreen(props: any) {
     setGoal(initialGoal);
   }, [isFocused]);
 
+  function getReferralTitle() {
+    if (refType == 1) {
+      if (relationship?.id == '' || relationship?.id == null) {
+        return 'This relationship gave me a referral:';
+      }
+      if (referral?.id == '' || referral?.id == null) {
+        return 'This relationship gave me a referral:';
+      }
+      return relationship?.firstName + ' gave me a referral named ' + referral?.firstName;
+    }
+    if (refType == 2) {
+      if (relationship?.id == '' || relationship?.id == null) {
+        return 'This relationship gave me a referral:';
+      }
+      if (referral?.id == '' || referral?.id == null) {
+        return 'This relationship gave me a referral:';
+      }
+      return referral?.firstName + ' was referred to me by ' + relationship?.firstName;
+    }
+    if (refType == 3) {
+      if (relationship?.id == '' || relationship?.id == null) {
+        return 'I gave this relationship a referral:';
+      }
+      if (referral?.id == '' || referral?.id == null) {
+        return 'I gave this relationship a referral:';
+      }
+      return 'I gave ' + relationship?.firstName + ' a referral';
+    }
+  }
+
   function handleRelPressed() {
     setModalRelVisible(!modalRelVisible);
+  }
+
+  function addReferralPressed() {
+    console.log('add referral pressed');
+    setModalRefVisible(!modalRefVisible);
   }
 
   function handleGoalPressed() {
@@ -50,10 +87,6 @@ export default function TrackActivityScreen(props: any) {
     setDate(currentDate);
   };
 
-  function removeReferralPressed() {}
-
-  function addReferralPressed() {}
-
   function savePressed() {
     if (relationship?.id == null) {
       Alert.alert('Please Choose a Relationship');
@@ -61,7 +94,17 @@ export default function TrackActivityScreen(props: any) {
     }
     setModalVisible(false);
     console.log('GOALID: ' + goal?.id);
-    onSave(relationship?.id, goal?.id.toString(), subject, date.toISOString(), askedReferral, note);
+    onSave(
+      relationship?.id,
+      referral?.id,
+      refType == 3,
+      refType != 3,
+      goal?.id.toString(),
+      subject,
+      date.toISOString(),
+      askedReferral,
+      note
+    );
   }
 
   function cancelPressed() {
@@ -72,7 +115,7 @@ export default function TrackActivityScreen(props: any) {
     if (relationship?.id == null) {
       return false;
     }
-    if (subject == null || subject == '') {
+    if (!goal?.title.includes('Referral') && (subject == null || subject == '')) {
       return false;
     }
     return true;
@@ -86,7 +129,6 @@ export default function TrackActivityScreen(props: any) {
         </TouchableOpacity>
 
         <Text style={styles.pageTitle}>{trackTitle}</Text>
-
         <TouchableOpacity onPress={savePressed}>
           <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
@@ -114,39 +156,52 @@ export default function TrackActivityScreen(props: any) {
         </View>
       </TouchableOpacity>
 
-      <Text style={styles.fieldTitle}>Subject</Text>
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setSubject(text)}
-            defaultValue={subject}
-          />
-        </View>
-      </View>
-
-      {/* {false && (
-        <View style={styles.textAndButtonRow}>
-          <Text style={styles.fieldTitle}>{'Who did ' + relationship?.firstName + ' refer?'}</Text>
-          <TouchableOpacity style={styles.inlineButtons} onPress={removeReferralPressed}>
-            <Text style={styles.inlineButtons}>Remove</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {false && (
+      {goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>{getReferralTitle()}</Text>}
+      {goal?.title.includes('Referral') && (
         <TouchableOpacity onPress={addReferralPressed}>
-          <View style={styles.textInput}>
-            <Text>{referral?.firstName}</Text>
-            {(referral == null || referral?.id == '' || referral?.id == null) && (
-              <Text style={styles.addText}>+ Add</Text>
-            )}
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+                {referral == null ? '' : referral.firstName + ' ' + referral.lastName}
+              </TextInput>
+            </View>
           </View>
         </TouchableOpacity>
-      )} */}
+      )}
+
+      {modalRefVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalRefVisible}
+          onRequestClose={() => {
+            setModalRefVisible(!modalRefVisible);
+          }}
+        >
+          <ChooseRelationship
+            title="Choose Relationship"
+            setModalRelVisible={setModalRefVisible}
+            setSelectedRel={setReferral}
+            lightOrDark={lightOrDark}
+          />
+        </Modal>
+      )}
+
+      {!goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>Subject</Text>}
+      {!goal?.title.includes('Referral') && (
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setSubject(text)}
+              defaultValue={subject}
+            />
+          </View>
+        </View>
+      )}
 
       <Text style={styles.fieldTitle}>Date</Text>
       <TouchableOpacity onPress={showDatePicker}>

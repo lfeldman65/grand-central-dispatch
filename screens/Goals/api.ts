@@ -1,3 +1,4 @@
+import { User } from 'react-native-feather';
 import { sub } from 'react-native-reanimated';
 import { http } from '../../utils/http';
 import { TrackDataResponse, GoalDataResponse, GoalDataConciseResponse, RolodexDataResponse } from './interfaces';
@@ -13,6 +14,9 @@ export function getGoalDataConcise(): Promise<GoalDataConciseResponse> {
 export function trackAction(
   guid: string,
   goalId: string,
+  contactGUID: string,
+  userGaveReferral: boolean,
+  followUp: boolean,
   subject: string,
   date: string,
   referral: boolean,
@@ -24,9 +28,21 @@ export function trackAction(
   console.log('API date: ' + date);
   console.log('API referral: ' + referral);
   console.log('API notes: ' + notes);
+  console.log('API contact GUID: ' + contactGUID);
+  console.log('API USER GAVE REF ' + userGaveReferral);
 
   return http.post(`activityGoalsTrack/${guid}`, {
-    body: { goalId: goalId, subject: subject, date: date, referral: referral, notes: notes },
+    body: {
+      goalId: goalId,
+      sourceGUID: guid,
+      contactGUID: contactGUID,
+      userGaveReferral: userGaveReferral,
+      followUp: followUp,
+      subject: subject,
+      date: date,
+      referral: referral,
+      notes: notes,
+    },
   });
 }
 

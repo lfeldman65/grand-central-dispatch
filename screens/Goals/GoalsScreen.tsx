@@ -208,14 +208,39 @@ export default function GoalsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function saveComplete(guid: string, goalId: string, subject: string, date: string, askedRef: boolean, note: string) {
+  function saveComplete(
+    guid: string,
+    contactGUID: string,
+    userGaveReferral: boolean,
+    followUp: boolean,
+    goalId: string,
+    subject: string,
+    date: string,
+    askedRef: boolean,
+    note: string
+  ) {
     setIsLoading(true);
-    trackActivityAPI(guid, goalId, subject, date, askedRef, note, trackSuccess, trackFailure);
+    trackActivityAPI(
+      guid,
+      goalId,
+      contactGUID,
+      userGaveReferral,
+      followUp,
+      subject,
+      date,
+      askedRef,
+      note,
+      trackSuccess,
+      trackFailure
+    );
   }
 
   function trackActivityAPI(
     contactId: string,
     goalId: string,
+    contactGUID: string,
+    userGaveReferral: boolean,
+    followUp: boolean,
     subject: string,
     date: string,
     referral: boolean,
@@ -226,7 +251,7 @@ export default function GoalsScreen() {
     console.log('CONTACTID: ' + contactId);
     console.log('GOALID: ' + goalId);
 
-    trackAction(contactId, goalId, subject, date, referral, note)
+    trackAction(contactId, goalId, contactGUID, userGaveReferral, followUp, subject, date, referral, note)
       .then((res) => {
         console.log(res);
         if (res.status == 'error') {
