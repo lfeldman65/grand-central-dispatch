@@ -144,7 +144,8 @@ export default function TrackActivityScreen(props: any) {
       subject,
       date.toISOString(),
       askedReferral,
-      note
+      note,
+      refInPast
     );
   }
 

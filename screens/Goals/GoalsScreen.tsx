@@ -217,7 +217,8 @@ export default function GoalsScreen() {
     subject: string,
     date: string,
     askedRef: boolean,
-    note: string
+    note: string,
+    referralInPast: boolean
   ) {
     setIsLoading(true);
     trackActivityAPI(
@@ -230,6 +231,7 @@ export default function GoalsScreen() {
       date,
       askedRef,
       note,
+      referralInPast,
       trackSuccess,
       trackFailure
     );
@@ -245,13 +247,25 @@ export default function GoalsScreen() {
     date: string,
     referral: boolean,
     note: string,
+    referralInPast: boolean,
     onSuccess: any,
     onFailure: any
   ) {
     console.log('CONTACTID: ' + contactId);
     console.log('GOALID: ' + goalId);
 
-    trackAction(contactId, goalId, contactGUID, userGaveReferral, followUp, subject, date, referral, note)
+    trackAction(
+      contactId,
+      goalId,
+      contactGUID,
+      userGaveReferral,
+      followUp,
+      subject,
+      date,
+      referral,
+      note,
+      referralInPast
+    )
       .then((res) => {
         console.log(res);
         if (res.status == 'error') {
