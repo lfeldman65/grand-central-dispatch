@@ -63,11 +63,14 @@ export default function EditRelationshipScreen(props: any) {
   const [isReferral, setIsReferral] = useState(data.referral);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalSpouseVisible, setModalSpouseVisibile] = useState(false);
-
   const [date, setDate] = useState(new Date());
-
   const isFocused = useIsFocused();
   const navigation = useNavigation();
+
+  function showBirthDatePicker() {
+    console.log('show birthday picker');
+    setShowBirthDate(true);
+  }
 
   const onDatePickerBdayChange = (event: any, selectedDate: any) => {
     setBirthday(
@@ -88,15 +91,6 @@ export default function EditRelationshipScreen(props: any) {
       })
     );
   };
-
-  // function saveComplete() {
-  //   console.log('save complete');
-  // }
-
-  function showBirthDatePicker() {
-    console.log('show birthday picker');
-    setShowBirthDate(true);
-  }
 
   function showWeddingDatePicker() {
     console.log('show wedding picker');
@@ -363,6 +357,7 @@ export default function EditRelationshipScreen(props: any) {
     } else {
       setChangeTypeButtonText('Change to Business');
     }
+    console.log('BIRTHDAY1120A:' + birthday);
     return () => {
       isMounted = false;
     };
@@ -649,7 +644,7 @@ export default function EditRelationshipScreen(props: any) {
       <TouchableOpacity onPress={showBirthDatePicker}>
         <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
           {birthday != null && birthday != '' && <Text>{birthday}</Text>}
-          {(birthday == null || birthday == '') && <Text style={styles.addText}>+Add</Text>}
+          {(birthday == null || birthday == '') && <Text style={styles.addText}>+ Add</Text>}
         </View>
       </TouchableOpacity>
 
@@ -666,7 +661,7 @@ export default function EditRelationshipScreen(props: any) {
       {showBirthDate && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={new Date(birthday)}
+          value={birthday == '' ? new Date() : new Date(birthday)}
           mode={'date'}
           is24Hour={true}
           onChange={onDatePickerBdayChange}
@@ -697,7 +692,7 @@ export default function EditRelationshipScreen(props: any) {
       {showWeddingDate && (
         <DateTimePicker
           testID="dateTimePicker"
-          value={new Date(wedding)}
+          value={wedding == '' ? new Date() : new Date(wedding)}
           mode={'date'}
           is24Hour={true}
           onChange={onDatePickerWeddingChange}

@@ -8,9 +8,8 @@ import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual, editCon
 import { RelDetailsProps, ToDoAndApptProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
-import { formatDate } from '../../utils/general';
+import { formatDate, prettyDate } from '../../utils/general';
 import openMap from 'react-native-open-maps';
-import EditRelationshipScreen from './EditRelationshipScreen';
 const chevron = require('../../images/chevron_blue_right.png');
 //const suitcase = require('../Relationships/images/iconSuitcase.png'); // branch
 
@@ -620,12 +619,13 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             </Text>
           )}
         </TouchableOpacity>
+
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.birthday) && (
           <Text style={styles.subTitle}>Birthday</Text>
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.birthday) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {formatDate(dataDetails?.personalAndFamily.birthday)}
+            {prettyDate(dataDetails?.personalAndFamily.birthday!)}
           </Text>
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary) && (
@@ -633,7 +633,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {formatDate(dataDetails?.personalAndFamily.weddingAnniversary)}
+            {prettyDate(dataDetails?.personalAndFamily.weddingAnniversary!)}
           </Text>
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.childrensNames) && (
