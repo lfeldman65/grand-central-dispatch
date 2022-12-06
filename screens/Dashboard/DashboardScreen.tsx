@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, LogBox } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Event } from 'expo-analytics';
 import * as Sentry from 'sentry-expo';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
-import { Appearance } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import { PermissionStatus } from 'expo-modules-core';
+import { Notification } from 'expo-notifications';
+import { scheduleNotifications } from '../../utils/general';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -32,9 +35,12 @@ interface DashboardNavigationProps {
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
-  const [lightOrDark, setLightOrDark] = useState('');
+  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-  var lightOrDarkLocal = 'automatic';
+
+  const [notificationPermissions, setNotificationPermissions] = useState<PermissionStatus>(
+    PermissionStatus.UNDETERMINED
+  );
 
   function SentryTest() {
     console.log('sentry test');
@@ -43,6 +49,26 @@ export default function DashboardScreen() {
     Sentry.Native.captureException(new Error('Oops!'));
   }
 
+  async function getDarkOrLightMode(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    const dOrlight = await storage.getItem('darkOrLight');
+    console.log('dark or light: ' + dOrlight);
+    setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  const requestNotificationPermissions = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    setNotificationPermissions(status);
+    return status;
+  };
+
+  const handleNotification = (notification: Notification) => {
+    const { title } = notification.request.content;
+    console.warn(title);
+  };
+
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
@@ -50,45 +76,23 @@ export default function DashboardScreen() {
   });
 
   useEffect(() => {
-    console.log('dashboard screen use effect');
+    requestNotificationPermissions();
     getLandingPage();
-    console.disableYellowBox = true;
-    //  LogBox.ignoreLogs(['Console Warning']); // Ignore log notification by message
   }, []);
 
   useEffect(() => {
-    console.log('dashboard screen ISFOCUSED use effect');
-    getDarkOrLightMode();
-    Appearance.addChangeListener(onThemeChange);
+    if (notificationPermissions !== PermissionStatus.GRANTED) return;
+    const listener = Notifications.addNotificationReceivedListener(handleNotification);
+    return () => listener.remove();
+  }, [notificationPermissions]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getDarkOrLightMode(isMounted);
     return () => {
-      Appearance.removeChangeListener(onThemeChange);
+      isMounted = false;
     };
   }, [isFocused]);
-
-  const onThemeChange = ({ colorScheme }) => {
-    console.log('onThemeChange', colorScheme);
-    console.log('lightOrDarkLocal ' + lightOrDarkLocal);
-
-    if (lightOrDarkLocal == 'automatic') {
-      setLightOrDark(colorScheme);
-    } else {
-      setLightOrDark(lightOrDarkLocal);
-    }
-  };
-
-  async function getDarkOrLightMode() {
-    var d = await storage.getItem('darkOrLight');
-    if (d == null || d == undefined || d == 'automatic') {
-      console.log('THEME: ' + d);
-      var dd = Appearance.getColorScheme();
-      console.log('APPEARANCE: ' + dd);
-      lightOrDarkLocal = 'automatic';
-      setLightOrDark(dd ?? 'light');
-    } else {
-      lightOrDarkLocal = d;
-      setLightOrDark(d);
-    }
-  }
 
   function navigateToLandingPage(landingPage?: string) {
     console.log('landing page:' + landingPage);
@@ -183,6 +187,7 @@ export default function DashboardScreen() {
   const handleNavigation = (props: DashboardNavigationProps) => {
     // SentryTest();
     console.log('parent screen: ' + props.parentScreen);
+
     if (props.parentScreen) {
       //  analytics.event(new Event('Dashboard', props.label + ' Pressed', '0'));
       navigation.navigate(props.parentScreen, {
@@ -199,7 +204,7 @@ export default function DashboardScreen() {
     <>
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={styles.row}>
-          <View style={styles.topPair}>
+          <View style={styles.pair}>
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
@@ -215,7 +220,7 @@ export default function DashboardScreen() {
             {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Calls</Text>}
           </View>
 
-          <View style={styles.topPair}>
+          <View style={styles.pair}>
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
@@ -231,7 +236,7 @@ export default function DashboardScreen() {
             {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Notes</Text>}
           </View>
 
-          <View style={styles.topPair}>
+          <View style={styles.pair}>
             <TouchableOpacity
               onPress={() =>
                 handleNavigation({
@@ -346,16 +351,9 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'space-between',
   },
-  topPair: {
-    flex: 1,
-    marginTop: '10%',
-    padding: 8,
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
   pair: {
     flex: 1,
-    marginTop: '20%',
+    marginTop: 20,
     padding: 8,
     flexDirection: 'column',
     alignItems: 'center',
