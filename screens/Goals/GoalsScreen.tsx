@@ -202,7 +202,7 @@ export default function GoalsScreen() {
           console.error(res.error);
         } else {
           setGoalList(res.data);
-          console.log(res.data);
+          //  console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -268,7 +268,7 @@ export default function GoalsScreen() {
       referralInPast
     )
       .then((res) => {
-        console.log(res);
+        //  console.log(res);
         if (res.status == 'error') {
           console.error(res.error);
           onFailure();

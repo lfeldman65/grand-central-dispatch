@@ -44,7 +44,7 @@ export default function ChooseGoalScreen(props: any) {
           console.error(res.error);
         } else {
           setGoalList(res.data);
-          console.log(res.data);
+          //  console.log(res.data);
         }
         setIsLoading(false);
       })
