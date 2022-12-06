@@ -1,3 +1,5 @@
+import * as Notifications from 'expo-notifications';
+
 export function isNullOrEmpty(value: any) {
   if (value == null) return true;
   if (value == '') return true;
@@ -43,4 +45,21 @@ export function prettyTime(uglyTime: string) {
   var timeOnly = uglyTime.substring(11, 16);
   //  console.log('time: ' + timeOnly);
   return timeOnly;
+}
+
+export function scheduleNotifications(title: string, body: string, seconds: number) {
+  console.log('SCHEDULE');
+  const schedulingOptions = {
+    content: {
+      title: title,
+      body: body,
+      sound: true,
+      priority: Notifications.AndroidNotificationPriority.HIGH,
+      color: 'blue',
+    },
+    trigger: {
+      seconds: seconds,
+    },
+  };
+  Notifications.scheduleNotificationAsync(schedulingOptions);
 }

@@ -6,6 +6,15 @@ import { StatusBar } from 'expo-status-bar';
 import DrawerNavigator from './components/Navigation';
 import LoginScreen from './screens/Login/LoginScreen';
 import * as Sentry from 'sentry-expo';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 Sentry.init({
   dsn: 'https://5d41131fe4fe4da196a07aa43c9c205f@o1223915.ingest.sentry.io/6368678',

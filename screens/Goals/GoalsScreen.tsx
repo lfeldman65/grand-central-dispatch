@@ -20,6 +20,7 @@ import { getGoalData, trackAction } from './api';
 import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { scheduleNotifications } from '../../utils/general';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
@@ -285,6 +286,8 @@ export default function GoalsScreen() {
   function trackSuccess() {
     setIsLoading(false);
     fetchGoals(true);
+    console.log('TRACKSUCCESS');
+    scheduleNotifications('Congratulations!', 'You Won the Week!', 3);
   }
 
   function trackFailure() {

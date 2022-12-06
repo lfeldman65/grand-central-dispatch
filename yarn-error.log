@@ -1,8 +1,8 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn install
+  /usr/local/bin/node /usr/local/bin/yarnpkg add expo-notifications@~0.15.4
 
 PATH: 
-  /usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/larryf/Library/Android/sdk/platform-tools
+  /Users/larryf/ReactNativeProjects/buffinireferralmaker_mobile/node_modules/.bin:/Users/larryf/ReactNativeProjects/node_modules/.bin:/Users/larryf/node_modules/.bin:/Users/node_modules/.bin:/node_modules/.bin:/usr/local/lib/node_modules/npm/node_modules/@npmcli/run-script/lib/node-gyp-bin:/Users/larryf/ReactNativeProjects/buffinireferralmaker_mobile/node_modules/.bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/larryf/Library/Android/sdk/platform-tools
 
 Yarn version: 
   1.22.18

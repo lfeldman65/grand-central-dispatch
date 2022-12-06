@@ -18,7 +18,7 @@ export default function TrackActivityScreen(props: any) {
   const [goal, setGoal] = useState<GoalDataConciseProps>();
   const [refType, setRefType] = useState('1');
   const [date, setDate] = useState(new Date());
-  const [subject, setSubject] = useState('');
+  const [subject, setSubject] = useState('test');
   const [askedReferral, setAskedReferral] = useState(true);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
