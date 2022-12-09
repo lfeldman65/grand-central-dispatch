@@ -23,16 +23,6 @@ export function trackAction(
   notes: string,
   referralInPast: boolean
 ): Promise<TrackDataResponse> {
-  console.log('API guid: ' + guid);
-  console.log('API goalID: ' + goalId);
-  console.log('API subject: ' + subject);
-  console.log('API date: ' + date);
-  console.log('API referral: ' + referral);
-  console.log('API notes: ' + notes);
-  console.log('API contact GUID: ' + contactGUID);
-  console.log('API USER GAVE REF ' + userGaveReferral);
-  console.log('API REF IN PAST ' + referralInPast);
-
   return http.post(`activityGoalsTrack/${guid}`, {
     body: {
       goalId: goalId,

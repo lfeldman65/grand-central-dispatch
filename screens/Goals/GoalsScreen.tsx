@@ -26,6 +26,8 @@ const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
 
+var localGoalID = '0';
+
 export default function GoalsScreen() {
   const navigation = useNavigation<any>();
   const [winTheDaySelected, setWinTheDaySelected] = useState(true);
@@ -42,13 +44,13 @@ export default function GoalsScreen() {
   function winTheDayPressed() {
     // analytics.event(new Event('Goals', 'Win the Day Pressed'));
     setWinTheDaySelected(true);
-    fetchGoals(true);
+    fetchGoals(true, false);
   }
 
   function winTheWeekPressed() {
     //  analytics.event(new Event('Goals', 'Win the Week Pressed'));
     setWinTheDaySelected(false);
-    fetchGoals(true);
+    fetchGoals(true, false);
   }
 
   function styleForProgress(goalData: GoalDataProps) {
@@ -191,7 +193,7 @@ export default function GoalsScreen() {
     }
   };
 
-  function fetchGoals(isMounted: boolean) {
+  function fetchGoals(isMounted: boolean, afterTrack: boolean) {
     setIsLoading(true);
     getGoalData()
       .then((res) => {
@@ -202,11 +204,55 @@ export default function GoalsScreen() {
           console.error(res.error);
         } else {
           setGoalList(res.data);
-          //  console.log(res.data);
+          console.log('CALLS: ' + res.data[0].goal.title);
+          console.log('CALLS: ' + res.data[0].achievedToday);
+          if (afterTrack) {
+            notifyIfWin(localGoalID, res.data);
+            //  setTimeout(notifyIfWin, 5000, localGoalID);
+          }
         }
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  function notifyIfWin(goalId: string, data: GoalDataProps[]) {
+    console.log('GOALID: ' + goalId);
+    var i = 0;
+    while (i < data.length) {
+      if (data[i].goal.id.toString() == goalId) {
+        testForNotification(
+          data[i].goal.title,
+          data[i].goal.weeklyTarget,
+          data[i].achievedThisWeek,
+          data[i].achievedToday
+        );
+      }
+      i = i + 1;
+    }
+  }
+
+  function testForNotification(goalName: string, weeklyGoal: number, weeklyNum: number, dailyNum: number) {
+    var dailyGoal = Math.ceil(weeklyGoal / 5);
+    var newGoalName = goalName;
+    if (goalName == 'Notes Made') {
+      newGoalName = 'Notes Written';
+    }
+    console.log('TEST DAILY TITLE: ' + goalName);
+    console.log('TEST DAILY GOAL: ' + dailyGoal);
+    console.log('TEST WEEKLY GOAL: ' + weeklyGoal);
+    console.log('TEST WEEKLY NUM: ' + weeklyNum);
+    console.log('TEST DAILY NUM: ' + dailyNum);
+
+    if (weeklyGoal == 0 && weeklyNum == 1) {
+      scheduleNotifications('Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
+    } else if (weeklyGoal != 0 && weeklyNum == weeklyGoal) {
+      scheduleNotifications('Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
+    } else if (dailyGoal == 0 && dailyNum == 1) {
+      scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
+    } else if (dailyGoal != 0 && dailyNum == dailyGoal) {
+      scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
+    }
   }
 
   function saveComplete(
@@ -252,6 +298,7 @@ export default function GoalsScreen() {
     onSuccess: any,
     onFailure: any
   ) {
+    localGoalID = goalId;
     console.log('CONTACTID: ' + contactId);
     console.log('GOALID: ' + goalId);
 
@@ -274,7 +321,6 @@ export default function GoalsScreen() {
           onFailure();
         } else {
           onSuccess();
-          fetchGoals(true);
         }
       })
       .catch((error) => {
@@ -285,9 +331,8 @@ export default function GoalsScreen() {
 
   function trackSuccess() {
     setIsLoading(false);
-    fetchGoals(true);
+    fetchGoals(true, true);
     console.log('TRACKSUCCESS');
-    scheduleNotifications('Congratulations!', 'You Won the Week!', 3);
   }
 
   function trackFailure() {
@@ -299,11 +344,11 @@ export default function GoalsScreen() {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  }, [navigation]);
+  }, [navigation, localGoalID, goalList]);
 
   useEffect(() => {
     let isMounted = true;
-    fetchGoals(isMounted);
+    fetchGoals(isMounted, false);
     return () => {
       isMounted = false;
     };
