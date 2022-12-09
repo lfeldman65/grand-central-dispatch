@@ -20,6 +20,7 @@ export interface PopByRadiusDataProps {
   address: PopByAddress;
   location: PopByLocation;
   lastPopbyDate: string;
+  notified: boolean;
 }
 
 export interface PopByAddress {

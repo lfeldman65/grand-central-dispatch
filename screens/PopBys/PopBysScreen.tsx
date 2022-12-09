@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,17 +16,24 @@ import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import PopByRow from './PopByRow';
 import PopByRowSaved from './PopByRowSaved';
-import { getPopByRadiusData, removePop, savePop } from './api';
+import { getPopByRadiusData, getPopBysInWindow, savePop, removePop } from './api';
 import { PopByRadiusDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { storage } from '../../utils/storage';
-import MapView from 'react-native-maps';
+import MapView, { LatLng, Region } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
-import { matchesSearch, shortestRoute } from './popByHelpers';
+import { matchesSearch, milesBetween, shortestRoute } from './popByHelpers';
+import * as TaskManager from 'expo-task-manager';
+import * as Location from 'expo-location';
+import { scheduleNotifications } from '../../utils/general';
+
+const LOCATION_TASK_NAME = 'background-location-task';
+var northEast: LatLng | null = null;
+var southWest: LatLng | null = null;
 
 var newRoute: PopByRadiusDataProps[] = [];
+var locationCallBack: { remove: any };
 
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
@@ -59,8 +66,16 @@ export default function ManageRelationshipsScreen() {
   const [search, setSearch] = useState('');
   const [mapHeight, setMapHeight] = useState<MapLength>('medium');
   const [showRoute, setShowRoute] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [lightOrDark, setIsLightOrDark] = useState('');
+  const [mapRef, updateMapRef] = useState<MapView>();
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  //var location: Location.LocationObject | null = null;
+  const popByDataRef = useRef(popByData);
+  popByDataRef.current = popByData;
+
+  //const locationRef = useRef(location);
+  //locationRef.current = location;
 
   async function getDarkOrLightMode(isMounted: boolean) {
     if (!isMounted) {
@@ -68,6 +83,108 @@ export default function ManageRelationshipsScreen() {
     }
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  const requestPermissions = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === 'granted') {
+      console.log('granted');
+      locationCallBack = await Location.watchPositionAsync(
+        {
+          distanceInterval: 800, //approx 0.5 miles
+          timeInterval: 10000, // must wait 10 seconds before receiving updates
+        },
+        (newLocation) => {
+          console.log('new location ' + newLocation.coords.latitude);
+          setLocation(newLocation);
+          calculateAndNotify(newLocation, popByDataRef.current, true);
+        }
+      );
+    }
+  };
+
+  async function calculateAndNotify(loc: Location.LocationObject, data: PopByRadiusDataProps[], notify: boolean) {
+    var alreadyScheduled = false;
+    console.log('calculateAndNotify: ' + loc.coords.latitude);
+
+    for (var i = 0; i < data.length; i++) {
+      var lon = parseFloat(data[i].location.longitude);
+      var lat = parseFloat(data[i].location.latitude);
+
+      if (!isNaN(lon) && !isNaN(lat)) {
+        var mb = milesBetween(lon, lat, loc.coords.longitude, loc.coords.latitude);
+
+        data[i].distance = mb.toFixed(1);
+
+        if (
+          mb > 5 &&
+          !alreadyScheduled &&
+          !data[i].notified &&
+          true && // data[i].ranking == 'A+' &&
+          (await enoughTimePassedRel(data[i].id, 30)) &&
+          (await enoughTimePassedNotif(60))
+        ) {
+          data[i].notified = true;
+          alreadyScheduled = true;
+          if (notify) {
+            scheduleNotifications(
+              'Pop-By Opportunity!',
+              data[i].firstName + ' ' + data[i].lastName + ' is ' + mb.toFixed(1) + ' miles from you!',
+              2
+            );
+          }
+        }
+      }
+    }
+    console.log('DATALENGTH: ' + data.length);
+    setPopByData(data);
+  }
+
+  async function enoughTimePassedRel(guid: string, daysBetween: number) {
+    // same relationship must have at least x days between notifications
+    var now = Date.now();
+    const lastNotifForRel = await storage.getItem(guid + 'pop');
+    if (guid == '44a5777d-8867-49ba-b7b3-02018dde8138') {
+      //   console.log('LASTNOTIF PENTANGELLI: ' + lastNotifForRel);
+    }
+    if (lastNotifForRel == null) {
+      if (guid == '44a5777d-8867-49ba-b7b3-02018dde8138') {
+        console.log('SAVE PENTAGELLI FIRST TIME: ' + lastNotifForRel);
+      }
+      storage.setItem(guid + 'pop', now.toString());
+      return true;
+    }
+    const msecBetween = daysBetween * 24 * 3600 * 1000;
+    const nextNotif = parseFloat(lastNotifForRel) + msecBetween;
+    if (guid == '44a5777d-8867-49ba-b7b3-02018dde8138') {
+      //  console.log('NEXTNOTIF: ' + nextNotif.toString());
+      //  console.log('NOW2: ' + now);
+    }
+    if (now > nextNotif) {
+      if (guid == '44a5777d-8867-49ba-b7b3-02018dde8138') {
+        //  console.log('SAVE PENTAGELLI SECOND TIME: ' + now);
+      }
+      storage.setItem(guid + 'pop', now.toString());
+      return true;
+    }
+    return false;
+  }
+
+  async function enoughTimePassedNotif(secondsBetween: number) {
+    // Must have at least y seconds between successive notifications
+    var now = Date.now();
+    const lastNotif = await storage.getItem('lastPopNotification');
+    if (lastNotif == null) {
+      storage.setItem('lastPopNotification', now.toString());
+      return true;
+    }
+    const nextNotif = parseFloat(lastNotif) + secondsBetween * 1000;
+    //  console.log('LASTNOTIF:' + parseFloat(lastNotif));
+    if (now > nextNotif) {
+      storage.setItem('lastPopNotification', now.toString());
+      return true;
+    }
+    return false;
   }
 
   function clearSearchPressed() {
@@ -121,16 +238,24 @@ export default function ManageRelationshipsScreen() {
     });
   }, [navigation, mapHeight, tabSelected]);
 
+  async function stopWatchPositionAsync() {
+    console.log('STOPWATCHPOSITION');
+    return locationCallBack?.remove();
+  }
+
   useEffect(() => {
+    requestPermissions();
     let isMounted = true;
     if (tabSelected == 'Near Me') {
-      fetchPopBys('nearby', isMounted, false);
+      fetchPopBysWindow('nearby', isMounted);
     } else if (tabSelected == 'Priority') {
-      fetchPopBys('priority', isMounted, false);
+      fetchPopBysWindow('priority', isMounted);
     } else {
-      fetchPopBys('favorites', isMounted, false);
+      fetchPopBysWindow('favorites', isMounted);
     }
     return () => {
+      console.log('clean up');
+      stopWatchPositionAsync();
       isMounted = false;
     };
   }, [isFocused]);
@@ -156,8 +281,9 @@ export default function ManageRelationshipsScreen() {
     if (isLoading) {
       return;
     }
-    setTabSelected('Near Me');
-    fetchPopBys('nearby', true, false);
+    const tab = 'Near Me';
+    setTabSelected(tab);
+    fetchPopBysWindow(tabToParam(tab), true);
   }
 
   function priorityPressed() {
@@ -165,8 +291,9 @@ export default function ManageRelationshipsScreen() {
     if (isLoading) {
       return;
     }
-    setTabSelected('Priority');
-    fetchPopBys('priority', true, false);
+    const tab = 'Priority';
+    setTabSelected(tab);
+    fetchPopBysWindow(tabToParam(tab), true);
   }
 
   function savedPressed() {
@@ -174,8 +301,10 @@ export default function ManageRelationshipsScreen() {
     if (isLoading) {
       return;
     }
-    setTabSelected('Saved');
-    fetchPopBys('favorites', true, false);
+    const tab = 'Saved';
+    setShowRoute(false);
+    setTabSelected(tab);
+    fetchPopBysWindow(tabToParam(tab), true);
   }
 
   function getRankPin(ranking: string) {
@@ -200,29 +329,69 @@ export default function ManageRelationshipsScreen() {
     }
     if (showRoute) {
       // these seem reversed but they aren't since showRoute isn't toggled til the end of this function.
-      handleClosestToFarthest();
+      fetchPopBysWindow(tabToParam(tabSelected), true);
+      setInfoText('Closest to Farthest');
+      console.log('SHOWROUTE1: ' + showRoute);
     } else {
+      fetchPopBysRadius(tabToParam(tabSelected), true);
       handleShortestRoute(popByData);
+      setInfoText('Minimized Route Distance');
+      console.log('SHOWROUTE2: ' + showRoute);
     }
     setShowRoute(!showRoute);
   }
 
   function handleShortestRoute(popByData: PopByRadiusDataProps[]) {
-    var route = shortestRoute(popByData);
-    newRoute = [];
-    newRoute.push(popByData[0]);
-    for (var i = 1; i < popByData.length; i++) {
-      newRoute.push(popByData[route[i - 1]]);
+    console.log('POPBYLENGTH: ' + popByData.length);
+    if (popByData.length < 4) {
+      Alert.alert('Please show at least 4 relationships for the shortest route to be calculated.');
+    } else {
+      var route = shortestRoute(popByData);
+      newRoute = [];
+      newRoute.push(popByData[0]);
+      for (var i = 1; i < popByData.length; i++) {
+        newRoute.push(popByData[route[i - 1]]);
+      }
+      for (var i = 0; i < newRoute.length; i++) {
+        popByData[i] = newRoute[i];
+      }
     }
-    for (var i = 0; i < newRoute.length; i++) {
-      popByData[i] = newRoute[i];
-    }
-    setInfoText('Minimized route distance');
-    //  Alert.alert('Relationships are listed to minimize the route distance');
   }
 
-  function handleClosestToFarthest() {
-    fetchPopBys('favorites', true, true);
+  function tabToParam(tab: string) {
+    if (tab == 'Near Me') {
+      return 'nearby';
+    }
+    if (tab == 'Priority') {
+      return 'priority';
+    }
+    if (tab == 'Saved') {
+      return 'favorites';
+    }
+    return 'nearby';
+  }
+
+  function handleRegionChange(region: Region) {
+    if (tabSelected == 'Near Me' || tabSelected == 'Priority' || (tabSelected == 'Saved' && !showRoute)) {
+      console.log('REGION: ' + region);
+      mapRef
+        ?.getMapBoundaries()
+        .then((res) => {
+          console.log(res);
+          if (
+            Math.abs(res.northEast.latitude - (northEast?.latitude ?? 0)) > 0 ||
+            Math.abs(res.northEast.longitude - (northEast?.longitude ?? 0)) > 0
+          ) {
+            northEast = res.northEast;
+            southWest = res.southWest;
+            //   console.log('REGIONCHANGE');
+            fetchPopBysWindow(tabToParam(tabSelected), true);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      console.log('REGIONCHANGED-SHORTESTROUTE');
+    }
   }
 
   function saveOrUnsavePressed() {
@@ -281,7 +450,7 @@ export default function ManageRelationshipsScreen() {
       await savePop(item.id);
       console.log('save pop ' + item.id);
     });
-    fetchPopBys('favorites', true, false);
+    //  fetchPopBys('favorites', true, false);
   }
 
   function unSaveAllPressedContinue() {
@@ -291,7 +460,7 @@ export default function ManageRelationshipsScreen() {
       await removePop(item.id);
       console.log('removePop ' + item.id);
     });
-    fetchPopBys('favorites', true, false);
+    //   fetchPopBys('favorites', true, false);
   }
 
   function tapAPlusFilter() {
@@ -338,11 +507,44 @@ export default function ManageRelationshipsScreen() {
     return unsaveAll;
   }
 
-  function fetchPopBys(type: string, isMounted: boolean, showAlert: boolean) {
+  function fetchPopBysRadius(type: string, isMounted: boolean) {
     console.log('type: ' + type);
     setIsLoading(true);
-    getPopByRadiusData(type)
-      .then((res) => {
+    if (location !== null) {
+      getPopByRadiusData(type, location.coords.latitude.toString(), location.coords.longitude.toString())
+        .then((res) => {
+          if (!isMounted) {
+            return false;
+          }
+          if (res.status == 'error') {
+            console.error(res.error);
+          } else {
+            setPopByData(res.data);
+          }
+          setIsLoading(false);
+          setInfoText('Minimized Route Distance');
+        })
+        .catch((error) => console.error('failure ' + error));
+    }
+  }
+
+  function fetchPopBysWindow(type: string, isMounted: boolean) {
+    console.log('FETCHPOPBYSWINDOW: ' + type);
+    console.log('SOUTHWEST:' + southWest);
+
+    if (southWest == null || northEast == null) {
+      return;
+    }
+    setIsLoading(true);
+    getPopBysInWindow(
+      type,
+      southWest!.latitude.toString(),
+      northEast!.longitude.toString(),
+      northEast!.latitude.toString(),
+      southWest!.longitude.toString()
+    )
+      .then(async (res) => {
+        //console.log('BACK:' + res.data);
         if (!isMounted) {
           return false;
         }
@@ -350,12 +552,20 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
+          console.log('RESDATA:' + res.data.length);
+          if (location == null) {
+            let loc = await Location.getCurrentPositionAsync({})
+              .then((l) => {
+                setLocation(l);
+                calculateAndNotify(l, res.data, true);
+              })
+              .catch((error) => console.log('cannot get location ' + error));
+          } else {
+            calculateAndNotify(location, res.data, false);
+          }
         }
         setIsLoading(false);
-        if (showAlert) {
-          setInfoText('Closest to farthest');
-          //  Alert.alert('Relationships are listed closest to farthest');
-        }
+        setInfoText('Closest to farthest');
       })
       .catch((error) => console.error('failure ' + error));
   }
@@ -422,20 +632,29 @@ export default function ManageRelationshipsScreen() {
         </View>
       </View>
 
-      {!isLoading && (
-        <View style={getMapHeight()}>
+      {
+        /*!isLoading &&*/ <View style={getMapHeight()}>
           <MapView
+            ref={(ref) => updateMapRef(ref!)}
             showsUserLocation={true}
             style={styles.map}
-            followsUserLocation={true}
-            initialRegion={{ latitude: 33.1175, longitude: -117.25, latitudeDelta: 0.11, longitudeDelta: 0.06 }}
+            followsUserLocation={tabSelected == 'Saved' && showRoute}
+            /*
+            initialRegion={{
+              //latitude: -37.112146,
+              //longitude: 144.857483,
+
+              latitude: popByData?.length == 0 ? 0 : parseFloat(popByData[0].location.latitude),
+              longitude: popByData?.length == 0 ? 0 : parseFloat(popByData[0].location.longitude),
+              latitudeDelta: 0.11,
+              longitudeDelta: 0.06,
+            }}*/
             userInterfaceStyle={lightOrDark == 'dark' ? 'dark' : 'light'}
+            //   onRegionChange={handleRegionChange}
+            onRegionChangeComplete={handleRegionChange}
           >
             {popByData.map((person, index) =>
-              matchesRankFilter(person.ranking) &&
-              matchesSearch(person, search) &&
-              person.location?.latitude != null &&
-              person.location?.longitude != null ? (
+              true ? (
                 <Marker
                   key={index}
                   coordinate={{
@@ -454,7 +673,7 @@ export default function ManageRelationshipsScreen() {
             )}
           </MapView>
         </View>
-      )}
+      }
 
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -483,8 +702,7 @@ export default function ManageRelationshipsScreen() {
                 {popByData.map(
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
-                    matchesSearch(item, search) &&
-                    !item.distance.includes('-') && (
+                    matchesSearch(item, search) && (
                       <PopByRow popByTab={'Near Me'} key={index} data={item} onPress={() => handleRowPress(index)} />
                     )
                 )}
@@ -495,8 +713,7 @@ export default function ManageRelationshipsScreen() {
                 {popByData.map(
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
-                    matchesSearch(item, search) &&
-                    !item.distance.includes('-') && (
+                    matchesSearch(item, search) && (
                       <PopByRow popByTab={'Priority'} key={index} data={item} onPress={() => handleRowPress(index)} />
                     )
                 )}
@@ -508,7 +725,6 @@ export default function ManageRelationshipsScreen() {
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
                     matchesSearch(item, search) &&
-                    !item.distance.includes('-') &&
                     item.address.isFavorite == 'True' && (
                       <PopByRowSaved
                         popByTab={'Saved'}
