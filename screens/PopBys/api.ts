@@ -34,6 +34,14 @@ export function savePop(guid: string): Promise<PopByFavoriteDataResponse> {
   return http.get(`setasfavorite?contactGuid=${guid}`);
 }
 
+export function saveOrRemovePopBulk(contactGUIDs: string, task: string): Promise<PopCompleteResponse> {
+  console.log('API POP GUIDS: ' + contactGUIDs);
+  console.log('API POP TASK: ' + task);
+  return http.post(`popByFavorites/${contactGUIDs}`, {
+    body: { guids: contactGUIDs, task: task },
+  });
+}
+
 export function removePop(guid: string): Promise<PopByRemoveFavoriteDataResponse> {
   return http.get(`removeasfavorite?contactGuid=${guid}`);
 }

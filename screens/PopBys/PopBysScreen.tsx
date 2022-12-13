@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 import PopByRow from './PopByRow';
 import PopByRowSaved from './PopByRowSaved';
-import { getPopByRadiusData, getPopBysInWindow, savePop, removePop } from './api';
+import { getPopByRadiusData, getPopBysInWindow, savePop, removePop, saveOrRemovePopBulk } from './api';
 import { PopByRadiusDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
@@ -279,7 +279,7 @@ export default function ManageRelationshipsScreen() {
   function nearPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
     if (isLoading) {
-      return;
+      //  return;
     }
     const tab = 'Near Me';
     setTabSelected(tab);
@@ -289,7 +289,7 @@ export default function ManageRelationshipsScreen() {
   function priorityPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
     if (isLoading) {
-      return;
+      //  return;
     }
     const tab = 'Priority';
     setTabSelected(tab);
@@ -299,7 +299,7 @@ export default function ManageRelationshipsScreen() {
   function savedPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
     if (isLoading) {
-      return;
+      //  return;
     }
     const tab = 'Saved';
     setShowRoute(false);
@@ -424,6 +424,25 @@ export default function ManageRelationshipsScreen() {
     );
   }
 
+  function saveAllPressedContinue() {
+    console.log('save all pressed');
+    if (popByData.length == 0) {
+      Alert.alert('No relationships to save');
+      return;
+    }
+    // setIsLoading(true);
+    var guids = popByData[0].id;
+    var i = 1;
+    while (i < popByData.length) {
+      guids = guids + ',' + popByData[i].id;
+      i = i + 1;
+    }
+    // setIsLoading(true);
+    console.log('GUIDS: ' + guids);
+    saveOrRemovePopBulk(guids, 'save');
+    fetchPopBysWindow(tabToParam(tabSelected), true);
+  }
+
   function unSaveAllPressed() {
     Alert.alert(
       'Remove all relationships?',
@@ -443,24 +462,23 @@ export default function ManageRelationshipsScreen() {
     );
   }
 
-  function saveAllPressedContinue() {
-    console.log('save all pressed');
-    setIsLoading(true);
-    popByData.forEach(async (item, index) => {
-      await savePop(item.id);
-      console.log('save pop ' + item.id);
-    });
-    //  fetchPopBys('favorites', true, false);
-  }
-
   function unSaveAllPressedContinue() {
     console.log('unsave all pressed');
-    setIsLoading(true);
-    popByData.forEach(async (item, index) => {
-      await removePop(item.id);
-      console.log('removePop ' + item.id);
-    });
-    //   fetchPopBys('favorites', true, false);
+    if (popByData.length == 0) {
+      Alert.alert('No relationships to remove');
+      return;
+    }
+    // setIsLoading(true);
+    var guids = popByData[0].id;
+    var i = 1;
+    while (i < popByData.length) {
+      guids = guids + ',' + popByData[i].id;
+      i = i + 1;
+    }
+    // setIsLoading(true);
+    console.log('GUIDS: ' + guids);
+    saveOrRemovePopBulk(guids, 'remove');
+    fetchPopBysWindow(tabToParam(tabSelected), true);
   }
 
   function tapAPlusFilter() {
