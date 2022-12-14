@@ -424,7 +424,7 @@ export default function ManageRelationshipsScreen() {
     );
   }
 
-  function saveAllPressedContinue() {
+  async function saveAllPressedContinue() {
     console.log('save all pressed');
     if (popByData.length == 0) {
       Alert.alert('No relationships to save');
@@ -437,10 +437,11 @@ export default function ManageRelationshipsScreen() {
       guids = guids + ',' + popByData[i].id;
       i = i + 1;
     }
+    console.log('DECEMBER i: ' + i);
     // setIsLoading(true);
     console.log('GUIDS: ' + guids);
-    saveOrRemovePopBulk(guids, 'save');
-    fetchPopBysWindow(tabToParam(tabSelected), true);
+    await saveOrRemovePopBulk(guids, 'save');
+    await fetchPopBysWindow(tabToParam(tabSelected), true);
   }
 
   function unSaveAllPressed() {
@@ -546,7 +547,7 @@ export default function ManageRelationshipsScreen() {
     }
   }
 
-  function fetchPopBysWindow(type: string, isMounted: boolean) {
+  async function fetchPopBysWindow(type: string, isMounted: boolean) {
     console.log('FETCHPOPBYSWINDOW: ' + type);
     console.log('SOUTHWEST:' + southWest);
 
