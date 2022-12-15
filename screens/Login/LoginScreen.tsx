@@ -91,7 +91,7 @@ export default function LoginScreen() {
     // populateCredentialsIfRemembered();
   }, [isFocused]);
 
-  async function HandleLoginPress() {
+  async function handleLoginPressess() {
     setIsLoading(true);
     console.log(userName);
     console.log(password);
@@ -99,7 +99,7 @@ export default function LoginScreen() {
     Analytics.logEvent('Login_Button_Press', {
       contentType: 'text',
       itemId: 'Login Button Press',
-      method: 'HandleLoginPress',
+      method: 'handleLoginPressess',
     });
 
     if (userName == '' || password == '') {
@@ -172,6 +172,7 @@ export default function LoginScreen() {
               contentType: 'text',
               itemId: 'Remember Me Button Press',
               method: 'HandleRememberMePressed',
+              origin: 'LoginScreen',
             });
           }}
         />
@@ -181,7 +182,7 @@ export default function LoginScreen() {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity onPress={HandleLoginPress}>
+      <TouchableOpacity onPress={handleLoginPressess}>
         <View style={{ alignItems: 'center' }}>
           <Text style={styles.loginText}>Login</Text>
         </View>

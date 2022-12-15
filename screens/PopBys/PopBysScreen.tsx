@@ -434,7 +434,9 @@ export default function ManageRelationshipsScreen() {
     var guids = popByData[0].id;
     var i = 1;
     while (i < popByData.length) {
-      guids = guids + ',' + popByData[i].id;
+      if (popByData[i].address?.isFavorite == 'False') {
+        guids = guids + ',' + popByData[i].id;
+      }
       i = i + 1;
     }
     console.log('DECEMBER i: ' + i);
@@ -473,7 +475,9 @@ export default function ManageRelationshipsScreen() {
     var guids = popByData[0].id;
     var i = 1;
     while (i < popByData.length) {
-      guids = guids + ',' + popByData[i].id;
+      if (popByData[i].address?.isFavorite == 'True') {
+        guids = guids + ',' + popByData[i].id;
+      }
       i = i + 1;
     }
     // setIsLoading(true);
