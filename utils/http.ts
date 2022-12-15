@@ -11,7 +11,7 @@ const apiBaseUrl = 'https://www.referralmaker.com/services/mobileapi';
 
 export async function httpBase(endpoint: string, { body, ...customConfig }: HttpOptions = {}) {
   const sessionToken = await storage.getItem('sessionToken');
-  console.log(sessionToken);
+  // console.log(sessionToken);
   const larryToken = '56B6DEC45D864875820ECB094377E191';
 
   const headers = {
@@ -30,6 +30,7 @@ export async function httpBase(endpoint: string, { body, ...customConfig }: Http
   };
   if (body) {
     config.body = JSON.stringify(body);
+    console.log('CONFIGBODY: ' + config.body);
   }
   return fetch(`${apiBaseUrl}/${endpoint}`, config).then(async (response) => {
     if (response.ok) {

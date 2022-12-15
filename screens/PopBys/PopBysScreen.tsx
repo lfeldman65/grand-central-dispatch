@@ -432,18 +432,24 @@ export default function ManageRelationshipsScreen() {
     }
     // setIsLoading(true);
     var guids = popByData[0].id;
-    var i = 1;
+    var i = 0;
     while (i < popByData.length) {
       if (popByData[i].address?.isFavorite == 'False') {
-        guids = guids + ',' + popByData[i].id;
+        // guids = guids + ',' + popByData[i].id;
+        saveOrRemovePopBulk(guids, 'save')
+          .then(async (res) => {
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            console.error('failure ' + error);
+            setIsLoading(false);
+          });
       }
       i = i + 1;
     }
-    console.log('DECEMBER i: ' + i);
-    // setIsLoading(true);
+    setIsLoading(true);
+    fetchPopBysWindow(tabToParam(tabSelected), true);
     console.log('GUIDS: ' + guids);
-    await saveOrRemovePopBulk(guids, 'save');
-    await fetchPopBysWindow(tabToParam(tabSelected), true);
   }
 
   function unSaveAllPressed() {
@@ -481,7 +487,6 @@ export default function ManageRelationshipsScreen() {
       i = i + 1;
     }
     // setIsLoading(true);
-    console.log('GUIDS: ' + guids);
     saveOrRemovePopBulk(guids, 'remove');
     fetchPopBysWindow(tabToParam(tabSelected), true);
   }
