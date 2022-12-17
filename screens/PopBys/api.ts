@@ -17,7 +17,8 @@ export function getPopBysInWindow(
   latSE: string,
   lonSE: string,
   latNW: string,
-  lonNW: string
+  lonNW: string,
+  task: string
 ): Promise<PopByRadiusDataResponse> {
   // console.log('type', type);
   // console.log('LATSE', latSE);
@@ -26,7 +27,7 @@ export function getPopBysInWindow(
   // console.log('LONNW', lonNW);
 
   return http.get(
-    `PopBysInWindow?sortType=${type}&pointNWLat=${latNW}&pointNWLong=${lonNW}&pointSELat=${latSE}&pointSELong=${lonSE}`
+    `PopBysInWindow?task=${task}&sortType=${type}&pointNWLat=${latNW}&pointNWLong=${lonNW}&pointSELat=${latSE}&pointSELong=${lonSE}`
   ); // NW lon = SW lon, NW lat = NE lat, SW lon = NW lon, SW lat = SE lat
 }
 

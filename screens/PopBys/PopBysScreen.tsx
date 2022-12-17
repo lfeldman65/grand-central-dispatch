@@ -247,11 +247,11 @@ export default function ManageRelationshipsScreen() {
     requestPermissions();
     let isMounted = true;
     if (tabSelected == 'Near Me') {
-      fetchPopBysWindow('nearby', isMounted);
+      fetchPopBysWindow('nearby', 'none', isMounted);
     } else if (tabSelected == 'Priority') {
-      fetchPopBysWindow('priority', isMounted);
+      fetchPopBysWindow('priority', 'none', isMounted);
     } else {
-      fetchPopBysWindow('favorites', isMounted);
+      fetchPopBysWindow('favorites', 'none', isMounted);
     }
     return () => {
       console.log('clean up');
@@ -283,7 +283,7 @@ export default function ManageRelationshipsScreen() {
     }
     const tab = 'Near Me';
     setTabSelected(tab);
-    fetchPopBysWindow(tabToParam(tab), true);
+    fetchPopBysWindow(tabToParam(tab), 'none', true);
   }
 
   function priorityPressed() {
@@ -293,7 +293,7 @@ export default function ManageRelationshipsScreen() {
     }
     const tab = 'Priority';
     setTabSelected(tab);
-    fetchPopBysWindow(tabToParam(tab), true);
+    fetchPopBysWindow(tabToParam(tab), 'none', true);
   }
 
   function savedPressed() {
@@ -304,7 +304,8 @@ export default function ManageRelationshipsScreen() {
     const tab = 'Saved';
     setShowRoute(false);
     setTabSelected(tab);
-    fetchPopBysWindow(tabToParam(tab), true);
+    console.log('TAB: ' + tab);
+    fetchPopBysWindow(tabToParam(tab), 'none', true);
   }
 
   function getRankPin(ranking: string) {
@@ -329,7 +330,7 @@ export default function ManageRelationshipsScreen() {
     }
     if (showRoute) {
       // these seem reversed but they aren't since showRoute isn't toggled til the end of this function.
-      fetchPopBysWindow(tabToParam(tabSelected), true);
+      fetchPopBysWindow(tabToParam(tabSelected), 'none', true);
       setInfoText('Closest to Farthest');
       console.log('SHOWROUTE1: ' + showRoute);
     } else {
@@ -385,7 +386,7 @@ export default function ManageRelationshipsScreen() {
             northEast = res.northEast;
             southWest = res.southWest;
             //   console.log('REGIONCHANGE');
-            fetchPopBysWindow(tabToParam(tabSelected), true);
+            fetchPopBysWindow(tabToParam(tabSelected), 'none', true);
           }
         })
         .catch((err) => console.log(err));
@@ -430,26 +431,8 @@ export default function ManageRelationshipsScreen() {
       Alert.alert('No relationships to save');
       return;
     }
-    // setIsLoading(true);
-    var guids = popByData[0].id;
-    var i = 0;
-    while (i < popByData.length) {
-      if (popByData[i].address?.isFavorite == 'False') {
-        // guids = guids + ',' + popByData[i].id;
-        saveOrRemovePopBulk(guids, 'save')
-          .then(async (res) => {
-            setIsLoading(false);
-          })
-          .catch((error) => {
-            console.error('failure ' + error);
-            setIsLoading(false);
-          });
-      }
-      i = i + 1;
-    }
-    setIsLoading(true);
-    fetchPopBysWindow(tabToParam(tabSelected), true);
-    console.log('GUIDS: ' + guids);
+    console.log('TABSELECTED: ' + tabSelected);
+    fetchPopBysWindow(tabToParam(tabSelected), 'save', true);
   }
 
   function unSaveAllPressed() {
@@ -477,18 +460,7 @@ export default function ManageRelationshipsScreen() {
       Alert.alert('No relationships to remove');
       return;
     }
-    // setIsLoading(true);
-    var guids = popByData[0].id;
-    var i = 1;
-    while (i < popByData.length) {
-      if (popByData[i].address?.isFavorite == 'True') {
-        guids = guids + ',' + popByData[i].id;
-      }
-      i = i + 1;
-    }
-    // setIsLoading(true);
-    saveOrRemovePopBulk(guids, 'remove');
-    fetchPopBysWindow(tabToParam(tabSelected), true);
+    fetchPopBysWindow(tabToParam(tabSelected), 'remove', true);
   }
 
   function tapAPlusFilter() {
@@ -556,7 +528,7 @@ export default function ManageRelationshipsScreen() {
     }
   }
 
-  async function fetchPopBysWindow(type: string, isMounted: boolean) {
+  async function fetchPopBysWindow(type: string, task: string, isMounted: boolean) {
     console.log('FETCHPOPBYSWINDOW: ' + type);
     console.log('SOUTHWEST:' + southWest);
 
@@ -569,7 +541,8 @@ export default function ManageRelationshipsScreen() {
       southWest!.latitude.toString(),
       northEast!.longitude.toString(),
       northEast!.latitude.toString(),
-      southWest!.longitude.toString()
+      southWest!.longitude.toString(),
+      task
     )
       .then(async (res) => {
         //console.log('BACK:' + res.data);
@@ -725,7 +698,7 @@ export default function ManageRelationshipsScreen() {
             </TouchableOpacity>
           </View>
           <ScrollView>
-            {tabSelected == 'Near Me' && (
+            {tabSelected == 'Near Me' && ( // item.distance != '-1.00'
               <View>
                 {popByData.map(
                   (item, index) =>
