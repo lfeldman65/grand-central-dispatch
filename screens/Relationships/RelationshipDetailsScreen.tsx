@@ -10,12 +10,22 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
 import { formatDate } from '../../utils/general';
 import openMap from 'react-native-open-maps';
+import IdeasCalls from '../PAC/IdeasCallsScreen';
+import IdeasNotes from '../PAC/IdeasNotesScreen';
+import IdeasPop from '../PAC/IdeasPopScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { ideasMenu, vidMenu, callMenu, mobileTypeMenu, Sheets } from './relationshipHelpers';
+import {
+  ideasMenu,
+  vidMenu,
+  callMenu,
+  mobileTypeMenu,
+  homeTypeMenu,
+  officeTypeMenu,
+  Sheets,
+} from './relationshipHelpers';
 import { trackAction } from '../Goals/api';
 import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
 import * as SMS from 'expo-sms';
-//import * as Linking from 'expo-linking';
 import Dialog from 'react-native-dialog';
 
 const chevron = require('../../images/chevron_blue_right.png');
@@ -280,25 +290,40 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleMobilePressed() {
+    // Body
     console.log('mobile pressed');
-    SheetManager.show(Sheets.callTypeSheet);
+    SheetManager.show(Sheets.mobileSheet);
   }
 
-  function handleCallPressed() {
-    console.log('call pressed');
-    SheetManager.show(Sheets.callSheet);
+  function handleHomePressed() {
+    // Body
+    console.log('home pressed');
+    SheetManager.show(Sheets.homeSheet);
+  }
+
+  function handleOfficePressed() {
+    // Body
+    console.log('officce pressed');
+    SheetManager.show(Sheets.officeSheet);
   }
 
   async function handleTextPressed(number: string) {
+    // Body
     console.log('TEXTPRESSED: ' + number);
     const isAvailable = await SMS.isAvailableAsync();
     const timer = setInterval(() => {
       clearInterval(timer);
       console.log('ISAVAILABLE: ' + isAvailable);
       if (isAvailable) {
-        SMS.sendSMSAsync([dataDetails?.mobile!], '');
+        SMS.sendSMSAsync([number], '');
       }
-    }, 250);
+    }, 500);
+  }
+
+  function handleCallPressed() {
+    // Top Row
+    console.log('call pressed');
+    SheetManager.show(Sheets.callSheet);
   }
 
   function handleWebsitePressed() {
@@ -417,7 +442,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleTransactionPressed() {
     console.log('transaction pressed');
-    //  navigation.navigate('AddTxMenu');
+    navigation.navigate('AddTxMenu');
   }
 
   function handleApptPressed() {
@@ -427,6 +452,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleIdeasPressed() {
     console.log('ideas pressed');
+    SheetManager.show(Sheets.ideaSheet);
   }
 
   // End of bottom row
@@ -845,12 +871,16 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </TouchableOpacity>
 
         {!isNullOrEmpty(dataDetails?.homePhone) && <Text style={styles.subTitle}>Home Phone Number</Text>}
-        {!isNullOrEmpty(dataDetails?.homePhone) && <Text style={styles.phoneAndEmail}>{dataDetails?.homePhone}</Text>}
+        <TouchableOpacity onPress={() => handleHomePressed()}>
+          {!isNullOrEmpty(dataDetails?.homePhone) && <Text style={styles.phoneAndEmail}>{dataDetails?.homePhone}</Text>}
+        </TouchableOpacity>
 
         {!isNullOrEmpty(dataDetails?.officePhone) && <Text style={styles.subTitle}>Office Phone Number</Text>}
-        {!isNullOrEmpty(dataDetails?.officePhone) && (
-          <Text style={styles.phoneAndEmail}>{dataDetails?.officePhone}</Text>
-        )}
+        <TouchableOpacity onPress={() => handleOfficePressed()}>
+          {!isNullOrEmpty(dataDetails?.officePhone) && (
+            <Text style={styles.phoneAndEmail}>{dataDetails?.officePhone}</Text>
+          )}
+        </TouchableOpacity>
 
         {!isNullOrEmpty(dataDetails?.email) && <Text style={styles.subTitle}>Email</Text>}
         <TouchableOpacity onPress={() => handleEmailPressed()}>
@@ -1141,6 +1171,42 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </TouchableOpacity>
 
         <Text></Text>
+        {modalCallsVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalCallsVisible}
+            onRequestClose={() => {
+              setModalCallsVisible(!modalCallsVisible);
+            }}
+          >
+            <IdeasCalls setModalCallsVisible={setModalCallsVisible} />
+          </Modal>
+        )}
+        {modalNotesVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalNotesVisible}
+            onRequestClose={() => {
+              setModalNotesVisible(!modalNotesVisible);
+            }}
+          >
+            <IdeasNotes setModalNotesVisible={setModalNotesVisible} />
+          </Modal>
+        )}
+        {modalPopVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalPopVisible}
+            onRequestClose={() => {
+              setModalPopVisible(!modalPopVisible);
+            }}
+          >
+            <IdeasPop setModalPopVisible={setModalPopVisible} />
+          </Modal>
+        )}
       </ScrollView>
 
       <View style={styles.topAndBottomRows}>
@@ -1198,7 +1264,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <ActionSheet
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('mobile call type sheet')}
-          id={Sheets.callTypeSheet}
+          id={Sheets.mobileSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1225,7 +1291,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      SheetManager.hide(Sheets.callTypeSheet, null).then(() => {
+                      SheetManager.hide(Sheets.mobileSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
                           Linking.openURL(`tel:${dataDetails?.mobile}`);
@@ -1247,7 +1313,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <ActionSheet
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('home call type sheet')}
-          id={Sheets.callTypeSheet}
+          id={Sheets.homeSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1270,15 +1336,16 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
               style={styles.scrollview}
             >
               <View>
-                {Object.entries(mobileTypeMenu).map(([index, value]) => (
+                {Object.entries(homeTypeMenu).map(([index, value]) => (
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      SheetManager.hide(Sheets.callTypeSheet, null).then(() => {
+                      SheetManager.hide(Sheets.homeSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
-                          Linking.openURL(`tel:${dataDetails?.mobile}`);
+                          Linking.openURL(`tel:${dataDetails?.homePhone}`);
                         } else {
+                          handleTextPressed(dataDetails?.homePhone!);
                         }
                       });
                     }}
@@ -1294,8 +1361,8 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
         <ActionSheet
           initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('call sheet')}
-          id={Sheets.callSheet}
+          onBeforeShow={(data) => console.log('work call sheet')}
+          id={Sheets.officeSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1318,12 +1385,17 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
               style={styles.scrollview}
             >
               <View>
-                {Object.entries(callMenu).map(([index, value]) => (
+                {Object.entries(officeTypeMenu).map(([index, value]) => (
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      SheetManager.hide(Sheets.callSheet, null).then(() => {
-                        dialPhone(value);
+                      SheetManager.hide(Sheets.officeSheet, null).then(() => {
+                        console.log('CALLTYPE: ' + value);
+                        if (value == 'Call') {
+                          Linking.openURL(`tel:${dataDetails?.officePhone}`);
+                        } else {
+                          handleTextPressed(dataDetails?.officePhone!);
+                        }
                       });
                     }}
                     style={globalStyles.listItemCell}
@@ -1479,6 +1551,25 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             lastName={dataDetails?.lastName}
             onSave={saveToDoComplete}
             setModalVisible={setAddToDoVisible}
+          />
+        </Modal>
+      )}
+      {addAppointmentVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={addAppointmentVisible}
+          onRequestClose={() => {
+            setAddAppointmentVisible(!addAppointmentVisible);
+          }}
+        >
+          <AddAppointment
+            title={'New Appointment'}
+            guid={dataDetails?.id}
+            firstName={dataDetails?.firstName}
+            lastName={dataDetails?.lastName}
+            onSave={saveAppointmentComplete}
+            setModalVisible={setAddAppointmentVisible}
           />
         </Modal>
       )}

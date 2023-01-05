@@ -174,7 +174,7 @@ export default function AddOrEditRealtorTx3(props: any) {
           console.error(res.error);
         } else {
           console.log('here ' + res.data.id);
-          navigation.navigate('RealEstateTransactions');
+          navigation.navigate('RelDetails');
         }
       })
       .catch((error) => console.error('failure ' + error));

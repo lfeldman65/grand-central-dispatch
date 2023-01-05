@@ -950,6 +950,123 @@ export const RelStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="AddTxMenu"
+        component={AddTxMenu}
+        options={{
+          title: 'Add Transaction',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditRealtorTx1"
+        component={AddOrEditRealtorTx1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditRealtorTx2"
+        component={AddOrEditRealtorTx2}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditRealtorTx3"
+        component={AddOrEditRealtorTx3}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditLenderTx1"
+        component={AddOrEditLenderTx1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditLenderTx2"
+        component={AddOrEditLenderTx2}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditLenderTx3"
+        component={AddOrEditLenderTx3}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditOtherTx1"
+        component={AddOrEditOtherTx1}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddOrEditOtherTx2"
+        component={AddOrEditOtherTx2}
+        options={{
+          title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
         name="EditRelationshipScreen"
         component={EditRelationshipScreen}
         options={{

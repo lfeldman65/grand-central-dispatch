@@ -20,9 +20,21 @@ export const mobileTypeMenu = {
   Message: 'Message',
 };
 
+export const homeTypeMenu = {
+  Call: 'Call',
+  Message: 'Message',
+};
+
+export const officeTypeMenu = {
+  Call: 'Call',
+  Message: 'Message',
+};
+
 export const Sheets = {
   callSheet: 'call_sheet_id',
   ideaSheet: 'idea_sheet_id',
   vidSheet: 'vid_sheet_id',
-  callTypeSheet: 'call_type_sheet_id',
+  mobileSheet: 'mobile_sheet_id',
+  homeSheet: 'home_sheet_id',
+  officeSheet: 'office_sheet_id',
 };
