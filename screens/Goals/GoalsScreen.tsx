@@ -433,7 +433,7 @@ export default function GoalsScreen() {
             >
               <TrackActivity
                 lightOrDark={lightOrDark}
-                trackTitle="Track Activity Goal"
+                title="Track Activity Goal"
                 onSave={saveComplete}
                 setModalVisible={setModalVisible}
                 data={goalList}

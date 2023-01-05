@@ -40,7 +40,7 @@ import { untilTypeMenu } from './toDoHelpersAndMenus';
 import { reminderMenu } from './toDoHelpersAndMenus';
 
 export default function AddToDoScreen(props: any) {
-  const { setModalVisible, title, onSave, lightOrDark } = props;
+  const { setModalVisible, title, onSave, guid, firstName, lastName } = props;
   const [toDoTitle, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -136,6 +136,22 @@ export default function AddToDoScreen(props: any) {
     return () => {
       isMounted = false;
     };
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (guid != null) {
+      var rel: RolodexDataProps = {
+        id: guid,
+        firstName: firstName,
+        lastName: lastName,
+        ranking: '',
+        contactTypeID: '',
+        employerName: '',
+        selected: false,
+        qualified: false,
+      };
+      attendees.push(rel);
+    }
   }, [isFocused]);
 
   useEffect(() => {
@@ -1053,7 +1069,7 @@ export default function AddToDoScreen(props: any) {
               title="Attendees"
               setModalAttendeesVisible={setModalAttendeesVisible}
               setSelectedAttendees={handleSelectedAttendees}
-              lightOrDark={lightOrDark}
+              //  lightOrDark={lightOrDark}
             />
           </Modal>
         )}

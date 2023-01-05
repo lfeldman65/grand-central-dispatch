@@ -35,7 +35,7 @@ function displayName(first: string, last: string, type: string, employer: string
 }
 
 export default function AttendeeRow(props: AtoZRowProps) {
-  const { lightOrDark } = props;
+  // const { lightOrDark } = props;
   const isFocused = useIsFocused();
 
   return (

@@ -106,9 +106,33 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     return true;
   }
 
-  function saveActivityComplete(goal: string, subject: string, date: string, askedRef: boolean, note: string) {
+  function saveActivityComplete(
+    guid: string,
+    refGUID: string,
+    gaveRef: boolean,
+    followUp: boolean,
+    goalID: string,
+    subject: string,
+    date: string,
+    askedRef: boolean,
+    note: string,
+    refInPast: boolean
+  ) {
     setIsLoading(true);
-    trackActivityAPI(dataDetails?.id!, goal, subject, date, askedRef, note, trackSuccess, trackFailure);
+    trackActivityAPI(
+      guid,
+      goalID,
+      refGUID,
+      gaveRef,
+      followUp,
+      subject,
+      date,
+      askedRef,
+      note,
+      refInPast,
+      trackSuccess,
+      trackFailure
+    );
     console.log('saveAppointmentComplete');
   }
 
@@ -120,10 +144,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   function trackActivityAPI(
     contactId: string,
     goalId: string,
+    refGUID: string,
+    gaveRef: boolean,
+    followUP: boolean,
     subject: string,
     date: string,
     referral: boolean,
     note: string,
+    refInPast: boolean,
     onSuccess: any,
     onFailure: any
   ) {
@@ -1416,6 +1444,44 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </View>
         </ActionSheet>
       </View>
+      {addActivityVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={addActivityVisible}
+          onRequestClose={() => {
+            setAddActivityVisible(!addActivityVisible);
+          }}
+        >
+          <TrackActivity
+            title="Track Activity Goal"
+            guid={dataDetails?.id!}
+            firstName={dataDetails?.firstName}
+            lastName={dataDetails?.lastName}
+            onSave={saveActivityComplete}
+            setModalVisible={setAddActivityVisible}
+          />
+        </Modal>
+      )}
+      {addToDoVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={addToDoVisible}
+          onRequestClose={() => {
+            setAddToDoVisible(!addToDoVisible);
+          }}
+        >
+          <AddToDo
+            title="New To-Do"
+            guid={dataDetails?.id}
+            firstName={dataDetails?.firstName}
+            lastName={dataDetails?.lastName}
+            onSave={saveToDoComplete}
+            setModalVisible={setAddToDoVisible}
+          />
+        </Modal>
+      )}
     </View>
   );
 }
