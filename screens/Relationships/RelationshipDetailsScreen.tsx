@@ -442,7 +442,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleTransactionPressed() {
     console.log('transaction pressed');
-    navigation.navigate('AddTxMenu');
     navigation.navigate('AddTxMenu', {
       guid: dataDetails?.id,
       firstName: dataDetails?.firstName,
@@ -464,7 +463,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleReferralPressed() {
     console.log('referral pressed');
-    navigation.navigate('RelDetails2', {
+    navigation.navigate('RelDetails', {
       contactId: dataDetails?.referredBy.id!,
       firstName: dataDetails?.referredBy.name,
       lastName: '',
@@ -473,7 +472,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleSpousePressed() {
     console.log('spouse pressed');
-    navigation.navigate('RelDetails2', {
+    navigation.navigate('RelDetails', {
       contactId: dataDetails?.spouse.id,
       firstName: dataDetails?.spouse.name,
       lastName: '',
