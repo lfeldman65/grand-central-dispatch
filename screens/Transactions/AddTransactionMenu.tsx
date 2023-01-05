@@ -8,6 +8,7 @@ import { getProfileData } from '../Settings/api';
 import { ProfileDataProps } from '../Settings/interfaces';
 
 export default function AddTransactionMenu(props: any) {
+  const { guid, firstName, lastName } = props;
   const [profileData, setProfileData] = useState<ProfileDataProps>();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
@@ -15,7 +16,14 @@ export default function AddTransactionMenu(props: any) {
   function buttonPressed(index: number) {
     console.log('index: ' + index);
     if (index == 0) {
-      navigation.navigate('AddOrEditRealtorTx1', {});
+      console.log('GUID: ' + guid);
+      console.log('FIRST: ' + firstName);
+      console.log('LAST: ' + lastName);
+      navigation.navigate('AddOrEditRealtorTx1', {
+        guid: guid,
+        firstName: firstName,
+        lastName: lastName,
+      });
     } else if (index == 1) {
       navigation.navigate('AddOrEditLenderTx1', {});
     } else if (index == 2) {
@@ -27,7 +35,7 @@ export default function AddTransactionMenu(props: any) {
     navigation.setOptions({
       title: 'Add Transaction',
     });
-  }, [navigation]);
+  }, [navigation, guid, firstName, lastName]);
 
   useEffect(() => {
     let isMounted = true;

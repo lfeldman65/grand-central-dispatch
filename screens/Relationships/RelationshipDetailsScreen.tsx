@@ -165,7 +165,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     onSuccess: any,
     onFailure: any
   ) {
-    trackAction(contactId, goalId, 'none', false, true, subject, date, referral, note, false)
+    trackAction(contactId, goalId, refGUID, gaveRef, followUP, subject, date, referral, note, refInPast)
       .then((res) => {
         console.log(res);
         if (res.status == 'error') {
@@ -443,6 +443,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   function handleTransactionPressed() {
     console.log('transaction pressed');
     navigation.navigate('AddTxMenu');
+    navigation.navigate('AddTxMenu', {
+      guid: dataDetails?.id,
+      firstName: dataDetails?.firstName,
+      lastName: dataDetails?.lastName,
+    });
   }
 
   function handleApptPressed() {
