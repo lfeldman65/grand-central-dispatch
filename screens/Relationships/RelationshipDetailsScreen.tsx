@@ -1,17 +1,28 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, Linking, TextInput } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
 import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual, editContact } from './api';
 import { RelDetailsProps, ToDoAndApptProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
-import { formatDate, prettyDate } from '../../utils/general';
+import { formatDate } from '../../utils/general';
 import openMap from 'react-native-open-maps';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+import { ideasMenu, vidMenu, callMenu, mobileTypeMenu, Sheets } from './relationshipHelpers';
+import { trackAction } from '../Goals/api';
+import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
+import * as SMS from 'expo-sms';
+//import * as Linking from 'expo-linking';
+import Dialog from 'react-native-dialog';
+
 const chevron = require('../../images/chevron_blue_right.png');
-//const suitcase = require('../Relationships/images/iconSuitcase.png'); // branch
+import TrackActivity from '../Goals/TrackActivityScreen';
+import AddToDo from '../ToDo/AddToDoScreen';
+import AddAppointment from '../Calendar/AddAppointmentScreen';
+import { savePop, removePop } from '../PopBys/api';
 
 const aPlusSel = require('../Relationships/images/aPlusSel.png');
 const aPlusReg = require('../Relationships/images/aPlusReg.png');
@@ -38,6 +49,9 @@ const transImg = require('../Relationships/images/relTransaction.png');
 const apptImg = require('../Relationships/images/relAppt.png');
 const ideasImg = require('../Relationships/images/relIdeas.png');
 
+var phoneArray: string[] = [];
+var phoneLabels: string[] = [];
+
 interface RelDetailsLocalProps {
   data: RelDetailsProps;
   route: any;
@@ -62,6 +76,18 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [showGroups, setShowGroups] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
   const [showBiz, setShowBiz] = useState(false);
+  const actionSheetRef = useRef<ActionSheet>(null);
+  const [ideaType, setIdeaType] = useState('Calls');
+  const [vidSource, setVidSource] = useState('');
+  const [modalCallsVisible, setModalCallsVisible] = useState(false);
+  const [modalNotesVisible, setModalNotesVisible] = useState(false);
+  const [modalPopVisible, setModalPopVisible] = useState(false);
+  const [addActivityVisible, setAddActivityVisible] = useState(false);
+  const [addToDoVisible, setAddToDoVisible] = useState(false);
+  const [addAppointmentVisible, setAddAppointmentVisible] = useState(false);
+  const [isFavorite, setIsFavorite] = useState('False');
+  const [vidTitle, setVidTitle] = useState('');
+  const [showVidTitle, setShowVidTitle] = useState(false);
 
   async function getDarkOrLightMode(isMounted: boolean) {
     if (!isMounted) {
@@ -70,6 +96,64 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     console.log('getDarkOrLight');
     const dOrlight = await storage.getItem('darkOrLight');
     setIsLightOrDark(dOrlight ?? 'light');
+  }
+
+  async function getVidTutWatched() {
+    const vidTutWatched = await storage.getItem('videoTutorialWatched');
+    if (vidTutWatched == null || vidTutWatched == 'False') {
+      return false;
+    }
+    return true;
+  }
+
+  function saveActivityComplete(goal: string, subject: string, date: string, askedRef: boolean, note: string) {
+    setIsLoading(true);
+    trackActivityAPI(dataDetails?.id!, goal, subject, date, askedRef, note, trackSuccess, trackFailure);
+    console.log('saveAppointmentComplete');
+  }
+
+  function saveToDoComplete() {
+    setIsLoading(true);
+    console.log('saveToDoComplete');
+  }
+
+  function trackActivityAPI(
+    contactId: string,
+    goalId: string,
+    subject: string,
+    date: string,
+    referral: boolean,
+    note: string,
+    onSuccess: any,
+    onFailure: any
+  ) {
+    trackAction(contactId, goalId, 'none', false, true, subject, date, referral, note, false)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 'error') {
+          console.error(res.error);
+          onFailure();
+        } else {
+          onSuccess();
+        }
+      })
+      .catch((error) => {
+        onFailure();
+        console.log('complete error' + error);
+      });
+  }
+
+  function saveAppointmentComplete() {
+    console.log('saveAppointmentComplete');
+  }
+
+  function trackSuccess() {
+    setIsLoading(false);
+  }
+
+  function trackFailure() {
+    setIsLoading(false);
+    console.log('track failure');
   }
 
   function backPressed() {
@@ -87,17 +171,17 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
-          <Text style={styles.saveText}>Edit</Text>
+          <Text style={styles.editAndBackText}>Edit</Text>
         </TouchableOpacity>
       ),
       headerLeft: () => (
         <TouchableOpacity style={styles.saveButton} onPress={backPressed}>
-          <Text style={styles.saveText}>Back</Text>
+          <Text style={styles.editAndBackText}>Back</Text>
         </TouchableOpacity>
       ),
     });
     navigation.setOptions({ title: fullName() });
-  }, [navigation, dataDetails, theRank, isQual]);
+  }, [navigation, dataDetails, theRank, isQual, ideaType]);
 
   useEffect(() => {
     let isMounted = true;
@@ -126,10 +210,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     };
   }, [isFocused]);
 
-  // function saveComplete(note: string) {
-  //   console.log('save complete edit');
-  // }
-
   function quickUpdateRankQual() {
     console.log('guid: ' + dataDetails?.id!);
     console.log('the rank: ' + theRank);
@@ -140,7 +220,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           console.log(res);
           Alert.alert(res.error);
         } else {
-          console.log(res);
+          //   console.log(res);
           navigation.goBack();
         }
         setIsLoading(false);
@@ -148,14 +228,184 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function handleButtonPress(index: number) {
-    console.log('button pressed');
-    quickUpdateRankQual();
+  function showDialog(source: string) {
+    console.log('source: ' + source);
+    setShowVidTitle(true);
   }
+
+  function handleCancel() {
+    console.log('HANDLE CANCEL');
+    setShowVidTitle(false);
+  }
+
+  function handleVidTitleOK() {
+    //  console.log('HANDLE VID SOURCE: ' + vidSource);
+    setShowVidTitle(false);
+    const timer = setInterval(() => {
+      clearInterval(timer);
+      if (vidSource == 'Use Video Album') {
+        handleVideoFromAlbum(vidTitle, dataDetails);
+      } else {
+        handleVideoFromCamera(vidTitle, dataDetails);
+      }
+    }, 1000); // wait for dialog to close
+  }
+
+  function handleMobilePressed() {
+    console.log('mobile pressed');
+    SheetManager.show(Sheets.callTypeSheet);
+  }
+
+  function handleCallPressed() {
+    console.log('call pressed');
+    SheetManager.show(Sheets.callSheet);
+  }
+
+  async function handleTextPressed(number: string) {
+    console.log('TEXTPRESSED: ' + number);
+    const isAvailable = await SMS.isAvailableAsync();
+    const timer = setInterval(() => {
+      clearInterval(timer);
+      console.log('ISAVAILABLE: ' + isAvailable);
+      if (isAvailable) {
+        SMS.sendSMSAsync([dataDetails?.mobile!], '');
+      }
+    }, 250);
+  }
+
+  function handleWebsitePressed() {
+    try {
+      console.log('NEWWEB');
+      var newWeb = dataDetails?.website!;
+      if (dataDetails?.website == '') {
+        return;
+      }
+      if (!dataDetails?.website.includes('http')) {
+        newWeb = 'https://' + dataDetails?.website;
+      }
+      console.log('NEWWEB: ' + newWeb);
+      Linking.openURL(newWeb);
+      //  Linking.openURL('www.yahoo.com');
+    } catch {
+      Alert.alert('Error loading website');
+    }
+  }
+
+  function makePhoneArray() {
+    phoneArray = [];
+    phoneLabels = [];
+    if (dataDetails?.mobile != null && dataDetails?.mobile.length > 6) {
+      phoneArray.push(dataDetails?.mobile);
+      phoneLabels.push('Mobile');
+    }
+    if (dataDetails?.homePhone != null && dataDetails?.homePhone.length > 6) {
+      phoneArray.push(dataDetails?.homePhone);
+      phoneLabels.push('Home');
+    }
+    if (dataDetails?.officePhone != null && dataDetails?.officePhone.length > 6) {
+      phoneArray.push(dataDetails?.officePhone);
+      phoneLabels.push('Office');
+    }
+    console.log('PHONEARRAY: ' + phoneArray);
+    console.log('PHONELABELS: ' + phoneLabels);
+  }
+
+  // Top Row
+
+  async function handleMessagePressed() {
+    console.log('message pressed');
+    if (dataDetails?.mobile == null || dataDetails?.mobile.length < 7) {
+      Alert.alert('Please enter a valid phone number');
+      return;
+    }
+    const isAvailable = await SMS.isAvailableAsync();
+    if (isAvailable) {
+      SMS.sendSMSAsync([dataDetails?.mobile], '', {});
+    }
+  }
+
+  async function handleVideoPressed() {
+    var watched = await getVidTutWatched();
+    console.log('WATCHED: ' + watched);
+    console.log('video pressed');
+    if (dataDetails?.mobile == '') {
+      Alert.alert('Please enter a mobile number');
+      return;
+    }
+    if (!watched) {
+      Alert.alert(
+        'Upload times will vary with size of the video and network speed. It may take up to several minutes to upload. For best results, we recommend videos no longer than 60 seconds in length'
+      );
+      storage.setItem('videoTutorialWatched', 'True');
+    }
+    SheetManager.show(Sheets.vidSheet);
+  }
+
+  function dialPhone(phoneType: string) {
+    console.log('PHONETYPE: ' + phoneType);
+    if (phoneType == 'Mobile') {
+      if (dataDetails?.mobile == null || dataDetails?.mobile.length < 7) {
+        Alert.alert('Please enter a mobile number');
+        return;
+      }
+      Linking.openURL(`tel:${dataDetails?.mobile}`);
+    } else if (phoneType == 'Home') {
+      if (dataDetails?.homePhone == null || dataDetails?.homePhone.length < 7) {
+        Alert.alert('Please enter a home number');
+        return;
+      }
+      Linking.openURL(`tel:${dataDetails?.homePhone}`);
+    } else if (phoneType == 'Office') {
+      if (dataDetails?.officePhone == null || dataDetails?.officePhone.length < 7) {
+        Alert.alert('Please enter an office number');
+        return;
+      }
+      Linking.openURL(`tel:${dataDetails?.officePhone}`);
+    }
+  }
+
+  function handleEmailPressed() {
+    if (dataDetails?.email == null || dataDetails?.email == '') {
+      Alert.alert('Please enter an email address');
+      return;
+    }
+    Linking.openURL(`mailto:${dataDetails?.email}`);
+  }
+
+  function handleMapPressed() {
+    console.log('map pressed');
+    handleDirectionsPressed();
+  }
+
+  // bottom row
+
+  function handleActivityPressed() {
+    setAddActivityVisible(!addActivityVisible);
+  }
+
+  function handleToDoPressed() {
+    setAddToDoVisible(!addToDoVisible);
+  }
+
+  function handleTransactionPressed() {
+    console.log('transaction pressed');
+    //  navigation.navigate('AddTxMenu');
+  }
+
+  function handleApptPressed() {
+    console.log('appointment pressed');
+    setAddAppointmentVisible(!addAppointmentVisible);
+  }
+
+  function handleIdeasPressed() {
+    console.log('ideas pressed');
+  }
+
+  // End of bottom row
 
   function handleReferralPressed() {
     console.log('referral pressed');
-    navigation.navigate('RelDetails', {
+    navigation.navigate('RelDetails2', {
       contactId: dataDetails?.referredBy.id!,
       firstName: dataDetails?.referredBy.name,
       lastName: '',
@@ -164,7 +414,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleSpousePressed() {
     console.log('spouse pressed');
-    navigation.navigate('RelDetails', {
+    navigation.navigate('RelDetails2', {
       contactId: dataDetails?.spouse.id,
       firstName: dataDetails?.spouse.name,
       lastName: '',
@@ -175,11 +425,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (notes != '') Alert.alert(notes);
   }
 
-  function handleToDoPressed(thisEventID: string) {
+  function handleToDoTogglePressed(thisEventID: string) {
     console.log(thisEventID);
   }
 
-  function handleTransactionPressed(thisTransactionID: number) {
+  function handleTransactionTogglePressed(thisTransactionID: number) {
     console.log(thisTransactionID);
   }
 
@@ -229,8 +479,22 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     return false;
   }
 
-  function handleSavePoPByPressed() {
-    console.log('Save Pop-By Pressed');
+  function handleSavePopByPressed() {
+    if (isFavorite == 'False') {
+      console.log('Save Pop-By Pressed False');
+      savePop(dataDetails?.id!);
+      setIsFavorite('True');
+      Alert.alert(dataDetails?.firstName + ' added to Saved list');
+    }
+  }
+
+  function handleUnsavePopByPressed() {
+    if (isFavorite == 'True') {
+      console.log('UnSave Pop-By Pressed');
+      removePop(dataDetails?.id!);
+      setIsFavorite('False');
+      Alert.alert(dataDetails?.firstName + ' removed from Saved list');
+    }
   }
 
   function fullName() {
@@ -335,13 +599,13 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function fetchRelDetails(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
     console.log('fetch rel details');
     setIsLoading(true);
     getRelDetails(contactId)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -404,12 +668,12 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function fetchToDos(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
     setIsLoading(true);
     getToDos(contactId)
       .then((res) => {
+        if (!isMounted) {
+          return;
+        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -437,37 +701,55 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+      <Dialog.Container visible={showVidTitle}>
+        <Dialog.Title>Video Title</Dialog.Title>
+        <TextInput
+          style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}
+          placeholder="+ Add"
+          placeholderTextColor="#AFB9C2"
+          textAlign="left"
+          onChangeText={(text) => setVidTitle(text)}
+          defaultValue={''}
+        />
+        <Dialog.Button label="Cancel" onPress={handleCancel} />
+        <Dialog.Button label="OK" onPress={handleVidTitleOK} />
+      </Dialog.Container>
+
       <View style={styles.topAndBottomRows}>
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(0)}>
+          <TouchableOpacity onPress={() => handleMessagePressed()}>
             <Image source={messageImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Message</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(1)}>
+          <TouchableOpacity onPress={() => handleCallPressed()}>
             <Image source={callImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Call</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(2)}>
+          <TouchableOpacity onPress={() => handleVideoPressed()}>
             <Image source={videoImg} style={styles.logo} />
           </TouchableOpacity>
-          {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Video</Text>}
+          {
+            <Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>
+              {dataDetails?.hasBombBombPermission ? 'Bomb Bomb' : 'Video'}
+            </Text>
+          }
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(3)}>
+          <TouchableOpacity onPress={() => handleEmailPressed()}>
             <Image source={emailImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Email</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(4)}>
+          <TouchableOpacity onPress={() => handleMapPressed()}>
             <Image source={mapImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Map</Text>}
@@ -511,9 +793,16 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <Text></Text>
 
         <Text style={styles.subTitle}>Pop-By</Text>
-        <TouchableOpacity onPress={() => handleSavePoPByPressed()}>
-          <Text style={styles.phoneAndEmail}>Save</Text>
-        </TouchableOpacity>
+        <View style={styles.topAndBottomRows}>
+          <TouchableOpacity style={styles.pairRows} onPress={() => handleSavePopByPressed()}>
+            <Text style={isFavorite == 'False' ? styles.saveText : styles.savedText}>
+              {isFavorite == 'False' ? 'Save' : 'Saved'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.pairRows} onPress={() => handleUnsavePopByPressed()}>
+            <Text style={styles.removeText}>{isFavorite == 'True' ? 'Remove' : ''}</Text>
+          </TouchableOpacity>
+        </View>
 
         {dataDetails?.contactTypeID == 'Biz' && <Text style={styles.subTitle}>Primary Contact</Text>}
         {dataDetails?.contactTypeID == 'Biz' && (
@@ -523,7 +812,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
 
         {!isNullOrEmpty(dataDetails?.mobile) && <Text style={styles.subTitle}>Mobile Phone Number</Text>}
-        {!isNullOrEmpty(dataDetails?.mobile) && <Text style={styles.phoneAndEmail}>{dataDetails?.mobile}</Text>}
+        <TouchableOpacity onPress={() => handleMobilePressed()}>
+          {!isNullOrEmpty(dataDetails?.mobile) && <Text style={styles.phoneAndEmail}>{dataDetails?.mobile}</Text>}
+        </TouchableOpacity>
 
         {!isNullOrEmpty(dataDetails?.homePhone) && <Text style={styles.subTitle}>Home Phone Number</Text>}
         {!isNullOrEmpty(dataDetails?.homePhone) && <Text style={styles.phoneAndEmail}>{dataDetails?.homePhone}</Text>}
@@ -534,10 +825,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
 
         {!isNullOrEmpty(dataDetails?.email) && <Text style={styles.subTitle}>Email</Text>}
-        {!isNullOrEmpty(dataDetails?.email) && <Text style={styles.phoneAndEmail}>{dataDetails?.email}</Text>}
+        <TouchableOpacity onPress={() => handleEmailPressed()}>
+          {!isNullOrEmpty(dataDetails?.email) && <Text style={styles.phoneAndEmail}>{dataDetails?.email}</Text>}
+        </TouchableOpacity>
 
         {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.subTitle}>Website</Text>}
-        {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.phoneAndEmail}>{dataDetails?.website}</Text>}
+        <TouchableOpacity onPress={() => handleWebsitePressed()}>
+          {!isNullOrEmpty(dataDetails?.website) && <Text style={styles.phoneAndEmail}>{dataDetails?.website}</Text>}
+        </TouchableOpacity>
 
         {!isNullOrEmpty(dataDetails?.spouse.id) && <Text style={styles.subTitle}>Spouse</Text>}
         {!isNullOrEmpty(dataDetails?.spouse.id) && (
@@ -559,9 +854,8 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {!isNullOrEmpty(dataDetails?.address.street) && (
           <View style={styles.topAndBottomRows}>
             <Text style={styles.subTitle}>Location</Text>
-
-            <TouchableOpacity style={styles.popByButtons} onPress={() => handleDirectionsPressed()}>
-              <Text style={styles.popByButtons}>{'Directions'}</Text>
+            <TouchableOpacity style={styles.pairRows} onPress={() => handleDirectionsPressed()}>
+              <Text style={styles.directionsText}>{'Directions'}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -619,13 +913,12 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             </Text>
           )}
         </TouchableOpacity>
-
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.birthday) && (
           <Text style={styles.subTitle}>Birthday</Text>
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.birthday) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {prettyDate(dataDetails?.personalAndFamily.birthday!)}
+            {formatDate(dataDetails?.personalAndFamily.birthday)}
           </Text>
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary) && (
@@ -633,7 +926,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {prettyDate(dataDetails?.personalAndFamily.weddingAnniversary!)}
+            {formatDate(dataDetails?.personalAndFamily.weddingAnniversary)}
           </Text>
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.childrensNames) && (
@@ -691,7 +984,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {showToDos && showSection2() && (
           <React.Fragment>
             {dataToDos.map((item, index) => (
-              <TouchableOpacity onPress={() => handleToDoPressed(item.EventID)}>
+              <TouchableOpacity onPress={() => handleToDoTogglePressed(item.EventID)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
@@ -721,7 +1014,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {showTransactions && showSection3() && (
           <React.Fragment>
             {dataDetails?.transactions.map((item, index) => (
-              <TouchableOpacity onPress={() => handleTransactionPressed(item.dealId)}>
+              <TouchableOpacity onPress={() => handleTransactionTogglePressed(item.dealId)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <React.Fragment>
@@ -824,7 +1117,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
       <View style={styles.topAndBottomRows}>
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(5)}>
+          <TouchableOpacity onPress={() => handleActivityPressed()}>
             <Image source={activityImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -835,7 +1128,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(6)}>
+          <TouchableOpacity onPress={() => handleToDoPressed()}>
             <Image source={toDoImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -846,7 +1139,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(7)}>
+          <TouchableOpacity onPress={() => handleTransactionPressed()}>
             <Image source={transImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -857,14 +1150,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(8)}>
+          <TouchableOpacity onPress={() => handleApptPressed()}>
             <Image source={apptImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.bottomButtonTextDark : styles.bottomButtonTextLight}>Appt</Text>}
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleButtonPress(9)}>
+          <TouchableOpacity onPress={() => handleIdeasPressed()}>
             <Image source={ideasImg} style={styles.logo} />
           </TouchableOpacity>
           {
@@ -873,12 +1166,265 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             </Text>
           }
         </View>
+
+        <ActionSheet
+          initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('mobile call type sheet')}
+          id={Sheets.callTypeSheet}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.3}
+        >
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.scrollview}
+            >
+              <View>
+                {Object.entries(mobileTypeMenu).map(([index, value]) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      SheetManager.hide(Sheets.callTypeSheet, null).then(() => {
+                        console.log('CALLTYPE: ' + value);
+                        if (value == 'Call') {
+                          Linking.openURL(`tel:${dataDetails?.mobile}`);
+                        } else {
+                          handleTextPressed(dataDetails?.mobile!);
+                        }
+                      });
+                    }}
+                    style={globalStyles.listItemCell}
+                  >
+                    <Text style={globalStyles.listItem}>{index}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </ActionSheet>
+
+        <ActionSheet
+          initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('home call type sheet')}
+          id={Sheets.callTypeSheet}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.3}
+        >
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.scrollview}
+            >
+              <View>
+                {Object.entries(mobileTypeMenu).map(([index, value]) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      SheetManager.hide(Sheets.callTypeSheet, null).then(() => {
+                        console.log('CALLTYPE: ' + value);
+                        if (value == 'Call') {
+                          Linking.openURL(`tel:${dataDetails?.mobile}`);
+                        } else {
+                        }
+                      });
+                    }}
+                    style={globalStyles.listItemCell}
+                  >
+                    <Text style={globalStyles.listItem}>{index}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </ActionSheet>
+
+        <ActionSheet
+          initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('call sheet')}
+          id={Sheets.callSheet}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.3}
+        >
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.scrollview}
+            >
+              <View>
+                {Object.entries(callMenu).map(([index, value]) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      SheetManager.hide(Sheets.callSheet, null).then(() => {
+                        dialPhone(value);
+                      });
+                    }}
+                    style={globalStyles.listItemCell}
+                  >
+                    <Text style={globalStyles.listItem}>{index}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </ActionSheet>
+
+        <ActionSheet
+          initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('idea sheet')}
+          id={Sheets.ideaSheet}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.3}
+        >
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.scrollview}
+            >
+              <View>
+                {Object.entries(ideasMenu).map(([index, value]) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      SheetManager.hide(Sheets.ideaSheet, null).then(() => {
+                        if (value == 'Calls') {
+                          setModalCallsVisible(true);
+                        } else if (value == 'Notes') {
+                          setModalNotesVisible(true);
+                        } else {
+                          setModalPopVisible(true);
+                        }
+                      });
+                    }}
+                    style={globalStyles.listItemCell}
+                  >
+                    <Text style={globalStyles.listItem}>{index}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </ActionSheet>
+
+        <ActionSheet
+          initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('vid sheet')}
+          id={Sheets.vidSheet}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.3}
+        >
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.scrollview}
+            >
+              <View>
+                {Object.entries(vidMenu).map(([index, value]) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      SheetManager.hide(Sheets.vidSheet, null);
+                      setVidSource(value);
+                      const timer = setInterval(() => {
+                        clearInterval(timer);
+                        if (dataDetails?.hasBombBombPermission!) {
+                          showDialog(value);
+                        } else {
+                          if (value == 'Use Video Album') {
+                            console.log(dataDetails?.contactID);
+                            handleVideoFromAlbum('none', dataDetails);
+                          } else {
+                            handleVideoFromCamera('none', dataDetails);
+                          }
+                        }
+                      }, 250);
+                    }}
+                    style={globalStyles.listItemCell}
+                  >
+                    <Text style={globalStyles.listItem}>{index}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              {/*  Add a Small Footer at Bottom */}
+            </ScrollView>
+          </View>
+        </ActionSheet>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollview: {
+    width: '100%',
+    padding: 12,
+  },
   bookMark: {
     fontSize: 18,
     color: 'orange',
@@ -888,7 +1434,7 @@ const styles = StyleSheet.create({
   saveButton: {
     padding: 5,
   },
-  saveText: {
+  editAndBackText: {
     color: 'white',
     fontSize: 18,
   },
@@ -948,7 +1494,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   subTitle: {
-    fontSize: 14,
+    fontSize: 12,
     color: 'gray',
     marginLeft: 15,
     marginBottom: 10,
@@ -979,26 +1525,24 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   topButtonTextDark: {
-    height: 16,
     color: 'white',
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 9,
   },
   topButtonTextLight: {
-    height: 16,
     color: '#016497',
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 9,
   },
   bottomButtonTextDark: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 9,
   },
   bottomButtonTextLight: {
     color: '#013273',
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 9,
   },
   namesLight: {
     color: 'black',
@@ -1012,11 +1556,16 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginBottom: 10,
   },
-  popByButtons: {
+  pairRows: {
+    marginRight: 10,
+    marginBottom: 5,
+    flexDirection: 'row',
+  },
+  directionsText: {
     color: '#1398F5',
     fontSize: 15,
     textAlign: 'right',
-    marginRight: 10,
+    marginRight: 20,
     marginBottom: 5,
   },
   addressDark: {
@@ -1051,5 +1600,38 @@ const styles = StyleSheet.create({
   chevron: {
     height: 18,
     width: 10,
+  },
+  saveText: {
+    color: '#1398F5',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 15,
+    marginBottom: 5,
+  },
+  savedText: {
+    color: 'black',
+    fontSize: 15,
+    textAlign: 'left',
+    marginLeft: 15,
+    marginBottom: 5,
+  },
+  removeText: {
+    color: 'orange',
+    fontSize: 15,
+    textAlign: 'left',
+    marginRight: 15,
+    marginBottom: 5,
+  },
+  textInputDark: {
+    fontSize: 18,
+    color: 'white',
+    width: 300,
+    paddingLeft: 10,
+  },
+  textInputLight: {
+    fontSize: 18,
+    color: 'black',
+    width: 300,
+    paddingLeft: 10,
   },
 });

@@ -18,7 +18,6 @@ import { Analytics, PageHit, Event } from 'expo-analytics';
 import Button from '../../components/Button';
 import { getRecentActivityData } from './api';
 import { RecentActivityDataProps } from './interfaces';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
@@ -55,7 +54,7 @@ export default function RecentActivityScreenScreen() {
 
   const handleRowPress = (index: number) => {
     console.log('rolodex row press');
-    analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
     navigation.navigate('RelDetails', {
       contactId: dataActivity[index].ContactId,
       firstName: dataActivity[index].Name,
@@ -78,7 +77,7 @@ export default function RecentActivityScreenScreen() {
   }, [isFocused]);
 
   function filterPressed() {
-    analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));
+    //  analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));
     SheetManager.show(Sheets.filterSheet);
   }
 

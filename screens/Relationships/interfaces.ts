@@ -277,3 +277,9 @@ export interface ContactDeleteDataResponse {
   error: string;
   status: string;
 }
+
+export interface FileUpload {
+  uri: string;
+  name: string;
+  type: string;
+}

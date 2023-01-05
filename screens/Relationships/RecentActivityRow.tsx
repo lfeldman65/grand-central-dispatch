@@ -15,7 +15,6 @@ import { useEffect } from 'react';
 import { Event } from 'expo-analytics';
 //import Swipeable from 'react-native-swipeable-row';
 //import styles from './styles';
-import { analytics } from '../../utils/analytics';
 import { RecentActivityDataProps } from './interfaces';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
