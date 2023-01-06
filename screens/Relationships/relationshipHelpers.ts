@@ -11,8 +11,8 @@ export const vidMenu = {
 
 export const callMenu = {
   Mobile: 'Mobile',
-  Office: 'Office',
   Home: 'Home',
+  Office: 'Office',
 };
 
 export const mobileTypeMenu = {
