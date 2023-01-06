@@ -21,6 +21,8 @@ import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { scheduleNotifications } from '../../utils/general';
+import { storage } from '../../utils/storage';
+import { getNotificationStatus } from '../../utils/general';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
@@ -232,7 +234,11 @@ export default function GoalsScreen() {
     }
   }
 
-  function testForNotification(goalName: string, weeklyGoal: number, weeklyNum: number, dailyNum: number) {
+  async function testForNotification(goalName: string, weeklyGoal: number, weeklyNum: number, dailyNum: number) {
+    var notifOn = await getNotificationStatus('notifWins');
+    if (!notifOn) {
+      return;
+    }
     var dailyGoal = Math.ceil(weeklyGoal / 5);
     var newGoalName = goalName;
     if (goalName == 'Notes Made') {

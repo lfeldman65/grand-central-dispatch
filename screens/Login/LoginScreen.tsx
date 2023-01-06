@@ -7,7 +7,6 @@ const logo = require('../Login/images/iconLogo.png');
 
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
-import { Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
 import * as Analytics from 'expo-firebase-analytics';
 import { loginToApp, getProfileData } from './api';
@@ -51,7 +50,36 @@ export default function LoginScreen() {
     }
   }
 
+  function toggleRememberMe() {
+    console.log('REMEMBER: ' + rememberChecked);
+    if (rememberChecked) {
+      // seems backwards, but only because analytics are before check is toggled
+      Analytics.logEvent('Remember_Me_Uncheck', {
+        contentType: 'none',
+        itemId: 'id0005',
+      });
+    } else {
+      Analytics.logEvent('Remember_Me_Check', {
+        contentType: 'none',
+        itemId: 'id0004',
+      });
+    }
+    setRememberCheck(!rememberChecked);
+  }
+
   function toggleEye() {
+    if (showPW) {
+      // seems backwards, but only because show analytics before showPW is toggled
+      Analytics.logEvent('Hide_Password_Press', {
+        contentType: 'none',
+        itemId: 'id0002',
+      });
+    } else {
+      Analytics.logEvent('Show_Password_Press', {
+        contentType: 'none',
+        itemId: 'id0001',
+      });
+    }
     setShowPW(!showPW);
   }
 
@@ -97,9 +125,8 @@ export default function LoginScreen() {
     console.log(password);
 
     Analytics.logEvent('Login_Button_Press', {
-      contentType: 'text',
-      itemId: 'Login Button Press',
-      method: 'handleLoginPressess',
+      contentType: 'none',
+      itemId: 'id0000',
     });
 
     if (userName == '' || password == '') {
@@ -168,12 +195,7 @@ export default function LoginScreen() {
           textContainerStyle={{ marginLeft: 10 }}
           style={styles.checkBox}
           onPress={() => {
-            Analytics.logEvent('Remember_Me_Press', {
-              contentType: 'text',
-              itemId: 'Remember Me Button Press',
-              method: 'HandleRememberMePressed',
-              origin: 'LoginScreen',
-            });
+            toggleRememberMe();
           }}
         />
 

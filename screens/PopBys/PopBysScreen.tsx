@@ -24,9 +24,8 @@ import { storage } from '../../utils/storage';
 import MapView, { LatLng, Region } from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import { matchesSearch, milesBetween, shortestRoute } from './popByHelpers';
-import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
-import { scheduleNotifications } from '../../utils/general';
+import { scheduleNotifications, getNotificationStatus } from '../../utils/general';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 var northEast: LatLng | null = null;
@@ -104,6 +103,11 @@ export default function ManageRelationshipsScreen() {
   };
 
   async function calculateAndNotify(loc: Location.LocationObject, data: PopByRadiusDataProps[], notify: boolean) {
+    var notifOn = await getNotificationStatus('notifPopBys');
+    if (!notifOn) {
+      console.log('POPBY RETURN');
+      return;
+    }
     var alreadyScheduled = false;
     console.log('calculateAndNotify: ' + loc.coords.latitude);
 

@@ -1,4 +1,5 @@
 import * as Notifications from 'expo-notifications';
+import { storage } from './storage';
 
 export function isNullOrEmpty(value: any) {
   if (value == null) return true;
@@ -62,4 +63,18 @@ export function scheduleNotifications(title: string, body: string, seconds: numb
     },
   };
   Notifications.scheduleNotificationAsync(schedulingOptions);
+}
+
+export async function getNotificationStatus(key: string) {
+  var notifStatus = await storage.getItem(key);
+  if (notifStatus == null || notifStatus == undefined) {
+    console.log('RETURN TRUE');
+    return true;
+  }
+  if (notifStatus == 'True') {
+    console.log('RETURN TRUE');
+    return true;
+  }
+  console.log('RETURN FALSE');
+  return false;
 }
