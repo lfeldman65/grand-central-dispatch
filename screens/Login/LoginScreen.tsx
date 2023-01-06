@@ -26,11 +26,10 @@ export default function LoginScreen() {
   const navigation = useNavigation();
 
   function ForgotPasswordPressed() {
-    // console.log('Forgot Press');
-    // analytics
-    //   .event(new Event('Login', 'Forgot Password Button Pressed', 0))
-    //   .then(() => console.log('button success'))
-    //   .catch((e) => console.log(e.message));
+    Analytics.logEvent('Forgot_Password_Press', {
+      contentType: 'none',
+      itemId: 'id0003',
+    });
     Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
   }
 
