@@ -3,12 +3,13 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { Analytics, PageHit, Event } from 'expo-analytics';
 import React from 'react';
-import globalStyles from '../../globalStyles';
 import { getProfileData } from '../Settings/api';
 import { ProfileDataProps } from '../Settings/interfaces';
+import { RolodexDataProps } from '../Relationships/interfaces';
 
 export default function AddTransactionMenu(props: any) {
-  const { guid, firstName, lastName } = props;
+  const { route } = props;
+  const [person, setPerson] = useState<RolodexDataProps>();
   const [profileData, setProfileData] = useState<ProfileDataProps>();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
@@ -16,18 +17,19 @@ export default function AddTransactionMenu(props: any) {
   function buttonPressed(index: number) {
     console.log('index: ' + index);
     if (index == 0) {
-      console.log('GUID: ' + guid);
-      console.log('FIRST: ' + firstName);
-      console.log('LAST: ' + lastName);
+      console.log('PERSONADD: ' + person?.firstName);
       navigation.navigate('AddOrEditRealtorTx1', {
-        guid: guid,
-        firstName: firstName,
-        lastName: lastName,
+        person: person,
       });
     } else if (index == 1) {
-      navigation.navigate('AddOrEditLenderTx1', {});
+      console.log('PERSONADD: ' + person?.firstName);
+      navigation.navigate('AddOrEditLenderTx1', {
+        person: person,
+      });
     } else if (index == 2) {
-      navigation.navigate('AddOrEditOtherTx1', {});
+      navigation.navigate('AddOrEditOtherTx1', {
+        person: person,
+      });
     }
   }
 
@@ -35,11 +37,15 @@ export default function AddTransactionMenu(props: any) {
     navigation.setOptions({
       title: 'Add Transaction',
     });
-  }, [navigation, guid, firstName, lastName]);
+  }, [navigation]);
 
   useEffect(() => {
     let isMounted = true;
     fetchProfile(isMounted);
+    if (route.params != null) {
+      setPerson(route.params.person);
+      console.log('PERSON: ' + person?.firstName);
+    }
     return () => {
       isMounted = false;
     };
