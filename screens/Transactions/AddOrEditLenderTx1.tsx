@@ -18,7 +18,7 @@ import ChooseLeadSource from './ChooseBorrowerLeadSource';
 
 export default function AddOrEditLenderTx1(props: any) {
   const { route } = props;
-  const { data } = route.params;
+  const { data, person } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Purchase Loan');
   const [seller, setSeller] = useState<RolodexDataProps>();
@@ -55,6 +55,9 @@ export default function AddOrEditLenderTx1(props: any) {
   useEffect(() => {
     let isMounted = true;
     populateDataIfEdit(isMounted);
+    if (person != null) {
+      setBorrower(person);
+    }
     return () => {
       isMounted = false;
     };
@@ -147,6 +150,7 @@ export default function AddOrEditLenderTx1(props: any) {
         state: state,
         zip: zip,
         data: data,
+        source: person == null ? 'Transactions' : 'Relationships',
       });
     }
   }

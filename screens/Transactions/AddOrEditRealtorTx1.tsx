@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
 import { Alert, Text, View, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -12,7 +11,7 @@ import ChooseLeadSource from './ChooseLeadSource';
 
 export default function AddOrEditRealtorTx1(props: any) {
   const { route } = props;
-  const { data } = route.params;
+  const { data, person } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Buyer');
   const [buyerLeadSource, setBuyerLeadSource] = useState('Advertising');
@@ -65,8 +64,22 @@ export default function AddOrEditRealtorTx1(props: any) {
   ]);
 
   useEffect(() => {
+    if (person != null) {
+      if (type.includes('Buyer')) {
+        setBuyer(person);
+      }
+      if (type.includes('Seller')) {
+        setSeller(person);
+      }
+    }
+  }, [type]);
+
+  useEffect(() => {
     let isMounted = true;
     populateDataIfEdit(isMounted);
+    if (person != null) {
+      setBuyer(person);
+    }
     return () => {
       isMounted = false;
     };
@@ -223,6 +236,7 @@ export default function AddOrEditRealtorTx1(props: any) {
         state: state,
         zip: zip,
         data: data,
+        source: person == null ? 'Transactions' : 'Relationships',
       });
     }
   }

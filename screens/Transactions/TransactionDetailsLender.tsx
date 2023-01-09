@@ -33,7 +33,6 @@ export default function TransactionDetailsLender(props: any) {
     console.log('edit pressed');
     navigation.navigate('AddOrEditLenderTx1', {
       data: data,
-      //  buyerOrSeller: data?.transactionType,
     });
   }
 
@@ -142,8 +141,8 @@ export default function TransactionDetailsLender(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.contacts[0].leadSource}</Text>
       )}
 
-      {data?.address.street != 'TBD' && <Text style={styles.header}>{'Street 1'}</Text>}
-      {data?.address.street != 'TBD' && (
+      {data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}
+      {data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 

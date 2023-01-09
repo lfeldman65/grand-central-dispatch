@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedba
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
 import { storage } from '../utils/storage';
-import * as Analytics from 'expo-firebase-analytics'; 
+import * as Analytics from 'expo-firebase-analytics';
 
 // Hamburger Menu test
 const rmLogo = require('../images/logoWide.png');
@@ -54,11 +54,10 @@ function CustomDrawerContent(props: any) {
     console.log(screenName);
 
     Analytics.logEvent('Menu_Item_Pressed', {
-      contentType: 'text', 
-      itemId: 'button success', 
-      method: 'trackPressed'
+      contentType: 'text',
+      itemId: 'button success',
+      method: 'trackPressed',
     });
-  
   };
 
   //****** there are 2 ways to create a function

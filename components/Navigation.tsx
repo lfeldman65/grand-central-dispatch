@@ -329,6 +329,32 @@ export const RealTxStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="LenderTransactions"
+        component={LenderTransactionsScreen}
+        options={{
+          title: 'Lender Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="OtherTransactions"
+        component={OtherTransactionsScreen}
+        options={{
+          title: 'Other Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -504,6 +530,32 @@ export const LenderTxStackNavigator = () => {
           headerBackVisible: false,
         }}
       />
+
+      <Stack.Screen
+        name="RealEstateTransactions"
+        component={RealEstateTransactionsScreen}
+        options={{
+          title: 'Real Estate Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="OtherTransactions"
+        component={OtherTransactionsScreen}
+        options={{
+          title: 'Other Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -672,6 +724,32 @@ export const OtherTxStackNavigator = () => {
         component={AddOrEditOtherTx2}
         options={{
           title: 'Buyer Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="RealEstateTransactions"
+        component={RealEstateTransactionsScreen}
+        options={{
+          title: 'Real Estate Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="LenderTransactions"
+        component={LenderTransactionsScreen}
+        options={{
+          title: 'Lender Transactions',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -12,7 +11,7 @@ import ChooseRelationship from '../Goals/ChooseRelationship';
 
 export default function AddOrEditOtherTx1(props: any) {
   const { route } = props;
-  const { data } = route.params;
+  const { data, person } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Lease');
   const [txTitle, setTxTitle] = useState('');
@@ -48,6 +47,10 @@ export default function AddOrEditOtherTx1(props: any) {
   useEffect(() => {
     let isMounted = true;
     populateDataIfEdit(isMounted);
+    if (person != null) {
+      console.log('PERSON:' + person.firstName);
+      setWhoInvolved(person);
+    }
     return () => {
       isMounted = false;
     };
@@ -139,6 +142,7 @@ export default function AddOrEditOtherTx1(props: any) {
         zip: zip,
         whoInvolved: whoInvolved,
         data: data,
+        source: person == null ? 'Transactions' : 'Relationships',
       });
     }
   }

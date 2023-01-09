@@ -38,6 +38,7 @@ export default function AddOrEditLenderTx3(props: any) {
     seller,
     myGrossComm,
     data,
+    source,
   } = route.params;
   const isFocused = useIsFocused();
   const [dollarOrPercentB4, setDollarOrPercentB4] = useState('percent');
@@ -143,10 +144,22 @@ export default function AddOrEditLenderTx3(props: any) {
           console.error(res.error);
         } else {
           console.log('here ' + res.data.id);
-          navigation.navigate('RealEstateTransactions');
+          leaveHere();
         }
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  function leaveHere() {
+    if (source == 'Relationships') {
+      navigation.navigate('RelDetails', {
+        contactId: borrower?.id,
+        firstName: borrower?.firstName,
+        lastName: borrower?.lastName,
+      });
+    } else {
+      navigation.navigate('RealEstateTransactions');
+    }
   }
 
   function miscBeforeDollarOrPercentPressed() {

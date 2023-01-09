@@ -5,7 +5,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
 import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual, editContact } from './api';
-import { RelDetailsProps, ToDoAndApptProps } from './interfaces';
+import { RelDetailsProps, ToDoAndApptProps, RolodexDataProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
 import { formatDate } from '../../utils/general';
@@ -442,10 +442,20 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleTransactionPressed() {
     console.log('transaction pressed');
+
+    var person: RolodexDataProps = {
+      id: dataDetails?.id!,
+      firstName: dataDetails?.firstName!,
+      lastName: dataDetails?.lastName!,
+      ranking: '',
+      contactTypeID: '',
+      employerName: '',
+      qualified: false,
+    };
+
     navigation.navigate('AddTxMenu', {
-      guid: dataDetails?.id,
-      firstName: dataDetails?.firstName,
-      lastName: dataDetails?.lastName,
+      person: person,
+      source: 'Relationships',
     });
   }
 
@@ -463,7 +473,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleReferralPressed() {
     console.log('referral pressed');
-    navigation.navigate('RelDetails', {
+    navigation.navigate('RelDetails2', {
       contactId: dataDetails?.referredBy.id!,
       firstName: dataDetails?.referredBy.name,
       lastName: '',
@@ -472,7 +482,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleSpousePressed() {
     console.log('spouse pressed');
-    navigation.navigate('RelDetails', {
+    navigation.navigate('RelDetails2', {
       contactId: dataDetails?.spouse.id,
       firstName: dataDetails?.spouse.name,
       lastName: '',
@@ -1264,50 +1274,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             </Text>
           }
         </View>
-
-        <ActionSheet
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('call sheet top row')}
-          id={Sheets.callSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.scrollview}
-            >
-              <View>
-                {Object.entries(callMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.callSheet, null).then(() => {
-                        dialPhone(value);
-                      });
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
 
         <ActionSheet
           initialOffsetFromBottom={10}

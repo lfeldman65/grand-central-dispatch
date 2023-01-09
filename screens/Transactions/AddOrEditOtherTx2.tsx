@@ -9,10 +9,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactionHelpers';
 import { storage } from '../../utils/storage';
 import { addOrEditOtherTransaction } from './api';
+import { DrawerContentScrollView } from '@react-navigation/drawer';
 
 export default function AddOrEditOtherTx2(props: any) {
   const { route } = props;
-  const { data, status, type, title, whoInvolved, street1, street2, city, state, zip } = route.params;
+  const { data, status, type, title, whoInvolved, street1, street2, city, state, zip, source } = route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
   const [lightOrDark, setIsLightOrDark] = useState('');
@@ -119,10 +120,23 @@ export default function AddOrEditOtherTx2(props: any) {
           console.error(res.error);
         } else {
           console.log('here ' + res.data.id);
-          navigation.navigate('OtherTransactions');
+          leaveHere();
         }
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  function leaveHere() {
+    console.log('LEAVE: ' + source);
+    if (source == 'Relationships') {
+      navigation.navigate('RelDetails', {
+        contactId: whoInvolved?.id,
+        firstName: whoInvolved?.firstName,
+        lastName: whoInvolved?.lastName,
+      });
+    } else {
+      navigation.navigate('RealEstateTransactions');
+    }
   }
 
   function probabilityPressed() {
@@ -202,7 +216,7 @@ export default function AddOrEditOtherTx2(props: any) {
           </View>
         </ActionSheet>
 
-        <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
+        <Text style={styles.nameTitle}>{'Amount (Projected)'}</Text>
         <View style={styles.mainContent}>
           <View style={styles.dollarAndPercentRow}>
             <View style={styles.dollarView}>

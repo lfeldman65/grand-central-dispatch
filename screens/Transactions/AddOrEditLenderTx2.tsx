@@ -14,7 +14,7 @@ var grossComm1 = 0;
 
 export default function AddOrEditLenderTx2(props: any) {
   const { route } = props;
-  const { status, type, leadSource, borrower, seller, address, street1, street2, city, state, zip, data } =
+  const { status, type, leadSource, borrower, seller, address, street1, street2, city, state, zip, data, source } =
     route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
@@ -210,6 +210,7 @@ export default function AddOrEditLenderTx2(props: any) {
         rateTypeDesc: rateTypeDesc, // Loan Desc in App
         myGrossComm: grossComm1,
         data: data,
+        source: source,
       });
     }
   }

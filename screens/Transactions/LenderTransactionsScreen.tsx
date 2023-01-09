@@ -56,7 +56,10 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
     //    analytics.event(new Event('Transactions', 'Add Transaction'));
     storage.setItem('whoCalledTxMenu', 'LenderTransactions');
     console.log('well here i am');
-    navigation.navigate('AddTxMenu');
+    navigation.navigate('AddTxMenu', {
+      person: null,
+      source: 'Transactions',
+    });
   };
 
   function tabPressed(type: TabType) {

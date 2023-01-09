@@ -139,8 +139,8 @@ export default function TransactionDetailsOther(props: any) {
         </TouchableOpacity>
       ))}
 
-      {data?.address.street != 'TBD' && data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}
-      {data?.address.street != 'TBD' && data?.address.street != '' && (
+      {data?.address.street != '' && data?.address.street != '' && <Text style={styles.header}>{'Street 1'}</Text>}
+      {data?.address.street != '' && data?.address.street != '' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.address.street}</Text>
       )}
 

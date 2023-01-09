@@ -37,6 +37,7 @@ export default function AddOrEditRealtorTx3(props: any) {
     additionalIncome,
     grossComm,
     data,
+    source,
   } = route.params;
   const isFocused = useIsFocused();
   const [dollarOrPercentB4, setDollarOrPercentB4] = useState('dollar');
@@ -173,11 +174,23 @@ export default function AddOrEditRealtorTx3(props: any) {
           console.log(res);
           console.error(res.error);
         } else {
-          console.log('here ' + res.data.id);
-          navigation.navigate('RelDetails');
+          leaveHere();
         }
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  function leaveHere() {
+    console.log('LEAVE: ' + source);
+    if (source == 'Relationships') {
+      navigation.navigate('RelDetails', {
+        contactId: buyer?.id,
+        firstName: buyer?.firstName,
+        lastName: buyer?.lastName,
+      });
+    } else {
+      navigation.navigate('RealEstateTransactions');
+    }
   }
 
   function miscBeforeDollarOrPercentPressed() {

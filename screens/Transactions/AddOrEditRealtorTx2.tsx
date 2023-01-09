@@ -13,14 +13,27 @@ var grossComm = 0;
 
 export default function AddOrEditRealtorTx2(props: any) {
   const { route } = props;
-  const { status, type, buyerLeadSource, sellerLeadSource, buyer, seller, street1, street2, city, state, zip, data } =
-    route.params;
+  const {
+    status,
+    type,
+    buyerLeadSource,
+    sellerLeadSource,
+    buyer,
+    seller,
+    street1,
+    street2,
+    city,
+    state,
+    zip,
+    data,
+    source,
+  } = route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
   const [closingPrice, setClosingPrice] = useState('400000'); // 400000
   const [closingDate, setClosingDate] = useState(new Date());
   const [originalDate, setOriginalDate] = useState(new Date());
-  const [originalPrice, setOriginalPrice] = useState('500000'); // 500000
+  const [originalPrice, setOriginalPrice] = useState(''); // 500000
   const [buyerCommission, setBuyerCommission] = useState('20'); // 20
   const [sellerCommission, setSellerCommission] = useState('');
   const [additionalIncome, setAdditionalIncome] = useState('10'); // 10
@@ -232,6 +245,7 @@ export default function AddOrEditRealtorTx2(props: any) {
         dollarOrPercentAddIncome: dollarOrPercentAddIncome,
         grossComm: grossComm,
         data: data,
+        source: source,
       });
     }
   }

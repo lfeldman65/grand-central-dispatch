@@ -14,7 +14,6 @@ const chevron = require('../../images/chevron_blue_right.png');
 export default function TransactionDetailsRE(props: any) {
   const { route } = props;
   const { dealID, lightOrDark } = route.params;
-  // const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<TransactionDetailsProps>();

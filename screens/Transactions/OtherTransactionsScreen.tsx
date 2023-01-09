@@ -57,7 +57,10 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
     console.log('Add');
     //   analytics.event(new Event('Transactions', 'Add Transaction'));
     storage.setItem('whoCalledTxMenu', 'OtherTransactions');
-    navigation.navigate('AddTxMenu');
+    navigation.navigate('AddTxMenu', {
+      person: null,
+      source: 'Transactions',
+    });
   };
 
   function tabPressed(type: TabType) {

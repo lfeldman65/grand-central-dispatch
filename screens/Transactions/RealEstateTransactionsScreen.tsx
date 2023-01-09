@@ -56,7 +56,10 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
     //   analytics.event(new Event('Transactions', 'Add Transaction'));
     storage.setItem('whoCalledTxMenu', 'RealEstateTransactions');
     console.log('well here i am');
-    navigation.navigate('AddTxMenu');
+    navigation.navigate('AddTxMenu', {
+      person: null,
+      source: 'Transactions',
+    });
   };
 
   function tabPressed(type: TabType) {
