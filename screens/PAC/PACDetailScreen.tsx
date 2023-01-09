@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Modal, Linking } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { Event } from 'expo-analytics';
 import PacComplete from './PACCompleteScreen';
 import { completePAC, getPACDetails } from './api';
 import openMap from 'react-native-open-maps';

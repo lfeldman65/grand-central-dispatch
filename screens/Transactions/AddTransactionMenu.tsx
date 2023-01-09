@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import React from 'react';
 import { getProfileData } from '../Settings/api';
 import { ProfileDataProps } from '../Settings/interfaces';

@@ -2,7 +2,6 @@ import { Fragment, useLayoutEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import { getBizGoalsSummary } from './api';

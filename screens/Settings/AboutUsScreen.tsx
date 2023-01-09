@@ -3,10 +3,8 @@ import { StyleSheet, View, Dimensions, Modal, ScrollView, ActivityIndicator, Lin
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import { getMedia } from './api';
 import { AboutUsDataProps } from './interfaces';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
 import AboutUsRow from './AboutUsRow';
 import globalStyles from '../../globalStyles';

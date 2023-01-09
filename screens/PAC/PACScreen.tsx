@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Text, View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { Event } from 'expo-analytics';
 import PACCallsRow from './PACCallsRow';
 import PACNotesRow from './PACNotesRow';
 import PACPopRow from './PACPopRow';

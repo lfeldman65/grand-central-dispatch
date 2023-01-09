@@ -3,8 +3,6 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Linking } 
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
-import { analytics } from '../../constants/analytics';
 import { storage } from '../../utils/storage';
 import { getProfileData } from './api';
 import { ProfileDataProps } from './interfaces';
@@ -24,10 +22,6 @@ export default function SettingsScreen() {
 
   function signOutPressed() {
     navigation.navigate('Login');
-    analytics
-      .event(new Event('Settings', 'Sign Out', 'Pressed', 0))
-      .then(() => console.log('button success'))
-      .catch((e) => console.log(e.message));
   }
 
   function changePasswordPressed() {

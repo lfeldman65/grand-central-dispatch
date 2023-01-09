@@ -10,12 +10,8 @@ import {
   ScrollView,
   TouchableHighlight,
 } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
-import { Event } from 'expo-analytics';
-import { analytics } from '../../utils/analytics';
 import { VideoSummaryDataProps } from './interfaces';
-import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 
 const chevron = require('../../images/chevron_blue_right.png');

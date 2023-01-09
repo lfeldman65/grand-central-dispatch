@@ -12,8 +12,6 @@ import {
 } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
-import { Event } from 'expo-analytics';
-import { analytics } from '../../utils/analytics';
 import { ToDoDataProps } from './interfaces';
 import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';

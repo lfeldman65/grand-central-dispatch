@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { Event } from 'expo-analytics';
-// import Swipeable from 'react-native-swipeable-row';
 import TransactionRow from './TransactionRow';
 import { styles } from './styles';
 import { getTransactionData } from './api';

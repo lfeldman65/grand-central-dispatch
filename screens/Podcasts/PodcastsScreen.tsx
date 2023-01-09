@@ -3,13 +3,11 @@ import { StyleSheet, View, Modal, ScrollView, ActivityIndicator } from 'react-na
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import { getPodcastData } from './api';
 import { PodcastDataProps } from './interfaces';
 import React from 'react';
 import PodcastsRow from './PodcastsRow';
 import PodcastPlayer from './PodcastPlayer';
-import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 

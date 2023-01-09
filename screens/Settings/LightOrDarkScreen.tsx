@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import React from 'react';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';

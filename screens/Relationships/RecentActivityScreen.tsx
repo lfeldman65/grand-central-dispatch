@@ -14,8 +14,6 @@ import {
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
-import Button from '../../components/Button';
 import { getRecentActivityData } from './api';
 import { RecentActivityDataProps } from './interfaces';
 import React from 'react';

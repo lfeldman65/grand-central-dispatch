@@ -13,7 +13,6 @@ import {
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Event } from 'expo-analytics';
 import { isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
 import { getGoalData, trackAction } from './api';

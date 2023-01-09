@@ -1,7 +1,6 @@
 import { Fragment, useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';

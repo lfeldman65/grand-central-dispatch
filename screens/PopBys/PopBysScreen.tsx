@@ -13,7 +13,6 @@ import {
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp, DarkTheme } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Event } from 'expo-analytics';
 import PopByRow from './PopByRow';
 import PopByRowSaved from './PopByRowSaved';
 import { getPopByRadiusData, getPopBysInWindow, savePop, removePop, saveOrRemovePopBulk } from './api';

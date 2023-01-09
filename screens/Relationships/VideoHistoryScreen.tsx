@@ -13,10 +13,8 @@ import {
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import { getVideoSummaryData } from './api';
 import { VideoSummaryDataProps } from './interfaces';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
@@ -34,7 +32,6 @@ export default function VideoHistoryScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
     console.log('Row Pressed');
 
     navigation.navigate('VideoDetailsScreen', {

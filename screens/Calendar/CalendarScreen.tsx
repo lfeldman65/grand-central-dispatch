@@ -17,7 +17,6 @@ import CalendarPicker, { DateChangedCallback } from 'react-native-calendar-picke
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Event } from 'expo-analytics';
 import AppointmentRow from './AppointmentRow';
 import { getAppointments } from './api';
 import { AppointmentDataProps } from './interfaces';

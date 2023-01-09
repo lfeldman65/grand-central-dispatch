@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { Event } from 'expo-analytics';
 import * as Sentry from 'sentry-expo';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';

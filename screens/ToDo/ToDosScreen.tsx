@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert, ActivityIn
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import { storage } from '../../utils/storage';
 import { getToDoData } from './api';
 import { ToDoDataProps } from './interfaces';

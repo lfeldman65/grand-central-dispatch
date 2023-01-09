@@ -13,7 +13,6 @@ import {
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Event } from 'expo-analytics';
 import AddRelScreen from './AddRelationshipScreen';
 import AtoZRow from './AtoZRow';
 import RankingRow from './RankingRow';

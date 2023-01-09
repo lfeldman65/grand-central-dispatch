@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { useEffect } from 'react';
-import { Event } from 'expo-analytics';
-import { analytics } from '../../utils/analytics';
 import { useIsFocused } from '@react-navigation/native';
 import { PodcastDataProps } from './interfaces';
 const logo = require('../Podcasts/images/podcastMini.png');
