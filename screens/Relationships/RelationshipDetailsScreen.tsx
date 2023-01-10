@@ -1277,6 +1277,51 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
         <ActionSheet
           initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('call top row sheet')}
+          id={Sheets.callSheet}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.3}
+        >
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.scrollview}
+            >
+              <View>
+                {Object.entries(callMenu).map(([index, value]) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      SheetManager.hide(Sheets.callSheet, null).then(() => {
+                        console.log('CALLTYPE: ' + value);
+                        dialPhone(value);
+                      });
+                    }}
+                    style={globalStyles.listItemCell}
+                  >
+                    <Text style={globalStyles.listItem}>{index}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </ActionSheet>
+
+        <ActionSheet
+          initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('mobile call type sheet')}
           id={Sheets.mobileSheet}
           ref={actionSheetRef}

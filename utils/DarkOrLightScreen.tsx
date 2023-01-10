@@ -1,4 +1,4 @@
-import { Button, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useColorScheme } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -7,13 +7,10 @@ import { Appearance } from 'react-native';
 
 var lightOrDarkLocal = 'automatic';
 
-export default function DarkOrLightScreen(props) {
+export default function DarkOrLightScreen(props: any) {
   const { setLightOrDark } = props;
 
   const onThemeChange = ({ colorScheme }) => {
-    console.log('onThemeChange', colorScheme);
-    console.log('lightOrDarkLocal ' + lightOrDarkLocal);
-
     if (lightOrDarkLocal == 'automatic') {
       setLightOrDark(colorScheme);
     } else {
@@ -22,7 +19,6 @@ export default function DarkOrLightScreen(props) {
   };
 
   useEffect(() => {
-    console.log('useEffect in DarkOrLight');
     getDarkOrLightMode();
     Appearance.addChangeListener(onThemeChange);
     return () => {

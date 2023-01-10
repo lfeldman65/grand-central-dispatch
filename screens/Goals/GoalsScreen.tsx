@@ -1,15 +1,5 @@
 import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  Modal,
-  LogBox,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -20,8 +10,8 @@ import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { scheduleNotifications } from '../../utils/general';
-import { storage } from '../../utils/storage';
 import { getNotificationStatus } from '../../utils/general';
+import * as Analytics from 'expo-firebase-analytics';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
@@ -39,17 +29,27 @@ export default function GoalsScreen() {
   const isFocused = useIsFocused();
 
   function trackActivityPressed() {
+    Analytics.logEvent('Goals_Track_Activity', {
+      contentType: 'none',
+      itemId: 'id0303',
+    });
     setModalVisible(true);
   }
 
   function winTheDayPressed() {
-    // analytics.event(new Event('Goals', 'Win the Day Pressed'));
+    Analytics.logEvent('Goals_Win_Day_Tab', {
+      contentType: 'none',
+      itemId: 'id0301',
+    });
     setWinTheDaySelected(true);
     fetchGoals(true, false);
   }
 
   function winTheWeekPressed() {
-    //  analytics.event(new Event('Goals', 'Win the Week Pressed'));
+    Analytics.logEvent('Goals_Win_Week_Tab', {
+      contentType: 'none',
+      itemId: 'id0302',
+    });
     setWinTheDaySelected(false);
     fetchGoals(true, false);
   }
@@ -164,7 +164,10 @@ export default function GoalsScreen() {
   const handleLinkPress = (index: number) => {
     switch (index) {
       case 0:
-        //  analytics.event(new Event('Goals', 'Calls Pressed'));
+        Analytics.logEvent('Goals_Calls_Link', {
+          contentType: 'none',
+          itemId: 'id0304',
+        });
         navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
@@ -172,7 +175,10 @@ export default function GoalsScreen() {
         });
         break;
       case 1:
-        //  analytics.event(new Event('Goals', 'Notes Pressed'));
+        Analytics.logEvent('Goals_Notes_Link', {
+          contentType: 'none',
+          itemId: 'id0305',
+        });
         navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
@@ -180,7 +186,10 @@ export default function GoalsScreen() {
         });
         break;
       case 2:
-        //   analytics.event(new Event('Goals', 'Pop-Bys Pressed'));
+        Analytics.logEvent('Goals_Pop_Bys_Link', {
+          contentType: 'none',
+          itemId: 'id0306',
+        });
         navigation.popToTop();
         navigation.navigate('PAC', {
           screen: 'PAC1',
@@ -188,11 +197,18 @@ export default function GoalsScreen() {
         });
         break;
       case 3:
-        //   analytics.event(new Event('Goals', 'Database Additions Pressed'));
-        //  navigation.navigate('Pop-Bys');  // Add new relationship
+        Analytics.logEvent('Goals_Database_Link', {
+          contentType: 'none',
+          itemId: 'id0307',
+        });
+        databaseAdditions();
         break;
     }
   };
+
+  function databaseAdditions() {
+    console.log('DATABASE ADDITIONS');
+  }
 
   function fetchGoals(isMounted: boolean, afterTrack: boolean) {
     setIsLoading(true);

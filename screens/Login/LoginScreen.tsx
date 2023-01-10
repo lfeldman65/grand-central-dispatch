@@ -26,7 +26,7 @@ export default function LoginScreen() {
   const navigation = useNavigation();
 
   function ForgotPasswordPressed() {
-    Analytics.logEvent('Forgot_Password_Press', {
+    Analytics.logEvent('Forgot_Password', {
       contentType: 'none',
       itemId: 'id0003',
     });
@@ -69,12 +69,12 @@ export default function LoginScreen() {
   function toggleEye() {
     if (showPW) {
       // seems backwards, but only because show analytics before showPW is toggled
-      Analytics.logEvent('Hide_Password_Press', {
+      Analytics.logEvent('Hide_Password', {
         contentType: 'none',
         itemId: 'id0002',
       });
     } else {
-      Analytics.logEvent('Show_Password_Press', {
+      Analytics.logEvent('Show_Password', {
         contentType: 'none',
         itemId: 'id0001',
       });
@@ -123,7 +123,7 @@ export default function LoginScreen() {
     console.log(userName);
     console.log(password);
 
-    Analytics.logEvent('Login_Button_Press', {
+    Analytics.logEvent('Login_Button', {
       contentType: 'none',
       itemId: 'id0000',
     });

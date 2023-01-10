@@ -50,13 +50,47 @@ function CustomDrawerContent(props: any) {
     setExpanded({ ...expanded, transactions: !expanded.transactions });
   }
 
-  const trackPressed = (screenName: string) => {
-    console.log(screenName);
+  function getPrettyEvent(screen: string) {
+    if (screen == 'Dashboard') return 'Hamburger_Menu_Dashboard';
+    if (screen == 'goals') return 'Hamburger_Menu_Goals';
+    if (screen == 'PAC') return 'Hamburger_Menu_PAC';
+    if (screen == 'Rolodex') return 'Hamburger_Menu_Manage_Relationships';
+    if (screen == 'RecentActivity') return 'Hamburger_Menu_Recent_Activity';
+    if (screen == 'VideoStack') return 'Hamburger_Menu_Video_History';
+    if (screen == 'RETransactionsMenu') return 'Hamburger_Menu_Realtor_Transactions';
+    if (screen == 'LenderTransactionsMenu') return 'Hamburger_Menu_Lender_Transactions';
+    if (screen == 'OtherTransactionsMenu') return 'Hamburger_Menu_Lender_Transactions';
+    if (screen == 'PopBysScreen') return 'Hamburger_Menu_Pop_By';
+    if (screen == 'To-Do') return 'Hamburger_Menu_To_Do';
+    if (screen == 'CalendarScreen') return 'Hamburger_Menu_Calendar';
+    if (screen == 'PodcastsScreen') return 'Hamburger_Menu_Podcasts';
+    if (screen == 'SettingsScreenNav') return 'Hamburger_Menu_Settings';
+    return 'Other';
+  }
 
-    Analytics.logEvent('Menu_Item_Pressed', {
-      contentType: 'text',
-      itemId: 'button success',
-      method: 'trackPressed',
+  function getItemID(screen: string) {
+    if (screen == 'Dashboard') return 'id0100';
+    if (screen == 'goals') return 'id0101';
+    if (screen == 'PAC') return 'id0102';
+    if (screen == 'Rolodex') return 'id0103';
+    if (screen == 'RecentActivity') return 'id0104';
+    if (screen == 'VideoStack') return 'id0105';
+    if (screen == 'RETransactionsMenu') return 'id0106';
+    if (screen == 'LenderTransactionsMenu') return 'id0107';
+    if (screen == 'OtherTransactionsMenu') return 'id0108';
+    if (screen == 'PopBysScreen') return 'id0109';
+    if (screen == 'To-Do') return 'id0110';
+    if (screen == 'CalendarScreen') return 'id0111';
+    if (screen == 'PodcastsScreen') return 'id0112';
+    if (screen == 'SettingsScreenNav') return 'id0113';
+    return 'id9999';
+  }
+
+  const trackPressed = (screenName: string) => {
+    console.log('SCREEN: ' + screenName);
+    Analytics.logEvent(getPrettyEvent(screenName), {
+      contentType: 'none',
+      itemId: getItemID(screenName),
     });
   };
 

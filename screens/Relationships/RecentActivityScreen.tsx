@@ -17,17 +17,12 @@ import { useEffect, useRef } from 'react';
 import { getRecentActivityData } from './api';
 import { RecentActivityDataProps } from './interfaces';
 import React from 'react';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
 import RecentActivityRow from './RecentActivityRow';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function RecentActivityScreenScreen() {
-  let deviceWidth = Dimensions.get('window').width;
-
   const filters = {
     All: 'all',
     Calls: 'calls',

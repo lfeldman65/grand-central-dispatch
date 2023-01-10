@@ -8,6 +8,8 @@ import ChooseGoal from '../Goals/ChooseGoalScreen';
 import { RolodexDataProps, GoalDataConciseProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
+import * as Analytics from 'expo-firebase-analytics';
+
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
@@ -145,6 +147,10 @@ export default function TrackActivityScreen(props: any) {
   };
 
   function savePressed() {
+    Analytics.logEvent('Goals_Track_Save', {
+      contentType: 'none',
+      itemId: 'id0308',
+    });
     if (relationship?.id == null) {
       Alert.alert('Please Choose a Relationship');
       return;

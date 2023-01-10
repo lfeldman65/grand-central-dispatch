@@ -8,7 +8,8 @@ import { storage } from '../../utils/storage';
 import * as Notifications from 'expo-notifications';
 import { PermissionStatus } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
-import { scheduleNotifications } from '../../utils/general';
+import * as Analytics from 'expo-firebase-analytics';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -20,21 +21,17 @@ const transImage = require('../Dashboard/images/quickTrans.png');
 const todoImage = require('../Dashboard/images/quickToDo.png');
 const calendarImage = require('../Dashboard/images/quickCalendar.png');
 
-//const analytics = new Analytics('UA-65596113-1');
-/*analytics.hit(new PageHit('Home'))
-  .then(() => console.log("success"))
-  .catch(e => console.log(e.message)); */
-
 interface DashboardNavigationProps {
   parentScreen?: string;
   label: string;
   screen: string;
   params?: any;
+  itemID: string;
 }
 
 export default function DashboardScreen() {
   const navigation = useNavigation();
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
   const [notificationPermissions, setNotificationPermissions] = useState<PermissionStatus>(
@@ -46,15 +43,6 @@ export default function DashboardScreen() {
     Sentry.Native.nativeCrash();
     throw new Error('My first Sentry error!');
     Sentry.Native.captureException(new Error('Oops!'));
-  }
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    console.log('dark or light: ' + dOrlight);
-    setIsLightOrDark(dOrlight ?? 'light');
   }
 
   const requestNotificationPermissions = async () => {
@@ -85,14 +73,6 @@ export default function DashboardScreen() {
     return () => listener.remove();
   }, [notificationPermissions]);
 
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
   function navigateToLandingPage(landingPage?: string) {
     console.log('landing page:' + landingPage);
     if (landingPage == 'Priority Action Center') {
@@ -101,72 +81,84 @@ export default function DashboardScreen() {
         screen: 'PAC1',
         params: { defaultTab: 'calls' },
         label: 'Calls Pressed',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Goals') {
       handleNavigation({
         screen: 'goals',
         label: 'Goals',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Manage Relationships') {
       handleNavigation({
         screen: 'Rolodex',
         label: 'Relationships',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Recent Contact Activity') {
       handleNavigation({
         screen: 'RecentActivity',
         label: 'RecentActivity',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Video History') {
       handleNavigation({
         screen: 'VideoStack',
         label: 'VideoStack',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Real Estate Transactions') {
       handleNavigation({
         screen: 'RETransactionsMenu',
         label: 'RETransactionsMenu',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Lender Transactions') {
       handleNavigation({
         screen: 'LenderTransactionsMenu',
         label: 'LenderTransactionsMenu',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Other Transactions') {
       handleNavigation({
         screen: 'OtherTransactionsMenu',
         label: 'OtherTransactionsMenu',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Pop-By') {
       handleNavigation({
         screen: 'PopBysScreen',
         label: 'PopBysScreen',
+        itemID: 'none',
       });
     }
     if (landingPage == 'To-Do') {
       handleNavigation({
         screen: 'To-Do',
         label: 'To-Do',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Calendar') {
       handleNavigation({
         screen: 'CalendarScreen',
         label: 'CalendarScreen',
+        itemID: 'none',
       });
     }
     if (landingPage == 'Podcasts') {
       handleNavigation({
         screen: 'PodcastsScreen',
         label: 'PodcastsScreen',
+        itemID: 'none',
       });
     }
   }
@@ -185,10 +177,16 @@ export default function DashboardScreen() {
 
   const handleNavigation = (props: DashboardNavigationProps) => {
     // SentryTest();
-    console.log('parent screen: ' + props.parentScreen);
-
+    console.log('parent screen1: ' + props.parentScreen);
+    const mainEvent = 'Dashboard_' + props.label;
+    console.log('MAINEVENT: ' + mainEvent);
+    Analytics.logEvent(mainEvent, {
+      contentType: 'none',
+      itemId: props.itemID,
+    });
     if (props.parentScreen) {
       //  analytics.event(new Event('Dashboard', props.label + ' Pressed', '0'));
+
       navigation.navigate(props.parentScreen, {
         screen: props.screen,
         params: props.params ? props.params : null,
@@ -201,6 +199,8 @@ export default function DashboardScreen() {
 
   return (
     <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={styles.row}>
           <View style={styles.pair}>
@@ -210,7 +210,8 @@ export default function DashboardScreen() {
                   parentScreen: 'PAC',
                   screen: 'PAC1',
                   params: { defaultTab: 'calls' },
-                  label: 'Calls Pressed',
+                  label: 'Calls',
+                  itemID: 'id0201',
                 })
               }
             >
@@ -226,7 +227,8 @@ export default function DashboardScreen() {
                   parentScreen: 'PAC',
                   screen: 'PAC1',
                   params: { defaultTab: 'notes' },
-                  label: 'Notes Pressed',
+                  label: 'Notes',
+                  itemID: 'id0202',
                 })
               }
             >
@@ -240,7 +242,8 @@ export default function DashboardScreen() {
               onPress={() =>
                 handleNavigation({
                   screen: 'PopBysScreen',
-                  label: 'Pop-Bys Pressed',
+                  label: 'Pop-Bys',
+                  itemID: 'id0203',
                 })
               }
             >
@@ -258,7 +261,8 @@ export default function DashboardScreen() {
                   parentScreen: 'PAC',
                   screen: 'PAC1',
                   params: { defaultTab: 'calls' },
-                  label: 'PAC Pressed',
+                  label: 'PAC',
+                  itemID: 'id0204',
                 })
               }
             >
@@ -275,6 +279,7 @@ export default function DashboardScreen() {
                 handleNavigation({
                   screen: 'Rolodex',
                   label: 'Relationships',
+                  itemID: 'id0205',
                 })
               }
             >
@@ -288,6 +293,7 @@ export default function DashboardScreen() {
                 handleNavigation({
                   screen: 'goals', // doesn't matter?
                   label: 'Goals',
+                  itemID: 'id0206',
                 })
               }
             >
@@ -304,6 +310,7 @@ export default function DashboardScreen() {
                 handleNavigation({
                   screen: 'RETransactionsMenu',
                   label: 'Transactions',
+                  itemID: 'id0207',
                 })
               }
             >
@@ -317,6 +324,7 @@ export default function DashboardScreen() {
                 handleNavigation({
                   screen: 'To-Do',
                   label: 'To-Do',
+                  itemID: 'id0208',
                 })
               }
             >
@@ -331,6 +339,7 @@ export default function DashboardScreen() {
                 handleNavigation({
                   screen: 'CalendarScreen',
                   label: 'Calendar',
+                  itemID: 'id0209',
                 })
               }
             >

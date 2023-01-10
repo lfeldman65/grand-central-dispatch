@@ -30,7 +30,6 @@ interface RecentActivityRowProps {
 }
 
 function chooseImage(activityType: string) {
-  console.log(activityType);
   if (activityType == 'callMade') return callImage;
   if (activityType == 'noteWritten') return noteImage;
   if (activityType == 'popByMade') return popImage;

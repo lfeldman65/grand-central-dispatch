@@ -505,14 +505,11 @@ export default function EditRelationshipScreen(props: any) {
             <Text style={styles.inlineButtons}>Remove</Text>
           </TouchableOpacity>
         )}
+        {spouse != null && spouse.id != '' && spouse.id != null && (
+          <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{spouse.name}</Text>
+        )}
+        {(spouse == null || spouse.id == '' || spouse.id == null) && <Text style={styles.addText}>+Add</Text>}
       </View>
-
-      <TouchableOpacity onPress={spousePressed}>
-        <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
-          {spouse != null && spouse.id != '' && spouse.id != null && <Text>{spouse.name}</Text>}
-          {(spouse == null || spouse.id == '' || spouse.id == null) && <Text style={styles.addText}>+Add</Text>}
-        </View>
-      </TouchableOpacity>
 
       {modalSpouseVisible && (
         <Modal
@@ -613,8 +610,10 @@ export default function EditRelationshipScreen(props: any) {
       </View>
 
       <TouchableOpacity onPress={referralPressed}>
-        <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
-          {referral != null && referral.id != '' && referral.id != null && <Text>{referral.name}</Text>}
+        <View>
+          {referral != null && referral.id != '' && referral.id != null && (
+            <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{referral.name}</Text>
+          )}
           {(referral == null || referral.id == '' || referral.id == null) && <Text style={styles.addText}>+Add</Text>}
         </View>
       </TouchableOpacity>
@@ -642,8 +641,10 @@ export default function EditRelationshipScreen(props: any) {
 
       <Text style={styles.subTitle}>Birthday</Text>
       <TouchableOpacity onPress={showBirthDatePicker}>
-        <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
-          {birthday != null && birthday != '' && <Text>{birthday}</Text>}
+        <View>
+          {birthday != null && birthday != '' && (
+            <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{birthday}</Text>
+          )}
           {(birthday == null || birthday == '') && <Text style={styles.addText}>+ Add</Text>}
         </View>
       </TouchableOpacity>
@@ -654,7 +655,7 @@ export default function EditRelationshipScreen(props: any) {
             setShowBirthDate(false);
           }}
         >
-          <Text style={styles.closePicker}>Close</Text>
+          <Text style={lightOrDark == 'dark' ? styles.closePickerDark : styles.closePickerLight}>Close</Text>
         </TouchableOpacity>
       )}
 
@@ -685,7 +686,7 @@ export default function EditRelationshipScreen(props: any) {
             setShowWeddingDate(false);
           }}
         >
-          <Text style={styles.closePicker}>Close</Text>
+          <Text style={lightOrDark == 'dark' ? styles.closePickerDark : styles.closePickerLight}>Close</Text>
         </TouchableOpacity>
       )}
 
@@ -782,7 +783,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  closePicker: {
+  closePickerDark: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
+  },
+  closePickerLight: {
+    color: 'black',
     textAlign: 'center',
     fontSize: 18,
   },
