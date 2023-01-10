@@ -1,30 +1,14 @@
 import { Fragment, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
-import MenuIcon from '../../components/MenuIcon';
+import { StyleSheet, View, ScrollView, ActivityIndicator } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { Analytics, PageHit, Event } from 'expo-analytics';
 import { getVideoDetails } from './api';
 import { VideoDetailsDataProps } from './interfaces';
-import { analytics } from '../../utils/analytics';
 import React from 'react';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
-import RecentActivityRow from './RecentActivityRow';
 import VideoDetailsRow from './VideoDetailsRow';
-import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import * as Analytics from 'expo-firebase-analytics';
 
 export default function VideoDetailsScreen(props: any) {
   const { route } = props;
@@ -36,10 +20,10 @@ export default function VideoDetailsScreen(props: any) {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    //  analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
-    console.log('Row Pressed 2');
-
-    // navigation.navigate('RelationshipDetailScreen', {});
+    Analytics.logEvent('Video_History_Details_Row', {
+      contentType: 'none',
+      itemId: 'id0702',
+    });
     navigation.navigate('RelDetails', {
       contactId: dataVid[0].contactGuid,
       firstName: dataVid[0].fullName,
@@ -101,26 +85,6 @@ export default function VideoDetailsScreen(props: any) {
       </>
     );
   }
-
-  return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#AAA" />
-        </View>
-      ) : (
-        <React.Fragment>
-          <ScrollView>
-            <View>
-              {dataVid.map((item, index) => (
-                <VideoDetailsRow key={index} data={item} onPress={() => handleRowPress(index)} />
-              ))}
-            </View>
-          </ScrollView>
-        </React.Fragment>
-      )}
-    </View>
-  );
 }
 
 const styles = StyleSheet.create({

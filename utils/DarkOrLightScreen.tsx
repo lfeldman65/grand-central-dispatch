@@ -1,16 +1,18 @@
 import { View } from 'react-native';
-
-import { useColorScheme } from 'react-native';
 import { useEffect, useState } from 'react';
 import { storage } from './storage';
 import { Appearance } from 'react-native';
 
 var lightOrDarkLocal = 'automatic';
+let eventEmitterSubscription: any;
 
 export default function DarkOrLightScreen(props: any) {
   const { setLightOrDark } = props;
 
   const onThemeChange = ({ colorScheme }) => {
+    console.log('onThemeChange', colorScheme);
+    console.log('lightOrDarkLocal ' + lightOrDarkLocal);
+
     if (lightOrDarkLocal == 'automatic') {
       setLightOrDark(colorScheme);
     } else {
@@ -19,10 +21,12 @@ export default function DarkOrLightScreen(props: any) {
   };
 
   useEffect(() => {
+    console.log('useEffect in DarkOrLight');
     getDarkOrLightMode();
-    Appearance.addChangeListener(onThemeChange);
+    eventEmitterSubscription = Appearance.addChangeListener(onThemeChange);
     return () => {
-      Appearance.removeChangeListener(onThemeChange);
+      eventEmitterSubscription.remove();
+      //Appearance.removeChangeListener(onThemeChange);
     };
   }, []);
 

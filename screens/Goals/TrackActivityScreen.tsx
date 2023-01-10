@@ -13,7 +13,7 @@ import * as Analytics from 'expo-firebase-analytics';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
-  const { setModalVisible, title, onSave, guid, firstName, lastName, lightOrDark, data1 } = props;
+  const { setModalVisible, title, onSave, guid, firstName, lastName, lightOrDark } = props;
   const [note, onNoteChange] = useState('');
   const [relationship, setRelationship] = useState<RolodexDataProps>();
   const [referral, setReferral] = useState<RolodexDataProps>();

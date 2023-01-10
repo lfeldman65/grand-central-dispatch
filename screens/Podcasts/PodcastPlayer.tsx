@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { storage } from '../../utils/storage';
 import Slider from '@react-native-community/slider';
 import { Audio } from 'expo-av';
 import { PlayerStatus, PodcastDataProps } from './interfaces';
+import { useIsFocused } from '@react-navigation/native';
+import * as Analytics from 'expo-firebase-analytics';
 
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { printWidth } from '../../prettier.config';
 const backArrow = require('../../images/white_arrow_left.png');
 const logo = require('../Podcasts/images/podcastLarge.png');
 const back = require('../Podcasts/images/audio_back.png');
@@ -19,19 +17,26 @@ const pause = require('../Podcasts/images/audio_pause.png');
 const speakerOff = require('../Podcasts/images/volumeDown.png');
 const speakerOn = require('../Podcasts/images/volumeUp.png');
 
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
+// const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
 
+export function getSeasonAndEpisode(longTitle: string) {
+  const sectionsArray = longTitle.split(':'); // 0: It's a good life, 1: S2E53, 2: Title
+  const seasonAndEpisode = sectionsArray[1]; // S2E53
+  const seasonAndEpiodeArray = seasonAndEpisode.split('E'); // 0: S2, 1: 53
+  const seasonUgly = seasonAndEpiodeArray[0]; // S2
+  const seasonArray = seasonUgly.split('S'); // 0: empty, 1: 2
+  const seasonOnly = seasonArray[1]; // 2
+  const episodeOnly = seasonAndEpiodeArray[1];
+  return 'Season ' + seasonOnly + ' Episode ' + episodeOnly;
+}
 export default function PodcastPlayer(props: any) {
   const { setModalPlayerVisible, dataList, selectedIndex } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [podcastItem, setPodcastItem] = useState<PodcastDataProps>(dataList[selectedIndex]);
   const [currentIndex, setCurrentIndex] = useState(selectedIndex);
   const [sound, setSound] = useState<Audio.Sound>();
   const [isLoading, setIsLoading] = useState(true);
   const [isSeeking, setIsSeeking] = useState(false);
   const [shouldPlayAtEndOfSeek, setShouldPlayAtEndOfSeek] = useState(false);
-
-  //var isMounted = false;
 
   const [playerStatus, setPlayerStatus] = useState<PlayerStatus>({
     playbackInstancePosition: null,
@@ -57,19 +62,6 @@ export default function PodcastPlayer(props: any) {
       return pos;
     }
     return 0;
-  }
-
-  function getSeasonAndEpisode(longTitle: string) {
-    const sectionsArray = longTitle.split(':'); // 0: It's a good life, 1: S2E53, 2: Title
-    const seasonAndEpisode = sectionsArray[1]; // S2E53
-    const seasonAndEpiodeArray = seasonAndEpisode.split('E'); // 0: S2, 1: 53
-    const seasonUgly = seasonAndEpiodeArray[0]; // S2
-    const seasonArray = seasonUgly.split('S'); // 0: empty, 1: 2
-    const seasonOnly = seasonArray[1]; // 2
-    const episodeOnly = seasonAndEpiodeArray[1];
-    // console.log(seasonArray[1]);
-
-    return 'Season ' + seasonOnly + ' Episode ' + episodeOnly;
   }
 
   function getMMSSFromMillis(millis: number) {
@@ -147,6 +139,10 @@ export default function PodcastPlayer(props: any) {
 
   async function backPressed() {
     console.log('back pressed current index: ' + currentIndex);
+    Analytics.logEvent('Podcast_Player_Previous', {
+      contentType: 'none',
+      itemId: 'id1402',
+    });
     if (playerStatus.isBuffering) {
       return;
     }
@@ -173,6 +169,10 @@ export default function PodcastPlayer(props: any) {
 
   async function nextPressed() {
     console.log('next pressed current index: ' + currentIndex);
+    Analytics.logEvent('Podcast_Player_Next', {
+      contentType: 'none',
+      itemId: 'id1403',
+    });
     if (playerStatus.isBuffering) {
       return;
     }
@@ -201,11 +201,9 @@ export default function PodcastPlayer(props: any) {
     if (sound != null && !isSeeking) {
       setIsSeeking(true);
       setShouldPlayAtEndOfSeek(playerStatus.isPlaying!);
-
       sound.setOnPlaybackStatusUpdate(null);
       sound.pauseAsync();
     }
-
     setPlayerStatus({
       playbackInstancePosition: value * playerStatus.playbackInstanceDuration,
       playbackInstanceDuration: playerStatus.playbackInstanceDuration,
@@ -219,8 +217,21 @@ export default function PodcastPlayer(props: any) {
     //playerStatus.playbackInstancePosition = value * playerStatus.playbackInstanceDuration;
   }
 
+  async function onVolumeSliderSlidingComplete(value: number) {
+    if (sound != null) {
+      Analytics.logEvent('Podcast_Player_Volume', {
+        contentType: 'none',
+        itemId: 'id1407',
+      });
+    }
+  }
+
   async function onSeekSliderSlidingComplete(value: number) {
     if (sound != null) {
+      Analytics.logEvent('Podcast_Player_Scrubber', {
+        contentType: 'none',
+        itemId: 'id1406',
+      });
       setIsSeeking(false);
       const seekPosition = value * playerStatus.playbackInstanceDuration;
       sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
@@ -244,6 +255,19 @@ export default function PodcastPlayer(props: any) {
 
   async function playPausePressed() {
     console.log('play/pause pressed');
+    if (!playerStatus.isBuffering) {
+      if (playerStatus.isPlaying) {
+        Analytics.logEvent('Podcast_Player_Pause', {
+          contentType: 'none',
+          itemId: 'id1404',
+        });
+      } else {
+        Analytics.logEvent('Podcast_Player_Play', {
+          contentType: 'none',
+          itemId: 'id1405',
+        });
+      }
+    }
     if (playerStatus.isBuffering) {
       return;
     }
@@ -349,6 +373,7 @@ export default function PodcastPlayer(props: any) {
           disabled={isLoading}
           value={playerStatus.volume ?? 0}
           onValueChange={onVolumeSliderValueChange}
+          onSlidingComplete={onVolumeSliderSlidingComplete}
         />
         <Image source={speakerOn} style={styles.speakerImage} />
       </View>

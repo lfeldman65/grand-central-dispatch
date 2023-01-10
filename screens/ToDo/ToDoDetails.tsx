@@ -4,12 +4,12 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getToDoDetails, markCompleteToDo, deleteToDo } from './api';
 import { ToDoDetailsDataProps } from './interfaces';
-import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import { prettyDate, isNullOrEmpty } from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import * as React from 'react';
 import EditToDo from './EditToDoScreen';
+import * as Analytics from 'expo-firebase-analytics';
 
 export default function ToDoDetails(props: any) {
   const navigation = useNavigation();
@@ -39,12 +39,18 @@ export default function ToDoDetails(props: any) {
   }, [navigation]);
 
   function editPressed() {
-    console.log('edit pressed');
+    Analytics.logEvent('To_Do_Edit', {
+      contentType: 'none',
+      itemId: 'id1208',
+    });
     setModalVisible(true);
   }
 
   function deletePressed() {
-    console.log('delete pressed');
+    Analytics.logEvent('To_Do_Delete', {
+      contentType: 'none',
+      itemId: 'id1207',
+    });
     Alert.alert(
       'Are you sure you want to delete this To-Do?',
       '',
@@ -119,6 +125,10 @@ export default function ToDoDetails(props: any) {
   }
 
   function markComplete() {
+    Analytics.logEvent('To_Do_Complete_Or_Close', {
+      contentType: 'none',
+      itemId: 'id1206',
+    });
     if (data?.isCampaign) {
       navigation.goBack();
       return;

@@ -1,28 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  Alert,
-  ScrollView,
-  Button,
-} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, Alert, ScrollView } from 'react-native';
 const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useIsFocused } from '@react-navigation/native';
 import { addNewToDo } from './api';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import Attendees from '../ToDo/AttendeesScreen';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { inlineStyles } from 'react-native-svg';
 import { RolodexDataProps, AttendeesProps } from './interfaces';
 import {
   convertFrequency,
@@ -38,9 +23,10 @@ import { frequencyWeekMenu } from './toDoHelpersAndMenus';
 import { frequencyYearMenu } from './toDoHelpersAndMenus';
 import { untilTypeMenu } from './toDoHelpersAndMenus';
 import { reminderMenu } from './toDoHelpersAndMenus';
+import * as Analytics from 'expo-firebase-analytics';
 
 export default function AddToDoScreen(props: any) {
-  const { setModalVisible, title, onSave, guid, firstName, lastName } = props;
+  const { setModalVisible, title, onSave, guid, firstName, lastName, lightOrDark } = props;
   const [toDoTitle, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -230,7 +216,10 @@ export default function AddToDoScreen(props: any) {
   }
 
   function savePressed() {
-    //  analytics.event(new Event('Relationships', 'Save Button', 'Pressed', 0));
+    Analytics.logEvent('To_Do_Save_New', {
+      contentType: 'none',
+      itemId: 'id1205',
+    });
     console.log(date.toDateString());
     console.log(date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }));
     console.log(date.toISOString());
@@ -1069,7 +1058,7 @@ export default function AddToDoScreen(props: any) {
               title="Attendees"
               setModalAttendeesVisible={setModalAttendeesVisible}
               setSelectedAttendees={handleSelectedAttendees}
-              //  lightOrDark={lightOrDark}
+              lightOrDark={lightOrDark}
             />
           </Modal>
         )}

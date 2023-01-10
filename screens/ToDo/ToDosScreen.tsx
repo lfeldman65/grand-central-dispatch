@@ -12,11 +12,7 @@ import globalStyles from '../../globalStyles';
 import AddToDo from './AddToDoScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-
-// AddNewToDoPressed
-// Invoke AddToDo, pass in title (string) onSave (function) setModalVisible (function)
-// AddToDoScreen receives props as const (setModalVisible, title, onSave) = props
-// ToDosScreen executes the function
+import * as Analytics from 'expo-firebase-analytics';
 
 export default function ToDosScreen() {
   const filters = {
@@ -28,7 +24,6 @@ export default function ToDosScreen() {
     Completed: 'completed',
   };
 
-  // const [tabSelected, setTabSelected] = useState(props.route.params?.defaultTab ?? 'A-Z');
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const [filterSetting, setFilterSetting] = useState('all');
@@ -43,9 +38,10 @@ export default function ToDosScreen() {
   };
 
   const handleRowPress = (index: number) => {
-    console.log('to do row press');
-    //  analytics.event(new Event('To-Do', 'Go To Details', 'Press', 0));
-
+    Analytics.logEvent('To_Do_Row', {
+      contentType: 'none',
+      itemId: 'id1203',
+    });
     navigation.navigate('toDoDetails', {
       toDoID: dataActivity[index].id,
       lightOrDark: lightOrDark,
@@ -73,13 +69,18 @@ export default function ToDosScreen() {
   //useEffect(() => {}); // this will run on every render
 
   function addNewToDoPressed() {
-    //  analytics.event(new Event('To-Do', 'Add To-Do', 'Pressed', 0));
-    console.log('Add To-Do Pressed');
+    Analytics.logEvent('To_Do_Add_New', {
+      contentType: 'none',
+      itemId: 'id1204',
+    });
     setModalVisible(true);
   }
 
   function filterPressed() {
-    // analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));
+    Analytics.logEvent('To_Do_Filter_Open', {
+      contentType: 'none',
+      itemId: 'id1201',
+    });
     SheetManager.show(Sheets.filterSheet);
   }
 
@@ -211,7 +212,10 @@ export default function ToDosScreen() {
                         onPress={() => {
                           SheetManager.hide(Sheets.filterSheet, null);
                           setFilterSetting(value);
-                          // fetchData();
+                          Analytics.logEvent('To_Do_Filter_Choice', {
+                            contentType: prettyFilter(value),
+                            itemId: 'id1202',
+                          });
                         }}
                         style={globalStyles.listItemCell}
                       >

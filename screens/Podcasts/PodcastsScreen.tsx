@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Modal, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -9,7 +9,9 @@ import React from 'react';
 import PodcastsRow from './PodcastsRow';
 import PodcastPlayer from './PodcastPlayer';
 import globalStyles from '../../globalStyles';
+import { getSeasonAndEpisode } from './PodcastPlayer';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import * as Analytics from 'expo-firebase-analytics';
 
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();
@@ -21,8 +23,10 @@ export default function PodcastsScreen() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleRowPress = (index: number) => {
-    //  analytics.event(new Event('Video Summary', 'Row', 'Press', 0));
-    console.log('Row Pressed');
+    Analytics.logEvent('Podcast_Row', {
+      contentType: getSeasonAndEpisode(data[index].title),
+      itemId: 'id1401',
+    });
     setSelectedIndex(index);
     setModalPlayerVisible(!modalPlayerVisible);
   };

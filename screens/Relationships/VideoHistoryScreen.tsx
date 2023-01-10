@@ -1,28 +1,15 @@
 import { Fragment, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
+import { StyleSheet, View, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getVideoSummaryData } from './api';
 import { VideoSummaryDataProps } from './interfaces';
 import React from 'react';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
-import RecentActivityRow from './RecentActivityRow';
 import VideoHistoryRow from './VideoHistoryRow';
-import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import * as Analytics from 'expo-firebase-analytics';
 
 export default function VideoHistoryScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
@@ -32,8 +19,10 @@ export default function VideoHistoryScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    console.log('Row Pressed');
-
+    Analytics.logEvent('Video_History_Summary_Row', {
+      contentType: 'none',
+      itemId: 'id0701',
+    });
     navigation.navigate('VideoDetailsScreen', {
       videoGuid: dataVid[index].videoGuid,
       videoTitle: dataVid[index].videoTitle,

@@ -21,6 +21,7 @@ import RecentActivityRow from './RecentActivityRow';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import * as Analytics from 'expo-firebase-analytics';
 
 export default function RecentActivityScreenScreen() {
   const filters = {
@@ -46,8 +47,10 @@ export default function RecentActivityScreenScreen() {
   };
 
   const handleRowPress = (index: number) => {
-    console.log('rolodex row press');
-    //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    Analytics.logEvent('Recent_Activity_Row', {
+      contentType: 'none',
+      itemId: 'id0603',
+    });
     navigation.navigate('RelDetails', {
       contactId: dataActivity[index].ContactId,
       firstName: dataActivity[index].Name,
@@ -70,7 +73,10 @@ export default function RecentActivityScreenScreen() {
   }, [isFocused]);
 
   function filterPressed() {
-    //  analytics.event(new Event('Recent Contact Activity', 'Filter', filterSetting, 0));
+    Analytics.logEvent('Recent_Activity_Filter_Open', {
+      contentType: 'none',
+      itemId: 'id0601',
+    });
     SheetManager.show(Sheets.filterSheet);
   }
 
@@ -173,7 +179,10 @@ export default function RecentActivityScreenScreen() {
                         onPress={() => {
                           SheetManager.hide(Sheets.filterSheet, null);
                           setFilterSetting(value);
-                          // fetchData();
+                          Analytics.logEvent('Recent_Activity_Filter_Choice', {
+                            contentType: value,
+                            itemId: 'id0602',
+                          });
                         }}
                         style={globalStyles.listItemCell}
                       >
