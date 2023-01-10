@@ -1,5 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { storage } from './storage';
+import { Platform } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics';
 
 export function isNullOrEmpty(value: any) {
   if (value == null) return true;
@@ -77,4 +79,14 @@ export async function getNotificationStatus(key: string) {
   }
   console.log('RETURN FALSE');
   return false;
+}
+
+export function determineDeviceType() {
+  if (Platform.OS === 'ios') return 'iOS';
+  return 'Android';
+}
+
+export function ga4Analytics(mainEvent: string, other: any) {
+  console.log('MAINEVENT:' + mainEvent);
+  Analytics.logEvent(mainEvent + '_' + determineDeviceType(), other);
 }

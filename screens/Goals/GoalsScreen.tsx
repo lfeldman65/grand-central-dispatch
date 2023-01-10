@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIn
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { isNullOrEmpty } from '../../utils/general';
+import { ga4Analytics, isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
 import { getGoalData, trackAction } from './api';
 import TrackActivity from './TrackActivityScreen';
@@ -29,7 +29,7 @@ export default function GoalsScreen() {
   const isFocused = useIsFocused();
 
   function trackActivityPressed() {
-    Analytics.logEvent('Goals_Track_Activity', {
+    ga4Analytics('Goals_Track_Activity', {
       contentType: 'none',
       itemId: 'id0303',
     });

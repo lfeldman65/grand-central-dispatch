@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "957614608255",
+    "project_id": "referral-maker-crm-apps",
+    "storage_bucket": "referral-maker-crm-apps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957614608255:android:caa8a4f6097c8105a8944a",
+        "android_client_info": {
+          "package_name": "com.seamgen.buffini"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "957614608255-328rt7r8e8jm8dfqaedp3sf570rnmjmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbG-wMZSmbjdk4MWIUK15rAOVIrIFCm04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "957614608255-328rt7r8e8jm8dfqaedp3sf570rnmjmu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "957614608255-seu6g8ginnu8hmeplhdo0o68qjlqpee7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.referralmaker.referralmaker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

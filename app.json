@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
@@ -27,6 +25,7 @@
       }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -38,7 +37,8 @@
         "firebase": {
           "apiKey": "AIzaSyAUfCXO4U5oUZ9GClgqn-bqv-kxiWuIQTQ",
           "measurementId": "G-FPEK1GJFRT"
-        }}
+        }
+      }
     },
     "plugins": [
       "sentry-expo",
