@@ -457,7 +457,6 @@ export default function GoalsScreen() {
                 title="Track Activity Goal"
                 onSave={saveComplete}
                 setModalVisible={setModalVisible}
-                data={goalList}
               />
             </Modal>
           )}

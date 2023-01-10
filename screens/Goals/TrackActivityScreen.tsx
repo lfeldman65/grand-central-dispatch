@@ -13,7 +13,7 @@ import * as Analytics from 'expo-firebase-analytics';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
-  const { setModalVisible, title, onSave, guid, firstName, lastName } = props;
+  const { setModalVisible, title, onSave, guid, firstName, lastName, lightOrDark, data1 } = props;
   const [note, onNoteChange] = useState('');
   const [relationship, setRelationship] = useState<RolodexDataProps>();
   const [referral, setReferral] = useState<RolodexDataProps>();
@@ -66,7 +66,7 @@ export default function TrackActivityScreen(props: any) {
   }
 
   useEffect(() => {
-    //  console.log('TRACKACTIVITY: ' + lightOrDark);
+    console.log('TRACKACTIVITY: ' + lightOrDark);
     var initialGoal: GoalDataConciseProps = {
       id: '1',
       title: 'Calls Made',
@@ -261,7 +261,7 @@ export default function TrackActivityScreen(props: any) {
             title="Choose Relationship"
             setModalRelVisible={setModalRefVisible}
             setSelectedRel={setReferral}
-            //  lightOrDark={lightOrDark}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}
@@ -380,7 +380,7 @@ export default function TrackActivityScreen(props: any) {
             title="Choose Relationship"
             setModalRelVisible={setModalRelVisible}
             setSelectedRel={setRelationship}
-            //  lightOrDark={lightOrDark}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}
@@ -442,7 +442,7 @@ export default function TrackActivityScreen(props: any) {
             title="Choose Goal"
             setModalGoalVisible={setModalGoalVisible}
             setSelectedGoal={setGoal}
-            //   lightOrDark={lightOrDark}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}
