@@ -4,7 +4,7 @@ import Slider from '@react-native-community/slider';
 import { Audio } from 'expo-av';
 import { PlayerStatus, PodcastDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
-import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 
 const backArrow = require('../../images/white_arrow_left.png');
 const logo = require('../Podcasts/images/podcastLarge.png');
@@ -16,8 +16,6 @@ const play = require('../Podcasts/images/audio_play.png');
 const pause = require('../Podcasts/images/audio_pause.png');
 const speakerOff = require('../Podcasts/images/volumeDown.png');
 const speakerOn = require('../Podcasts/images/volumeUp.png');
-
-// const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
 
 export function getSeasonAndEpisode(longTitle: string) {
   const sectionsArray = longTitle.split(':'); // 0: It's a good life, 1: S2E53, 2: Title
@@ -139,7 +137,7 @@ export default function PodcastPlayer(props: any) {
 
   async function backPressed() {
     console.log('back pressed current index: ' + currentIndex);
-    Analytics.logEvent('Podcast_Player_Previous', {
+    ga4Analytics('Podcast_Player_Previous', {
       contentType: 'none',
       itemId: 'id1402',
     });
@@ -169,7 +167,7 @@ export default function PodcastPlayer(props: any) {
 
   async function nextPressed() {
     console.log('next pressed current index: ' + currentIndex);
-    Analytics.logEvent('Podcast_Player_Next', {
+    ga4Analytics('Podcast_Player_Next', {
       contentType: 'none',
       itemId: 'id1403',
     });
@@ -219,7 +217,7 @@ export default function PodcastPlayer(props: any) {
 
   async function onVolumeSliderSlidingComplete(value: number) {
     if (sound != null) {
-      Analytics.logEvent('Podcast_Player_Volume', {
+      ga4Analytics('Podcast_Player_Volume', {
         contentType: 'none',
         itemId: 'id1407',
       });
@@ -228,7 +226,7 @@ export default function PodcastPlayer(props: any) {
 
   async function onSeekSliderSlidingComplete(value: number) {
     if (sound != null) {
-      Analytics.logEvent('Podcast_Player_Scrubber', {
+      ga4Analytics('Podcast_Player_Scrubber', {
         contentType: 'none',
         itemId: 'id1406',
       });
@@ -257,12 +255,12 @@ export default function PodcastPlayer(props: any) {
     console.log('play/pause pressed');
     if (!playerStatus.isBuffering) {
       if (playerStatus.isPlaying) {
-        Analytics.logEvent('Podcast_Player_Pause', {
+        ga4Analytics('Podcast_Player_Pause', {
           contentType: 'none',
           itemId: 'id1404',
         });
       } else {
-        Analytics.logEvent('Podcast_Player_Play', {
+        ga4Analytics('Podcast_Player_Play', {
           contentType: 'none',
           itemId: 'id1405',
         });

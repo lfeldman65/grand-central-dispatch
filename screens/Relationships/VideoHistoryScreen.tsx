@@ -9,7 +9,7 @@ import React from 'react';
 import VideoHistoryRow from './VideoHistoryRow';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 
 export default function VideoHistoryScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
@@ -19,7 +19,7 @@ export default function VideoHistoryScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    Analytics.logEvent('Video_History_Summary_Row', {
+    ga4Analytics('Video_History_Summary_Row', {
       contentType: 'none',
       itemId: 'id0701',
     });

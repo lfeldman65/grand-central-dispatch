@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/menuIcon';
 import { useEffect } from 'react';
-import { analytics } from '../../utils/analytics';
 import { VideoDetailsDataProps } from './interfaces';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { storage } from '../../utils/storage';

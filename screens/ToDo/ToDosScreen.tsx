@@ -1,9 +1,8 @@
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert, ActivityIndicator, Modal } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
-import { storage } from '../../utils/storage';
 import { getToDoData } from './api';
 import { ToDoDataProps } from './interfaces';
 import React from 'react';
@@ -12,7 +11,7 @@ import globalStyles from '../../globalStyles';
 import AddToDo from './AddToDoScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 
 export default function ToDosScreen() {
   const filters = {
@@ -38,7 +37,7 @@ export default function ToDosScreen() {
   };
 
   const handleRowPress = (index: number) => {
-    Analytics.logEvent('To_Do_Row', {
+    ga4Analytics('To_Do_Row', {
       contentType: 'none',
       itemId: 'id1203',
     });
@@ -69,7 +68,7 @@ export default function ToDosScreen() {
   //useEffect(() => {}); // this will run on every render
 
   function addNewToDoPressed() {
-    Analytics.logEvent('To_Do_Add_New', {
+    ga4Analytics('To_Do_Add_New', {
       contentType: 'none',
       itemId: 'id1204',
     });
@@ -77,7 +76,7 @@ export default function ToDosScreen() {
   }
 
   function filterPressed() {
-    Analytics.logEvent('To_Do_Filter_Open', {
+    ga4Analytics('To_Do_Filter_Open', {
       contentType: 'none',
       itemId: 'id1201',
     });
@@ -212,7 +211,7 @@ export default function ToDosScreen() {
                         onPress={() => {
                           SheetManager.hide(Sheets.filterSheet, null);
                           setFilterSetting(value);
-                          Analytics.logEvent('To_Do_Filter_Choice', {
+                          ga4Analytics('To_Do_Filter_Choice', {
                             contentType: prettyFilter(value),
                             itemId: 'id1202',
                           });

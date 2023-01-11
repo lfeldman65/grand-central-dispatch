@@ -9,7 +9,6 @@ const logo = require('../Login/images/iconLogo.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { storage } from '../../utils/storage';
-import * as Analytics from 'expo-firebase-analytics';
 import { loginToApp, getProfileData } from './api';
 import { useNavigation, useIsFocused } from '@react-navigation/native'; // branch
 

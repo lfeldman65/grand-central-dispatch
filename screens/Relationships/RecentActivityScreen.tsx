@@ -21,7 +21,7 @@ import RecentActivityRow from './RecentActivityRow';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 
 export default function RecentActivityScreenScreen() {
   const filters = {
@@ -47,7 +47,7 @@ export default function RecentActivityScreenScreen() {
   };
 
   const handleRowPress = (index: number) => {
-    Analytics.logEvent('Recent_Activity_Row', {
+    ga4Analytics('Recent_Activity_Row', {
       contentType: 'none',
       itemId: 'id0603',
     });
@@ -73,7 +73,7 @@ export default function RecentActivityScreenScreen() {
   }, [isFocused]);
 
   function filterPressed() {
-    Analytics.logEvent('Recent_Activity_Filter_Open', {
+    ga4Analytics('Recent_Activity_Filter_Open', {
       contentType: 'none',
       itemId: 'id0601',
     });
@@ -179,7 +179,7 @@ export default function RecentActivityScreenScreen() {
                         onPress={() => {
                           SheetManager.hide(Sheets.filterSheet, null);
                           setFilterSetting(value);
-                          Analytics.logEvent('Recent_Activity_Filter_Choice', {
+                          ga4Analytics('Recent_Activity_Filter_Choice', {
                             contentType: value,
                             itemId: 'id0602',
                           });

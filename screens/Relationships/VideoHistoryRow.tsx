@@ -1,15 +1,5 @@
 import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Linking,
-  ScrollView,
-  TouchableHighlight,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { useEffect } from 'react';
 import { VideoSummaryDataProps } from './interfaces';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';

@@ -5,11 +5,10 @@ import { useEffect } from 'react';
 import { getToDoDetails, markCompleteToDo, deleteToDo } from './api';
 import { ToDoDetailsDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
-import { prettyDate, isNullOrEmpty } from '../../utils/general';
+import { prettyDate, isNullOrEmpty, ga4Analytics } from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import * as React from 'react';
 import EditToDo from './EditToDoScreen';
-import * as Analytics from 'expo-firebase-analytics';
 
 export default function ToDoDetails(props: any) {
   const navigation = useNavigation();
@@ -39,7 +38,7 @@ export default function ToDoDetails(props: any) {
   }, [navigation]);
 
   function editPressed() {
-    Analytics.logEvent('To_Do_Edit', {
+    ga4Analytics('To_Do_Edit', {
       contentType: 'none',
       itemId: 'id1208',
     });
@@ -47,7 +46,7 @@ export default function ToDoDetails(props: any) {
   }
 
   function deletePressed() {
-    Analytics.logEvent('To_Do_Delete', {
+    ga4Analytics('To_Do_Delete', {
       contentType: 'none',
       itemId: 'id1207',
     });
@@ -125,7 +124,7 @@ export default function ToDoDetails(props: any) {
   }
 
   function markComplete() {
-    Analytics.logEvent('To_Do_Complete_Or_Close', {
+    ga4Analytics('To_Do_Complete_Or_Close', {
       contentType: 'none',
       itemId: 'id1206',
     });

@@ -11,7 +11,7 @@ import PodcastPlayer from './PodcastPlayer';
 import globalStyles from '../../globalStyles';
 import { getSeasonAndEpisode } from './PodcastPlayer';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();
@@ -23,7 +23,7 @@ export default function PodcastsScreen() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleRowPress = (index: number) => {
-    Analytics.logEvent('Podcast_Row', {
+    ga4Analytics('Podcast_Row', {
       contentType: getSeasonAndEpisode(data[index].title),
       itemId: 'id1401',
     });

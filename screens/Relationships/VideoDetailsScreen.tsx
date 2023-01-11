@@ -8,7 +8,7 @@ import React from 'react';
 import VideoDetailsRow from './VideoDetailsRow';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 
 export default function VideoDetailsScreen(props: any) {
   const { route } = props;
@@ -20,7 +20,7 @@ export default function VideoDetailsScreen(props: any) {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    Analytics.logEvent('Video_History_Details_Row', {
+    ga4Analytics('Video_History_Details_Row', {
       contentType: 'none',
       itemId: 'id0702',
     });

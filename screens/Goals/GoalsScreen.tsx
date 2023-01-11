@@ -3,14 +3,12 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIn
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { ga4Analytics, isNullOrEmpty } from '../../utils/general';
 import { GoalDataProps, GoalObject } from './interfaces';
 import { getGoalData, trackAction } from './api';
 import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import { scheduleNotifications } from '../../utils/general';
-import { getNotificationStatus } from '../../utils/general';
+import { scheduleNotifications, getNotificationStatus, ga4Analytics, isNullOrEmpty } from '../../utils/general';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');

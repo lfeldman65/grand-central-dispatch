@@ -23,7 +23,7 @@ import { frequencyWeekMenu } from './toDoHelpersAndMenus';
 import { frequencyYearMenu } from './toDoHelpersAndMenus';
 import { untilTypeMenu } from './toDoHelpersAndMenus';
 import { reminderMenu } from './toDoHelpersAndMenus';
-import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 
 export default function AddToDoScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName, lightOrDark } = props;
@@ -216,7 +216,7 @@ export default function AddToDoScreen(props: any) {
   }
 
   function savePressed() {
-    Analytics.logEvent('To_Do_Save_New', {
+    ga4Analytics('To_Do_Save_New', {
       contentType: 'none',
       itemId: 'id1205',
     });

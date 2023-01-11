@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedba
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
 import { storage } from '../utils/storage';
-import * as Analytics from 'expo-firebase-analytics';
 import { ga4Analytics } from '../utils/general';
 
 const rmLogo = require('../images/logoWide.png');

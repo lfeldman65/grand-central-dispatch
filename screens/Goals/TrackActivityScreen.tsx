@@ -8,7 +8,7 @@ import ChooseGoal from '../Goals/ChooseGoalScreen';
 import { RolodexDataProps, GoalDataConciseProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
-import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -147,7 +147,7 @@ export default function TrackActivityScreen(props: any) {
   };
 
   function savePressed() {
-    Analytics.logEvent('Goals_Track_Save', {
+    ga4Analytics('Goals_Track_Save', {
       contentType: 'none',
       itemId: 'id0308',
     });
