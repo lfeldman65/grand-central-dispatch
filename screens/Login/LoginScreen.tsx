@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking, Alert } from 'react-native';
+import { ga4Analytics } from '../../utils/general';
 
 const eyeClosed = require('../Login/images/eyeClosed.png');
 const eyeOpen = require('../Login/images/eyeOpen.png');
@@ -26,7 +27,7 @@ export default function LoginScreen() {
   const navigation = useNavigation();
 
   function ForgotPasswordPressed() {
-    Analytics.logEvent('Forgot_Password', {
+    ga4Analytics('Forgot_Password', {
       contentType: 'none',
       itemId: 'id0003',
     });
@@ -53,12 +54,12 @@ export default function LoginScreen() {
     console.log('REMEMBER: ' + rememberChecked);
     if (rememberChecked) {
       // seems backwards, but only because analytics are before check is toggled
-      Analytics.logEvent('Remember_Me_Uncheck', {
+      ga4Analytics('Remember_Me_Uncheck', {
         contentType: 'none',
         itemId: 'id0005',
       });
     } else {
-      Analytics.logEvent('Remember_Me_Check', {
+      ga4Analytics('Remember_Me_Check', {
         contentType: 'none',
         itemId: 'id0004',
       });
@@ -69,12 +70,12 @@ export default function LoginScreen() {
   function toggleEye() {
     if (showPW) {
       // seems backwards, but only because show analytics before showPW is toggled
-      Analytics.logEvent('Hide_Password', {
+      ga4Analytics('Hide_Password', {
         contentType: 'none',
         itemId: 'id0002',
       });
     } else {
-      Analytics.logEvent('Show_Password', {
+      ga4Analytics('Show_Password', {
         contentType: 'none',
         itemId: 'id0001',
       });
@@ -123,7 +124,7 @@ export default function LoginScreen() {
     console.log(userName);
     console.log(password);
 
-    Analytics.logEvent('Login_Button', {
+    ga4Analytics('Login_Button', {
       contentType: 'none',
       itemId: 'id0000',
     });

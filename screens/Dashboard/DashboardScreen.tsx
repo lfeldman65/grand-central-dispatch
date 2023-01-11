@@ -9,6 +9,7 @@ import * as Notifications from 'expo-notifications';
 import { PermissionStatus } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
 import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
@@ -180,7 +181,7 @@ export default function DashboardScreen() {
     console.log('parent screen1: ' + props.parentScreen);
     const mainEvent = 'Dashboard_' + props.label;
     console.log('MAINEVENT: ' + mainEvent);
-    Analytics.logEvent(mainEvent, {
+    ga4Analytics(mainEvent, {
       contentType: 'none',
       itemId: props.itemID,
     });

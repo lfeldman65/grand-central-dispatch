@@ -11,7 +11,6 @@ import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { scheduleNotifications } from '../../utils/general';
 import { getNotificationStatus } from '../../utils/general';
-import * as Analytics from 'expo-firebase-analytics';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
@@ -37,7 +36,7 @@ export default function GoalsScreen() {
   }
 
   function winTheDayPressed() {
-    Analytics.logEvent('Goals_Win_Day_Tab', {
+    ga4Analytics('Goals_Win_Day_Tab', {
       contentType: 'none',
       itemId: 'id0301',
     });
@@ -46,7 +45,7 @@ export default function GoalsScreen() {
   }
 
   function winTheWeekPressed() {
-    Analytics.logEvent('Goals_Win_Week_Tab', {
+    ga4Analytics('Goals_Win_Week_Tab', {
       contentType: 'none',
       itemId: 'id0302',
     });
@@ -164,7 +163,7 @@ export default function GoalsScreen() {
   const handleLinkPress = (index: number) => {
     switch (index) {
       case 0:
-        Analytics.logEvent('Goals_Calls_Link', {
+        ga4Analytics('Goals_Calls_Link', {
           contentType: 'none',
           itemId: 'id0304',
         });
@@ -175,7 +174,7 @@ export default function GoalsScreen() {
         });
         break;
       case 1:
-        Analytics.logEvent('Goals_Notes_Link', {
+        ga4Analytics('Goals_Notes_Link', {
           contentType: 'none',
           itemId: 'id0305',
         });
@@ -186,7 +185,7 @@ export default function GoalsScreen() {
         });
         break;
       case 2:
-        Analytics.logEvent('Goals_Pop_Bys_Link', {
+        ga4Analytics('Goals_Pop_Bys_Link', {
           contentType: 'none',
           itemId: 'id0306',
         });
@@ -197,7 +196,7 @@ export default function GoalsScreen() {
         });
         break;
       case 3:
-        Analytics.logEvent('Goals_Database_Link', {
+        ga4Analytics('Goals_Database_Link', {
           contentType: 'none',
           itemId: 'id0307',
         });

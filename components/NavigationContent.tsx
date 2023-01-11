@@ -4,8 +4,8 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
 import { storage } from '../utils/storage';
 import * as Analytics from 'expo-firebase-analytics';
+import { ga4Analytics } from '../utils/general';
 
-// Hamburger Menu test
 const rmLogo = require('../images/logoWide.png');
 
 const dashIcon = require('../images/menuDashboard.png');
@@ -88,7 +88,7 @@ function CustomDrawerContent(props: any) {
 
   const trackPressed = (screenName: string) => {
     console.log('SCREEN: ' + screenName);
-    Analytics.logEvent(getPrettyEvent(screenName), {
+    ga4Analytics(getPrettyEvent(screenName), {
       contentType: 'none',
       itemId: getItemID(screenName),
     });
