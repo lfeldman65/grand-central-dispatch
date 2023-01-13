@@ -95,8 +95,7 @@ export default function ToDoDetails(props: any) {
       contactId: data?.attendees[0].id,
       firstName: data?.attendees[0].name,
       lastName: '',
-      //  rankFromAbove: dataRolodex[index]['ranking'],
-      //  qualFromAbove: dataRolodex[index]['qualified'],
+      lightOrDark: lightOrDark,
     });
   }
 

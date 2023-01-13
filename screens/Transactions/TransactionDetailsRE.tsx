@@ -69,8 +69,7 @@ export default function TransactionDetailsRE(props: any) {
       contactId: data?.contacts[index].userID,
       firstName: data?.contacts[index].contactName,
       lastName: '',
-      //   rankFromAbove: 'C',
-      //   qualFromAbove: true,
+      lightOrDark: lightOrDark,
     });
   }
 

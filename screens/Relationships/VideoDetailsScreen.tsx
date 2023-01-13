@@ -28,6 +28,7 @@ export default function VideoDetailsScreen(props: any) {
       contactId: dataVid[0].contactGuid,
       firstName: dataVid[0].fullName,
       lastName: '',
+      lightOrDark: lightOrDark,
     });
   };
 

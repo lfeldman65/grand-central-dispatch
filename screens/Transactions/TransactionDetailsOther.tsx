@@ -67,6 +67,7 @@ export default function TransactionDetailsOther(props: any) {
       contactId: data?.contacts[index].userID,
       firstName: data?.contacts[index].contactName,
       lastName: '',
+      lightOrDark: lightOrDark,
     });
   }
 
