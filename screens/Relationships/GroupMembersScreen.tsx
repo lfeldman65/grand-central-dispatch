@@ -54,6 +54,7 @@ export default function GroupMembersScreen(props: any) {
       contactId: dataGroups[index].id,
       firstName: dataGroups[index].firstName,
       lastName: dataGroups[index].lastName,
+      lightOrDark: lightOrDark,
     });
   };
 

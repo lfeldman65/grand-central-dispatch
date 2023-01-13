@@ -25,6 +25,7 @@ import { Marker } from 'react-native-maps';
 import { matchesSearch, milesBetween, shortestRoute } from './popByHelpers';
 import * as Location from 'expo-location';
 import { scheduleNotifications, getNotificationStatus } from '../../utils/general';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 var northEast: LatLng | null = null;
@@ -65,28 +66,17 @@ export default function ManageRelationshipsScreen() {
   const [mapHeight, setMapHeight] = useState<MapLength>('medium');
   const [showRoute, setShowRoute] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const [lightOrDark, setLightOrDark] = useState('');
   const [mapRef, updateMapRef] = useState<MapView>();
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
-  //var location: Location.LocationObject | null = null;
   const popByDataRef = useRef(popByData);
   popByDataRef.current = popByData;
-
-  //const locationRef = useRef(location);
-  //locationRef.current = location;
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   const requestPermissions = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status === 'granted') {
       console.log('granted');
+      nearPressed();
       locationCallBack = await Location.watchPositionAsync(
         {
           distanceInterval: 800, //approx 0.5 miles
@@ -224,12 +214,12 @@ export default function ManageRelationshipsScreen() {
 
   const handleRowPress = (index: number) => {
     console.log('rolodex row press');
-    //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
     navigation.navigate('RelDetails', {
       contactId: popByData[index].id,
       firstName: popByData[index].firstName,
       lastName: popByData[index].lastName,
       rankFromAbove: popByData[index].ranking,
+      lightOrDark: lightOrDark,
     });
   };
 
@@ -248,28 +238,8 @@ export default function ManageRelationshipsScreen() {
 
   useEffect(() => {
     requestPermissions();
-    let isMounted = true;
-    if (tabSelected == 'Near Me') {
-      fetchPopBysWindow('nearby', 'none', isMounted);
-    } else if (tabSelected == 'Priority') {
-      fetchPopBysWindow('priority', 'none', isMounted);
-    } else {
-      fetchPopBysWindow('favorites', 'none', isMounted);
-    }
-    return () => {
-      console.log('clean up');
-      stopWatchPositionAsync();
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
+    // nearPressed();
+  }, []);
 
   function matchesRankFilter(ranking: string) {
     if (ranking == 'A+' && showAPlus) return true;
@@ -282,7 +252,7 @@ export default function ManageRelationshipsScreen() {
   function nearPressed() {
     //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
     if (isLoading) {
-      //  return;
+      return;
     }
     const tab = 'Near Me';
     setTabSelected(tab);
@@ -574,117 +544,129 @@ export default function ManageRelationshipsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      <View style={globalStyles.tabButtonRow}>
-        <Text style={tabSelected == 'Near Me' ? globalStyles.selected : globalStyles.unselected} onPress={nearPressed}>
-          Near Me
-        </Text>
-        <Text
-          style={tabSelected == 'Priority' ? globalStyles.selected : globalStyles.unselected}
-          onPress={priorityPressed}
-        >
-          Priority
-        </Text>
-        <Text style={tabSelected == 'Saved' ? globalStyles.selected : globalStyles.unselected} onPress={savedPressed}>
-          Saved
-        </Text>
-      </View>
-
-      <View style={styles.searchView}>
-        <Image source={searchGlass} style={styles.magGlass} />
-        <TextInput
-          style={styles.searchTextInput}
-          placeholder="Search By Name or Address"
-          placeholderTextColor="white"
-          textAlign="left"
-          defaultValue={search}
-          onChangeText={(text) => setSearch(text)}
-        />
-        <TouchableOpacity onPress={clearSearchPressed}>
-          <Image source={closeButton} style={styles.closeX} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.actionAndFilterButtonView}>
-        <View style={styles.actionButtonView}>
-          {tabSelected == 'Saved' && (
-            <TouchableOpacity onPress={toggleRouteButton}>
-              <Image source={getRouteButton()} style={styles.actionButtons} />
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={styles.filterView}>
-          <TouchableOpacity onPress={tapAPlusFilter}>
-            <Image source={pinAPlus} style={showAPlus ? styles.pinFilterShow : styles.pinFilterDim} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={tapAFilter}>
-            <Image source={pinA} style={showA ? styles.pinFilterShow : styles.pinFilterDim} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={tapBFilter}>
-            <Image source={pinB} style={showB ? styles.pinFilterShow : styles.pinFilterDim} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={tapCFilter}>
-            <Image source={pinC} style={showC ? styles.pinFilterShow : styles.pinFilterDim} />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.actionButtonView}>
-          <TouchableOpacity onPress={saveOrUnsavePressed}>
-            <Image source={getSavedButton()} style={styles.actionButtons} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {
-        /*!isLoading &&*/ <View style={getMapHeight()}>
-          <MapView
-            ref={(ref) => updateMapRef(ref!)}
-            showsUserLocation={true}
-            style={styles.map}
-            followsUserLocation={tabSelected == 'Saved' && showRoute}
-            /*
-            initialRegion={{
-              //latitude: -37.112146,
-              //longitude: 144.857483,
-
-              latitude: popByData?.length == 0 ? 0 : parseFloat(popByData[0].location.latitude),
-              longitude: popByData?.length == 0 ? 0 : parseFloat(popByData[0].location.longitude),
-              latitudeDelta: 0.11,
-              longitudeDelta: 0.06,
-            }}*/
-            userInterfaceStyle={lightOrDark == 'dark' ? 'dark' : 'light'}
-            //   onRegionChange={handleRegionChange}
-            onRegionChangeComplete={handleRegionChange}
-          >
-            {popByData.map((person, index) =>
-              true ? (
-                <Marker
-                  key={index}
-                  coordinate={{
-                    latitude: parseFloat(person.location.latitude),
-                    longitude: parseFloat(person.location.longitude),
-                  }}
-                  image={getRankPin(person.ranking)}
-                  title={person.firstName + ' ' + person.lastName}
-                  description={
-                    person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'
-                  }
-                />
-              ) : (
-                <View></View>
-              )
-            )}
-          </MapView>
-        </View>
-      }
-
-      {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  if (isLoading) {
+    return (
+      <>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+        <View style={lightOrDark == 'dark' ? styles.activityIndicatorDark : styles.activityIndicatorLight}>
           <ActivityIndicator size="large" color="#AAA" />
         </View>
-      ) : (
-        <React.Fragment>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+        <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+          <View style={globalStyles.tabButtonRow}>
+            <Text
+              style={tabSelected == 'Near Me' ? globalStyles.selected : globalStyles.unselected}
+              onPress={nearPressed}
+            >
+              Near Me
+            </Text>
+            <Text
+              style={tabSelected == 'Priority' ? globalStyles.selected : globalStyles.unselected}
+              onPress={priorityPressed}
+            >
+              Priority
+            </Text>
+            <Text
+              style={tabSelected == 'Saved' ? globalStyles.selected : globalStyles.unselected}
+              onPress={savedPressed}
+            >
+              Saved
+            </Text>
+          </View>
+
+          <View style={styles.searchView}>
+            <Image source={searchGlass} style={styles.magGlass} />
+            <TextInput
+              style={styles.searchTextInput}
+              placeholder="Search By Name or Address"
+              placeholderTextColor="white"
+              textAlign="left"
+              defaultValue={search}
+              onChangeText={(text) => setSearch(text)}
+            />
+            <TouchableOpacity onPress={clearSearchPressed}>
+              <Image source={closeButton} style={styles.closeX} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.actionAndFilterButtonView}>
+            <View style={styles.actionButtonView}>
+              {tabSelected == 'Saved' && (
+                <TouchableOpacity onPress={toggleRouteButton}>
+                  <Image source={getRouteButton()} style={styles.actionButtons} />
+                </TouchableOpacity>
+              )}
+            </View>
+            <View style={styles.filterView}>
+              <TouchableOpacity onPress={tapAPlusFilter}>
+                <Image source={pinAPlus} style={showAPlus ? styles.pinFilterShow : styles.pinFilterDim} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={tapAFilter}>
+                <Image source={pinA} style={showA ? styles.pinFilterShow : styles.pinFilterDim} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={tapBFilter}>
+                <Image source={pinB} style={showB ? styles.pinFilterShow : styles.pinFilterDim} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={tapCFilter}>
+                <Image source={pinC} style={showC ? styles.pinFilterShow : styles.pinFilterDim} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.actionButtonView}>
+              <TouchableOpacity onPress={saveOrUnsavePressed}>
+                <Image source={getSavedButton()} style={styles.actionButtons} />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {
+            /*!isLoading &&*/ <View style={getMapHeight()}>
+              <MapView
+                ref={(ref) => updateMapRef(ref!)}
+                showsUserLocation={true}
+                style={styles.map}
+                followsUserLocation={tabSelected == 'Saved' && showRoute}
+                /*
+              initialRegion={{
+                //latitude: -37.112146,
+                //longitude: 144.857483,
+  
+                latitude: popByData?.length == 0 ? 0 : parseFloat(popByData[0].location.latitude),
+                longitude: popByData?.length == 0 ? 0 : parseFloat(popByData[0].location.longitude),
+                latitudeDelta: 0.11,
+                longitudeDelta: 0.06,
+              }}*/
+                userInterfaceStyle={lightOrDark == 'dark' ? 'dark' : 'light'}
+                //   onRegionChange={handleRegionChange}
+                onRegionChangeComplete={handleRegionChange}
+              >
+                {popByData.map((person, index) =>
+                  true ? (
+                    <Marker
+                      key={index}
+                      coordinate={{
+                        latitude: parseFloat(person.location.latitude),
+                        longitude: parseFloat(person.location.longitude),
+                      }}
+                      image={getRankPin(person.ranking)}
+                      title={person.firstName + ' ' + person.lastName}
+                      description={
+                        person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'
+                      }
+                    />
+                  ) : (
+                    <View></View>
+                  )
+                )}
+              </MapView>
+            </View>
+          }
+
           <View style={styles.upAndDownRow}>
             <TouchableOpacity style={styles.upAndDownView} onPress={upPressed}>
               <View>
@@ -707,7 +689,13 @@ export default function ManageRelationshipsScreen() {
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
                     matchesSearch(item, search) && (
-                      <PopByRow popByTab={'Near Me'} key={index} data={item} onPress={() => handleRowPress(index)} />
+                      <PopByRow
+                        popByTab={'Near Me'}
+                        key={index}
+                        data={item}
+                        lightOrDark={lightOrDark}
+                        onPress={() => handleRowPress(index)}
+                      />
                     )
                 )}
               </View>
@@ -718,7 +706,13 @@ export default function ManageRelationshipsScreen() {
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
                     matchesSearch(item, search) && (
-                      <PopByRow popByTab={'Priority'} key={index} data={item} onPress={() => handleRowPress(index)} />
+                      <PopByRow
+                        popByTab={'Priority'}
+                        key={index}
+                        data={item}
+                        lightOrDark={lightOrDark}
+                        onPress={() => handleRowPress(index)}
+                      />
                     )
                 )}
               </View>
@@ -734,6 +728,7 @@ export default function ManageRelationshipsScreen() {
                         popByTab={'Saved'}
                         key={index}
                         data={item}
+                        lightOrDark={lightOrDark}
                         onPress={() => handleRowPress(index)}
                         refresh={() => savedPressed()}
                       />
@@ -742,10 +737,10 @@ export default function ManageRelationshipsScreen() {
               </View>
             )}
           </ScrollView>
-        </React.Fragment>
-      )}
-    </View>
-  );
+        </View>
+      </>
+    );
+  }
 }
 
 export const styles = StyleSheet.create({
@@ -759,6 +754,18 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 1,
     marginBottom: 1,
+  },
+  activityIndicatorDark: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  activityIndicatorLight: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   searchRow: {
     flexDirection: 'row',

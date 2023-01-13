@@ -25,11 +25,8 @@ const qualUnchecked = require('../Relationships/images/qualUnchecked.png');
 
 export default function EditRelationshipScreen(props: any) {
   const { route } = props;
-  const { data } = route.params;
+  const { data, lightOrDark } = route.params;
 
-  //var d : RelDetailsProps = data;
-
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [relOrBiz, setRelOrBiz] = useState(data.contactTypeID);
   const [changeTypeButtonText, setChangeTypeButtonText] = useState('');
   const [showBirthDate, setShowBirthDate] = useState(false);
@@ -349,8 +346,6 @@ export default function EditRelationshipScreen(props: any) {
   }
 
   useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
     navigation.setOptions({ title: fullName() });
     if (relOrBiz == 'Biz') {
       setChangeTypeButtonText('Change to Relationship');
@@ -358,9 +353,6 @@ export default function EditRelationshipScreen(props: any) {
       setChangeTypeButtonText('Change to Business');
     }
     console.log('BIRTHDAY1120A:' + birthday);
-    return () => {
-      isMounted = false;
-    };
   }, [isFocused]);
 
   useEffect(() => {
@@ -371,14 +363,6 @@ export default function EditRelationshipScreen(props: any) {
     }
     navigation.setOptions({ title: fullName() });
   }, [relOrBiz]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   return (
     <ScrollView style={lightOrDark == 'dark' ? styles.scrollViewDark : styles.scrollViewLight}>

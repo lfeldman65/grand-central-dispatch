@@ -70,9 +70,8 @@ interface RelDetailsLocalProps {
 }
 export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const { route } = props;
-  const { contactId, firstName, lastName } = route.params;
+  const { contactId, firstName, lastName, lightOrDark } = route.params;
   const navigation = useNavigation();
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [theRank, setTheRank] = useState('D');
   const [isQual, setIsQual] = useState('False');
   const [dataDetails, setDataDetails] = useState<RelDetailsProps>();
@@ -98,15 +97,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [isFavorite, setIsFavorite] = useState('False');
   const [vidTitle, setVidTitle] = useState('');
   const [showVidTitle, setShowVidTitle] = useState(false);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    console.log('getDarkOrLight');
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   async function getVidTutWatched() {
     const vidTutWatched = await storage.getItem('videoTutorialWatched');
@@ -202,6 +192,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (dataDetails == null) return;
     navigation.navigate('EditRelationshipScreen', {
       data: dataDetails,
+      lightOrDark: lightOrDark,
     });
   }
 
@@ -220,15 +211,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     });
     navigation.setOptions({ title: fullName() });
   }, [navigation, dataDetails, theRank, isQual, ideaType]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    console.log('is focused');
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;

@@ -1,9 +1,9 @@
 import { Text, View, Image, TouchableOpacity, StyleSheet, Modal, Alert, Linking } from 'react-native';
 import { PopByRadiusDataProps, PopByFavoriteDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { storage } from '../../utils/storage';
-import { savePop, removePop, completePop } from './api';
+import { removePop, completePop } from './api';
 import openMap from 'react-native-open-maps';
 import PopComplete from './PopCompleteScreen';
 
@@ -19,6 +19,7 @@ interface PopBysRowProps {
   onPress(): void;
   popByTab: string;
   refresh(): void;
+  lightOrDark: string;
 }
 
 function chooseImage(rank: string) {
@@ -31,28 +32,14 @@ function chooseImage(rank: string) {
 
 export default function PopByRowSaved(props: PopBysRowProps) {
   const { popByTab } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState('False');
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
     setIsFavorite(props.data.address.isFavorite);
-    return () => {
-      isMounted = false;
-    };
   }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function handleDirectionsPressed() {
     console.log('directions pressed');
@@ -148,12 +135,12 @@ export default function PopByRowSaved(props: PopBysRowProps) {
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.rankBox}>
           <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
         </View>
-        <View style={lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
-          <Text style={lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
+        <View style={props.lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
             {props.data.firstName + ' ' + props.data.lastName}
           </Text>
           <Text
@@ -175,7 +162,7 @@ export default function PopByRowSaved(props: PopBysRowProps) {
           </View>
         </View>
         <View style={styles.chevronBox}>
-          <Text style={lightOrDark == 'dark' ? styles.distanceTextDark : styles.distanceTextLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.distanceTextDark : styles.distanceTextLight}>
             {props.data.distance + ' ' + 'miles   '}
           </Text>
           <Image source={chevron} style={styles.chevron} />

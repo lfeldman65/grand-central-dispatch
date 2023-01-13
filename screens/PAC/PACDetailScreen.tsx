@@ -42,6 +42,7 @@ export default function PACDetailScreen(props: any) {
       firstName: data?.firstName,
       lastName: data?.lastName,
       rankFromAbove: data?.ranking,
+      lightOrDark: lightOrDark,
     });
   }
 

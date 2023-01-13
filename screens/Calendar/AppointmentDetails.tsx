@@ -109,6 +109,7 @@ export default function AppointmentDetails(props: any) {
       contactId: apptData?.attendees[0].id,
       firstName: apptData?.attendees[0].name,
       lastName: '',
+      lightOrDark: lightOrDark,
     });
   }
 

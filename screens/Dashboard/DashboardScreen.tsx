@@ -178,7 +178,14 @@ export default function DashboardScreen() {
   const handleNavigation = (props: DashboardNavigationProps) => {
     // SentryTest();
     console.log('parent screen1: ' + props.parentScreen);
-    const mainEvent = 'Dashboard_' + props.label;
+    var newLabel = props.label;
+    if (props.label == 'To-Do') {
+      newLabel = 'To_Do';
+    }
+    if (props.label == 'Pop-Bys') {
+      newLabel = 'Pop_Bys';
+    }
+    const mainEvent = 'Dashboard_' + newLabel;
     console.log('MAINEVENT: ' + mainEvent);
     ga4Analytics(mainEvent, {
       contentType: 'none',
