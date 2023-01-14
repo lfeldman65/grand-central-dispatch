@@ -8,7 +8,7 @@ import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual, editCon
 import { RelDetailsProps, ToDoAndApptProps, RolodexDataProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
-import { formatDate } from '../../utils/general';
+import { formatDate, handleTextPressed } from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
@@ -272,38 +272,21 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleMobilePressed() {
-    // Body
     console.log('mobile pressed');
     SheetManager.show(Sheets.mobileSheet);
   }
 
   function handleHomePressed() {
-    // Body
     console.log('home pressed');
-    SheetManager.show(Sheets.homeSheet);
+    Linking.openURL(`tel:${dataDetails?.homePhone}`);
   }
 
   function handleOfficePressed() {
-    // Body
-    console.log('officce pressed');
-    SheetManager.show(Sheets.officeSheet);
-  }
-
-  async function handleTextPressed(number: string) {
-    // Body
-    console.log('TEXTPRESSED: ' + number);
-    const isAvailable = await SMS.isAvailableAsync();
-    const timer = setInterval(() => {
-      clearInterval(timer);
-      console.log('ISAVAILABLE: ' + isAvailable);
-      if (isAvailable) {
-        SMS.sendSMSAsync([number], '');
-      }
-    }, 500);
+    console.log('office pressed');
+    Linking.openURL(`tel:${dataDetails?.officePhone}`);
   }
 
   function handleCallPressed() {
-    // Top Row
     console.log('call pressed');
     SheetManager.show(Sheets.callSheet);
   }
@@ -786,7 +769,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </TouchableOpacity>
           {
             <Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>
-              {dataDetails?.hasBombBombPermission ? 'Bomb Bomb' : 'Video'}
+              {dataDetails?.hasBombBombPermission ? 'BombBomb' : 'Video'}
             </Text>
           }
         </View>
@@ -1725,22 +1708,22 @@ const styles = StyleSheet.create({
   topButtonTextDark: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 9,
+    fontSize: 7,
   },
   topButtonTextLight: {
     color: '#016497',
     textAlign: 'center',
-    fontSize: 9,
+    fontSize: 7,
   },
   bottomButtonTextDark: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 9,
+    fontSize: 7,
   },
   bottomButtonTextLight: {
     color: '#013273',
     textAlign: 'center',
-    fontSize: 9,
+    fontSize: 7,
   },
   namesLight: {
     color: 'black',

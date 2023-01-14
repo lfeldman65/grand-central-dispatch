@@ -110,4 +110,19 @@ export default StyleSheet.create({
     backgroundColor: '#1A6295',
     height: 60,
   },
+
+  // Spinner
+
+  activityIndicatorDark: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  activityIndicatorLight: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
 });

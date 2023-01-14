@@ -9,6 +9,10 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
+  scrollview: {
+    width: '100%',
+    padding: 12,
+  },
   personNameDark: {
     color: 'white',
     fontSize: 18,

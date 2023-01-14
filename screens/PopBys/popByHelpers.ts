@@ -46,6 +46,7 @@ export function matchesSearch(person: PopByRadiusDataProps, search?: string) {
 }
 
 export function shortestRoute(data: PopByRadiusDataProps[]) {
+  console.log('DATALENGTH: ' + data.length);
   var i = 0;
   var j = 0;
   var optimalRoute = '';
@@ -54,11 +55,14 @@ export function shortestRoute(data: PopByRadiusDataProps[]) {
   var bestRoute = new Array();
   var minPath = 999999;
   var currentCost = 0;
-
+  var numNodes = data.length;
+  if (data.length > 10) {
+    numNodes = 10;
+  }
   var graph: number[][] = [];
-  for (var i = 0; i < data.length; i++) {
+  for (var i = 0; i < numNodes; i++) {
     graph[i] = [];
-    for (var j = 0; j < data.length; j++) {
+    for (var j = 0; j < numNodes; j++) {
       graph[i][j] = milesBetween(
         parseFloat(data[i].location.longitude),
         parseFloat(data[i].location.latitude),
@@ -68,7 +72,7 @@ export function shortestRoute(data: PopByRadiusDataProps[]) {
     }
   }
   // console.log(graph);
-  for (var i = 0; i < data.length; i++) {
+  for (var i = 0; i < numNodes; i++) {
     if (i != sTSP) {
       vertex.push(i);
     }

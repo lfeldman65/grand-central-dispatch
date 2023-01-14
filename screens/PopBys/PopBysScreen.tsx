@@ -316,14 +316,17 @@ export default function ManageRelationshipsScreen() {
   }
 
   function handleShortestRoute(popByData: PopByRadiusDataProps[]) {
-    console.log('POPBYLENGTH: ' + popByData.length);
     if (popByData.length < 4) {
       Alert.alert('Please show at least 4 relationships for the shortest route to be calculated.');
     } else {
+      var numNodes = popByData.length;
+      if (numNodes > 10) {
+        numNodes = 10;
+      }
       var route = shortestRoute(popByData);
       newRoute = [];
       newRoute.push(popByData[0]);
-      for (var i = 1; i < popByData.length; i++) {
+      for (var i = 1; i < numNodes; i++) {
         newRoute.push(popByData[route[i - 1]]);
       }
       for (var i = 0; i < newRoute.length; i++) {
@@ -456,6 +459,16 @@ export default function ManageRelationshipsScreen() {
     setShowC(!showC);
   }
 
+  function shouldShowRow(index: number) {
+    if (showRoute) {
+      if (index < 11) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  }
+
   function getRouteButton() {
     if (showRoute) {
       return routeCircle;
@@ -548,7 +561,7 @@ export default function ManageRelationshipsScreen() {
     return (
       <>
         <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-        <View style={lightOrDark == 'dark' ? styles.activityIndicatorDark : styles.activityIndicatorLight}>
+        <View style={lightOrDark == 'dark' ? globalStyles.activityIndicatorDark : globalStyles.activityIndicatorLight}>
           <ActivityIndicator size="large" color="#AAA" />
         </View>
       </>
@@ -683,7 +696,7 @@ export default function ManageRelationshipsScreen() {
             </TouchableOpacity>
           </View>
           <ScrollView>
-            {tabSelected == 'Near Me' && ( // item.distance != '-1.00'
+            {tabSelected == 'Near Me' && (
               <View>
                 {popByData.map(
                   (item, index) =>
@@ -723,6 +736,7 @@ export default function ManageRelationshipsScreen() {
                   (item, index) =>
                     matchesRankFilter(item.ranking) &&
                     matchesSearch(item, search) &&
+                    shouldShowRow(index) &&
                     item.address.isFavorite == 'True' && (
                       <PopByRowSaved
                         popByTab={'Saved'}
@@ -754,18 +768,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 1,
     marginBottom: 1,
-  },
-  activityIndicatorDark: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-  },
-  activityIndicatorLight: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
   },
   searchRow: {
     flexDirection: 'row',

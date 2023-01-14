@@ -1,5 +1,5 @@
-import { Text, View, TouchableOpacity, Linking, Modal } from 'react-native';
-import { useState, useEffect } from 'react';
+import { Text, View, TouchableOpacity, Linking, Modal, ScrollView } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
 import { styles } from './styles';
 import { saveAsFavorite } from './api';
 import openMap from 'react-native-open-maps';
@@ -8,6 +8,10 @@ import { PACDataProps } from './interfaces';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
+import { handleTextPressed } from '../../utils/general';
+import globalStyles from '../../globalStyles';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
 
 interface PACRowProps {
   data: PACDataProps;
@@ -21,6 +25,7 @@ export default function PACPopRow(props: PACRowProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const actionSheetRef = useRef<ActionSheet>(null);
 
   async function completePressed() {
     console.log('complete pressed');
@@ -59,8 +64,19 @@ export default function PACPopRow(props: PACRowProps) {
     console.log('complete failure');
   }
 
-  function handlePhonePressed(phoneNumber: string) {
-    Linking.openURL(`tel:${phoneNumber}`);
+  function handleMobilePressed() {
+    console.log('mobile pressed here');
+    SheetManager.show(Sheets.mobileSheet);
+  }
+
+  function handleHomePressed() {
+    console.log('home pressed');
+    Linking.openURL(`tel:${props.data.homePhone}`);
+  }
+
+  function handleOfficePressed() {
+    console.log('office pressed');
+    Linking.openURL(`tel:${props.data.officePhone}`);
   }
 
   useEffect(() => {
@@ -70,14 +86,6 @@ export default function PACPopRow(props: PACRowProps) {
   useEffect(() => {
     styleForSaveButton;
   }, [saveShown]);
-
-  // function handleText(number) {
-  //   console.log(number);
-  //   if (SMS.isAvailableAsync()) {
-  //     const result = SMS.sendSMSAsync(['8478774043'], 'My sample HelloWorld message');
-  //   } else {
-  //   }
-  // }
 
   function titleForSaveButton() {
     if (saveShown) {
@@ -250,22 +258,71 @@ export default function PACPopRow(props: PACRowProps) {
             </Text>
           )}
           {props.data.mobilePhone != null && (
-            <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.mobilePhone)}>
+            <TouchableOpacity style={styles.phoneRow} onPress={() => handleMobilePressed()}>
               <Text style={styles.phoneNumber}>{'Mobile: ' + props.data.mobilePhone}</Text>
             </TouchableOpacity>
           )}
 
           {props.data.officePhone != null && (
-            <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.officePhone)}>
+            <TouchableOpacity style={styles.phoneRow} onPress={() => handleOfficePressed()}>
               <Text style={styles.phoneNumber}>{'Office: ' + props.data.officePhone}</Text>
             </TouchableOpacity>
           )}
 
           {props.data.homePhone != null && (
-            <TouchableOpacity style={styles.phoneRow} onPress={() => handlePhonePressed(props.data.homePhone)}>
+            <TouchableOpacity style={styles.phoneRow} onPress={() => handleHomePressed()}>
               <Text style={styles.phoneNumber}>{'Home: ' + props.data.homePhone}</Text>
             </TouchableOpacity>
           )}
+
+          <ActionSheet
+            initialOffsetFromBottom={10}
+            onBeforeShow={(data) => console.log('mobile call type sheet')}
+            id={Sheets.mobileSheet}
+            ref={actionSheetRef}
+            statusBarTranslucent
+            bounceOnOpen={true}
+            drawUnderStatusBar={true}
+            bounciness={4}
+            gestureEnabled={true}
+            bottomOffset={40}
+            defaultOverlayOpacity={0.3}
+          >
+            <View
+              style={{
+                paddingHorizontal: 12,
+              }}
+            >
+              <ScrollView
+                nestedScrollEnabled
+                onMomentumScrollEnd={() => {
+                  actionSheetRef.current?.handleChildScrollEnd();
+                }}
+                style={styles.scrollview}
+              >
+                <View>
+                  {Object.entries(mobileTypeMenu).map(([index, value]) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        SheetManager.hide(Sheets.mobileSheet, null).then(() => {
+                          console.log('CALLTYPE1: ' + props.data.mobilePhone);
+                          if (value == 'Call') {
+                            Linking.openURL(`tel:${props.data.mobilePhone}`);
+                          } else {
+                            handleTextPressed(props.data.mobilePhone);
+                          }
+                        });
+                      }}
+                      style={globalStyles.listItemCell}
+                    >
+                      <Text style={globalStyles.listItem}>{index}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </ScrollView>
+            </View>
+          </ActionSheet>
 
           {modalVisible && (
             <Modal

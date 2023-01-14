@@ -130,7 +130,7 @@ export default function ToDosScreen() {
     return (
       <>
         <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={lightOrDark == 'dark' ? globalStyles.activityIndicatorDark : globalStyles.activityIndicatorLight}>
           <ActivityIndicator size="large" color="#AAA" />
         </View>
       </>

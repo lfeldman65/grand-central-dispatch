@@ -2,6 +2,7 @@ import * as Notifications from 'expo-notifications';
 import { storage } from './storage';
 import { Platform } from 'react-native';
 import * as Analytics from 'expo-firebase-analytics';
+import * as SMS from 'expo-sms';
 
 export function isNullOrEmpty(value: any) {
   if (value == null) return true;
@@ -89,4 +90,15 @@ export function determineDeviceType() {
 export function ga4Analytics(mainEvent: string, other: any) {
   console.log('MAINEVENT:' + mainEvent);
   Analytics.logEvent(mainEvent + '_' + determineDeviceType(), other);
+}
+
+export async function handleTextPressed(number: string) {
+  const isAvailable = await SMS.isAvailableAsync();
+  const timer = setInterval(() => {
+    clearInterval(timer);
+    console.log('ISAVAILABLE: ' + isAvailable);
+    if (isAvailable) {
+      SMS.sendSMSAsync(number, '');
+    }
+  }, 500);
 }
