@@ -769,11 +769,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           <TouchableOpacity onPress={() => handleVideoPressed()}>
             <Image source={videoImg} style={styles.logo} />
           </TouchableOpacity>
-          {
-            <Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>
-              {dataDetails?.hasBombBombPermission ? 'BombBomb' : 'Video'}
-            </Text>
-          }
+          {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Video</Text>}
         </View>
 
         <View style={styles.pair}>
@@ -1619,7 +1615,8 @@ const styles = StyleSheet.create({
   },
   editAndBackText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 14,
+    marginTop: 3,
   },
   textAndChevronRow: {
     paddingTop: 10,
