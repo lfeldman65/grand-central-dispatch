@@ -15,17 +15,16 @@ interface AtoZRowProps {
   data: RolodexDataProps;
   onPress(): void;
   relFromAbove: string;
+  lightOrDark: string;
 }
 
 export default function AtoZRow(props: AtoZRowProps) {
   const { relFromAbove } = props;
   const [displayOrder, setDisplayOrder] = useState('First Last');
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
 
   useEffect(() => {
     let isMounted = true;
-    getDarkOrLightMode(isMounted);
     getDisplayAZ(isMounted);
     return () => {
       isMounted = false;
@@ -50,14 +49,6 @@ export default function AtoZRow(props: AtoZRowProps) {
     return employer + ' (' + first + ')';
   }
 
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
   async function getDisplayAZ(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -73,9 +64,9 @@ export default function AtoZRow(props: AtoZRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       {props.data.contactTypeID == relFromAbove && (
-        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+        <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
-          <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
             {displayName(
               props.data.firstName,
               props.data.lastName,

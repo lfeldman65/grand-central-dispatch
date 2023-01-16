@@ -1,13 +1,26 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Modal, Linking } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+  Modal,
+  Linking,
+  ScrollView,
+} from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import PacComplete from './PACCompleteScreen';
-import { completePAC, getPACDetails } from './api';
+import { getPACDetails } from './api';
 import openMap from 'react-native-open-maps';
 import { styles } from './styles';
-import { isNullOrEmpty } from '../../utils/general';
+import { isNullOrEmpty, ga4Analytics, handleTextPressed } from '../../utils/general';
 import { AddressProps, ContactDetailDataProps } from './interfaces';
 import { completeAction, postponeAction } from './postponeAndComplete';
+import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
+import globalStyles from '../../globalStyles';
 
 let deviceHeight = Dimensions.get('window').height;
 
@@ -19,10 +32,35 @@ export default function PACDetailScreen(props: any) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
+  const actionSheetRef = useRef<ActionSheet>(null);
 
   function postponePressed() {
-    //   analytics.event(new Event('PAC Detail', 'Postpone', '0'));
+    ga4Analytics('PAC_Details_Postpone', {
+      contentType: 'none',
+      itemId: 'id0419',
+    });
     postponeEvent(contactId, type);
+  }
+
+  function handleMobilePressed() {
+    console.log('mobile pressed here');
+    SheetManager.show(Sheets.mobileSheet);
+  }
+
+  function handleHomePressed() {
+    ga4Analytics('PAC_Home_Call', {
+      contentType: 'Details',
+      itemId: 'id0410',
+    });
+    Linking.openURL(`tel:${props.data.homePhone}`);
+  }
+
+  function handleOfficePressed() {
+    ga4Analytics('PAC_Office_Call', {
+      contentType: 'Details',
+      itemId: 'id0411',
+    });
+    Linking.openURL(`tel:${props.data.officePhone}`);
   }
 
   function handlePhonePressed(type: string) {
@@ -37,6 +75,10 @@ export default function PACDetailScreen(props: any) {
 
   function goToRelDetails() {
     console.log('PAC: ' + data?.id);
+    ga4Analytics('PAC_Details_Relationship', {
+      contentType: 'none',
+      itemId: 'id0417',
+    });
     navigation.navigate('RelDetails', {
       contactId: data?.id,
       firstName: data?.firstName,
@@ -59,8 +101,11 @@ export default function PACDetailScreen(props: any) {
   }
 
   async function completePressed() {
-    console.log('complete pressed: ' + contactId);
-    //  analytics.event(new Event('PAC Detail', 'Complete', '0'));
+    ga4Analytics('PAC_Details_Complete', {
+      contentType: 'none',
+      itemId: 'id0418',
+    });
+
     setModalVisible(true);
   }
 
@@ -69,7 +114,10 @@ export default function PACDetailScreen(props: any) {
   }
 
   function handleDirectionsPressed(address?: AddressProps) {
-    console.log('Directions');
+    ga4Analytics('PAC_Directions', {
+      contentType: 'Details',
+      itemId: 'id0412',
+    });
     openMap({ query: completeAddress(address) });
   }
 
@@ -165,7 +213,7 @@ export default function PACDetailScreen(props: any) {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={lightOrDark == 'dark' ? globalStyles.activityIndicatorDark : globalStyles.activityIndicatorLight}>
         <ActivityIndicator size="large" color="#AAA" />
       </View>
     );
@@ -184,7 +232,7 @@ export default function PACDetailScreen(props: any) {
 
         <TouchableOpacity
           onPress={() => {
-            handlePhonePressed('mobile');
+            handleMobilePressed();
           }}
         >
           {!isNullOrEmpty(data?.mobile) && <Text style={stylesDetail.sectionTitle}>{'Mobile Phone'}</Text>}
@@ -193,15 +241,16 @@ export default function PACDetailScreen(props: any) {
 
         <TouchableOpacity
           onPress={() => {
-            handlePhonePressed('office');
+            handleOfficePressed();
           }}
         >
           {!isNullOrEmpty(data?.officePhone) && <Text style={stylesDetail.sectionTitle}>{'Office Phone'}</Text>}
           {!isNullOrEmpty(data?.officePhone) && <Text style={stylesDetail.phoneNumber}>{data?.officePhone}</Text>}
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => {
-            handlePhonePressed('home');
+            handleHomePressed();
           }}
         >
           {!isNullOrEmpty(data?.homePhone) && <Text style={stylesDetail.sectionTitle}>{'Home Phone'}</Text>}
@@ -251,6 +300,63 @@ export default function PACDetailScreen(props: any) {
           <Text style={stylesDetail.postponeText}>Postpone</Text>
         </TouchableOpacity>
       </View>
+
+      <ActionSheet
+        initialOffsetFromBottom={10}
+        onBeforeShow={(data) => console.log('mobile call type sheet')}
+        id={Sheets.mobileSheet}
+        ref={actionSheetRef}
+        statusBarTranslucent
+        bounceOnOpen={true}
+        drawUnderStatusBar={true}
+        bounciness={4}
+        gestureEnabled={true}
+        bottomOffset={40}
+        defaultOverlayOpacity={0.3}
+      >
+        <View
+          style={{
+            paddingHorizontal: 12,
+          }}
+        >
+          <ScrollView
+            nestedScrollEnabled
+            onMomentumScrollEnd={() => {
+              actionSheetRef.current?.handleChildScrollEnd();
+            }}
+            style={styles.scrollview}
+          >
+            <View>
+              {Object.entries(mobileTypeMenu).map(([index, value]) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    SheetManager.hide(Sheets.mobileSheet, null).then(() => {
+                      console.log('CALLTYPE1: ' + props.data.mobilePhone);
+                      if (value == 'Call') {
+                        ga4Analytics('PAC_Mobile_Call', {
+                          contentType: 'Details',
+                          itemId: 'id0408',
+                        });
+                        Linking.openURL(`tel:${props.data.mobilePhone}`);
+                      } else {
+                        ga4Analytics('PAC_Mobile_Text', {
+                          contentType: 'Details',
+                          itemId: 'id0409',
+                        });
+                        handleTextPressed(props.data.mobilePhone);
+                      }
+                    });
+                  }}
+                  style={globalStyles.listItemCell}
+                >
+                  <Text style={globalStyles.listItem}>{index}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      </ActionSheet>
 
       {modalVisible && (
         <Modal

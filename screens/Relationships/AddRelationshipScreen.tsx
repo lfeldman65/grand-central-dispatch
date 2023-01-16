@@ -10,7 +10,7 @@ import { RolodexDataProps } from './interfaces';
 let deviceWidth = Dimensions.get('window').width;
 
 export default function AddRelationshipScreen(props: any) {
-  const { setModalVisible, title, onSave } = props;
+  const { setModalVisible, title, onSave, lightOrDark } = props;
   const [bizChecked, setBizCheck] = useState(false);
   const [referralChecked, setReferralChecked] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -188,6 +188,7 @@ export default function AddRelationshipScreen(props: any) {
               title={'Select Referral'}
               setReferral={setReferral}
               setModalVisible={setReferralModalVisible}
+              lightOrDark={lightOrDark}
             />
           </Modal>
         )}

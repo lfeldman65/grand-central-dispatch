@@ -3,7 +3,7 @@ import { styles } from './styles';
 import { RolodexDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -15,6 +15,7 @@ interface AtoZRowProps {
   data: RolodexDataProps;
   onPress(): void;
   relFromAbove: string;
+  lightOrDark: string;
 }
 
 function chooseImage(rank: string) {
@@ -27,23 +28,16 @@ function chooseImage(rank: string) {
 
 export default function RankingRow(props: AtoZRowProps) {
   const { relFromAbove } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [displayOrder, setDisplayOrder] = useState('First Last');
   const isFocused = useIsFocused();
 
   useEffect(() => {
     let isMounted = true;
-    getDarkOrLightMode();
     getDisplayAZ(isMounted);
     return () => {
       isMounted = false;
     };
   }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
     if (type == 'Rel') {
@@ -70,10 +64,10 @@ export default function RankingRow(props: AtoZRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       {props.data.contactTypeID == relFromAbove && (
-        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+        <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
           {relFromAbove == 'Rel' && (
-            <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
               {displayName(
                 props.data.firstName,
                 props.data.lastName,
@@ -84,7 +78,7 @@ export default function RankingRow(props: AtoZRowProps) {
             </Text>
           )}
           {relFromAbove == 'Biz' && (
-            <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
               {displayName(
                 props.data.firstName,
                 props.data.lastName,

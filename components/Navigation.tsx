@@ -1018,7 +1018,7 @@ export const RelStackNavigator = () => {
         name="RelDetails"
         component={RelationshipDetailsScreen}
         options={{
-          title: 'Details',
+          title: 'RelDetails',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

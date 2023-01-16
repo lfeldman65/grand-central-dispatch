@@ -1,28 +1,34 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
+import { ga4Analytics } from '../../utils/general';
+
 const closeButton = require('../../images/button_close_white.png');
 
 export default function PACCompleteScreen(props: any) {
   const { onSave, setModalVisible, contactName, lightOrDark } = props;
   const [note, onNoteChange] = useState('');
 
-  function SavePressed() {
+  function savePressed() {
+    ga4Analytics('PAC_Details_Complete_Save', {
+      contentType: 'none',
+      itemId: 'id0420',
+    });
     onSave(note);
   }
-  function CancelPressed() {
+  function cancelPressed() {
     setModalVisible(false);
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <TouchableOpacity onPress={CancelPressed}>
+        <TouchableOpacity onPress={cancelPressed}>
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
 
         <Text style={styles.nameLabel}>{contactName}</Text>
 
-        <TouchableOpacity onPress={SavePressed}>
+        <TouchableOpacity onPress={savePressed}>
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
       </View>

@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet, Image } from 'react-native';
-import MenuIcon from '../../components/MenuIcon';
+import { Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet, Image } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { styles } from './styles';
 import { getRolodexData } from './api';
 import { RolodexDataProps } from './interfaces';
-import IdeasCalls from '../PAC/IdeasCallsScreen';
-import IdeasNotes from '../PAC/IdeasNotesScreen';
-import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
-import { storage } from '../../utils/storage';
 import AtoZRow from './AtoZRow';
 import AddNewRef from './AddNewReferral';
 
@@ -20,11 +14,10 @@ const searchBlank = require('../../images/blankSearch.png'); // Preserves horizo
 type TabType = 'Search Existing' | 'Add New';
 
 export default function SelectReferralScreen(props: any) {
-  const { setModalVisible, title, setReferral } = props;
+  const { setModalVisible, title, setReferral, lightOrDark } = props;
   const [tabSelected, setTabSelected] = useState<TabType>('Search Existing');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -75,22 +68,6 @@ export default function SelectReferralScreen(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
   useEffect(() => {
     let isMounted = true;
     fetchRolodexPressed('alpha', isMounted);
@@ -136,7 +113,13 @@ export default function SelectReferralScreen(props: any) {
             {tabSelected == 'Search Existing' && (
               <View>
                 {dataRolodex.map((item, index) => (
-                  <AtoZRow relFromAbove={'Rel'} key={index} data={item} onPress={() => handleRowPress(index)} />
+                  <AtoZRow
+                    relFromAbove={'Rel'}
+                    key={index}
+                    data={item}
+                    lightOrDark={lightOrDark}
+                    onPress={() => handleRowPress(index)}
+                  />
                 ))}
               </View>
             )}

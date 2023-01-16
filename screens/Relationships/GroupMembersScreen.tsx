@@ -8,11 +8,9 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
-  Button,
   Modal,
 } from 'react-native';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused, NavigationContainer } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getGroupMembers, getGroupMembersSearch, addRelToGroup } from './api';
 import { GroupMembersDataProps } from './interfaces';
 import GroupMemberRow from './GroupMemberRow';
@@ -24,8 +22,7 @@ const searchGlass = require('../../images/whiteSearch.png');
 
 export default function GroupMembersScreen(props: any) {
   const { route } = props;
-  const { groupID, groupName } = route.params;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { groupID, groupName, lightOrDark } = route.params;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dataGroups, setDataGroups] = useState<GroupMembersDataProps[]>([]);
@@ -115,22 +112,6 @@ export default function GroupMembersScreen(props: any) {
     };
   }, [isFocused]);
 
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
-
   function fetchGroupMembersSearch(groupID: string, searchParam: string, isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -204,6 +185,7 @@ export default function GroupMembersScreen(props: any) {
                 search={search}
                 key={index}
                 data={item}
+                lightOrDark={lightOrDark}
                 onPress={() => handleRowPress(index)}
                 refresh={() => fetchGroupMembers(groupID, true)}
               />
@@ -223,6 +205,7 @@ export default function GroupMembersScreen(props: any) {
                 title={'Select Relationship'}
                 setReferral={setMember}
                 setModalVisible={setRelModalVisible}
+                lightOrDark={lightOrDark}
               />
             </Modal>
           )}

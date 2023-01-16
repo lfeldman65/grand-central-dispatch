@@ -13,6 +13,7 @@ import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { ga4Analytics } from '../../utils/general';
 
 type TabType = 'calls' | 'notes' | 'popby';
 
@@ -32,7 +33,7 @@ export default function PACScreen(props: PACScreenProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    // analytics.event(new Event('PAC', 'Go To Details'));
+    rowAnalytics();
     navigation.navigate('PACDetail', {
       contactId: data[index]['contactId'],
       type: data[index]['type'],
@@ -44,32 +45,66 @@ export default function PACScreen(props: PACScreenProps) {
     });
   };
 
-  const handleIdeasPressed = () => {
-    console.log('Ideas');
-    //  analytics.event(new Event('PAC', 'View Ideas'));
+  function rowAnalytics() {
+    var mainEvent = 'Error';
+    var itemID = 'id9999';
     if (tabSelected == 'calls') {
+      mainEvent = 'PAC_Calls_Row';
+      itemID = 'id0404';
+    } else if (tabSelected == 'notes') {
+      mainEvent = 'PAC_Notes_Row';
+      itemID = 'id0405';
+    } else if (tabSelected == 'popby') {
+      mainEvent = 'PAC_Pop_By_Row';
+      itemID = 'id0406';
+    }
+    ga4Analytics(mainEvent, {
+      contentType: 'none',
+      itemId: itemID,
+    });
+  }
+
+  const handleIdeasPressed = () => {
+    var contentType = 'Error';
+    if (tabSelected == 'calls') {
+      var contentType = 'Calls';
       setModalCallsVisible(!modalCallsVisible);
     } else if (tabSelected == 'notes') {
+      var contentType = 'Notes';
       setModalNotesVisible(!modalNotesVisible);
     } else if (tabSelected == 'popby') {
+      var contentType = 'Pop_Bys';
       setModalPopVisible(!modalPopVisible);
     }
+    ga4Analytics('PAC_View_Ideas', {
+      contentType: contentType,
+      itemId: 'id0407',
+    });
   };
 
   function callsPressed() {
-    //   analytics.event(new Event('PAC', 'Calls Tab'));
+    ga4Analytics('PAC_Calls_Tab', {
+      contentType: 'none',
+      itemId: 'id0401',
+    });
     setTabSelected('calls');
     fetchData('calls', true);
   }
 
   function notesPressed() {
-    //  analytics.event(new Event('PAC', 'Notes Tab'));
+    ga4Analytics('PAC_Notes_Tab', {
+      contentType: 'none',
+      itemId: 'id0402',
+    });
     setTabSelected('notes');
     fetchData('notes', true);
   }
 
   function popPressed() {
-    //   analytics.event(new Event('PAC', 'Pop-By Tab'));
+    ga4Analytics('PAC_Pop_By_Tab', {
+      contentType: 'none',
+      itemId: 'id0403',
+    });
     setTabSelected('popby');
     fetchData('popby', true);
   }
@@ -122,7 +157,9 @@ export default function PACScreen(props: PACScreenProps) {
         </View>
 
         {isLoading ? (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View
+            style={lightOrDark == 'dark' ? globalStyles.activityIndicatorDark : globalStyles.activityIndicatorLight}
+          >
             <ActivityIndicator size="large" color="#AAA" />
           </View>
         ) : (

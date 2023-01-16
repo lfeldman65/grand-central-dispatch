@@ -7,6 +7,7 @@ import { GoalDataProps, GoalObject } from './interfaces';
 import { getGoalData, trackAction } from './api';
 import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
+import AddRelScreen from '../Relationships/AddRelationshipScreen';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { scheduleNotifications, getNotificationStatus, ga4Analytics, isNullOrEmpty } from '../../utils/general';
 
@@ -22,7 +23,8 @@ export default function GoalsScreen() {
   const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+  const [trackModalVisible, setTrackModalVisible] = useState(false);
+  const [addRelModalVisible, setAddRelModalVisible] = useState(false);
   const isFocused = useIsFocused();
 
   function trackActivityPressed() {
@@ -30,7 +32,7 @@ export default function GoalsScreen() {
       contentType: 'none',
       itemId: 'id0303',
     });
-    setModalVisible(true);
+    setTrackModalVisible(true);
   }
 
   function winTheDayPressed() {
@@ -205,6 +207,7 @@ export default function GoalsScreen() {
 
   function databaseAdditions() {
     console.log('DATABASE ADDITIONS');
+    setAddRelModalVisible(true);
   }
 
   function fetchGoals(isMounted: boolean, afterTrack: boolean) {
@@ -271,6 +274,11 @@ export default function GoalsScreen() {
     } else if (dailyGoal != 0 && dailyNum == dailyGoal) {
       scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
     }
+  }
+
+  function saveAddRelComplete() {
+    console.log('SAVEADDRELCOMPLETE');
+    fetchGoals(true, true);
   }
 
   function saveComplete(
@@ -385,7 +393,6 @@ export default function GoalsScreen() {
     return (
       <>
         <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-
         <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
           <View style={globalStyles.tabButtonRow}>
             <Text
@@ -440,20 +447,37 @@ export default function GoalsScreen() {
               <Text style={styles.buttonText}>Track Activity</Text>
             </View>
           </TouchableOpacity>
-          {modalVisible && (
+          {trackModalVisible && (
             <Modal
               animationType="slide"
               transparent={true}
-              visible={modalVisible}
+              visible={trackModalVisible}
               onRequestClose={() => {
-                setModalVisible(!modalVisible);
+                setTrackModalVisible(!trackModalVisible);
               }}
             >
               <TrackActivity
                 lightOrDark={lightOrDark}
                 title="Track Activity Goal"
                 onSave={saveComplete}
-                setModalVisible={setModalVisible}
+                setModalVisible={setTrackModalVisible}
+              />
+            </Modal>
+          )}
+          {addRelModalVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={addRelModalVisible}
+              onRequestClose={() => {
+                setAddRelModalVisible(!addRelModalVisible);
+              }}
+            >
+              <AddRelScreen
+                title={'New Relationship'}
+                onSave={saveAddRelComplete}
+                setModalVisible={setAddRelModalVisible}
+                lightOrDark={lightOrDark}
               />
             </Modal>
           )}

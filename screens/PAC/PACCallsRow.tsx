@@ -8,7 +8,7 @@ import { postponeAction, completeAction } from './postponeAndComplete';
 import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
-import { handleTextPressed } from '../../utils/general';
+import { handleTextPressed, ga4Analytics } from '../../utils/general';
 
 interface PACCallsRowProps {
   data: PACDataProps;
@@ -23,7 +23,10 @@ export default function PACCallsRow(props: PACCallsRowProps) {
   const actionSheetRef = useRef<ActionSheet>(null);
 
   async function completePressed() {
-    console.log('complete pressed');
+    ga4Analytics('PAC_Swipe_Complete', {
+      contentType: 'Calls',
+      itemId: 'id0416',
+    });
     setModalVisible(true);
   }
 
@@ -33,7 +36,10 @@ export default function PACCallsRow(props: PACCallsRowProps) {
   }
 
   async function postponePressed(contactID: string, type: string) {
-    console.log('postpone pressed');
+    ga4Analytics('PAC_Swipe_Postpone', {
+      contentType: 'Calls',
+      itemId: 'id0415',
+    });
     setIsLoading(true);
     postponeAction(contactID, type, postponeSuccess, postponeFailure);
   }
@@ -65,12 +71,18 @@ export default function PACCallsRow(props: PACCallsRowProps) {
   }
 
   function handleHomePressed() {
-    console.log('home pressed');
+    ga4Analytics('PAC_Home_Call', {
+      contentType: 'Calls',
+      itemId: 'id0410',
+    });
     Linking.openURL(`tel:${props.data.homePhone}`);
   }
 
   function handleOfficePressed() {
-    console.log('office pressed');
+    ga4Analytics('PAC_Office_Call', {
+      contentType: 'Calls',
+      itemId: 'id0411',
+    });
     Linking.openURL(`tel:${props.data.officePhone}`);
   }
 
@@ -178,8 +190,16 @@ export default function PACCallsRow(props: PACCallsRowProps) {
                         SheetManager.hide(Sheets.mobileSheet, null).then(() => {
                           console.log('CALLTYPE: ' + value);
                           if (value == 'Call') {
+                            ga4Analytics('PAC_Mobile_Call', {
+                              contentType: 'Calls_Tab',
+                              itemId: 'id0408',
+                            });
                             Linking.openURL(`tel:${props.data.mobilePhone}`);
                           } else {
+                            ga4Analytics('PAC_Mobile_Text', {
+                              contentType: 'Calls_Tab',
+                              itemId: 'id0409',
+                            });
                             handleTextPressed(props.data.mobilePhone);
                           }
                         });

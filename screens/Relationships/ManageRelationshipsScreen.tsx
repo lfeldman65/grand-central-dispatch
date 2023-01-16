@@ -1,15 +1,5 @@
 import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  ScrollView,
-  ActivityIndicator,
-  Image,
-} from 'react-native';
+import { Text, View, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -21,7 +11,7 @@ import { getGroupsData, getRolodexData } from './api';
 import { GroupsDataProps, RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
-import { storage } from '../../utils/storage';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 
@@ -34,15 +24,7 @@ export default function ManageRelationshipsScreen() {
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]); // A-Z and Ranking tabs
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lightOrDark, setIsLightOrDark] = useState('');
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
+  const [lightOrDark, setLightOrDark] = useState('');
 
   const handleRowPress = (index: number) => {
     //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
@@ -52,23 +34,17 @@ export default function ManageRelationshipsScreen() {
       navigation.navigate('GroupMembersScreen', {
         groupID: dataGroups[index].id,
         groupName: dataGroups[index].groupName,
+        lightOrDark: lightOrDark,
       });
     } else {
       navigation.navigate('RelDetails', {
         contactId: dataRolodex[index].id,
         firstName: dataRolodex[index].firstName,
         lastName: dataRolodex[index].lastName,
+        lightOrDark: lightOrDark,
       });
     }
   };
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   useEffect(() => {
     let isMounted = true;
@@ -194,88 +170,101 @@ export default function ManageRelationshipsScreen() {
   }
 
   return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      <View style={globalStyles.tabButtonRow}>
-        <Text style={tabSelected == 'a-z' ? globalStyles.selected : globalStyles.unselected} onPress={azPressed}>
-          A-Z
-        </Text>
-        <Text
-          style={tabSelected == 'ranking' ? globalStyles.selected : globalStyles.unselected}
-          onPress={rankingPressed}
-        >
-          Ranking
-        </Text>
-        <Text style={tabSelected == 'groups' ? globalStyles.selected : globalStyles.unselected} onPress={groupsPressed}>
-          Groups
-        </Text>
-      </View>
-
-      {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#AAA" />
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+        <View style={globalStyles.tabButtonRow}>
+          <Text style={tabSelected == 'a-z' ? globalStyles.selected : globalStyles.unselected} onPress={azPressed}>
+            A-Z
+          </Text>
+          <Text
+            style={tabSelected == 'ranking' ? globalStyles.selected : globalStyles.unselected}
+            onPress={rankingPressed}
+          >
+            Ranking
+          </Text>
+          <Text
+            style={tabSelected == 'groups' ? globalStyles.selected : globalStyles.unselected}
+            onPress={groupsPressed}
+          >
+            Groups
+          </Text>
         </View>
-      ) : (
-        <React.Fragment>
-          {tabSelected != 'groups' && (
-            <View style={globalStyles.filterRow}>
-              <TouchableOpacity onPress={filterPressed}>
-                <Text style={globalStyles.filterText}>{isFilterRel ? 'Show Businesses' : 'Show Relationships'}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
 
-          <ScrollView>
-            {tabSelected == 'a-z' && (
-              <View>
-                {dataRolodex.map((item, index) => (
-                  <AtoZRow
-                    relFromAbove={showFilterTitle()}
-                    key={index}
-                    data={item}
-                    onPress={() => handleRowPress(index)}
-                  />
-                ))}
+        {isLoading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#AAA" />
+          </View>
+        ) : (
+          <React.Fragment>
+            {tabSelected != 'groups' && (
+              <View style={globalStyles.filterRow}>
+                <TouchableOpacity onPress={filterPressed}>
+                  <Text style={globalStyles.filterText}>{isFilterRel ? 'Show Businesses' : 'Show Relationships'}</Text>
+                </TouchableOpacity>
               </View>
             )}
-            {tabSelected == 'ranking' && (
-              <View>
-                {dataRolodex.map((item, index) => (
-                  <RankingRow
-                    relFromAbove={showFilterTitle()}
-                    key={index}
-                    data={item}
-                    onPress={() => handleRowPress(index)}
-                  />
-                ))}
+
+            <ScrollView>
+              {tabSelected == 'a-z' && (
+                <View>
+                  {dataRolodex.map((item, index) => (
+                    <AtoZRow
+                      relFromAbove={showFilterTitle()}
+                      key={index}
+                      data={item}
+                      onPress={() => handleRowPress(index)}
+                      lightOrDark={lightOrDark}
+                    />
+                  ))}
+                </View>
+              )}
+              {tabSelected == 'ranking' && (
+                <View>
+                  {dataRolodex.map((item, index) => (
+                    <RankingRow
+                      relFromAbove={showFilterTitle()}
+                      key={index}
+                      data={item}
+                      onPress={() => handleRowPress(index)}
+                      lightOrDark={lightOrDark}
+                    />
+                  ))}
+                </View>
+              )}
+              {tabSelected == 'groups' && (
+                <View>
+                  {dataGroups.map((item, index) => (
+                    <GroupsRow
+                      key={index}
+                      data={item}
+                      lightOrDark={lightOrDark}
+                      onPress={() => handleRowPress(index)}
+                    />
+                  ))}
+                </View>
+              )}
+            </ScrollView>
+            <TouchableOpacity style={globalStyles.bottomContainer} onPress={() => handleAddRelPressed()}>
+              <View style={globalStyles.addButton}>
+                <Text style={globalStyles.addText}>{'Add Relationship'}</Text>
               </View>
-            )}
-            {tabSelected == 'groups' && (
-              <View>
-                {dataGroups.map((item, index) => (
-                  <GroupsRow key={index} data={item} onPress={() => handleRowPress(index)} />
-                ))}
-              </View>
-            )}
-          </ScrollView>
-          <TouchableOpacity style={globalStyles.bottomContainer} onPress={() => handleAddRelPressed()}>
-            <View style={globalStyles.addButton}>
-              <Text style={globalStyles.addText}>{'Add Relationship'}</Text>
-            </View>
-          </TouchableOpacity>
-        </React.Fragment>
-      )}
-      {modalVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <AddRelScreen title={'New Relationship'} onSave={saveComplete} setModalVisible={setModalVisible} />
-        </Modal>
-      )}
-    </View>
+            </TouchableOpacity>
+          </React.Fragment>
+        )}
+        {modalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <AddRelScreen title={'New Relationship'} onSave={saveComplete} setModalVisible={setModalVisible} />
+          </Modal>
+        )}
+      </View>
+    </>
   );
 }

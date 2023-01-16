@@ -6,6 +6,7 @@ import { useIsFocused } from '@react-navigation/native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { postponeAction, completeAction } from './postponeAndComplete';
 import PacComplete from './PACCompleteScreen';
+import { ga4Analytics } from '../../utils/general';
 
 interface PACNotesRowProps {
   data: PACDataProps;
@@ -19,7 +20,10 @@ export default function PACNotesRow(props: PACNotesRowProps) {
   const [modalVisible, setModalVisible] = useState(false);
 
   async function completePressed() {
-    console.log('complete pressed');
+    ga4Analytics('PAC_Swipe_Complete', {
+      contentType: 'Notes',
+      itemId: 'id0416',
+    });
     setModalVisible(true);
   }
 
@@ -29,7 +33,10 @@ export default function PACNotesRow(props: PACNotesRowProps) {
   }
 
   async function postponePressed(contactID: string, type: string) {
-    console.log('postpone pressed');
+    ga4Analytics('PAC_Swipe_Postpone', {
+      contentType: 'Notes',
+      itemId: 'id0415',
+    });
     setIsLoading(true);
     postponeAction(contactID, type, postponeSuccess, postponeFailure);
   }

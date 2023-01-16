@@ -1,8 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
 import { GroupMembersDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { storage } from '../../utils/storage';
 import { removeGroupMember } from './api';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
@@ -17,6 +15,7 @@ interface GroupMemberRowProps {
   search: string;
   groupID: string;
   groupName: string;
+  lightOrDark: string;
   refresh(): void;
 }
 
@@ -37,26 +36,7 @@ function displayName(first: string, last: string, type: string, employer: string
 
 export default function GroupMemberRow(props: GroupMemberRowProps) {
   const { groupID, groupName } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const isFocused = useIsFocused();
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function removePressed() {
     Alert.alert(
@@ -97,9 +77,9 @@ export default function GroupMemberRow(props: GroupMemberRowProps) {
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
-        <Text style={lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+        <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
           {displayName(props.data.firstName, props.data.lastName, props.data.contactTypeID, 'Motorola', true)}
         </Text>
         <View style={styles.removeView}>

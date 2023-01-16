@@ -8,7 +8,7 @@ import { PACDataProps } from './interfaces';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
-import { handleTextPressed } from '../../utils/general';
+import { handleTextPressed, ga4Analytics } from '../../utils/general';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
@@ -28,7 +28,10 @@ export default function PACPopRow(props: PACRowProps) {
   const actionSheetRef = useRef<ActionSheet>(null);
 
   async function completePressed() {
-    console.log('complete pressed');
+    ga4Analytics('PAC_Swipe_Complete', {
+      contentType: 'Pop_Bys',
+      itemId: 'id0416',
+    });
     setModalVisible(true);
   }
 
@@ -38,7 +41,10 @@ export default function PACPopRow(props: PACRowProps) {
   }
 
   async function postponePressed(contactID: string, type: string) {
-    console.log('postpone pressed');
+    ga4Analytics('PAC_Swipe_Postpone', {
+      contentType: 'Pop_Bys',
+      itemId: 'id0415',
+    });
     setIsLoading(true);
     postponeAction(contactID, type, postponeSuccess, postponeFailure);
   }
@@ -70,12 +76,18 @@ export default function PACPopRow(props: PACRowProps) {
   }
 
   function handleHomePressed() {
-    console.log('home pressed');
+    ga4Analytics('PAC_Home_Call', {
+      contentType: 'Pop_By_Tab',
+      itemId: 'id0410',
+    });
     Linking.openURL(`tel:${props.data.homePhone}`);
   }
 
   function handleOfficePressed() {
-    console.log('office pressed');
+    ga4Analytics('PAC_Office_Call', {
+      contentType: 'Pop_By_Tab',
+      itemId: 'id0411',
+    });
     Linking.openURL(`tel:${props.data.officePhone}`);
   }
 
@@ -95,6 +107,10 @@ export default function PACPopRow(props: PACRowProps) {
   }
 
   function handleDirectionsPressed() {
+    ga4Analytics('PAC_Directions', {
+      contentType: 'Pop_Bys',
+      itemId: 'id0412',
+    });
     //   openMap({ latitude: 33.1175, longitude: -117.0722, zoom: 10 });
     //   openMap({ query: '7743 Royal Park Dr. Lewis Center OH 43035' });
     openMap({ query: completeAddress() });
@@ -122,6 +138,10 @@ export default function PACPopRow(props: PACRowProps) {
 
   function handleSavePressed() {
     if (saveShown) {
+      ga4Analytics('PAC_Save_To_Map', {
+        contentType: 'none',
+        itemId: 'id0413',
+      });
       saveAsFavoriteAPI();
       setSaveShown(!saveShown);
     } else {
@@ -149,7 +169,10 @@ export default function PACPopRow(props: PACRowProps) {
   }
 
   function handlePopPressed() {
-    console.log('pop');
+    ga4Analytics('PAC_Pop_By_Map', {
+      contentType: 'none',
+      itemId: 'id0414',
+    });
     navigation.navigate('PopBysScreen');
   }
 
@@ -308,8 +331,16 @@ export default function PACPopRow(props: PACRowProps) {
                         SheetManager.hide(Sheets.mobileSheet, null).then(() => {
                           console.log('CALLTYPE1: ' + props.data.mobilePhone);
                           if (value == 'Call') {
+                            ga4Analytics('PAC_Mobile_Call', {
+                              contentType: 'Pop_By_Tab',
+                              itemId: 'id0408',
+                            });
                             Linking.openURL(`tel:${props.data.mobilePhone}`);
                           } else {
+                            ga4Analytics('PAC_Mobile_Text', {
+                              contentType: 'Pop_By_Tab',
+                              itemId: 'id0409',
+                            });
                             handleTextPressed(props.data.mobilePhone);
                           }
                         });
