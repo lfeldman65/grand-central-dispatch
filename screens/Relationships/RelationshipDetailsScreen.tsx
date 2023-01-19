@@ -648,6 +648,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           //  data = res.data;
           setTheRank(res.data.ranking);
           setIsQual(res.data.qualified);
+          setIsFavorite(res.data.address.isFavorite);
           console.log('dataDetails:' + res.data.address.country);
         }
         setIsLoading(false);
@@ -1789,7 +1790,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   savedText: {
-    color: 'black',
+    color: 'gray',
     fontSize: 15,
     textAlign: 'left',
     marginLeft: 15,
