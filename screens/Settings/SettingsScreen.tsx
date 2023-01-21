@@ -37,7 +37,7 @@ export default function SettingsScreen() {
   }
 
   function importPressed() {
-    console.log('import relationshps');
+    navigation.navigate('ImportStackNavigator');
   }
 
   function sortPressed() {

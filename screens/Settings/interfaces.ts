@@ -110,3 +110,44 @@ export interface AboutUsDataResponse {
   error: string;
   status: string;
 }
+
+// AZ Contacts in Postman
+
+export interface RolodexImportDataProps {
+  id: string;
+  firstName: string;
+  lastName: string;
+  ranking: string;
+  contactTypeID: string;
+  employerName: string;
+  qualified: boolean;
+  selected: boolean;
+  homePhone: string;
+  mobile: string;
+  officePhone: string;
+  email: string;
+  notes: string;
+}
+
+export interface RolodexImportDataResponse {
+  data: RolodexImportDataProps[];
+  error: string;
+  status: string;
+}
+
+// Add Contact in Postman Body
+
+export interface AddContactImportDataProps {
+  id: string;
+  firstName: string;
+  lastName: string;
+  contactTypeID: string;
+}
+
+// Add Contact in Postman Return
+
+export interface AddContactImportDataResponse {
+  data: AddContactImportDataProps[];
+  error: string;
+  status: string;
+}

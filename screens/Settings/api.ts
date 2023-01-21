@@ -5,6 +5,8 @@ import {
   BizGoalsDataResponse,
   BizGoalsSummaryDataResponse,
   AboutUsDataResponse,
+  AddContactImportDataResponse,
+  RolodexImportDataResponse,
 } from './interfaces';
 export function getProfileData(): Promise<ProfileDataResponse> {
   return http.get('setup/profile');
@@ -77,3 +79,52 @@ export function getBizGoalsSummary(): Promise<BizGoalsSummaryDataResponse> {
 export function getMedia(type: string): Promise<AboutUsDataResponse> {
   return http.get(`media?batchSize=50&lastItem=0&type=${type}`);
 }
+
+export function addNewContact(
+  firstName: string,
+  lastName: string,
+  contactTypeID: string,
+  employerName: string,
+  referredByName: string = '',
+  referredByID: string = '',
+  homePhone: string = '',
+  mobile: string = '',
+  officePhone: string = '',
+  email: string = '',
+  notes: string = ''
+): Promise<AddContactImportDataResponse> {
+  console.log(referredByName);
+  console.log(referredByID);
+  var isReferral = false;
+  if (referredByID != '') {
+    isReferral = true;
+  }
+  return http.post('contacts', {
+    body: [
+      {
+        firstName: firstName,
+        lastName: lastName,
+        homePhone: homePhone,
+        mobile: mobile,
+        officePhone: officePhone,
+        email: email,
+        contactTypeID: contactTypeID,
+        businessAndCareer: {
+          occupation: '',
+          employerName: employerName,
+          careerNotes: '',
+        },
+        referral: isReferral,
+        notes: notes,
+        referredBy: {
+          name: referredByName,
+          id: referredByID,
+        },
+      },
+    ],
+  });
+}
+
+export function getRolodexData(type: string): Promise<RolodexImportDataResponse> {
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=250`);
+} // back tick (`) only necessary for string interpolation

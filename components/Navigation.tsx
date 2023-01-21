@@ -39,6 +39,8 @@ import TransactionDetailsLender from '../screens/Transactions/TransactionDetails
 import TransactionDetailsOther from '../screens/Transactions/TransactionDetailsOther';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
+import ImportRel1 from '../screens/Settings/ImportRelScreen1';
+import ImportRel2 from '../screens/Settings/ImportRelScreen2';
 import BizGoals from '../screens/Settings/BizGoalsScreen';
 import BizGoalsReview from '../screens/Settings/BizGoalsReviewScreen';
 import AboutUs from '../screens/Settings/AboutUsScreen';
@@ -851,6 +853,38 @@ export const BizGoalsStackNavigator = () => {
   );
 };
 
+export const ImportStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="ImportRel1"
+        component={ImportRel1}
+        options={{
+          title: 'Import Relationships',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="ImportRel2"
+        component={ImportRel2}
+        options={{
+          title: 'Import Relationships',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -911,6 +945,15 @@ export const SettingsStackNavigator = () => {
       <Stack.Screen
         name="BizGoalsStackNavigator"
         component={BizGoalsStackNavigator}
+        options={{
+          headerBackVisible: true,
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="ImportStackNavigator"
+        component={ImportStackNavigator}
         options={{
           headerBackVisible: true,
           headerShown: false,
