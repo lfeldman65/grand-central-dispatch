@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import React from 'react';
 import { styles, roundToInt } from './transactionHelpers';
 import { storage } from '../../utils/storage';
 import { addOrEditTransaction } from './api';
+import { shouldRunTests } from '../../utils/general';
 
 var incomeAfterCosts = 0;
 
@@ -77,6 +78,11 @@ export default function AddOrEditRealtorTx3(props: any) {
 
   useEffect(() => {
     calculateIncome();
+    if (shouldRunTests()) {
+      setMiscBeforeFees('2000');
+      setMiscAfterFees('1500');
+      setMyPortion('50');
+    }
     console.log('SCREEN3: ' + data?.id!);
   }, [isFocused]);
 
@@ -129,6 +135,13 @@ export default function AddOrEditRealtorTx3(props: any) {
   }
 
   function completePressed() {
+    if (shouldRunTests()) {
+      if (incomeAfterCosts == 57500) {
+        Alert.alert('Test Passed');
+      } else {
+        Alert.alert('Test Failed');
+      }
+    }
     console.log('CLOSING DATE: ' + closingDate);
     addOrEditTransaction(
       data == null ? 0 : data?.id,

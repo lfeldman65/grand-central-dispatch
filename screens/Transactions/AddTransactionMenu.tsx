@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import React from 'react';
 import { getProfileData } from '../Settings/api';
@@ -8,7 +8,8 @@ import { RolodexDataProps } from '../Relationships/interfaces';
 
 export default function AddTransactionMenu(props: any) {
   const { route } = props;
-  const [person, setPerson] = useState<RolodexDataProps>();
+  const { lightOrDark } = route.params;
+  const [person, setPerson] = useState<RolodexDataProps>(); // if called from relationship detail, shouldn't be null
   const [profileData, setProfileData] = useState<ProfileDataProps>();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
@@ -17,8 +18,10 @@ export default function AddTransactionMenu(props: any) {
     console.log('index: ' + index);
     if (index == 0) {
       console.log('PERSONADD: ' + person?.firstName);
+      console.log('theme: ' + lightOrDark);
       navigation.navigate('AddOrEditRealtorTx1', {
         person: person,
+        lightOrDark: lightOrDark,
       });
     } else if (index == 1) {
       console.log('PERSONADD: ' + person?.firstName);

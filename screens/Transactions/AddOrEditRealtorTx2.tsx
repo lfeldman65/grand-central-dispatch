@@ -1,12 +1,13 @@
-import { Fragment, useLayoutEffect, useState } from 'react';
-import { Alert, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useState } from 'react';
+import { Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from './transactionHelpers';
+import { shouldRunTests } from '../../utils/general';
 
 var grossComm = 0;
 
@@ -29,19 +30,19 @@ export default function AddOrEditRealtorTx2(props: any) {
   } = route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
-  const [closingPrice, setClosingPrice] = useState('400000'); // 400000
+  const [closingPrice, setClosingPrice] = useState('');
   const [closingDate, setClosingDate] = useState(new Date());
   const [originalDate, setOriginalDate] = useState(new Date());
-  const [originalPrice, setOriginalPrice] = useState(''); // 500000
-  const [buyerCommission, setBuyerCommission] = useState('20'); // 20
+  const [originalPrice, setOriginalPrice] = useState('');
+  const [buyerCommission, setBuyerCommission] = useState('');
   const [sellerCommission, setSellerCommission] = useState('');
-  const [additionalIncome, setAdditionalIncome] = useState('10'); // 10
+  const [additionalIncome, setAdditionalIncome] = useState('');
   const [showOriginalDate, setShowOriginalDate] = useState(false);
   const [showClosingDate, setShowClosingDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const [dollarOrPercentBuyerComm, setDollarOrPercentBuyerComm] = useState('percent');
   const [dollarOrPercentSellerComm, setDollarOrPercentSellerComm] = useState('percent');
-  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('percent'); // percent
+  const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('percent');
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -99,6 +100,15 @@ export default function AddOrEditRealtorTx2(props: any) {
     return () => {
       isMounted = false;
     };
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (shouldRunTests()) {
+      setBuyerCommission('20'); // % by default
+      setAdditionalIncome('10'); // % by default
+      setClosingPrice('400000');
+      setOriginalPrice('500000');
+    }
   }, [isFocused]);
 
   function populateDataIfEdit(isMounted: boolean) {
@@ -245,6 +255,7 @@ export default function AddOrEditRealtorTx2(props: any) {
         grossComm: grossComm,
         data: data,
         source: source,
+        //   lightOrDark: lightOrDark
       });
     }
   }

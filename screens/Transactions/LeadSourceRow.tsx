@@ -1,27 +1,13 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
-// import { RolodexDataProps } from './interfaces';
-import { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { storage } from '../../utils/storage';
 
 interface LeadSourceProps {
   data: string;
+  lightOrDark: string;
   onPress(): void;
 }
 
 export default function LeadSourceRow(props: LeadSourceProps) {
-  //  const { relFromAbove } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
+  const { lightOrDark } = props;
 
   return (
     <TouchableOpacity onPress={props.onPress}>

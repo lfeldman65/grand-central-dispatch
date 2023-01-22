@@ -53,10 +53,11 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   const handleAddPressed = () => {
     //   analytics.event(new Event('Transactions', 'Add Transaction'));
     storage.setItem('whoCalledTxMenu', 'RealEstateTransactions');
-    console.log('well here i am');
+    console.log('theme in RealEstateTransactionsScreen: ' + lightOrDark);
     navigation.navigate('AddTxMenu', {
       person: null,
       source: 'Transactions',
+      lightOrDark: lightOrDark,
     });
   };
 

@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useState, useRef } from 'react';
-import { Alert, Text, View, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useEffect, useState, useRef } from 'react';
+import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -11,7 +11,7 @@ import ChooseLeadSource from './ChooseLeadSource';
 
 export default function AddOrEditRealtorTx1(props: any) {
   const { route } = props;
-  const { data, person } = route.params;
+  const { data, person, lightOrDark } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Buyer');
   const [buyerLeadSource, setBuyerLeadSource] = useState('Advertising');
@@ -61,6 +61,7 @@ export default function AddOrEditRealtorTx1(props: any) {
     state,
     zip,
     data,
+    lightOrDark,
   ]);
 
   useEffect(() => {
@@ -375,6 +376,7 @@ export default function AddOrEditRealtorTx1(props: any) {
             title="Choose Relationship"
             setModalRelVisible={setModalBuyerVisible}
             setSelectedRel={setBuyer}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}
@@ -402,6 +404,7 @@ export default function AddOrEditRealtorTx1(props: any) {
             title="Buyer Lead Source"
             setModalSourceVisible={setModalBuyerSourceVisible}
             setSelectedSource={setBuyerLeadSource}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}
@@ -458,6 +461,7 @@ export default function AddOrEditRealtorTx1(props: any) {
             title="Seller Lead Source"
             setModalSourceVisible={setModalSellerSourceVisible}
             setSelectedSource={setSellerLeadSource}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}

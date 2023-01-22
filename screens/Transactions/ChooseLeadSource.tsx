@@ -9,8 +9,7 @@ import LeadSourceRow from './LeadSourceRow';
 const backArrow = require('../../images/white_arrow_left.png');
 
 export default function ChooseLeadSource(props: any) {
-  const { title, setModalSourceVisible, setSelectedSource } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { title, setModalSourceVisible, setSelectedSource, lightOrDark } = props;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dealOptions, setDealOptions] = useState<TransactionTypeDataProps>();
@@ -29,15 +28,6 @@ export default function ChooseLeadSource(props: any) {
   useEffect(() => {
     fetchDealOptions(true);
   }, [isFocused]);
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function fetchDealOptions(isMounted: boolean) {
     setIsLoading(true);
@@ -74,7 +64,7 @@ export default function ChooseLeadSource(props: any) {
       <ScrollView>
         <View>
           {dealOptions?.leadSources.map((item, index) => (
-            <LeadSourceRow key={index} data={item} onPress={() => handleRowPress(index)} />
+            <LeadSourceRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
           ))}
         </View>
       </ScrollView>

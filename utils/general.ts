@@ -102,3 +102,7 @@ export async function handleTextPressed(number: string) {
     }
   }, 500);
 }
+
+export function shouldRunTests() {
+  return true;
+}
