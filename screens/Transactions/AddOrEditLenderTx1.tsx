@@ -17,7 +17,7 @@ import ChooseLeadSource from './ChooseBorrowerLeadSource';
 
 export default function AddOrEditLenderTx1(props: any) {
   const { route } = props;
-  const { data, person } = route.params;
+  const { data, person, lightOrDark } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Purchase Loan');
   const [seller, setSeller] = useState<RolodexDataProps>();
@@ -49,7 +49,21 @@ export default function AddOrEditLenderTx1(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, status, type, borrower, seller, borrowerLeadSource, address, street1, street2, city, state, zip]);
+  }, [
+    navigation,
+    status,
+    type,
+    borrower,
+    seller,
+    borrowerLeadSource,
+    address,
+    street1,
+    street2,
+    city,
+    state,
+    zip,
+    lightOrDark,
+  ]);
 
   useEffect(() => {
     let isMounted = true;
@@ -286,6 +300,7 @@ export default function AddOrEditLenderTx1(props: any) {
             title="Choose Relationship"
             setModalRelVisible={setModalRelVisible}
             setSelectedRel={setBorrower}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}
@@ -312,6 +327,7 @@ export default function AddOrEditLenderTx1(props: any) {
             title="Borrower Lead Source"
             setModalSourceVisible={setModalBorrowerSourceVisible}
             setSelectedSource={setBorrowerLeadSource}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}

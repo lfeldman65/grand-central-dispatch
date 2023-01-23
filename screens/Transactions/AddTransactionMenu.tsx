@@ -27,10 +27,12 @@ export default function AddTransactionMenu(props: any) {
       console.log('PERSONADD: ' + person?.firstName);
       navigation.navigate('AddOrEditLenderTx1', {
         person: person,
+        lightOrDark: lightOrDark,
       });
     } else if (index == 2) {
       navigation.navigate('AddOrEditOtherTx1', {
         person: person,
+        lightOrDark: lightOrDark,
       });
     }
   }

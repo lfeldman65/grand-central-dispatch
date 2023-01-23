@@ -1,14 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { storage } from '../../utils/storage';
 import { useIsFocused } from '@react-navigation/native';
 import { getDealOptions } from './api';
@@ -18,8 +9,7 @@ import LeadSourceRow from './LeadSourceRow';
 const backArrow = require('../../images/white_arrow_left.png');
 
 export default function ChooseBorrowerLeadSource(props: any) {
-  const { title, setModalSourceVisible, setSelectedSource } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { title, setModalSourceVisible, setSelectedSource, lightOrDark } = props;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dealOptions, setDealOptions] = useState<TransactionTypeDataProps>();
@@ -41,22 +31,6 @@ export default function ChooseBorrowerLeadSource(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
-
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function fetchDealOptions(isMounted: boolean) {
     setIsLoading(true);
@@ -93,7 +67,7 @@ export default function ChooseBorrowerLeadSource(props: any) {
       <ScrollView>
         <View>
           {dealOptions?.leadSourcesLender.map((item, index) => (
-            <LeadSourceRow key={index} data={item} onPress={() => handleRowPress(index)} />
+            <LeadSourceRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
           ))}
         </View>
       </ScrollView>

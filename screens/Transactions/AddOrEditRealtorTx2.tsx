@@ -255,7 +255,6 @@ export default function AddOrEditRealtorTx2(props: any) {
         grossComm: grossComm,
         data: data,
         source: source,
-        //   lightOrDark: lightOrDark
       });
     }
   }

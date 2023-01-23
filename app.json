@@ -20,6 +20,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.referralmaker.referralmaker",
       "buildNumber": "1",
+      "accessesContactNotes": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses your location to show contacts that are near you."
       }

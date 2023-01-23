@@ -58,6 +58,7 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
     navigation.navigate('AddTxMenu', {
       person: null,
       source: 'Transactions',
+      lightOrDark: lightOrDark,
     });
   };
 

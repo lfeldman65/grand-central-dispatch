@@ -104,5 +104,5 @@ export async function handleTextPressed(number: string) {
 }
 
 export function shouldRunTests() {
-  return true;
+  return false;
 }

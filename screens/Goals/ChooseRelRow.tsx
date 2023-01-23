@@ -1,8 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { RolodexDataProps } from './interfaces';
-import { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { storage } from '../../utils/storage';
+import { useIsFocused } from '@react-navigation/native';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');

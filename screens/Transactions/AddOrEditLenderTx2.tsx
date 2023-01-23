@@ -8,6 +8,7 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, loanTypeMenu, styles, roundToInt } from './transactionHelpers';
 import ChooseLoanDescription from './ChooseLoanDescription';
+import { shouldRunTests } from '../../utils/general';
 
 var grossComm1 = 0;
 
@@ -17,11 +18,11 @@ export default function AddOrEditLenderTx2(props: any) {
     route.params;
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
-  const [originalPrice, setOriginalPrice] = useState('200000'); // 500000
+  const [originalPrice, setOriginalPrice] = useState('');
   const [applicationDate, setApplicationDate] = useState(new Date());
   const [closingDate, setClosingDate] = useState(new Date());
-  const [closingPrice, setClosingPrice] = useState('400000');
-  const [interestRate, setInterestRate] = useState('2');
+  const [closingPrice, setClosingPrice] = useState('');
+  const [interestRate, setInterestRate] = useState('');
   const [rateType, setRateType] = useState('Fixed'); // Loan Type in app
   const [rateTypeDesc, setRateTypeDesc] = useState('1st'); //
   const [originationFees, setOriginationFees] = useState('90'); // sellerCommission in Postman
@@ -78,6 +79,17 @@ export default function AddOrEditLenderTx2(props: any) {
     return () => {
       isMounted = false;
     };
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (shouldRunTests()) {
+      setOriginalPrice('500000');
+      setClosingPrice('400000');
+      setInterestRate('2');
+      setOriginationFees('90');
+      setBuyerCommission('20'); // % by default
+      setAdditionalIncome('10'); // $ by default
+    }
   }, [isFocused]);
 
   function populateDataIfEdit(isMounted: boolean) {
