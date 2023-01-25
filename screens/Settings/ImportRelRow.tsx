@@ -9,22 +9,12 @@ interface ImportRowProps {
   data: RolodexImportDataProps;
   onPress(): void;
   relFromAbove: string;
+  lightOrDark: string;
 }
 
 export default function ImportRelRow(props: ImportRowProps) {
-  const { relFromAbove } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { relFromAbove, lightOrDark } = props;
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    getDarkOrLightMode();
-    //console.log('relFromAbove: ' + relFromAbove);
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   return (
     <TouchableOpacity onPress={props.onPress}>

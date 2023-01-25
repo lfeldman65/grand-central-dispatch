@@ -1,34 +1,28 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { useState } from 'react';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 interface LeadSourceProps {
   data: string;
-  lightOrDark: string;
   onPress(): void;
 }
 
 export default function LeadSourceRow(props: LeadSourceProps) {
-  const { lightOrDark } = props;
+  const [lightOrDark, setLightOrDark] = useState('');
 
   return (
-    <TouchableOpacity onPress={props.onPress}>
-      <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-        <Text style={lightOrDark == 'dark' ? styles.sourceDark : styles.sourceLight}>{props.data}</Text>
-      </View>
-    </TouchableOpacity>
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <TouchableOpacity onPress={props.onPress}>
+        <View style={lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+          <Text style={lightOrDark == 'dark' ? styles.sourceDark : styles.sourceLight}>{props.data}</Text>
+        </View>
+      </TouchableOpacity>
+    </>
   );
 }
 
 export const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    height: '100%',
-  },
-  checkView: {
-    marginTop: 12,
-    left: '90%',
-    position: 'absolute',
-    marginBottom: 12,
-  },
   sourceDark: {
     color: 'white',
     fontSize: 18,
@@ -62,12 +56,5 @@ export const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 0.5,
     paddingBottom: 10,
-  },
-  rankingCircle: {
-    height: 30,
-    width: 30,
-    borderRadius: 10,
-    marginLeft: 10,
-    marginRight: 5,
   },
 });

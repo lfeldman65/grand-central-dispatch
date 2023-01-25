@@ -1,27 +1,16 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
-// import { RolodexDataProps } from './interfaces';
-import { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { storage } from '../../utils/storage';
+import { useIsFocused } from '@react-navigation/native';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 interface LeadSourceProps {
   data: string;
   onPress(): void;
+  lightOrDark: string;
 }
 
 export default function OtherTxtypeRow(props: LeadSourceProps) {
-  //  const { relFromAbove } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { lightOrDark } = props;
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   return (
     <TouchableOpacity onPress={props.onPress}>

@@ -1,26 +1,14 @@
 import { useState, useEffect } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { ScrollView, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import { getDealOptions } from './api';
 import { TransactionTypeDataProps } from './interfaces';
 import OtherTxTypeRow from './OtherTxTypeRow';
 
-var prunedOptions = [];
 const backArrow = require('../../images/white_arrow_left.png');
 
 export default function ChooseOtherTxType(props: any) {
-  const { title, setModalTypeVisible, setSelectedType } = props;
-  const [lightOrDark, setIsLightOrDark] = useState('');
+  const { title, setModalTypeVisible, setSelectedType, lightOrDark } = props;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dealOptions, setDealOptions] = useState<TransactionTypeDataProps>();
@@ -43,15 +31,6 @@ export default function ChooseOtherTxType(props: any) {
   useEffect(() => {
     var a = [];
   }, [dealOptions]);
-
-  useEffect(() => {
-    getDarkOrLightMode();
-  }, [isFocused]);
-
-  async function getDarkOrLightMode() {
-    const dOrlight = await storage.getItem('darkOrLight');
-    setIsLightOrDark(dOrlight ?? 'light');
-  }
 
   function fetchDealOptions(isMounted: boolean) {
     setIsLoading(true);
@@ -93,7 +72,14 @@ export default function ChooseOtherTxType(props: any) {
               item != 'Seller' &&
               item != 'Buyer & Seller' &&
               item != 'Purchase Loan' &&
-              item != 'Refinance' && <OtherTxTypeRow key={index} data={item} onPress={() => handleRowPress(index)} />
+              item != 'Refinance' && (
+                <OtherTxTypeRow
+                  key={index}
+                  data={item}
+                  lightOrDark={lightOrDark}
+                  onPress={() => handleRowPress(index)}
+                />
+              )
           )}
         </View>
       </ScrollView>

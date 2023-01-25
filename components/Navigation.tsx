@@ -39,6 +39,8 @@ import TransactionDetailsLender from '../screens/Transactions/TransactionDetails
 import TransactionDetailsOther from '../screens/Transactions/TransactionDetailsOther';
 import Profile1 from '../screens/Settings/ProfileScreen1';
 import Profile2 from '../screens/Settings/ProfileScreen2';
+import Sort1 from '../screens/Settings/SortScreen1';
+import Sort2 from '../screens/Settings/SortScreen2';
 import ImportRel1 from '../screens/Settings/ImportRelScreen1';
 import ImportRel2 from '../screens/Settings/ImportRelScreen2';
 import BizGoals from '../screens/Settings/BizGoalsScreen';
@@ -885,6 +887,38 @@ export const ImportStackNavigator = () => {
   );
 };
 
+export const SortStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Sort1"
+        component={Sort1}
+        options={{
+          title: 'Sorting Relationships',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="Sort2"
+        component={Sort2}
+        options={{
+          title: 'Mailing Address',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const ProfileStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -954,6 +988,15 @@ export const SettingsStackNavigator = () => {
       <Stack.Screen
         name="ImportStackNavigator"
         component={ImportStackNavigator}
+        options={{
+          headerBackVisible: true,
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="SortStackNavigator"
+        component={SortStackNavigator}
         options={{
           headerBackVisible: true,
           headerShown: false,

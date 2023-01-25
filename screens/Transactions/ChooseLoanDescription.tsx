@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { storage } from '../../utils/storage';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { getDealOptions } from './api';
 import { TransactionTypeDataProps } from './interfaces';
 import LeadSourceRow from './LeadSourceRow';
@@ -23,6 +23,7 @@ export default function ChooseLoanDescription(props: any) {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dealOptions, setDealOptions] = useState<TransactionTypeDataProps>();
+  const navigation = useNavigation<any>();
 
   const handleRowPress = (index: number) => {
     console.log('title: ' + title);
@@ -33,6 +34,14 @@ export default function ChooseLoanDescription(props: any) {
   function cancelPressed() {
     setModalSourceVisible(false);
   }
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchDealOptions(isMounted);
+    return () => {
+      isMounted = false;
+    };
+  }, [navigation, lightOrDark]);
 
   useEffect(() => {
     let isMounted = true;

@@ -8,6 +8,7 @@ import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { lightOrDarkRows, prettyText } from './settingsHelpers';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function LightOrDarkScreen(props: any) {
   const [lightOrDark, setIsLightOrDark] = useState(lightOrDarkRows[0]);

@@ -67,7 +67,7 @@ export default function ChooseBorrowerLeadSource(props: any) {
       <ScrollView>
         <View>
           {dealOptions?.leadSourcesLender.map((item, index) => (
-            <LeadSourceRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+            <LeadSourceRow key={index} data={item} onPress={() => handleRowPress(index)} />
           ))}
         </View>
       </ScrollView>

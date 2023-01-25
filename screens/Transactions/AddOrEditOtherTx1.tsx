@@ -11,7 +11,7 @@ import ChooseRelationship from '../Goals/ChooseRelationship';
 
 export default function AddOrEditOtherTx1(props: any) {
   const { route } = props;
-  const { data, person } = route.params;
+  const { data, person, lightOrDark } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Lease');
   const [txTitle, setTxTitle] = useState('');
@@ -266,6 +266,7 @@ export default function AddOrEditOtherTx1(props: any) {
             title="Choose Relationship"
             setModalRelVisible={setModalRelVisible}
             setSelectedRel={setWhoInvolved}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}

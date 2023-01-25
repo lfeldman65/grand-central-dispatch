@@ -127,6 +127,7 @@ export interface RolodexImportDataProps {
   officePhone: string;
   email: string;
   notes: string;
+  didChange: boolean;
 }
 
 export interface RolodexImportDataResponse {

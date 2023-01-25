@@ -126,5 +126,6 @@ export function addNewContact(
 }
 
 export function getRolodexData(type: string): Promise<RolodexImportDataResponse> {
-  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=250`);
+  console.log('get rolodex: ' + type);
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=100`);
 } // back tick (`) only necessary for string interpolation

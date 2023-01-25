@@ -9,6 +9,7 @@ import { RolodexImportDataProps } from './interfaces';
 import ImportRelRow from './ImportRelRow';
 import * as Contacts from 'expo-contacts';
 import { addNewContact } from './api';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 // dataRM[] = rolodex in RM app
 // dataNative[] = native contacts
@@ -26,6 +27,7 @@ export default function ImportRelScreen2(props: any) {
   const isFocused = useIsFocused();
   const [dataRM, setDataRM] = useState<RolodexImportDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lightOrDark, setLightOrDark] = useState('');
   const navigation = useNavigation<any>();
 
   var numImport = 0;
@@ -61,6 +63,7 @@ export default function ImportRelScreen2(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
+          //  console.log(res.data);
           var contactsToDisplay: RolodexImportDataProps[] = [];
 
           Contacts.requestPermissionsAsync().then((status) => {
@@ -95,12 +98,12 @@ export default function ImportRelScreen2(props: any) {
                     }
 
                     notes = nativeElement.note;
-                    console.log('NOTES: ' + notes);
+                    //  console.log('NOTES: ' + notes);
 
-                    console.log(e.number + ' ' + e.label);
+                    //    console.log(e.number + ' ' + e.label);
                     nativeElement.emails?.forEach((e) => {
                       email = e.email;
-                      console.log(e.email);
+                      //  console.log(e.email);
                     });
                   });
                   res.data.forEach((cloudElement) => {
@@ -110,8 +113,8 @@ export default function ImportRelScreen2(props: any) {
                   });
 
                   if (add) {
-                    console.log('adding ' + nativeElement.firstName + ' ' + nativeElement.lastName);
-                    console.log('adding ' + nativeElement.note);
+                    //  console.log('adding ' + nativeElement.firstName + ' ' + nativeElement.lastName);
+                    //  console.log('adding ' + nativeElement.note);
 
                     var rp: RolodexImportDataProps = {
                       firstName: nativeElement.firstName ?? '',
@@ -127,6 +130,7 @@ export default function ImportRelScreen2(props: any) {
                       officePhone: officePhone,
                       email: email,
                       notes: notes,
+                      didChange: false,
                     };
                     contactsToDisplay.push(rp);
                   }
@@ -172,7 +176,7 @@ export default function ImportRelScreen2(props: any) {
 
     for (let i = 0; i < dataRM.length; i++) {
       if (dataRM[i].selected == true) {
-        console.log(dataRM[i].firstName + ' ' + dataRM[i].selected);
+        //  console.log(dataRM[i].firstName + ' ' + dataRM[i].selected);
         await addNewContact(
           dataRM[i].firstName,
           dataRM[i].lastName,
@@ -191,7 +195,7 @@ export default function ImportRelScreen2(props: any) {
               console.log(res);
               console.error(res.error);
             } else {
-              console.log(res);
+              //  console.log(res);
               numImport++;
             }
           })
@@ -203,7 +207,6 @@ export default function ImportRelScreen2(props: any) {
   }
 
   function displayNumImport() {
-    console.log('NUM IMPORT: ' + numImport);
     if (numImport == 1) {
       Alert.alert(numImport.toString() + ' relationship was imported');
     } else if (numImport > 1) {
@@ -224,35 +227,39 @@ export default function ImportRelScreen2(props: any) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={globalStyles.tabButtonRow}>
-        <Text style={styles.selected} onPress={selectAllPressed}>
-          Select All
-        </Text>
-        <Text style={styles.selected} onPress={deselectAllPressed}>
-          Deselect All
-        </Text>
-      </View>
-      {isLoading && (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#AAA" />
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={styles.container}>
+        <View style={globalStyles.tabButtonRow}>
+          <Text style={styles.selected} onPress={selectAllPressed}>
+            Select All
+          </Text>
+          <Text style={styles.selected} onPress={deselectAllPressed}>
+            Deselect All
+          </Text>
         </View>
-      )}
-      {!isLoading && (
-        <ScrollView>
-          <View>
-            {dataRM.map((item, index) => (
-              <ImportRelRow
-                relFromAbove={item.firstName}
-                key={index}
-                data={item}
-                onPress={() => handleRowPress(index)}
-              />
-            ))}
+        {isLoading && (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#AAA" />
           </View>
-        </ScrollView>
-      )}
-    </View>
+        )}
+        {!isLoading && (
+          <ScrollView>
+            <View>
+              {dataRM.map((item, index) => (
+                <ImportRelRow
+                  relFromAbove={item.firstName}
+                  key={index}
+                  data={item}
+                  onPress={() => handleRowPress(index)}
+                  lightOrDark={lightOrDark}
+                />
+              ))}
+            </View>
+          </ScrollView>
+        )}
+      </View>
+    </>
   );
 }
 

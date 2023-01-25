@@ -7,13 +7,13 @@ import { storage } from '../../utils/storage';
 import { getProfileData } from './api';
 import { ProfileDataProps } from './interfaces';
 import Constants from 'expo-constants';
-import { landingPages, displayAZRows, lightOrDarkRows, prettyText } from './settingsHelpers';
+import { landingPages, displayAZRows, prettyText } from './settingsHelpers';
 const chevron = require('../../images/chevron_white_right.png');
 const person = require('../Settings/images/user.png');
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
-  const [lightOrDark, setLightOrDark] = useState(lightOrDarkRows[0]);
+  const [lightOrDark, setLightOrDark] = useState('');
   const [profileData, setProfileData] = useState<ProfileDataProps>();
   const [date, setDate] = useState(new Date());
   const isFocused = useIsFocused();
@@ -37,11 +37,13 @@ export default function SettingsScreen() {
   }
 
   function importPressed() {
+    console.log('import pressed: ' + lightOrDark);
     navigation.navigate('ImportStackNavigator');
   }
 
   function sortPressed() {
     console.log('sort relationships');
+    navigation.navigate('SortStackNavigator');
   }
 
   function landingPagePressed() {
@@ -104,12 +106,8 @@ export default function SettingsScreen() {
     if (!isMounted) {
       return;
     }
-    var savedState = await storage.getItem('darkOrLight');
-    if (savedState == null) {
-      setLightOrDark(lightOrDarkRows[0]);
-    } else {
-      setLightOrDark(savedState);
-    }
+    const dOrlight = await storage.getItem('darkOrLight');
+    setLightOrDark(dOrlight ?? 'light');
   }
 
   async function getDisplayAZ(isMounted: boolean) {
@@ -140,7 +138,7 @@ export default function SettingsScreen() {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  }, [navigation]);
+  }, [navigation, lightOrDark]);
 
   useEffect(() => {
     let isMounted = true;

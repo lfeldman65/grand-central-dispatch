@@ -199,12 +199,12 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity style={styles.saveButton} onPress={editPressed}>
+        <TouchableOpacity style={styles.editAndBackText} onPress={editPressed}>
           <Text style={styles.editAndBackText}>Edit</Text>
         </TouchableOpacity>
       ),
       headerLeft: () => (
-        <TouchableOpacity style={styles.saveButton} onPress={backPressed}>
+        <TouchableOpacity style={styles.editAndBackText} onPress={backPressed}>
           <Text style={styles.editAndBackText}>Back</Text>
         </TouchableOpacity>
       ),
@@ -1611,12 +1611,9 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginBottom: 10,
   },
-  saveButton: {
-    padding: 5,
-  },
   editAndBackText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 16,
     marginTop: 3,
   },
   textAndChevronRow: {
