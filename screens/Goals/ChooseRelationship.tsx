@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { getRolodexData, getRolodexSearch } from './api';
 import { RolodexDataProps } from './interfaces';
 import RelationshipRow from './ChooseRelRow';

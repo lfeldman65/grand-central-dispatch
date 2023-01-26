@@ -225,6 +225,7 @@ export default function AddOrEditOtherTx1(props: any) {
             title="Other Tx Type"
             setModalTypeVisible={setModalTypeVisible}
             setSelectedType={setType}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}

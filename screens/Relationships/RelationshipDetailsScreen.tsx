@@ -27,6 +27,7 @@ import { trackAction } from '../Goals/api';
 import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
 import * as SMS from 'expo-sms';
 import Dialog from 'react-native-dialog';
+import { ga4Analytics } from '../../utils/general';
 
 const chevron = require('../../images/chevron_blue_right.png');
 import TrackActivity from '../Goals/TrackActivityScreen';
@@ -189,6 +190,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function editPressed() {
+    ga4Analytics('Relationships_Edit', {
+      contentType: 'none',
+      itemId: 'id0508',
+    });
     if (dataDetails == null) return;
     navigation.navigate('EditRelationshipScreen', {
       data: dataDetails,
@@ -272,17 +277,22 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleMobilePressed() {
-    console.log('mobile pressed');
     SheetManager.show(Sheets.mobileSheet);
   }
 
   function handleHomePressed() {
-    console.log('home pressed');
+    ga4Analytics('Relationships_Phone_Call', {
+      contentType: 'Home',
+      itemId: 'id0520',
+    });
     Linking.openURL(`tel:${dataDetails?.homePhone}`);
   }
 
   function handleOfficePressed() {
-    console.log('office pressed');
+    ga4Analytics('Relationships_Phone_Call', {
+      contentType: 'Office',
+      itemId: 'id0520',
+    });
     Linking.openURL(`tel:${dataDetails?.officePhone}`);
   }
 
@@ -331,7 +341,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   // Top Row
 
   async function handleMessagePressed() {
-    console.log('message pressed');
+    ga4Analytics('Relationships_Message_Top', {
+      contentType: 'none',
+      itemId: 'id0509',
+    });
     if (dataDetails?.mobile == null || dataDetails?.mobile.length < 7) {
       Alert.alert('Please enter a valid phone number');
       return;
@@ -383,6 +396,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleEmailPressed() {
+    ga4Analytics('Relationships_Email_Top', {
+      contentType: 'none',
+      itemId: 'id0513',
+    });
     if (dataDetails?.email == null || dataDetails?.email == '') {
       Alert.alert('Please enter an email address');
       return;
@@ -391,23 +408,36 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleMapPressed() {
-    console.log('map pressed');
+    ga4Analytics('Relationships_Map_Top', {
+      contentType: 'none',
+      itemId: 'id0514',
+    });
     handleDirectionsPressed();
   }
 
   // bottom row
 
   function handleActivityPressed() {
+    ga4Analytics('Relationships_Activity_Bottom', {
+      contentType: 'none',
+      itemId: 'id0515',
+    });
     setAddActivityVisible(!addActivityVisible);
   }
 
   function handleToDoPressed() {
+    ga4Analytics('Relationships_ToDo_Bottom', {
+      contentType: 'none',
+      itemId: 'id0516',
+    });
     setAddToDoVisible(!addToDoVisible);
   }
 
   function handleTransactionPressed() {
-    console.log('transaction pressed');
-
+    ga4Analytics('Relationships_Transaction_Bottom', {
+      contentType: 'none',
+      itemId: 'id0517',
+    });
     var person: RolodexDataProps = {
       id: dataDetails?.id!,
       firstName: dataDetails?.firstName!,
@@ -425,7 +455,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleApptPressed() {
-    console.log('appointment pressed');
+    ga4Analytics('Relationships_Appointment_Bottom', {
+      contentType: 'none',
+      itemId: 'id0518',
+    });
     setAddAppointmentVisible(!addAppointmentVisible);
   }
 
@@ -438,7 +471,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleReferralPressed() {
     console.log('referral pressed');
-    navigation.navigate('RelDetails', {
+    navigation.push('RelDetails', {
       contactId: dataDetails?.referredBy.id!,
       firstName: dataDetails?.referredBy.name,
       lastName: '',
@@ -448,7 +481,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleSpousePressed() {
     console.log('spouse pressed');
-    navigation.navigate('RelDetails', {
+    navigation.push('RelDetails', {
       contactId: dataDetails?.spouse.id,
       firstName: dataDetails?.spouse.name,
       lastName: '',
@@ -592,7 +625,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function deletePressedContinue() {
-    console.log('delete pressed');
+    ga4Analytics('Relationships_Delete', {
+      contentType: 'none',
+      itemId: 'id0522',
+    });
     setIsLoading(true);
     deleteRelationship(contactId)
       .then((res) => {
@@ -1270,7 +1306,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                     key={index}
                     onPress={() => {
                       SheetManager.hide(Sheets.callSheet, null).then(() => {
-                        console.log('CALLTYPE: ' + value);
+                        ga4Analytics('Relationships_Call_Top', {
+                          contentType: value,
+                          itemId: 'id0510',
+                        });
                         dialPhone(value);
                       });
                     }}
@@ -1317,8 +1356,16 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                       SheetManager.hide(Sheets.mobileSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
+                          ga4Analytics('Relationships_Phone_Call', {
+                            contentType: 'Mobile',
+                            itemId: 'id0520',
+                          });
                           Linking.openURL(`tel:${dataDetails?.mobile}`);
                         } else {
+                          ga4Analytics('Relationships_Mobile_Text', {
+                            contentType: 'Mobile',
+                            itemId: 'id0521',
+                          });
                           handleTextPressed(dataDetails?.mobile!);
                         }
                       });
@@ -1461,7 +1508,12 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
+                      console.log(value);
                       SheetManager.hide(Sheets.ideaSheet, null).then(() => {
+                        ga4Analytics('Relationships_Ideas_Bottom', {
+                          contentType: value,
+                          itemId: 'id0519',
+                        });
                         if (value == 'Calls') {
                           setModalCallsVisible(true);
                         } else if (value == 'Notes') {
@@ -1519,7 +1571,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                           showDialog(value);
                         } else {
                           if (value == 'Use Video Album') {
-                            console.log(dataDetails?.contactID);
                             handleVideoFromAlbum('none', dataDetails);
                           } else {
                             handleVideoFromCamera('none', dataDetails);
@@ -1533,8 +1584,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                   </TouchableOpacity>
                 ))}
               </View>
-
-              {/*  Add a Small Footer at Bottom */}
             </ScrollView>
           </View>
         </ActionSheet>

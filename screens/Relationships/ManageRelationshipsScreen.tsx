@@ -12,6 +12,7 @@ import { GroupsDataProps, RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { ga4Analytics } from '../../utils/general';
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 
@@ -27,7 +28,10 @@ export default function ManageRelationshipsScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
 
   const handleRowPress = (index: number) => {
-    //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    ga4Analytics('Relationships_Row', {
+      contentType: prettyTabName(tabSelected),
+      itemId: 'id0507',
+    });
     if (tabSelected == 'groups') {
       console.log('group name:' + dataGroups[index].groupName);
       console.log('group id:' + dataGroups[index].id);
@@ -95,35 +99,60 @@ export default function ManageRelationshipsScreen() {
     return 'Biz';
   }
 
+  function prettyTabName(ugly: TabType) {
+    if (ugly == 'a-z') return 'AZ';
+    if (ugly == 'ranking') return 'Ranking';
+    return 'Groups';
+  }
+
   function handleAddRelPressed() {
-    //  analytics.event(new Event('Relationships', 'Add Relationship', 'Press', 0));
+    ga4Analytics('Relationships_Add', {
+      contentType: prettyTabName(tabSelected),
+      itemId: 'id0506',
+    });
     setModalVisible(true);
   }
 
   function azPressed() {
-    //   analytics.event(new Event('Manage Relationships', 'Tab Button', 'A-Z', 0));
+    ga4Analytics('Relationships_AZ_Tab', {
+      contentType: 'none',
+      itemId: 'id0501',
+    });
     setTabSelected('a-z');
     fetchRolodexPressed('alpha', true);
   }
 
   function rankingPressed() {
-    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
+    ga4Analytics('Relationships_Ranking_Tab', {
+      contentType: 'none',
+      itemId: 'id0502',
+    });
     setTabSelected('ranking');
     fetchRolodexPressed('ranking', true);
   }
 
   function groupsPressed() {
-    //   analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
+    ga4Analytics('Relationships_Groups_Tab', {
+      contentType: 'none',
+      itemId: 'id0503',
+    });
     setTabSelected('groups');
     fetchGroupsPressed(true);
   }
 
   function filterPressed() {
-    console.log('filter');
-    //   analytics.event(new Event('Manage Relationships', 'Filter', 'Press', 0));
     if (isFilterRel) {
+      // these seem backwards, but it's because we are sending the analytics before toggling.
+      ga4Analytics('Relationships_Show_Businesses', {
+        contentType: 'none',
+        itemId: 'id0504',
+      });
       setIsFilterRel(false);
     } else {
+      ga4Analytics('Relationships_Show_Relationships', {
+        contentType: 'none',
+        itemId: 'id0505',
+      });
       setIsFilterRel(true);
       showFilterTitle();
     }

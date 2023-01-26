@@ -1,9 +1,21 @@
 import * as ImagePicker from 'expo-image-picker';
 import * as SMS from 'expo-sms';
 import { RelDetailsProps, FileUpload } from './interfaces';
+import { ga4Analytics } from '../../utils/general';
+
+function prettyVideoType(hasBB: boolean) {
+  if (hasBB) {
+    return 'BombBomb';
+  }
+  return 'Standard';
+}
 
 export async function handleVideoFromAlbum(vidTitle: string, relationship: RelDetailsProps | undefined | null) {
   console.log('handle video from album with bb: ' + relationship?.hasBombBombPermission);
+  ga4Analytics('Relationships_Video_Album', {
+    contentType: prettyVideoType(relationship?.hasBombBombPermission!),
+    itemId: 'id0511',
+  });
   let result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     videoQuality: 1,
@@ -19,7 +31,10 @@ export async function handleVideoFromAlbum(vidTitle: string, relationship: RelDe
 
 export async function handleVideoFromCamera(vidTitle: string, relationship: RelDetailsProps | undefined | null) {
   console.log('handle video from camera with bb: ' + relationship?.hasBombBombPermission);
-
+  ga4Analytics('Relationships_Video_Camera', {
+    contentType: prettyVideoType(relationship?.hasBombBombPermission!),
+    itemId: 'id0512',
+  });
   const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
 
   if (permissionResult.granted === false) {

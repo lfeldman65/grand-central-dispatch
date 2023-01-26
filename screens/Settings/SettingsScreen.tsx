@@ -8,6 +8,9 @@ import { getProfileData } from './api';
 import { ProfileDataProps } from './interfaces';
 import Constants from 'expo-constants';
 import { landingPages, displayAZRows, prettyText } from './settingsHelpers';
+import { ga4Analytics } from '../../utils/general';
+import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+
 const chevron = require('../../images/chevron_white_right.png');
 const person = require('../Settings/images/user.png');
 
@@ -21,69 +24,124 @@ export default function SettingsScreen() {
   const [displayAZ, setDisplayAZ] = useState(displayAZRows[0]);
 
   function signOutPressed() {
+    ga4Analytics('Settings_Sign_Out', {
+      contentType: 'none',
+      itemId: 'id1514',
+    });
     navigation.navigate('Login');
   }
 
   function changePasswordPressed() {
+    ga4Analytics('Settings_Change_Password', {
+      contentType: 'none',
+      itemId: 'id1515',
+    });
     Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
   }
 
   function profilePressed() {
+    ga4Analytics('Settings_Profile', {
+      contentType: 'none',
+      itemId: 'id1501',
+    });
     navigation.navigate('ProfileStackNavigator');
   }
 
   function businessGoalsPressed() {
+    ga4Analytics('Settings_Biz_Goals', {
+      contentType: 'none',
+      itemId: 'id1502',
+    });
     navigation.navigate('BizGoalsStackNavigator');
   }
 
   function importPressed() {
-    console.log('import pressed: ' + lightOrDark);
-    navigation.navigate('ImportStackNavigator');
+    ga4Analytics('Settings_Import', {
+      contentType: 'none',
+      itemId: 'id1503',
+    });
+    console.log('SETTINGS: ' + lightOrDark);
+    navigation.navigate('ImportStackNavigator', {
+      lightOrDark: lightOrDark,
+    });
   }
 
   function sortPressed() {
-    console.log('sort relationships');
+    ga4Analytics('Settings_Sort', {
+      contentType: 'none',
+      itemId: 'id1504',
+    });
     navigation.navigate('SortStackNavigator');
   }
 
   function landingPagePressed() {
-    console.log('landing page');
+    ga4Analytics('Settings_Landing', {
+      contentType: 'none',
+      itemId: 'id1505',
+    });
     navigation.navigate('LandingScreen');
   }
 
   function displayAZPressed() {
-    console.log('display A-Z');
+    ga4Analytics('Settings_Display_AZ', {
+      contentType: 'none',
+      itemId: 'id1506',
+    });
     navigation.navigate('RelOrderScreen');
   }
 
   function lightOrDarkPressed() {
-    console.log('light or dark');
+    ga4Analytics('Settings_Light_Or_Dark', {
+      contentType: 'none',
+      itemId: 'id1507',
+    });
     navigation.navigate('LightOrDarkScreen');
   }
 
   function notificationsPressed() {
-    console.log('notifications');
+    ga4Analytics('Settings_Notifications', {
+      contentType: 'none',
+      itemId: 'id1508',
+    });
     navigation.navigate('NotificationsScreen');
   }
 
   function tutorialPressed() {
-    console.log('tutorial');
+    ga4Analytics('Settings_Tutorial', {
+      contentType: 'none',
+      itemId: 'id1509',
+    });
   }
 
   function aboutUsPressed() {
+    ga4Analytics('Settings_About_Us', {
+      contentType: 'none',
+      itemId: 'id1510',
+    });
     navigation.navigate('AboutUsScreen');
   }
 
   function ratePressed() {
-    console.log('rate');
+    ga4Analytics('Settings_Rate', {
+      contentType: 'none',
+      itemId: 'id1511',
+    });
     Linking.openURL('https://apps.apple.com/us/app/referral-maker-crm/id1097338930');
   }
 
   function privacyPressed() {
+    ga4Analytics('Settings_Privacy', {
+      contentType: 'none',
+      itemId: 'id1512',
+    });
     Linking.openURL('https://www.buffiniandcompany.com/privacy-policy.aspx');
   }
 
   function termsPressed() {
+    ga4Analytics('Settings_Terms', {
+      contentType: 'none',
+      itemId: 'id1513',
+    });
     Linking.openURL('https://buffiniandcompany.com/terms');
   }
 
@@ -173,187 +231,190 @@ export default function SettingsScreen() {
   }, [isFocused]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.topView}>
-        <View style={styles.imageBox}>
-          <Image source={person} style={styles.personImage} />
+    <>
+      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <View style={styles.container}>
+        <View style={styles.topView}>
+          <View style={styles.imageBox}>
+            <Image source={person} style={styles.personImage} />
+          </View>
+          <View style={styles.userNameView}>
+            <Text style={styles.userText}>{profileData != null ? profileData.email : ''}</Text>
+            <Text onPress={changePasswordPressed} style={styles.changePasswordText}>
+              Change Password
+            </Text>
+          </View>
         </View>
-        <View style={styles.userNameView}>
-          <Text style={styles.userText}>{profileData != null ? profileData.email : ''}</Text>
-          <Text onPress={changePasswordPressed} style={styles.changePasswordText}>
-            Change Password
+        <ScrollView>
+          <Text style={styles.headerRow}>Set Up</Text>
+          <TouchableOpacity onPress={profilePressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Set Up Profile</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={businessGoalsPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Set Your Business Goals</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={importPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Import Relationships</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={sortPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Sort Relationships</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <Text style={styles.headerRow}>Display and Features</Text>
+
+          <TouchableOpacity onPress={landingPagePressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBoxSupp}>
+                <Text style={styles.activityText}>Landing Page</Text>
+              </View>
+              <Text style={styles.suppText}>{landingPage}</Text>
+
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={displayAZPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBoxSupp}>
+                <Text style={styles.activityText}>Display Relationships A - Z</Text>
+              </View>
+              <Text style={styles.suppText}>{displayAZ}</Text>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={lightOrDarkPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBoxSupp}>
+                <Text style={styles.activityText}>Light or Dark Mode</Text>
+              </View>
+              <Text style={styles.suppText}>{prettyText(lightOrDark)}</Text>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={notificationsPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Notifications</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={tutorialPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Tutorial</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <Text style={styles.headerRow}>Buffini and Company</Text>
+
+          <TouchableOpacity onPress={aboutUsPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>About Us</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={ratePressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Rate in App Store</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={privacyPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Privacy Policy</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={termsPressed}>
+            <View style={styles.pressableRow}>
+              <View style={styles.textBox}>
+                <Text style={styles.activityText}>Terms of Service</Text>
+              </View>
+              <View style={styles.chevronBox}>
+                <Image source={chevron} style={styles.chevron} />
+              </View>
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
+        <View style={styles.bottomView}>
+          <TouchableOpacity style={styles.bottomContainer} onPress={signOutPressed}>
+            <View style={styles.signOutButton}>
+              <Text style={styles.signOutText}>{'Sign Out'}</Text>
+            </View>
+          </TouchableOpacity>
+          <Text style={styles.versionText}>{'Version ' + Constants.manifest?.version} </Text>
+          <Text style={styles.copyrightText}>
+            {'@ ' +
+              date.toLocaleDateString('en-us', {
+                year: 'numeric',
+              }) +
+              ' Buffini and Company'}
           </Text>
         </View>
       </View>
-      <ScrollView>
-        <Text style={styles.headerRow}>Set Up</Text>
-        <TouchableOpacity onPress={profilePressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Set Up Profile</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={businessGoalsPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Set Your Business Goals</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={importPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Import Relationships</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={sortPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Sort Relationships</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <Text style={styles.headerRow}>Display and Features</Text>
-
-        <TouchableOpacity onPress={landingPagePressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBoxSupp}>
-              <Text style={styles.activityText}>Landing Page</Text>
-            </View>
-            <Text style={styles.suppText}>{landingPage}</Text>
-
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={displayAZPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBoxSupp}>
-              <Text style={styles.activityText}>Display Relationships A - Z</Text>
-            </View>
-            <Text style={styles.suppText}>{displayAZ}</Text>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={lightOrDarkPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBoxSupp}>
-              <Text style={styles.activityText}>Light or Dark Mode</Text>
-            </View>
-            <Text style={styles.suppText}>{prettyText(lightOrDark)}</Text>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={notificationsPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Notifications</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={tutorialPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Tutorial</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <Text style={styles.headerRow}>Buffini and Company</Text>
-
-        <TouchableOpacity onPress={aboutUsPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>About Us</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={ratePressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Rate in App Store</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={privacyPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Privacy Policy</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={termsPressed}>
-          <View style={styles.pressableRow}>
-            <View style={styles.textBox}>
-              <Text style={styles.activityText}>Terms of Service</Text>
-            </View>
-            <View style={styles.chevronBox}>
-              <Image source={chevron} style={styles.chevron} />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
-      <View style={styles.bottomView}>
-        <TouchableOpacity style={styles.bottomContainer} onPress={signOutPressed}>
-          <View style={styles.signOutButton}>
-            <Text style={styles.signOutText}>{'Sign Out'}</Text>
-          </View>
-        </TouchableOpacity>
-        <Text style={styles.versionText}>{'Version ' + Constants.manifest?.version} </Text>
-        <Text style={styles.copyrightText}>
-          {'@ ' +
-            date.toLocaleDateString('en-us', {
-              year: 'numeric',
-            }) +
-            ' Buffini and Company'}
-        </Text>
-      </View>
-    </View>
+    </>
   );
 }
 

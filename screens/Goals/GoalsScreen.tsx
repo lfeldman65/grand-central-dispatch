@@ -370,6 +370,7 @@ export default function GoalsScreen() {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
+    console.log('Goals: ' + lightOrDark);
   }, [navigation, localGoalID, goalList]);
 
   useEffect(() => {

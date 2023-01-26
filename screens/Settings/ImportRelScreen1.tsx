@@ -1,13 +1,18 @@
 import { useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 
 const rmLogo = require('./images/upload_contacts.png');
 
 export default function ImportRelScreen1(props: any) {
+  const { lightOrDark } = props;
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
+
+  useEffect(() => {
+    console.log('LIGHTORDARK!!!: ' + props.lightOrDark);
+  }, [isFocused]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -30,7 +35,10 @@ export default function ImportRelScreen1(props: any) {
   }
 
   function nextPressed() {
-    navigation.navigate('ImportRel2');
+    console.log('Import Next: ' + lightOrDark);
+    navigation.navigate('ImportRel2', {
+      lightOrDark: lightOrDark,
+    });
   }
 
   return (

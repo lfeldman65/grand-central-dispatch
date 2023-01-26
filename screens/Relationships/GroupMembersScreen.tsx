@@ -16,6 +16,7 @@ import { GroupMembersDataProps } from './interfaces';
 import GroupMemberRow from './GroupMemberRow';
 import SelRelScreen from './SelectRelationshipScreen';
 import { RolodexDataProps } from './interfaces';
+import { ga4Analytics } from '../../utils/general';
 
 const closeButton = require('../../images/button_close_white.png');
 const searchGlass = require('../../images/whiteSearch.png');
@@ -47,6 +48,10 @@ export default function GroupMembersScreen(props: any) {
   }, [navigation]);
 
   const handleRowPress = (index: number) => {
+    ga4Analytics('Relationships_Groups_Details_Row', {
+      contentType: 'none',
+      itemId: 'id0525',
+    });
     navigation.navigate('RelDetails', {
       contactId: dataGroups[index].id,
       firstName: dataGroups[index].firstName,
@@ -89,6 +94,10 @@ export default function GroupMembersScreen(props: any) {
   }
 
   function addPressed() {
+    ga4Analytics('Relationships_Groups_Add', {
+      contentType: 'none',
+      itemId: 'id0523',
+    });
     setRelModalVisible(true);
   }
 

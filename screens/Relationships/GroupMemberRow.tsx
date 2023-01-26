@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-na
 import { GroupMembersDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { removeGroupMember } from './api';
+import { ga4Analytics } from '../../utils/general';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -58,8 +59,10 @@ export default function GroupMemberRow(props: GroupMemberRowProps) {
   }
 
   function removePressedContinued() {
-    console.log('group id from above: ' + groupID);
-    console.log('guid from above: ' + props.data.id);
+    ga4Analytics('Relationships_Groups_Remove', {
+      contentType: 'none',
+      itemId: 'id0524',
+    });
     setIsLoading(true);
     removeGroupMember(groupID, props.data.id)
       .then((res) => {
