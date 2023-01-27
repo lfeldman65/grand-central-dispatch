@@ -8,6 +8,7 @@ import { getTransactionDetails, deleteTx } from './api';
 import { isNullOrEmpty } from '../../utils/general';
 import { prettyDate } from '../../utils/general';
 import { roundToInt } from './transactionHelpers';
+import { ga4Analytics } from '../../utils/general';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -31,7 +32,10 @@ export default function TransactionDetailsRE(props: any) {
   }, [navigation, data]);
 
   function editPressed() {
-    console.log('edit pressed');
+    ga4Analytics('Realtor_Transactions_Edit', {
+      contentType: 'none',
+      itemId: 'id0808',
+    });
     navigation.navigate('AddOrEditRealtorTx1', {
       data: data,
     });
@@ -87,7 +91,10 @@ export default function TransactionDetailsRE(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res);
+          ga4Analytics('Realtor_Transactions_Delete', {
+            contentType: 'none',
+            itemId: 'id0809',
+          });
           navigation.goBack();
         }
       })

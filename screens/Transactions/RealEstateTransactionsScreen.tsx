@@ -11,8 +11,9 @@ import { storage } from '../../utils/storage';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { changeTxStatus } from './api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { ga4Analytics } from '../../utils/general';
 
-type TabType = 'potential' | 'active' | 'pending' | 'closed';
+type TabType = 'Potential' | 'Active' | 'Pending' | 'Closed';
 
 interface TransactionScreenProps {
   route: RouteProp<any>;
@@ -21,29 +22,31 @@ interface TransactionScreenProps {
 export default function RealEstateTransactionsScreen(props: TransactionScreenProps) {
   // console.log('route param defaultTab', props.route.params?.defaultTab);
   const filters = {
-    Potential: 'potential',
-    Active: 'active',
-    Pending: 'pending',
-    Closed: 'closed',
+    Potential: 'Potential',
+    Active: 'Active',
+    Pending: 'Pending',
+    Closed: 'Closed',
   };
 
   const Sheets = {
     filterSheet: 'filter_sheet_id',
   };
 
-  const [tabSelected, setTabSelected] = useState<TabType>(props.route.params?.defaultTab ?? 'potential');
+  const [tabSelected, setTabSelected] = useState<TabType>(props.route.params?.defaultTab ?? 'Potential');
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [lightOrDark, setLightOrDark] = useState('');
   const [data, setData] = useState<TransactionDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const actionSheetRef = useRef<ActionSheet>(null);
-  const [statusChoice, setStatusChoice] = useState('potential');
+  const [statusChoice, setStatusChoice] = useState('Potential');
   const [currentId, setCurrentId] = useState(0);
 
   const handleRowPress = (index: number) => {
-    //  analytics.event(new Event('Real Estate Transactions', 'Row Pressed'));
-    console.log(data[index].id);
+    ga4Analytics('Realtor_Transactions_Row', {
+      contentType: tabSelected,
+      itemId: 'id0805',
+    });
     navigation.navigate('RealEstateTxDetails', {
       dealID: data[index].id,
       lightOrDark: lightOrDark,
@@ -51,7 +54,10 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   };
 
   const handleAddPressed = () => {
-    //   analytics.event(new Event('Transactions', 'Add Transaction'));
+    ga4Analytics('Realtor_Transactions_Add', {
+      contentType: 'none',
+      itemId: 'id0807',
+    });
     storage.setItem('whoCalledTxMenu', 'RealEstateTransactions');
     console.log('theme in RealEstateTransactionsScreen: ' + lightOrDark);
     navigation.navigate('AddTxMenu', {
@@ -62,8 +68,20 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   };
 
   function tabPressed(type: TabType) {
-    //   analytics.event(new Event('Real Estate Trans', type));
+    console.log(type);
+    var mainEvent = 'Realtor_Transactions_' + type;
+    ga4Analytics(mainEvent, {
+      contentType: 'none',
+      itemId: getItemId(type),
+    });
     setTabSelected(type);
+  }
+
+  function getItemId(whichTab: string) {
+    if (whichTab == 'Potential') return 'id0801';
+    if (whichTab == 'Active') return 'id0802';
+    if (whichTab == 'Pending') return 'id0803';
+    return 'id0804';
   }
 
   function fetchData(status: string, type: string, isMounted: boolean) {
@@ -93,7 +111,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
 
   useEffect(() => {
     let isMounted = true;
-    fetchData(tabSelected, 'Realtor', true);
+    fetchData(tabSelected, 'Realtor', isMounted);
     return () => {
       isMounted = false;
     };
@@ -144,26 +162,26 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       <View style={globalStyles.tabButtonRow}>
         <Text
-          style={tabSelected == 'potential' ? globalStyles.selected : globalStyles.unselected}
-          onPress={() => tabPressed('potential')}
+          style={tabSelected == 'Potential' ? globalStyles.selected : globalStyles.unselected}
+          onPress={() => tabPressed('Potential')}
         >
           Potential
         </Text>
         <Text
-          style={tabSelected == 'active' ? globalStyles.selected : globalStyles.unselected}
-          onPress={() => tabPressed('active')}
+          style={tabSelected == 'Active' ? globalStyles.selected : globalStyles.unselected}
+          onPress={() => tabPressed('Active')}
         >
           Active
         </Text>
         <Text
-          style={tabSelected == 'pending' ? globalStyles.selected : globalStyles.unselected}
-          onPress={() => tabPressed('pending')}
+          style={tabSelected == 'Pending' ? globalStyles.selected : globalStyles.unselected}
+          onPress={() => tabPressed('Pending')}
         >
           Pending
         </Text>
         <Text
-          style={tabSelected == 'closed' ? globalStyles.selected : globalStyles.unselected}
-          onPress={() => tabPressed('closed')}
+          style={tabSelected == 'Closed' ? globalStyles.selected : globalStyles.unselected}
+          onPress={() => tabPressed('Closed')}
         >
           Closed
         </Text>
@@ -188,7 +206,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
                     data={item}
                     lightOrDark={lightOrDark}
                     onPress={() => handleRowPress(index)}
-                    refresh={() => tabPressed('potential')}
+                    refresh={() => tabPressed('Potential')}
                     onChangeStatus={() => changeStatusPressed(item.id)}
                   />
                 </View>
@@ -232,7 +250,10 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
                           SheetManager.hide(Sheets.filterSheet, null);
                           setStatusChoice(value);
                           continueTxChangeStatus(currentId, value, changeStatusSuccess, changeStatusFailure);
-                          // fetchData();
+                          ga4Analytics('Realtor_Transactions_Swipe', {
+                            contentType: value,
+                            itemId: 'id0806',
+                          });
                         }}
                         style={globalStyles.listItemCell}
                       >
