@@ -11,6 +11,7 @@ import { storage } from '../../utils/storage';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { changeTxStatus } from './api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { ga4Analytics } from '../../utils/general';
 
 type TabType = 'potential' | 'active' | 'pending' | 'closed';
 
@@ -43,7 +44,10 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
   const [currentId, setCurrentId] = useState(0);
 
   const handleRowPress = (index: number) => {
-    //  analytics.event(new Event('Real Estate Transactions', 'Row Pressed'));
+    ga4Analytics('Other_Transactions_Row', {
+      contentType: tabSelected,
+      itemId: 'id1005',
+    });
     console.log(data[index].id);
     navigation.navigate('OtherTxDetails', {
       dealID: data[index].id,
@@ -62,9 +66,20 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
   };
 
   function tabPressed(type: TabType) {
-    //  analytics.event(new Event('Other Transaction Tab', type));
+    var mainEvent = 'Other_Transactions_' + type;
+    ga4Analytics(mainEvent, {
+      contentType: 'none',
+      itemId: getItemId(type),
+    });
     setTabSelected(type);
     //no need to call fetch data here, the useEffect will automatically call fetchData
+  }
+
+  function getItemId(whichTab: string) {
+    if (whichTab == 'Potential') return 'id1001';
+    if (whichTab == 'Active') return 'id1002';
+    if (whichTab == 'Pending') return 'id1003';
+    return 'id1004';
   }
 
   function fetchData(status: string, type: string) {
@@ -226,7 +241,10 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
                           SheetManager.hide(Sheets.filterSheet, null);
                           setStatusChoice(value);
                           continueTxChangeStatus(currentId, value, changeStatusSuccess, changeStatusFailure);
-                          // fetchData();
+                          ga4Analytics('Other_Transactions_Swipe', {
+                            contentType: value,
+                            itemId: 'id1006',
+                          });
                         }}
                         style={globalStyles.listItemCell}
                       >

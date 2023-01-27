@@ -11,6 +11,7 @@ import { storage } from '../../utils/storage';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { changeTxStatus } from './api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { ga4Analytics } from '../../utils/general';
 
 type TabType = 'potential' | 'active' | 'pending' | 'closed';
 
@@ -43,7 +44,10 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
   const [currentId, setCurrentId] = useState(0);
 
   const handleRowPress = (index: number) => {
-    //  analytics.event(new Event('Lender Transactions', 'Row Pressed'));
+    ga4Analytics('Lender_Transactions_Row', {
+      contentType: tabSelected,
+      itemId: 'id0905',
+    });
     console.log(data[index].id);
     navigation.navigate('LenderTxDetails', {
       dealID: data[index].id,
@@ -52,7 +56,6 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
   };
 
   const handleAddPressed = () => {
-    //    analytics.event(new Event('Transactions', 'Add Transaction'));
     storage.setItem('whoCalledTxMenu', 'LenderTransactions');
     console.log('well here i am');
     navigation.navigate('AddTxMenu', {
@@ -63,9 +66,20 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
   };
 
   function tabPressed(type: TabType) {
-    //  analytics.event(new Event('Lender Transaction Tab', type));
+    var mainEvent = 'Lender_Transactions_' + type;
+    ga4Analytics(mainEvent, {
+      contentType: 'none',
+      itemId: getItemId(type),
+    });
     setTabSelected(type);
     //no need to call fetch data here, the useEffect will automatically call fetchData
+  }
+
+  function getItemId(whichTab: string) {
+    if (whichTab == 'Potential') return 'id0901';
+    if (whichTab == 'Active') return 'id0902';
+    if (whichTab == 'Pending') return 'id0903';
+    return 'id0904';
   }
 
   function fetchData(status: string, type: string) {
@@ -232,7 +246,10 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
                           SheetManager.hide(Sheets.filterSheet, null);
                           setStatusChoice(value);
                           continueTxChangeStatus(currentId, value, changeStatusSuccess, changeStatusFailure);
-                          // fetchData();
+                          ga4Analytics('Lender_Transactions_Swipe', {
+                            contentType: value,
+                            itemId: 'id0906',
+                          });
                         }}
                         style={globalStyles.listItemCell}
                       >

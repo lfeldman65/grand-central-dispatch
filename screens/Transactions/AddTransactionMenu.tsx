@@ -5,6 +5,7 @@ import React from 'react';
 import { getProfileData } from '../Settings/api';
 import { ProfileDataProps } from '../Settings/interfaces';
 import { RolodexDataProps } from '../Relationships/interfaces';
+import { ga4Analytics } from '../../utils/general';
 
 export default function AddTransactionMenu(props: any) {
   const { route } = props;
@@ -15,21 +16,29 @@ export default function AddTransactionMenu(props: any) {
   const navigation = useNavigation<any>();
 
   function buttonPressed(index: number) {
-    console.log('index: ' + index);
     if (index == 0) {
-      console.log('PERSONADD: ' + person?.firstName);
-      console.log('theme: ' + lightOrDark);
+      ga4Analytics('Realtor_Transactions_Add', {
+        contentType: 'none',
+        itemId: 'id0807',
+      });
       navigation.navigate('AddOrEditRealtorTx1', {
         person: person,
         lightOrDark: lightOrDark,
       });
     } else if (index == 1) {
-      console.log('PERSONADD: ' + person?.firstName);
+      ga4Analytics('Lender_Transactions_Add', {
+        contentType: 'none',
+        itemId: 'id0907',
+      });
       navigation.navigate('AddOrEditLenderTx1', {
         person: person,
         lightOrDark: lightOrDark,
       });
     } else if (index == 2) {
+      ga4Analytics('Other_Transactions_Add', {
+        contentType: 'none',
+        itemId: 'id1007',
+      });
       navigation.navigate('AddOrEditOtherTx1', {
         person: person,
         lightOrDark: lightOrDark,

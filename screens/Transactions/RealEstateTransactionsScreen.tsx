@@ -54,10 +54,6 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   };
 
   const handleAddPressed = () => {
-    ga4Analytics('Realtor_Transactions_Add', {
-      contentType: 'none',
-      itemId: 'id0807',
-    });
     storage.setItem('whoCalledTxMenu', 'RealEstateTransactions');
     console.log('theme in RealEstateTransactionsScreen: ' + lightOrDark);
     navigation.navigate('AddTxMenu', {

@@ -7,6 +7,7 @@ import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
 import { prettyDate, isNullOrEmpty } from '../../utils/general';
 import { roundToInt } from './transactionHelpers';
+import { ga4Analytics } from '../../utils/general';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -30,7 +31,10 @@ export default function TransactionDetailsLender(props: any) {
   }, [navigation, data]);
 
   function editPressed() {
-    console.log('edit pressed');
+    ga4Analytics('Lender_Transactions_Edit', {
+      contentType: 'none',
+      itemId: 'id0908',
+    });
     navigation.navigate('AddOrEditLenderTx1', {
       data: data,
     });
@@ -86,7 +90,10 @@ export default function TransactionDetailsLender(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          //  console.log(res);
+          ga4Analytics('Lender_Transactions_Delete', {
+            contentType: 'none',
+            itemId: 'id0909',
+          });
           navigation.goBack();
         }
       })

@@ -7,6 +7,7 @@ import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
 import { isNullOrEmpty } from '../../utils/general';
 import { prettyDate } from '../../utils/general';
+import { ga4Analytics } from '../../utils/general';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -30,7 +31,10 @@ export default function TransactionDetailsOther(props: any) {
   }, [navigation, data]);
 
   function editPressed() {
-    console.log('EDITDATAID: ' + data?.id);
+    ga4Analytics('Other_Transactions_Edit', {
+      contentType: 'none',
+      itemId: 'id1008',
+    });
     navigation.navigate('AddOrEditOtherTx1', {
       data: data,
     });
@@ -81,7 +85,10 @@ export default function TransactionDetailsOther(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res);
+          ga4Analytics('Other_Transactions_Delete', {
+            contentType: 'none',
+            itemId: 'id1009',
+          });
           navigation.goBack();
         }
       })
