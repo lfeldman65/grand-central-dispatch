@@ -489,11 +489,16 @@ export default function EditRelationshipScreen(props: any) {
             <Text style={styles.inlineButtons}>Remove</Text>
           </TouchableOpacity>
         )}
-        {spouse != null && spouse.id != '' && spouse.id != null && (
-          <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{spouse.name}</Text>
-        )}
-        {(spouse == null || spouse.id == '' || spouse.id == null) && <Text style={styles.addText}>+Add</Text>}
       </View>
+
+      <TouchableOpacity onPress={referralPressed}>
+        <View>
+          {spouse != null && spouse.id != '' && spouse.id != null && (
+            <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{spouse.name}</Text>
+          )}
+          {(spouse == null || spouse.id == '' || spouse.id == null) && <Text style={styles.addText}>+Add</Text>}
+        </View>
+      </TouchableOpacity>
 
       {modalSpouseVisible && (
         <Modal
@@ -888,5 +893,7 @@ const styles = StyleSheet.create({
   addText: {
     fontSize: 16,
     color: '#AFB9C2',
+    marginLeft: 15,
+    marginBottom: 10,
   },
 });

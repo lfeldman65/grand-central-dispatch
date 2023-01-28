@@ -1,17 +1,5 @@
 import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  ScrollView,
-  ActivityIndicator,
-  Image,
-  PermissionsAndroid,
-} from 'react-native';
-
+import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
 import { Moment, MomentInput } from 'moment';
 import CalendarPicker, { DateChangedCallback } from 'react-native-calendar-picker';
 import MenuIcon from '../../components/MenuIcon';
@@ -26,6 +14,7 @@ import { storage } from '../../utils/storage';
 import AddAppointmentScreen from './AddAppointmentScreen';
 import { getDayNumber, getMonthNumber, getYear } from './calendarHelpers';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { ga4Analytics } from '../../utils/general';
 
 export default function CalendarScreen() {
   const navigation = useNavigation();
@@ -38,8 +27,10 @@ export default function CalendarScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
 
   const handleRowPress = (index: number) => {
-    console.log('appointment row press');
-    //  analytics.event(new Event('Relationships', 'Go To Details', 'Press', 0));
+    ga4Analytics('Calendar_Row', {
+      contentType: 'none',
+      itemId: 'id1301',
+    });
     navigation.navigate('ApptDetails', {
       apptID: data[index].id,
       lightOrDark: lightOrDark,
@@ -66,6 +57,10 @@ export default function CalendarScreen() {
   }, [isFocused]);
 
   function addAppointmentPressed() {
+    ga4Analytics('Calendar_Add_Appointment', {
+      contentType: 'none',
+      itemId: 'id1302',
+    });
     setModalVisible(true);
   }
 

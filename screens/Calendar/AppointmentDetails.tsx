@@ -11,6 +11,7 @@ import { prettyDate, isNullOrEmpty, prettyTime } from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import * as React from 'react';
 import EditAppointment from './EditAppointmentScreen';
+import { ga4Analytics } from '../../utils/general';
 
 export default function AppointmentDetails(props: any) {
   const navigation = useNavigation();
@@ -40,7 +41,10 @@ export default function AppointmentDetails(props: any) {
   }, [isFocused]);
 
   function editPressed() {
-    console.log('edit pressed');
+    ga4Analytics('Calendar_Edit', {
+      contentType: 'none',
+      itemId: 'id1303',
+    });
     setModalVisible(true);
   }
 
@@ -83,7 +87,10 @@ export default function AppointmentDetails(props: any) {
   }
 
   function deletePressedContinue() {
-    console.log('delete pressed');
+    ga4Analytics('Calendar_Delete', {
+      contentType: 'none',
+      itemId: 'id1304',
+    });
     setIsLoading(true);
     deleteToDo(apptID)
       .then((res) => {

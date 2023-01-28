@@ -229,7 +229,7 @@ export default function ManageRelationshipsScreen() {
       headerLeft: () => <MenuIcon />,
       tab: tabSelected,
     });
-  }, [navigation, mapHeight, tabSelected]);
+  }, [navigation, tabSelected]);
 
   async function stopWatchPositionAsync() {
     console.log('STOPWATCHPOSITION');
@@ -349,6 +349,7 @@ export default function ManageRelationshipsScreen() {
   }
 
   function handleRegionChange(region: Region) {
+    console.log('HANDLEREGIONCHANGE');
     if (tabSelected == 'Near Me' || tabSelected == 'Priority' || (tabSelected == 'Saved' && !showRoute)) {
       console.log('REGION: ' + region);
       mapRef
@@ -515,7 +516,7 @@ export default function ManageRelationshipsScreen() {
   }
 
   async function fetchPopBysWindow(type: string, task: string, isMounted: boolean) {
-    console.log('FETCHPOPBYSWINDOW: ' + type);
+    console.log('Me2112: ' + type);
     console.log('SOUTHWEST:' + southWest);
 
     if (southWest == null || northEast == null) {
