@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 import { ga4Analytics } from '../../utils/general';
-
+import { GoalDataProps } from '../Goals/interfaces';
+import { getGoalData } from '../Goals/api';
+import { testForNotificationPAC } from '../Goals/handleWinNotifications';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function PACCompleteScreen(props: any) {
-  const { onSave, setModalVisible, contactName, lightOrDark } = props;
+  const { onSave, setModalVisible, contactName, type } = props;
+  const [isLoading, setIsLoading] = useState(true);
   const [note, onNoteChange] = useState('');
 
   function savePressed() {
@@ -13,10 +16,51 @@ export default function PACCompleteScreen(props: any) {
       contentType: 'none',
       itemId: 'id0420',
     });
+    fetchGoals(true);
     onSave(note);
   }
   function cancelPressed() {
     setModalVisible(false);
+  }
+
+  function getGoalID() {
+    if (type == 'calls') return 1;
+    if (type == 'notes') return 2;
+    if (type == 'popbys') return 3;
+    return 4;
+  }
+
+  function fetchGoals(isMounted: boolean) {
+    setIsLoading(true);
+    getGoalData()
+      .then((res) => {
+        if (!isMounted) {
+          return;
+        }
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          notifyIfWin(getGoalID(), res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function notifyIfWin(goalId: number, data: GoalDataProps[]) {
+    console.log('GOALID: ' + goalId);
+    var i = 0;
+    while (i < data.length) {
+      if (data[i].goal.id == goalId) {
+        testForNotificationPAC(
+          data[i].goal.title,
+          data[i].goal.weeklyTarget,
+          data[i].achievedThisWeek,
+          data[i].achievedToday
+        );
+      }
+      i = i + 1;
+    }
   }
 
   return (

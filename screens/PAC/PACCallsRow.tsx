@@ -31,7 +31,8 @@ export default function PACCallsRow(props: PACCallsRowProps) {
   }
 
   function saveComplete(note: string) {
-    console.log('Note ', note);
+    console.log('318');
+    console.log('Note11 ', note);
     completeAction(props.data.contactId, props.data.type, note, completeSuccess, completeFailure);
   }
 
@@ -227,6 +228,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
                 contactName={props.data.contactName}
                 onSave={saveComplete}
                 setModalVisible={setModalVisible}
+                type={'calls'}
               />
             </Modal>
           )}

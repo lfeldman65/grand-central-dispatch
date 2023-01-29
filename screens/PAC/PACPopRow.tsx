@@ -368,6 +368,7 @@ export default function PACPopRow(props: PACRowProps) {
                 contactName={props.data.contactName}
                 onSave={saveComplete}
                 setModalVisible={setModalVisible}
+                type={'popbys'}
               />
             </Modal>
           )}

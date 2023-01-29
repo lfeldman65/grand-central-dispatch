@@ -10,7 +10,7 @@ import globalStyles from '../../globalStyles';
 import AddRelScreen from '../Relationships/AddRelationshipScreen';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { scheduleNotifications, getNotificationStatus, ga4Analytics, isNullOrEmpty } from '../../utils/general';
-
+import { testForNotificationGoals } from './handleWinNotifications';
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
@@ -238,7 +238,7 @@ export default function GoalsScreen() {
     var i = 0;
     while (i < data.length) {
       if (data[i].goal.id.toString() == goalId) {
-        testForNotification(
+        testForNotificationGoals(
           data[i].goal.title,
           data[i].goal.weeklyTarget,
           data[i].achievedThisWeek,
@@ -246,33 +246,6 @@ export default function GoalsScreen() {
         );
       }
       i = i + 1;
-    }
-  }
-
-  async function testForNotification(goalName: string, weeklyGoal: number, weeklyNum: number, dailyNum: number) {
-    var notifOn = await getNotificationStatus('notifWins');
-    if (!notifOn) {
-      return;
-    }
-    var dailyGoal = Math.ceil(weeklyGoal / 5);
-    var newGoalName = goalName;
-    if (goalName == 'Notes Made') {
-      newGoalName = 'Notes Written';
-    }
-    console.log('TEST DAILY TITLE: ' + goalName);
-    console.log('TEST DAILY GOAL: ' + dailyGoal);
-    console.log('TEST WEEKLY GOAL: ' + weeklyGoal);
-    console.log('TEST WEEKLY NUM: ' + weeklyNum);
-    console.log('TEST DAILY NUM: ' + dailyNum);
-
-    if (weeklyGoal == 0 && weeklyNum == 1) {
-      scheduleNotifications('Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
-    } else if (weeklyGoal != 0 && weeklyNum == weeklyGoal) {
-      scheduleNotifications('Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
-    } else if (dailyGoal == 0 && dailyNum == 1) {
-      scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
-    } else if (dailyGoal != 0 && dailyNum == dailyGoal) {
-      scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
     }
   }
 

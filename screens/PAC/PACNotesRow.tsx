@@ -143,6 +143,7 @@ export default function PACNotesRow(props: PACNotesRowProps) {
                 contactName={props.data.contactName}
                 onSave={saveComplete}
                 setModalVisible={setModalVisible}
+                type={'notes'}
               />
             </Modal>
           )}

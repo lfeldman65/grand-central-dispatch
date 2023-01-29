@@ -83,7 +83,7 @@ export default function ManageRelationshipsScreen() {
           timeInterval: 10000, // must wait 10 seconds before receiving updates
         },
         (newLocation) => {
-          console.log('new location ' + newLocation.coords.latitude);
+          //  console.log('new location ' + newLocation.coords.latitude);
           setLocation(newLocation);
           calculateAndNotify(newLocation, popByDataRef.current, true);
         }
@@ -98,7 +98,7 @@ export default function ManageRelationshipsScreen() {
       return;
     }
     var alreadyScheduled = false;
-    console.log('calculateAndNotify: ' + loc.coords.latitude);
+    // console.log('calculateAndNotify: ' + loc.coords.latitude);
 
     for (var i = 0; i < data.length; i++) {
       var lon = parseFloat(data[i].location.longitude);
@@ -129,7 +129,7 @@ export default function ManageRelationshipsScreen() {
         }
       }
     }
-    console.log('DATALENGTH: ' + data.length);
+    //  console.log('DATALENGTH: ' + data.length);
     setPopByData(data);
   }
 
