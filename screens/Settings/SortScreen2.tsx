@@ -112,7 +112,7 @@ export default function SortScreen2(props: any) {
             if (res.data[i].qualified) {
               res.data[i].qualified = true;
             } else {
-              res.data[i].qualified = true;
+              res.data[i].qualified = false;
             }
           }
         }

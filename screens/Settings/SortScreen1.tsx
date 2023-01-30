@@ -42,7 +42,7 @@ export default function SortScreen1(props: any) {
       <View style={styles.topView}>
         <Text style={styles.fieldText}>
           Last Step. Referral Maker will help you sort your relationships by allowing you to rank each one of your
-          contacts. Rate your contacts based on how likely they are to refer yuo as an agent.
+          contacts. Rate your contacts based on how likely they are to refer you as an agent.
         </Text>
       </View>
       <View style={styles.dividingLine}></View>
