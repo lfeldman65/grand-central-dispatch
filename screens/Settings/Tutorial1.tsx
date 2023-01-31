@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, Animated, FlatList, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, Text, Animated, FlatList, TouchableOpacity, useWindowDimensions, Image } from 'react-native';
 import { SlidingDot } from 'react-native-animated-pagination-dots';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+const goals = require('../Settings/images/goals.png');
 
 interface ItemProps {
   key: string;
@@ -13,8 +14,9 @@ interface ItemProps {
 const INTRO_DATA = [
   {
     key: '1',
-    title: 'App showcase ✨',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+    title: 'Welcome to Referral Maker CRM',
+    description:
+      'Set your business goals and track your progress from a single dashboard. Access features through simple menu navigation.',
   },
   {
     key: '2',
@@ -56,6 +58,7 @@ export default function Tutorial1(props: any) {
       return (
         <View style={[styles.itemContainer, { width: width - 80 }]}>
           <Text>{item.title}</Text>
+          <Image source={goals}></Image>
           <Animated.Text>{item.description}</Animated.Text>
         </View>
       );
@@ -125,6 +128,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1A6295',
+    borderWidth: 0.5,
+    borderTopColor: 'white',
+    borderBottomColor: '#1A6295',
   },
   dotStyle: {
     backgroundColor: 'white',
@@ -158,7 +164,7 @@ const styles = StyleSheet.create({
     padding: 40,
     marginTop: 40,
     marginHorizontal: 40,
-    borderRadius: 20,
+    //  borderRadius: 20,
   },
   backAndNext: {
     color: 'white',
