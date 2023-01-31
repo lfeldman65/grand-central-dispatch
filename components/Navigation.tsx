@@ -45,6 +45,7 @@ import ImportRel1 from '../screens/Settings/ImportRelScreen1';
 import ImportRel2 from '../screens/Settings/ImportRelScreen2';
 import BizGoals from '../screens/Settings/BizGoalsScreen';
 import BizGoalsReview from '../screens/Settings/BizGoalsReviewScreen';
+import Tutorial1 from '../screens/Settings/Tutorial1';
 import AboutUs from '../screens/Settings/AboutUsScreen';
 import LandingScreen from '../screens/Settings/LandingScreen';
 import RelOrderScreen from '../screens/Settings/RelOrderScreen';
@@ -951,6 +952,25 @@ export const ProfileStackNavigator = () => {
   );
 };
 
+export const TutorialStackNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Tutorial1"
+        component={Tutorial1}
+        options={{
+          title: 'Page 1',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export const SettingsStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -1052,6 +1072,15 @@ export const SettingsStackNavigator = () => {
             backgroundColor: '#1A6295',
           },
           headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="TutorialStackNavigator"
+        component={TutorialStackNavigator}
+        options={{
+          headerBackVisible: true,
+          headerShown: false,
         }}
       />
 

@@ -111,6 +111,7 @@ export default function SettingsScreen() {
       contentType: 'none',
       itemId: 'id1509',
     });
+    navigation.navigate('TutorialStackNavigator');
   }
 
   function aboutUsPressed() {
