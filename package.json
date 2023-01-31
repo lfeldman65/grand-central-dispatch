@@ -39,6 +39,7 @@
     "react-dom": "17.0.2",
     "react-native": "0.68.2",
     "react-native-actions-sheet": "^0.6.1",
+    "react-native-animated-pagination-dots": "^0.1.73",
     "react-native-bouncy-checkbox": "^2.1.10",
     "react-native-calendar-picker": "^7.1.2",
     "react-native-collapsible": "^1.6.0",

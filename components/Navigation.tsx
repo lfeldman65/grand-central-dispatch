@@ -959,7 +959,7 @@ export const TutorialStackNavigator = () => {
         name="Tutorial1"
         component={Tutorial1}
         options={{
-          title: 'Page 1',
+          title: 'Tutorial',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
