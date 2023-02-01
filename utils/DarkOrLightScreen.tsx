@@ -2,12 +2,15 @@ import { View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { storage } from './storage';
 import { Appearance } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 var lightOrDarkLocal = 'automatic';
 let eventEmitterSubscription: any;
 
 export default function DarkOrLightScreen(props: any) {
   const { setLightOrDark } = props;
+  const { setLightOrDarkLabel } = props;
+  const isFocused = useIsFocused();
 
   const onThemeChange = ({ colorScheme }) => {
     console.log('onThemeChange', colorScheme);
@@ -15,8 +18,16 @@ export default function DarkOrLightScreen(props: any) {
 
     if (lightOrDarkLocal == 'automatic') {
       setLightOrDark(colorScheme);
+      console.log('color scheme: ' + colorScheme);
     } else {
       setLightOrDark(lightOrDarkLocal);
+    }
+    console.log('LIGHTORDARKLOCAL1: ' + typeof lightOrDarkLocal);
+
+    if (typeof setLightOrDarkLabel !== 'undefined') {
+      console.log('LIGHTORDARKLOCAL1: ' + lightOrDarkLocal);
+
+      setLightOrDarkLabel(lightOrDarkLocal);
     }
   };
 
@@ -30,6 +41,16 @@ export default function DarkOrLightScreen(props: any) {
     };
   }, []);
 
+  useEffect(() => {
+    console.log('useEffect in DarkOrLight');
+    getDarkOrLightMode();
+    eventEmitterSubscription = Appearance.addChangeListener(onThemeChange);
+    return () => {
+      eventEmitterSubscription.remove();
+      //Appearance.removeChangeListener(onThemeChange);
+    };
+  }, [isFocused]);
+
   async function getDarkOrLightMode() {
     var d = await storage.getItem('darkOrLight');
     if (d == null || d == undefined || d == 'automatic') {
@@ -41,6 +62,12 @@ export default function DarkOrLightScreen(props: any) {
     } else {
       lightOrDarkLocal = d;
       setLightOrDark(d);
+    }
+
+    if (typeof setLightOrDarkLabel !== 'undefined') {
+      console.log('LIGHTORDARKLOCAL2: ' + lightOrDarkLocal);
+
+      setLightOrDarkLabel(lightOrDarkLocal);
     }
   }
 

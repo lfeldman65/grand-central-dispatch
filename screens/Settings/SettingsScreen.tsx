@@ -17,6 +17,7 @@ const person = require('../Settings/images/user.png');
 export default function SettingsScreen() {
   const navigation = useNavigation();
   const [lightOrDark, setLightOrDark] = useState('');
+  const [lightOrDarkLabel, setLightOrDarkLabel] = useState('');
   const [profileData, setProfileData] = useState<ProfileDataProps>();
   const [date, setDate] = useState(new Date());
   const isFocused = useIsFocused();
@@ -161,14 +162,6 @@ export default function SettingsScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  async function getDarkOrLightMode(isMounted: boolean) {
-    if (!isMounted) {
-      return;
-    }
-    const dOrlight = await storage.getItem('darkOrLight');
-    setLightOrDark(dOrlight ?? 'light');
-  }
-
   async function getDisplayAZ(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -197,15 +190,7 @@ export default function SettingsScreen() {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
     });
-  }, [navigation, lightOrDark]);
-
-  useEffect(() => {
-    let isMounted = true;
-    getDarkOrLightMode(isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
+  }, [navigation, lightOrDark, lightOrDarkLabel]);
 
   useEffect(() => {
     let isMounted = true;
@@ -233,7 +218,7 @@ export default function SettingsScreen() {
 
   return (
     <>
-      <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
+      <DarkOrLightScreen setLightOrDarkLabel={setLightOrDarkLabel} setLightOrDark={setLightOrDark}></DarkOrLightScreen>
       <View style={styles.container}>
         <View style={styles.topView}>
           <View style={styles.imageBox}>
@@ -324,7 +309,7 @@ export default function SettingsScreen() {
               <View style={styles.textBoxSupp}>
                 <Text style={styles.activityText}>Light or Dark Mode</Text>
               </View>
-              <Text style={styles.suppText}>{prettyText(lightOrDark)}</Text>
+              <Text style={styles.suppText}>{prettyText(lightOrDarkLabel)}</Text>
               <View style={styles.chevronBox}>
                 <Image source={chevron} style={styles.chevron} />
               </View>

@@ -22,8 +22,10 @@ export function getTransactionDetails(dealID: string): Promise<TransactionDetail
 export function changeTxStatus(idDeal: number, newStatus: string): Promise<TxChangeStatusResponse> {
   console.log(idDeal);
   console.log(newStatus);
+  var paramStatus = newStatus.toLocaleLowerCase();
+  console.log('New status: ' + paramStatus);
   return http.post('dealChangeStatus', {
-    body: { idDeal, newStatus },
+    body: { idDeal: idDeal, newStatus: paramStatus },
   });
 }
 
