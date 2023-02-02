@@ -12,9 +12,13 @@ import { GroupsDataProps, RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { AlphabetList, IData } from 'react-native-section-alphabet-list';
 import { ga4Analytics } from '../../utils/general';
+import { styles } from './styles';
+import { storage } from '../../utils/storage';
 
 type TabType = 'a-z' | 'ranking' | 'groups';
+var localDisplay = 'First Last';
 
 export default function ManageRelationshipsScreen() {
   const [tabSelected, setTabSelected] = useState<TabType>('a-z');
@@ -26,6 +30,7 @@ export default function ManageRelationshipsScreen() {
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
+  const [alphaIndex, setAlphaIndex] = useState<IData[]>([]);
 
   const handleRowPress = (index: number) => {
     ga4Analytics('Relationships_Row', {
@@ -52,6 +57,7 @@ export default function ManageRelationshipsScreen() {
 
   useEffect(() => {
     let isMounted = true;
+    getCurrentDisplayAZ(true);
     if (tabSelected == 'a-z') {
       fetchRolodexPressed('alpha', isMounted);
     } else if (tabSelected == 'ranking') {
@@ -65,13 +71,14 @@ export default function ManageRelationshipsScreen() {
   }, [isFocused]);
 
   useEffect(() => {
+    let isMounted = true;
     showFilterTitle();
     if (tabSelected == 'a-z') {
-      fetchRolodexPressed('alpha', true);
+      fetchRolodexPressed('alpha', isMounted);
     } else if (tabSelected == 'ranking') {
-      fetchRolodexPressed('ranking', true);
+      fetchRolodexPressed('ranking', isMounted);
     } else {
-      fetchGroupsPressed(true);
+      fetchGroupsPressed(isMounted);
     }
   }, [isFilterRel]);
 
@@ -142,7 +149,6 @@ export default function ManageRelationshipsScreen() {
 
   function filterPressed() {
     if (isFilterRel) {
-      // these seem backwards, but it's because we are sending the analytics before toggling.
       ga4Analytics('Relationships_Show_Businesses', {
         contentType: 'none',
         itemId: 'id0504',
@@ -158,8 +164,24 @@ export default function ManageRelationshipsScreen() {
     }
   }
 
-  function fetchRolodexPressed(type: string, isMounted: boolean) {
+  async function getCurrentDisplayAZ(isMounted: boolean) {
+    if (!isMounted) {
+      return;
+    }
+    var saved = await storage.getItem('displayAZ');
+    if (saved != null) {
+      localDisplay = saved;
+      console.log('getCurrent1: ' + localDisplay);
+    } else {
+      //  setDisplayAZ('First Last');
+      localDisplay = 'Last, First';
+      console.log('getCurrent2: ' + localDisplay);
+    }
+  }
+
+  async function fetchRolodexPressed(type: string, isMounted: boolean) {
     setIsLoading(true);
+    console.log('55555');
     getRolodexData(type)
       .then((res) => {
         if (!isMounted) {
@@ -169,7 +191,17 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setDataRolodex(res.data);
-          //  console.log(res.data);
+          var ad: IData[] = [];
+          if (localDisplay == 'First Last') {
+            res.data.forEach((e) => {
+              ad.push({ value: e.firstName, key: e.id });
+            });
+          } else {
+            res.data.forEach((e) => {
+              ad.push({ value: e.lastName, key: e.id });
+            });
+          }
+          setAlphaIndex(ad);
         }
         setIsLoading(false);
       })
@@ -187,7 +219,11 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setDataGroups(res.data);
-          //  console.log(res.data);
+          var ad: IData[] = [];
+          res.data.forEach((e) => {
+            ad.push({ value: e.groupName, key: e.id });
+          });
+          setAlphaIndex(ad);
         }
         setIsLoading(false);
       })
@@ -234,46 +270,53 @@ export default function ManageRelationshipsScreen() {
               </View>
             )}
 
-            <ScrollView>
-              {tabSelected == 'a-z' && (
-                <View>
-                  {dataRolodex.map((item, index) => (
+            <View style={styles.rolodex}>
+              <AlphabetList
+                data={alphaIndex}
+                indexLetterContainerStyle={{
+                  width: 20,
+                }}
+                letterListContainerStyle={{
+                  width: 40,
+                  alignItems: 'flex-start',
+                }}
+                indexLetterStyle={{
+                  color: '#1398f5',
+                  fontSize: 15,
+                }}
+                indexContainerStyle={{
+                  width: 20,
+                }}
+                renderCustomItem={(item) =>
+                  tabSelected == 'a-z' ? (
                     <AtoZRow
                       relFromAbove={showFilterTitle()}
-                      key={index}
-                      data={item}
-                      onPress={() => handleRowPress(index)}
+                      data={dataRolodex.find((e) => e.id == item.key)!}
+                      onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
                       lightOrDark={lightOrDark}
                     />
-                  ))}
-                </View>
-              )}
-              {tabSelected == 'ranking' && (
-                <View>
-                  {dataRolodex.map((item, index) => (
+                  ) : tabSelected == 'ranking' ? (
                     <RankingRow
                       relFromAbove={showFilterTitle()}
-                      key={index}
-                      data={item}
-                      onPress={() => handleRowPress(index)}
+                      data={dataRolodex.find((e) => e.id == item.key)!}
+                      onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
                       lightOrDark={lightOrDark}
                     />
-                  ))}
-                </View>
-              )}
-              {tabSelected == 'groups' && (
-                <View>
-                  {dataGroups.map((item, index) => (
+                  ) : (
                     <GroupsRow
-                      key={index}
-                      data={item}
+                      data={dataGroups.find((e) => e.id == item.key)!}
+                      onPress={() => handleRowPress(dataGroups.findIndex((e) => e.id == item.key))}
                       lightOrDark={lightOrDark}
-                      onPress={() => handleRowPress(index)}
                     />
-                  ))}
-                </View>
-              )}
-            </ScrollView>
+                  )
+                }
+                renderCustomSectionHeader={(section) => (
+                  <View style={styles.sectionHeaderContainer}>
+                    <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
+                  </View>
+                )}
+              />
+            </View>
             <TouchableOpacity style={globalStyles.bottomContainer} onPress={() => handleAddRelPressed()}>
               <View style={globalStyles.addButton}>
                 <Text style={globalStyles.addText}>{'Add Relationship'}</Text>

@@ -32,7 +32,8 @@ export const styles = StyleSheet.create({
   },
   bottomContainer: {
     backgroundColor: '#1A6295',
-    height: 60,
+    height: '8%',
+    justifyContent: 'center',
   },
   addRelButton: {
     marginTop: 5,
@@ -83,7 +84,7 @@ export const styles = StyleSheet.create({
     borderWidth: 0.5,
     paddingBottom: 10,
     paddingLeft: 10,
-    paddingRight: 20,
+    paddingRight: 30,
   },
   groupRowLight: {
     flexDirection: 'row',
@@ -94,11 +95,42 @@ export const styles = StyleSheet.create({
     borderWidth: 0.5,
     paddingBottom: 10,
     paddingLeft: 10,
-    paddingRight: 20,
+    paddingRight: 30,
   },
   chevron: {
     marginTop: 5,
     height: 20,
     width: 12,
+  },
+  listItemContainer: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    borderTopColor: '#e6ebf2',
+    borderTopWidth: 1,
+  },
+  listItemLabel: {
+    color: '#1c1b1e',
+    fontSize: 14,
+  },
+  sectionHeaderContainer: {
+    height: 30,
+    backgroundColor: '#8e8e93',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+  },
+  sectionHeaderLabel: {
+    color: 'white',
+  },
+  centerSection: {
+    height: '80%',
+  },
+  rolodex: {
+    height: '80%',
+  },
+  bottom: {
+    height: '20%',
+    backgroundColor: 'red',
   },
 });
