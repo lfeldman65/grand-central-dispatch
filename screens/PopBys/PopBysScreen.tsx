@@ -73,17 +73,17 @@ export default function ManageRelationshipsScreen() {
   popByDataRef.current = popByData;
 
   const requestPermissions = async () => {
+    console.log('-----------------------------------');
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status === 'granted') {
-      console.log('granted');
       nearPressed();
       locationCallBack = await Location.watchPositionAsync(
         {
           distanceInterval: 800, //approx 0.5 miles
-          timeInterval: 10000, // must wait 10 seconds before receiving updates
+          timeInterval: 60000, // must wait 60 seconds before receiving updates
         },
         (newLocation) => {
-          //  console.log('new location ' + newLocation.coords.latitude);
+          console.log('new location ' + newLocation.coords.latitude);
           setLocation(newLocation);
           calculateAndNotify(newLocation, popByDataRef.current, true);
         }
@@ -98,17 +98,21 @@ export default function ManageRelationshipsScreen() {
       return;
     }
     var alreadyScheduled = false;
-    // console.log('calculateAndNotify: ' + loc.coords.latitude);
+    //console.log('calculateAndNotify: ' + loc.coords.latitude);
+
+    var tempArray: PopByRadiusDataProps[] = [];
 
     for (var i = 0; i < data.length; i++) {
+      var t: PopByRadiusDataProps = data[i];
+
       var lon = parseFloat(data[i].location.longitude);
       var lat = parseFloat(data[i].location.latitude);
 
       if (!isNaN(lon) && !isNaN(lat)) {
         var mb = milesBetween(lon, lat, loc.coords.longitude, loc.coords.latitude);
 
-        data[i].distance = mb.toFixed(1);
-
+        t.distance = mb.toFixed(1);
+        console.log('calculating ' + mb.toFixed(1));
         if (
           mb > 5 &&
           !alreadyScheduled &&
@@ -117,7 +121,7 @@ export default function ManageRelationshipsScreen() {
           (await enoughTimePassedRel(data[i].id, 30)) &&
           (await enoughTimePassedNotif(60))
         ) {
-          data[i].notified = true;
+          t.notified = true;
           alreadyScheduled = true;
           if (notify) {
             scheduleNotifications(
@@ -127,10 +131,12 @@ export default function ManageRelationshipsScreen() {
             );
           }
         }
+        tempArray.push(t);
       }
     }
-    //  console.log('DATALENGTH: ' + data.length);
-    setPopByData(data);
+    //console.log('DATALENGTH: ' + data.length);
+    console.log('update pop by data with new distances');
+    setPopByData(tempArray);
   }
 
   async function enoughTimePassedRel(guid: string, daysBetween: number) {
@@ -238,6 +244,10 @@ export default function ManageRelationshipsScreen() {
 
   useEffect(() => {
     requestPermissions();
+
+    return function cleanup() {
+      stopWatchPositionAsync();
+    };
     // nearPressed();
   }, []);
 
@@ -346,19 +356,21 @@ export default function ManageRelationshipsScreen() {
       return 'favorites';
     }
     return 'nearby';
-  }
+  } // branch
 
   function handleRegionChange(region: Region) {
-    console.log('HANDLEREGIONCHANGE');
+    console.log('HANDLEREGIONCHANGE----------------------------------');
     if (tabSelected == 'Near Me' || tabSelected == 'Priority' || (tabSelected == 'Saved' && !showRoute)) {
       console.log('REGION: ' + region);
       mapRef
         ?.getMapBoundaries()
         .then((res) => {
           console.log(res);
+          console.log(northEast);
+
           if (
-            Math.abs(res.northEast.latitude - (northEast?.latitude ?? 0)) > 0 ||
-            Math.abs(res.northEast.longitude - (northEast?.longitude ?? 0)) > 0
+            Math.abs(res.northEast.latitude - (northEast?.latitude ?? 0)) > 0.1 ||
+            Math.abs(res.northEast.longitude - (northEast?.longitude ?? 0)) > 0.1
           ) {
             northEast = res.northEast;
             southWest = res.southWest;
@@ -517,12 +529,16 @@ export default function ManageRelationshipsScreen() {
 
   async function fetchPopBysWindow(type: string, task: string, isMounted: boolean) {
     console.log('Me2112: ' + type);
-    console.log('SOUTHWEST:' + southWest);
 
     if (southWest == null || northEast == null) {
+      console.log('no coordinates');
+
       return;
     }
-    setIsLoading(true);
+
+    //don't show spinner if there is already data on screen, it's just too distracting
+    if (popByData == null) setIsLoading(true);
+
     getPopBysInWindow(
       type,
       southWest!.latitude.toString(),
@@ -540,7 +556,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          console.log('RESDATA:' + res.data.length);
+          //console.log('RESDATA:' + res.data.length);
           if (location == null) {
             let loc = await Location.getCurrentPositionAsync({})
               .then((l) => {

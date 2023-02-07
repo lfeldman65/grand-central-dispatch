@@ -42,6 +42,12 @@ export function matchesSearch(person: PopByRadiusDataProps, search?: string) {
   if (person.address != null && person.address.country.toLowerCase().includes(searchLower)) {
     return true;
   }
+  if (person.firstName != null && person.lastName != null) {
+    var firstLast = person.firstName.toLowerCase() + ' ' + person.lastName.toLowerCase();
+    if (firstLast.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+  }
   return false;
 }
 
