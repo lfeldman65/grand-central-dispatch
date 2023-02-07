@@ -173,15 +173,13 @@ export default function ManageRelationshipsScreen() {
       localDisplay = saved;
       console.log('getCurrent1: ' + localDisplay);
     } else {
-      //  setDisplayAZ('First Last');
-      localDisplay = 'Last, First';
+      localDisplay = 'First Last';
       console.log('getCurrent2: ' + localDisplay);
     }
   }
 
   async function fetchRolodexPressed(type: string, isMounted: boolean) {
     setIsLoading(true);
-    console.log('55555');
     getRolodexData(type)
       .then((res) => {
         if (!isMounted) {
@@ -192,9 +190,11 @@ export default function ManageRelationshipsScreen() {
         } else {
           setDataRolodex(res.data);
           var ad: IData[] = [];
+          console.log('LOCAL: ' + localDisplay);
           if (localDisplay == 'First Last') {
             res.data.forEach((e) => {
               ad.push({ value: e.firstName, key: e.id });
+              console.log('FIRSTNAME: ' + e.firstName);
             });
           } else {
             res.data.forEach((e) => {
