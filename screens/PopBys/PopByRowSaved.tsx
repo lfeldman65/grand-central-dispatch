@@ -94,6 +94,7 @@ export default function PopByRowSaved(props: PopBysRowProps) {
           console.error(res.error);
           onFailure();
         } else {
+          setModalVisible(false);
           onSuccess();
         }
       })

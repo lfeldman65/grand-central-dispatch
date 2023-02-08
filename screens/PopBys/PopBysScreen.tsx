@@ -112,7 +112,7 @@ export default function ManageRelationshipsScreen() {
         var mb = milesBetween(lon, lat, loc.coords.longitude, loc.coords.latitude);
 
         t.distance = mb.toFixed(1);
-        console.log('calculating ' + mb.toFixed(1));
+        //   console.log('calculating ' + mb.toFixed(1));
         if (
           mb > 5 &&
           !alreadyScheduled &&
