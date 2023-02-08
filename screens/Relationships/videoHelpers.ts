@@ -2,6 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as SMS from 'expo-sms';
 import { RelDetailsProps, FileUpload } from './interfaces';
 import { ga4Analytics } from '../../utils/general';
+import * as MediaLibrary from 'expo-media-library';
 
 function prettyVideoType(hasBB: boolean) {
   if (hasBB) {
@@ -47,6 +48,7 @@ export async function handleVideoFromCamera(vidTitle: string, relationship: RelD
     videoQuality: 1,
     quality: 1,
     aspect: [16, 9],
+
     //  videoMaxDuration: 10,
   });
 
@@ -54,9 +56,25 @@ export async function handleVideoFromCamera(vidTitle: string, relationship: RelD
   console.log(result);
 
   if (!result.cancelled) {
+    saveImage(result.uri);
     composeSMS(vidTitle, relationship, result);
   }
 }
+
+const saveImage = async (uri: any) => {
+  try {
+    // Request device storage access permission
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status === 'granted') {
+      // Save image to media library
+      await MediaLibrary.saveToLibraryAsync(uri);
+
+      console.log('Image successfully saved');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 async function composeSMS(vidTitle: string, relationship: RelDetailsProps | undefined | null, result: any) {
   const isAvailable = await SMS.isAvailableAsync();
