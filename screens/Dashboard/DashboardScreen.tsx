@@ -21,6 +21,8 @@ const transImage = require('../Dashboard/images/quickTrans.png');
 const todoImage = require('../Dashboard/images/quickToDo.png');
 const calendarImage = require('../Dashboard/images/quickCalendar.png');
 
+var watchedTut = 'false';
+
 interface DashboardNavigationProps {
   parentScreen?: string;
   label: string;
@@ -64,14 +66,36 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     requestNotificationPermissions();
-    getLandingPage();
+    if (watchedTut == 'true') {
+      console.log('HEREA');
+      getLandingPage();
+    } else {
+      console.log('HEREB');
+      showTutorial();
+    }
   }, []);
+
+  useEffect(() => {
+    hasWatchedTutorial();
+  }, [isFocused]);
 
   useEffect(() => {
     if (notificationPermissions !== PermissionStatus.GRANTED) return;
     const listener = Notifications.addNotificationReceivedListener(handleNotification);
     return () => listener.remove();
   }, [notificationPermissions]);
+
+  async function hasWatchedTutorial() {
+    console.log('WATCHEDTUT');
+    const localWatched = await storage.getItem('watchedTutorial');
+    if (localWatched == null) {
+      watchedTut = 'false';
+    } else {
+      watchedTut = localWatched;
+    }
+    storage.setItem('watchedTutorial', 'true');
+    console.log(watchedTut);
+  }
 
   function navigateToLandingPage(landingPage?: string) {
     console.log('landing page:' + landingPage);
@@ -170,9 +194,15 @@ export default function DashboardScreen() {
       if (savedLanding != 'Dashboard') {
         navigateToLandingPage(savedLanding);
       }
-    } else {
-      console.log('getCurrent: ' + savedLanding);
     }
+  }
+
+  function showTutorial() {
+    handleNavigation({
+      screen: 'Tutorial',
+      label: 'Tutorial',
+      itemID: 'none',
+    });
   }
 
   const handleNavigation = (props: DashboardNavigationProps) => {
@@ -192,8 +222,6 @@ export default function DashboardScreen() {
       itemId: props.itemID,
     });
     if (props.parentScreen) {
-      //  analytics.event(new Event('Dashboard', props.label + ' Pressed', '0'));
-
       navigation.navigate(props.parentScreen, {
         screen: props.screen,
         params: props.params ? props.params : null,

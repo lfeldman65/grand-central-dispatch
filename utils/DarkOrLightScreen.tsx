@@ -13,8 +13,8 @@ export default function DarkOrLightScreen(props: any) {
   const isFocused = useIsFocused();
 
   const onThemeChange = ({ colorScheme }) => {
-    console.log('onThemeChange', colorScheme);
-    console.log('lightOrDarkLocal ' + lightOrDarkLocal);
+    // console.log('onThemeChange', colorScheme);
+    //  console.log('lightOrDarkLocal ' + lightOrDarkLocal);
 
     if (lightOrDarkLocal == 'automatic') {
       setLightOrDark(colorScheme);
@@ -22,7 +22,7 @@ export default function DarkOrLightScreen(props: any) {
     } else {
       setLightOrDark(lightOrDarkLocal);
     }
-    console.log('LIGHTORDARKLOCAL1: ' + typeof lightOrDarkLocal);
+    //  console.log('LIGHTORDARKLOCAL1: ' + typeof lightOrDarkLocal);
 
     if (typeof setLightOrDarkLabel !== 'undefined') {
       console.log('LIGHTORDARKLOCAL1: ' + lightOrDarkLocal);
@@ -32,7 +32,7 @@ export default function DarkOrLightScreen(props: any) {
   };
 
   useEffect(() => {
-    console.log('useEffect in DarkOrLight');
+    // console.log('useEffect in DarkOrLight');
     getDarkOrLightMode();
     eventEmitterSubscription = Appearance.addChangeListener(onThemeChange);
     return () => {
@@ -42,7 +42,7 @@ export default function DarkOrLightScreen(props: any) {
   }, []);
 
   useEffect(() => {
-    console.log('useEffect in DarkOrLight');
+    // console.log('useEffect in DarkOrLight');
     getDarkOrLightMode();
     eventEmitterSubscription = Appearance.addChangeListener(onThemeChange);
     return () => {
@@ -54,9 +54,9 @@ export default function DarkOrLightScreen(props: any) {
   async function getDarkOrLightMode() {
     var d = await storage.getItem('darkOrLight');
     if (d == null || d == undefined || d == 'automatic') {
-      console.log('THEME: ' + d);
+      // console.log('THEME: ' + d);
       var dd = Appearance.getColorScheme();
-      console.log('APPEARANCE: ' + dd);
+      //   console.log('APPEARANCE: ' + dd);
       lightOrDarkLocal = 'automatic';
       setLightOrDark(dd);
     } else {
@@ -65,7 +65,7 @@ export default function DarkOrLightScreen(props: any) {
     }
 
     if (typeof setLightOrDarkLabel !== 'undefined') {
-      console.log('LIGHTORDARKLOCAL2: ' + lightOrDarkLocal);
+      //  console.log('LIGHTORDARKLOCAL2: ' + lightOrDarkLocal);
 
       setLightOrDarkLabel(lightOrDarkLocal);
     }

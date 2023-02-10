@@ -136,6 +136,10 @@ export default function ImportRelScreen2(props: any) {
                   }
                 });
 
+                contactsToDisplay.sort(function (a, b) {
+                  return a.lastName.localeCompare(b.lastName);
+                });
+
                 setDataRM(contactsToDisplay);
                 setIsLoading(false);
               });

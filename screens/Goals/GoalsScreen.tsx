@@ -9,7 +9,7 @@ import TrackActivity from './TrackActivityScreen';
 import globalStyles from '../../globalStyles';
 import AddRelScreen from '../Relationships/AddRelationshipScreen';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import { scheduleNotifications, getNotificationStatus, ga4Analytics, isNullOrEmpty } from '../../utils/general';
+import { ga4Analytics, isNullOrEmpty } from '../../utils/general';
 import { testForNotificationGoals } from './handleWinNotifications';
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');

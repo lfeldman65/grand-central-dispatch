@@ -45,7 +45,7 @@ import ImportRel1 from '../screens/Settings/ImportRelScreen1';
 import ImportRel2 from '../screens/Settings/ImportRelScreen2';
 import BizGoals from '../screens/Settings/BizGoalsScreen';
 import BizGoalsReview from '../screens/Settings/BizGoalsReviewScreen';
-import Tutorial1 from '../screens/Settings/Tutorial1';
+import Tutorial from '../screens/Settings/Tutorial';
 import AboutUs from '../screens/Settings/AboutUsScreen';
 import LandingScreen from '../screens/Settings/LandingScreen';
 import RelOrderScreen from '../screens/Settings/RelOrderScreen';
@@ -952,25 +952,6 @@ export const ProfileStackNavigator = () => {
   );
 };
 
-export const TutorialStackNavigator = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Tutorial1"
-        component={Tutorial1}
-        options={{
-          title: 'Tutorial',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: true,
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-
 export const SettingsStackNavigator = () => {
   return (
     <Stack.Navigator>
@@ -1076,11 +1057,15 @@ export const SettingsStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="TutorialStackNavigator"
-        component={TutorialStackNavigator}
+        name="Tutorial"
+        component={Tutorial}
         options={{
-          headerBackVisible: true,
-          headerShown: false,
+          title: 'Tutorial',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
         }}
       />
 
@@ -1431,6 +1416,19 @@ export const HomeStackNavigator = () => {
         component={DashboardScreen}
         options={{
           title: 'Dashboard',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="Tutorial"
+        component={Tutorial}
+        options={{
+          title: 'Tutorial',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

@@ -89,13 +89,13 @@ export default function LoginScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res.data);
+          //   console.log(res.data);
           if (res.data.hasBombBombPermission) {
             storage.setItem('hasBombBomb', 'true');
           } else {
             storage.setItem('hasBombBomb', 'false');
           }
-          console.log('LOGINTYPE: ' + res.data.businessType);
+          //   console.log('LOGINTYPE: ' + res.data.businessType);
           storage.setItem('businessType', res.data.businessType);
         }
         setIsLoading(false);
@@ -138,7 +138,7 @@ export default function LoginScreen() {
           console.log(res);
           Alert.alert(res.error);
         } else {
-          console.log(res);
+          //   console.log(res);
           saveCredentials(res.data.token);
           fetchProfile();
 
