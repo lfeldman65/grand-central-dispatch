@@ -299,11 +299,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   topView: {
-    height: 150,
     flexDirection: 'column',
     borderWidth: 0.5,
     borderTopColor: 'white',
     borderBottomColor: '#1A6295',
+    paddingLeft: 5,
+    paddingRight: 8,
   },
   imageBox: {
     width: 200,
