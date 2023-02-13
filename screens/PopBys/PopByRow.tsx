@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { savePop } from './api';
 import openMap from 'react-native-open-maps';
+import { ga4Analytics } from '../../utils/general';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -41,7 +42,10 @@ export default function PopByRow(props: PopBysRowProps) {
   }, [isFocused]);
 
   function handleDirectionsPressed() {
-    console.log('directions pressed');
+    ga4Analytics('PopBy_Directions', {
+      contentType: popByTab,
+      itemId: 'id1109',
+    });
     openMap({ query: completeAddress() });
   }
 
@@ -66,6 +70,10 @@ export default function PopByRow(props: PopBysRowProps) {
   }
 
   function handleSavePressed() {
+    ga4Analytics('PopBy_Save', {
+      contentType: popByTab,
+      itemId: 'id1110',
+    });
     if (isFavorite == 'False') {
       savePop(props.data.id);
       setIsFavorite('True');

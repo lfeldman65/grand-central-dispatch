@@ -6,6 +6,7 @@ import { storage } from '../../utils/storage';
 import { removePop, completePop } from './api';
 import openMap from 'react-native-open-maps';
 import PopComplete from './PopCompleteScreen';
+import { ga4Analytics } from '../../utils/general';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -42,7 +43,10 @@ export default function PopByRowSaved(props: PopBysRowProps) {
   }, [isFocused]);
 
   function handleDirectionsPressed() {
-    console.log('directions pressed');
+    ga4Analytics('PopBy_Directions', {
+      contentType: popByTab,
+      itemId: 'id1109',
+    });
     openMap({ query: completeAddress() });
   }
 
@@ -82,7 +86,6 @@ export default function PopByRowSaved(props: PopBysRowProps) {
   }
 
   function handleCompletePressed() {
-    console.log('handle complete pressed');
     setModalVisible(true);
   }
 
@@ -95,6 +98,10 @@ export default function PopByRowSaved(props: PopBysRowProps) {
           onFailure();
         } else {
           setModalVisible(false);
+          ga4Analytics('PopBy_Complete', {
+            contentType: 'none',
+            itemId: 'id1111',
+          });
           onSuccess();
         }
       })
@@ -125,7 +132,10 @@ export default function PopByRowSaved(props: PopBysRowProps) {
   }
 
   function removePressedContinue() {
-    console.log('remove continued');
+    ga4Analytics('PopBy_Remove', {
+      contentType: 'none',
+      itemId: 'id1112',
+    });
     removePop(props.data.id);
     props.refresh();
   }

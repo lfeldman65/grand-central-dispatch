@@ -26,6 +26,7 @@ import { matchesSearch, milesBetween, shortestRoute } from './popByHelpers';
 import * as Location from 'expo-location';
 import { scheduleNotifications, getNotificationStatus } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { ga4Analytics } from '../../utils/general';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 var northEast: LatLng | null = null;
@@ -219,7 +220,10 @@ export default function ManageRelationshipsScreen() {
   }
 
   const handleRowPress = (index: number) => {
-    console.log('rolodex row press');
+    ga4Analytics('PopBy_Row', {
+      contentType: tabSelected,
+      itemId: 'id1104',
+    });
     navigation.navigate('RelDetails', {
       contactId: popByData[index].id,
       firstName: popByData[index].firstName,
@@ -260,7 +264,10 @@ export default function ManageRelationshipsScreen() {
   }
 
   function nearPressed() {
-    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
+    ga4Analytics('PopBy_Near_Me_Tab', {
+      contentType: 'none',
+      itemId: 'id1101',
+    });
     if (isLoading) {
       return;
     }
@@ -270,9 +277,11 @@ export default function ManageRelationshipsScreen() {
   }
 
   function priorityPressed() {
-    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Ranking', 0));
+    ga4Analytics('PopBy_Priority_Tab', {
+      contentType: 'none',
+      itemId: 'id1102',
+    });
     if (isLoading) {
-      //  return;
     }
     const tab = 'Priority';
     setTabSelected(tab);
@@ -280,9 +289,11 @@ export default function ManageRelationshipsScreen() {
   }
 
   function savedPressed() {
-    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Groups', 0));
+    ga4Analytics('PopBy_Saved_Tab', {
+      contentType: 'none',
+      itemId: 'id1103',
+    });
     if (isLoading) {
-      //  return;
     }
     const tab = 'Saved';
     setShowRoute(false);
@@ -313,10 +324,18 @@ export default function ManageRelationshipsScreen() {
     }
     if (showRoute) {
       // these seem reversed but they aren't since showRoute isn't toggled til the end of this function.
+      ga4Analytics('PopBy_Closest_To_Farthest', {
+        contentType: 'none',
+        itemId: 'id1108',
+      });
       fetchPopBysWindow(tabToParam(tabSelected), 'none', true);
       setInfoText('Closest to Farthest');
       console.log('SHOWROUTE1: ' + showRoute);
     } else {
+      ga4Analytics('PopBy_Shortest_Route', {
+        contentType: 'none',
+        itemId: 'id1107',
+      });
       fetchPopBysRadius(tabToParam(tabSelected), true);
       handleShortestRoute(popByData);
       setInfoText('Minimized Route Distance');
@@ -415,7 +434,10 @@ export default function ManageRelationshipsScreen() {
   }
 
   async function saveAllPressedContinue() {
-    console.log('save all pressed');
+    ga4Analytics('PopBy_Save_All', {
+      contentType: tabSelected,
+      itemId: 'id1105',
+    });
     if (popByData.length == 0) {
       Alert.alert('No relationships to save');
       return;
@@ -444,7 +466,10 @@ export default function ManageRelationshipsScreen() {
   }
 
   function unSaveAllPressedContinue() {
-    console.log('unsave all pressed');
+    ga4Analytics('PopBy_Unsave_All', {
+      contentType: 'none',
+      itemId: 'id1106',
+    });
     if (popByData.length == 0) {
       Alert.alert('No relationships to remove');
       return;

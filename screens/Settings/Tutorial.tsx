@@ -23,6 +23,7 @@ const tx1 = require('../Settings/images/tx1.png');
 const tx2 = require('../Settings/images/tx2.png');
 const pop1 = require('../Settings/images/pop1.png');
 const pop2 = require('../Settings/images/pop2.png');
+const blank = require('../../images/blankSearch.png');
 
 interface ItemProps {
   key: string;
@@ -54,7 +55,7 @@ const INTRO_DATA = [
   {
     key: '4',
     title: 'Priority Action Center',
-    description: 'Activity details are easily viewed by tapping a cell in the list view on the previous page.',
+    description: "Relationship activity details are easily viewed by tapping the relationship's name.",
     imageName: pac2,
   },
   {
@@ -74,7 +75,7 @@ const INTRO_DATA = [
     key: '7',
     title: 'Transactions',
     description:
-      'Manage all of your transactions through the Referral Maker CRM. Use a quick swipe left to change the status of your transaction while you progress towards closing the deal!',
+      'Use a quick swipe left to change the status of your transaction while you progress towards closing the deal!',
     imageName: tx2,
   },
   {
@@ -87,7 +88,7 @@ const INTRO_DATA = [
     key: '9',
     title: "Pop-By's",
     description:
-      'Advanced mapping technology lets you know who is around you for easy visits. Tap the large map pins along the top to show or hide relationships based on ranking.',
+      'Advanced mapping technology lets you know who is around you for easy visits. Tap the rank pins along the top to show or hide relationships based on ranking.',
     imageName: pop1,
   },
   {
@@ -96,6 +97,12 @@ const INTRO_DATA = [
     description:
       "Save the relationships that you wish to visit. Tap on the route icon to list the saved Pop-By's in an order that will minimize your route distance.",
     imageName: pop2,
+  },
+  {
+    key: '11',
+    title: 'Tap the Done button to get started!',
+    description: '',
+    imageName: blank,
   },
 ];
 
