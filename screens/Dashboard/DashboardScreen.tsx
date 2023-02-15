@@ -10,6 +10,7 @@ import { PermissionStatus } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
 import { ga4Analytics } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { LogBox } from 'react-native';
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -207,6 +208,7 @@ export default function DashboardScreen() {
 
   const handleNavigation = (props: DashboardNavigationProps) => {
     // SentryTest();
+    LogBox.ignoreAllLogs(true);
     console.log('parent screen1: ' + props.parentScreen);
     var newLabel = props.label;
     if (props.label == 'To-Do') {
