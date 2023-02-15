@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, Linking, TextInput } from 'react-native';
-import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
 import globalStyles from '../../globalStyles';
@@ -14,6 +13,8 @@ import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
+import { GoalDataProps } from '../Goals/interfaces';
+import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 import {
   ideasMenu,
   vidMenu,
@@ -23,7 +24,7 @@ import {
   officeTypeMenu,
   Sheets,
 } from './relationshipHelpers';
-import { trackAction } from '../Goals/api';
+import { getGoalData, trackAction } from '../Goals/api';
 import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
 import * as SMS from 'expo-sms';
 import Dialog from 'react-native-dialog';
@@ -63,6 +64,8 @@ const ideasImg = require('../Relationships/images/relIdeas.png');
 var phoneArray: string[] = [];
 var phoneLabels: string[] = [];
 
+var localGoalID = '0';
+
 interface RelDetailsLocalProps {
   data: RelDetailsProps;
   route: any;
@@ -98,6 +101,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [isFavorite, setIsFavorite] = useState('False');
   const [vidTitle, setVidTitle] = useState('');
   const [showVidTitle, setShowVidTitle] = useState(false);
+  const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
 
   async function getVidTutWatched() {
     const vidTutWatched = await storage.getItem('videoTutorialWatched');
@@ -119,6 +123,8 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     note: string,
     refInPast: boolean
   ) {
+    localGoalID = goalID;
+
     setIsLoading(true);
     trackActivityAPI(
       guid,
@@ -178,6 +184,41 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function trackSuccess() {
     setIsLoading(false);
+    console.log('track success 1');
+    fetchGoals();
+  }
+
+  function fetchGoals() {
+    setIsLoading(true);
+    getGoalData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setGoalList(res.data);
+          console.log('CALLS: ' + res.data[0].goal.title);
+          console.log('CALLS: ' + res.data[0].achievedToday);
+          notifyIfWin(localGoalID, res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function notifyIfWin(goalId: string, data: GoalDataProps[]) {
+    console.log('GOALID: ' + goalId);
+    var i = 0;
+    while (i < data.length) {
+      if (data[i].goal.id.toString() == goalId) {
+        testForNotificationTrack(
+          data[i].goal.title,
+          data[i].goal.weeklyTarget,
+          data[i].achievedThisWeek,
+          data[i].achievedToday
+        );
+      }
+      i = i + 1;
+    }
   }
 
   function trackFailure() {

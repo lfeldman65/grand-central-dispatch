@@ -10,7 +10,7 @@ import globalStyles from '../../globalStyles';
 import AddRelScreen from '../Relationships/AddRelationshipScreen';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics, isNullOrEmpty } from '../../utils/general';
-import { testForNotificationGoals } from './handleWinNotifications';
+import { testForNotificationTrack } from './handleWinNotifications';
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
@@ -238,7 +238,7 @@ export default function GoalsScreen() {
     var i = 0;
     while (i < data.length) {
       if (data[i].goal.id.toString() == goalId) {
-        testForNotificationGoals(
+        testForNotificationTrack(
           data[i].goal.title,
           data[i].goal.weeklyTarget,
           data[i].achievedThisWeek,

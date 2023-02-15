@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'reac
 import { ga4Analytics } from '../../utils/general';
 import { GoalDataProps } from '../Goals/interfaces';
 import { getGoalData } from '../Goals/api';
-import { testForNotificationPAC } from '../Goals/handleWinNotifications';
+import { testForNotificationPre } from '../Goals/handleWinNotifications';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function PACCompleteScreen(props: any) {
@@ -52,7 +52,7 @@ export default function PACCompleteScreen(props: any) {
     var i = 0;
     while (i < data.length) {
       if (data[i].goal.id == goalId) {
-        testForNotificationPAC(
+        testForNotificationPre(
           data[i].goal.title,
           data[i].goal.weeklyTarget,
           data[i].achievedThisWeek,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 40,
   },
   closeX: {
     width: 15,

@@ -33,7 +33,7 @@ export default function ChooseGoalScreen(props: any) {
   }, [isFocused]);
 
   function fetchGoalList(type: string, isMounted: boolean) {
-    console.log('fetch rolodex');
+    console.log('fetch goals');
     setIsLoading(true);
     getGoalDataConcise()
       .then((res) => {
@@ -44,7 +44,7 @@ export default function ChooseGoalScreen(props: any) {
           console.error(res.error);
         } else {
           setGoalList(res.data);
-          //  console.log(res.data);
+          //   console.log(res.data);
         }
         setIsLoading(false);
       })

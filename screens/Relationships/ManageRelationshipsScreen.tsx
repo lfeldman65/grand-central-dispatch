@@ -190,11 +190,11 @@ export default function ManageRelationshipsScreen() {
         } else {
           setDataRolodex(res.data);
           var ad: IData[] = [];
-          console.log('LOCAL: ' + localDisplay);
+          //  console.log('LOCAL: ' + localDisplay);
           if (localDisplay == 'First Last') {
             res.data.forEach((e) => {
               ad.push({ value: e.firstName, key: e.id });
-              console.log('FIRSTNAME: ' + e.firstName);
+              //   console.log('FIRSTNAME: ' + e.firstName);
             });
           } else {
             res.data.forEach((e) => {

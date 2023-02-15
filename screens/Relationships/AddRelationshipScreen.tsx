@@ -6,6 +6,9 @@ import { useIsFocused } from '@react-navigation/native';
 import { addNewContact } from './api';
 import SelRefScreen from './SelectRelationshipScreen';
 import { RolodexDataProps } from './interfaces';
+import { testForNotificationPre, testForNotificationTrack } from '../Goals/handleWinNotifications';
+import { getGoalData } from '../Goals/api';
+import { GoalDataProps } from '../Goals/interfaces';
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -30,8 +33,7 @@ export default function AddRelationshipScreen(props: any) {
     setReferralModalVisible(true);
   }
 
-  function SavePressed() {
-    //   analytics.event(new Event('Login', 'Login Button', 'Pressed', 0));
+  function savePressed() {
     if (firstName == ' ' && lastName == ' ') {
       console.error('Please enter a First Name and/or Last Name');
       return;
@@ -56,26 +58,61 @@ export default function AddRelationshipScreen(props: any) {
         } else {
           console.log(res);
           setModalVisible(false);
-          onSave();
+          afterSave();
         }
         //   setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
-  function CancelPressed() {
+  function cancelPressed() {
     setModalVisible(false);
+  }
+
+  function afterSave() {
+    console.log('aftersave');
+    fetchGoals();
+    onSave();
+  }
+
+  function fetchGoals() {
+    getGoalData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log('fetchgoals');
+          notifyIfWin(4, res.data);
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function notifyIfWin(goalId: number, data: GoalDataProps[]) {
+    console.log('GOALID: ' + goalId);
+    var i = 0;
+    while (i < data.length) {
+      if (data[i].goal.id == goalId) {
+        testForNotificationTrack(
+          data[i].goal.title,
+          data[i].goal.weeklyTarget,
+          data[i].achievedThisWeek,
+          data[i].achievedToday
+        );
+      }
+      i = i + 1;
+    }
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <TouchableOpacity onPress={CancelPressed}>
+        <TouchableOpacity onPress={cancelPressed}>
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
 
         <Text style={styles.nameLabel}>{title}</Text>
 
-        <TouchableOpacity onPress={SavePressed}>
+        <TouchableOpacity onPress={savePressed}>
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
       </View>
@@ -209,7 +246,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 40,
   },
   closeX: {
     width: 15,

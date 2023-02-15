@@ -1,6 +1,6 @@
 import { scheduleNotifications, getNotificationStatus, ga4Analytics } from '../../utils/general';
 
-export async function testForNotificationPAC(
+export async function testForNotificationPre(
   goalName: string,
   weeklyGoal: number,
   weeklyNum: number,
@@ -36,7 +36,7 @@ export async function testForNotificationPAC(
   }
 }
 
-export async function testForNotificationGoals(
+export async function testForNotificationTrack(
   goalName: string,
   weeklyGoal: number,
   weeklyNum: number,
