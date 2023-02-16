@@ -1128,6 +1128,32 @@ export const RelStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="RealEstateTxDetails"
+        component={TransactionDetailsRE}
+        options={{
+          title: 'Transaction Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="RealEstateTransactions"
+        component={RealEstateTransactionsScreen}
+        options={{
+          title: 'Real Estate Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
         name="AddTxMenu"
         component={AddTxMenu}
         options={{

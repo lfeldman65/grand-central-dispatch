@@ -534,16 +534,25 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (notes != '') Alert.alert(notes);
   }
 
-  function handleToDoTogglePressed(thisEventID: string) {
-    console.log(thisEventID);
+  function handleToDoItemPressed(thisEventID: string) {
+    console.log('ToDo:' + thisEventID);
   }
 
-  function handleTransactionTogglePressed(thisTransactionID: number) {
-    console.log(thisTransactionID);
+  function handleTransactionItemPressed(thisTransactionID: number) {
+    console.log('Tx: ' + thisTransactionID);
+    navigation.navigate('RealEstateTxDetails', {
+      dealID: thisTransactionID,
+      lightOrDark: lightOrDark,
+    });
   }
 
-  function handleGroupPressed(thisGroupID: string) {
-    console.log(thisGroupID);
+  function handleGroupPressed(thisGroupID: string, thisGroupName: string) {
+    console.log('this group: ' + thisGroupID);
+    navigation.navigate('GroupMembersScreen', {
+      groupID: thisGroupID,
+      groupName: thisGroupName,
+      lightOrDark: lightOrDark,
+    });
   }
 
   function showSection0() {
@@ -1097,7 +1106,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {showToDos && showSection2() && (
           <React.Fragment>
             {dataToDos.map((item, index) => (
-              <TouchableOpacity onPress={() => handleToDoTogglePressed(item.EventID)}>
+              <TouchableOpacity onPress={() => handleToDoItemPressed(item.EventID)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
@@ -1127,7 +1136,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {showTransactions && showSection3() && (
           <React.Fragment>
             {dataDetails?.transactions.map((item, index) => (
-              <TouchableOpacity onPress={() => handleTransactionTogglePressed(item.dealId)}>
+              <TouchableOpacity onPress={() => handleTransactionItemPressed(item.dealId)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <React.Fragment>
@@ -1158,7 +1167,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {showGroups && showSection4() && (
           <React.Fragment>
             {dataDetails?.groupsNotes.map((item, index) => (
-              <TouchableOpacity onPress={() => handleGroupPressed(item.groupId)}>
+              <TouchableOpacity onPress={() => handleGroupPressed(item.groupId, item.groupName)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>{item.groupName}</Text>
