@@ -131,12 +131,12 @@ export default function Tutorial(props: any) {
       title: 'Tutorial',
       // headerLeft: () => (
       //   <TouchableOpacity onPress={backPressed}>
-      //     <Text style={styles.backAndSkip}>Back</Text>
+      //     <Text style={styles.doneButton}>Back</Text>
       //   </TouchableOpacity>
       // ),
       headerRight: () => (
-        <TouchableOpacity onPress={skipPressed}>
-          <Text style={styles.backAndSkip}>Done</Text>
+        <TouchableOpacity onPress={donePressed}>
+          <Text style={styles.doneButton}>Done</Text>
         </TouchableOpacity>
       ),
     });
@@ -146,7 +146,7 @@ export default function Tutorial(props: any) {
     navigation.goBack();
   }
 
-  function skipPressed() {
+  function donePressed() {
     navigation.goBack();
   }
 
@@ -241,9 +241,9 @@ const styles = StyleSheet.create({
     height: '100%',
     //  borderRadius: 20,
   },
-  backAndSkip: {
+  doneButton: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 14,
     opacity: 1.0,
   },
 });

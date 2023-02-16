@@ -15,6 +15,7 @@ import {
   AddGroupMemberDataResponse,
   RelDetailsSpouse,
   RelDetailsReferredBy,
+  VideoNotificatonDataResponse,
 } from './interfaces';
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
@@ -100,6 +101,10 @@ export function getVideoSummaryData(): Promise<VideoHistoryDataResponse> {
 
 export function getVideoDetails(vidGuid: string): Promise<VideoDetailsDataResponse> {
   return http.get(`videoViews?videoGuid=${vidGuid}`);
+}
+
+export function getVideoNotificationInfo(): Promise<VideoNotificatonDataResponse> {
+  return http.get('videosnotification');
 }
 
 export function deleteRelationship(guid: string): Promise<ContactDeleteDataResponse> {

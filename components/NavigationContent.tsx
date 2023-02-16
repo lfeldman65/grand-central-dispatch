@@ -4,6 +4,7 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
 import { storage } from '../utils/storage';
 import { ga4Analytics } from '../utils/general';
+import { handleVideoNotifications } from '../components/videoNotifications';
 
 const rmLogo = require('../images/logoWide.png');
 
@@ -98,7 +99,7 @@ function CustomDrawerContent(props: any) {
   const pressed = (screenName: string) => {
     navigation.navigate(screenName);
     trackPressed(screenName);
-    //console.log('111');
+    handleVideoNotifications();
   };
 
   function pressed2(screenName: string) {

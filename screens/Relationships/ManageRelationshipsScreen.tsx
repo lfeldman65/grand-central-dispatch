@@ -282,7 +282,8 @@ export default function ManageRelationshipsScreen() {
                 }}
                 indexLetterStyle={{
                   color: '#1398f5',
-                  fontSize: 15,
+                  fontSize: 14,
+                  height: 60,
                 }}
                 indexContainerStyle={{
                   width: 20,

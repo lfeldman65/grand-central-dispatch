@@ -55,40 +55,40 @@ export default function NotificationsScreen(props: any) {
   }, [isFocused]);
 
   function savePressed() {
-    var state = 'False';
+    var state = 'false';
     if (notifCall) {
-      state = 'True';
+      state = 'true';
     }
     storage.setItem('notifCall', state);
     console.log('save: ' + state);
 
-    state = 'False';
+    state = 'false';
     if (notifToDo) {
-      state = 'True';
+      state = 'true';
     }
     storage.setItem('notifToDo', state);
 
-    state = 'False';
+    state = 'false';
     if (notifWins) {
-      state = 'True';
+      state = 'true';
     }
     storage.setItem('notifWins', state);
 
-    state = 'False';
+    state = 'false';
     if (notifPopBys) {
-      state = 'True';
+      state = 'true';
     }
     storage.setItem('notifPopBys', state);
 
-    state = 'False';
+    state = 'false';
     if (notifImport) {
-      state = 'True';
+      state = 'true';
     }
     storage.setItem('notifImport', state);
 
-    state = 'False';
+    state = 'false';
     if (notifVideos) {
-      state = 'True';
+      state = 'true';
     }
     storage.setItem('notifVideos', state);
 
@@ -165,55 +165,54 @@ export default function NotificationsScreen(props: any) {
       return;
     }
     var saved = await storage.getItem('notifCall');
-    if (saved == null || saved == 'True') {
+    if (saved == null || saved == 'true') {
       setNotifCall(true);
     } else {
       setNotifCall(false);
     }
 
     saved = await storage.getItem('notifToDo');
-    if (saved == null || saved == 'True') {
+    if (saved == null || saved == 'true') {
       setNotifToDo(true);
     } else {
       setNotifToDo(false);
     }
 
     saved = await storage.getItem('notifWins');
-    if (saved == null || saved == 'True') {
+    if (saved == null || saved == 'true') {
       setNotifWins(true);
     } else {
       setNotifWins(false);
     }
 
     saved = await storage.getItem('notifPopBys');
-    if (saved == null || saved == 'True') {
+    if (saved == null || saved == 'true') {
       setNotifPopBys(true);
     } else {
       setNotifPopBys(false);
     }
 
     saved = await storage.getItem('notifImport');
-    if (saved == null || saved == 'True') {
+    if (saved == null || saved == 'true') {
       setNotifImport(true);
     } else {
       setNotifImport(false);
     }
 
     saved = await storage.getItem('notifVideos');
-    if (saved == null || saved == 'True') {
+    if (saved == null || saved == 'true') {
       setNotifVideos(true);
     } else {
       setNotifVideos(false);
     }
 
     saved = await storage.getItem('hasBombBomb');
-    if (saved == null || saved == 'true') {
+    // should never be null since initialized on Login
+    console.log('hasBB storage: ' + saved);
+    if (saved == 'null' || saved == 'true') {
       setHasBombBomb(true);
     } else {
-      setHasBombBomb(true);
-    }
-    if (hasBombBomb) {
-      console.log('has bb: ' + hasBombBomb);
+      setHasBombBomb(false);
     }
   }
 

@@ -266,6 +266,19 @@ export interface VideoDetailsDataResponse {
   status: string;
 }
 
+// Get Video Notification in Postman
+
+export interface VideoNotificationDataProps {
+  summary: string;
+  hasNewViews: string;
+}
+
+export interface VideoNotificatonDataResponse {
+  data: VideoNotificationDataProps;
+  error: string;
+  status: string;
+}
+
 // Contact Delete in Postman
 
 export interface ContactDeleteProps {

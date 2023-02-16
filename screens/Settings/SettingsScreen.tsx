@@ -295,7 +295,7 @@ export default function SettingsScreen() {
           <TouchableOpacity onPress={displayAZPressed}>
             <View style={styles.pressableRow}>
               <View style={styles.textBoxSupp}>
-                <Text style={styles.activityText}>Display Relationships A - Z</Text>
+                <Text style={styles.activityText}>Display Relationships</Text>
               </View>
               <Text style={styles.suppText}>{displayAZ}</Text>
               <View style={styles.chevronBox}>
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   topView: {
-    height: 80,
+    height: 90,
     backgroundColor: '#1A6295',
     flexDirection: 'row',
     borderWidth: 0.5,
@@ -443,12 +443,12 @@ const styles = StyleSheet.create({
   userText: {
     marginTop: 20,
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
   },
   headerRow: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 15,
     backgroundColor: '#04121b',
     paddingTop: 15,
     height: 50,
@@ -456,18 +456,18 @@ const styles = StyleSheet.create({
   signOutButton: {
     marginTop: 15,
     backgroundColor: '#1A6295',
-    paddingTop: 7,
     borderColor: 'white',
     borderWidth: 2,
     borderRadius: 10,
     height: 40,
     width: 100,
     alignSelf: 'center',
+    justifyContent: 'center',
   },
   signOutText: {
     textAlign: 'center',
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
   },
   bottomView: {
     borderTopColor: 'white',
@@ -482,14 +482,14 @@ const styles = StyleSheet.create({
   versionText: {
     marginTop: 8,
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
     marginLeft: 10,
   },
   copyrightText: {
     marginTop: 5,
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
     marginLeft: 10,
   },
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
   },
   activityText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 2,

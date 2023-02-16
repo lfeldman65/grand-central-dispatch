@@ -27,7 +27,7 @@ export default StyleSheet.create({
     height: '100%',
     backgroundColor: '#09334a',
     flex: 1,
-    paddingTop: 11,
+    padding: 7,
   },
   selected: {
     color: 'white',
@@ -36,7 +36,7 @@ export default StyleSheet.create({
     height: '100%',
     backgroundColor: '#04121b',
     flex: 1,
-    paddingTop: 11,
+    padding: 7,
     borderColor: 'lightblue',
     borderWidth: 2,
   },
@@ -64,7 +64,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     fontSize: 18,
     color: '#1398f5',
-    marginTop: 9,
+    marginTop: 7,
   },
   chevronFilter: {
     marginRight: 20,

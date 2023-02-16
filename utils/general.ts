@@ -71,14 +71,14 @@ export function scheduleNotifications(title: string, body: string, seconds: numb
 export async function getNotificationStatus(key: string) {
   var notifStatus = await storage.getItem(key);
   if (notifStatus == null || notifStatus == undefined) {
-    console.log('RETURN TRUE');
+    console.log('RETURN Notif TRUE');
     return true;
   }
-  if (notifStatus == 'True') {
-    console.log('RETURN TRUE');
+  if (notifStatus == 'true') {
+    console.log('RETURN Notif 2 TRUE');
     return true;
   }
-  console.log('RETURN FALSE');
+  console.log('RETURN Notif FALSE');
   return false;
 }
 
