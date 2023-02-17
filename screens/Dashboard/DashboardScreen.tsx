@@ -55,9 +55,9 @@ export default function DashboardScreen() {
     await Notifications.scheduleNotificationAsync({
       identifier: 'afternoon-notification',
       content: {
-        title: `Hello :)`,
-        subtitle: 'Have a great nap :D',
-        body: `Have a great nap :D`,
+        title: `Reminder`,
+        subtitle: '',
+        body: `Would you like to see if there are any new relationships to import?`,
         sound: true,
         data: {
           to: 'new-log',
