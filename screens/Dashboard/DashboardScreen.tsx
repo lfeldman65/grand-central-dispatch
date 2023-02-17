@@ -51,6 +51,27 @@ export default function DashboardScreen() {
   const requestNotificationPermissions = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
     setNotificationPermissions(status);
+    console.log('Import Notif');
+    await Notifications.scheduleNotificationAsync({
+      identifier: 'afternoon-notification',
+      content: {
+        title: `Hello :)`,
+        subtitle: 'Have a great nap :D',
+        body: `Have a great nap :D`,
+        sound: true,
+        data: {
+          to: 'new-log',
+        },
+        color: '#000000',
+      },
+      trigger: {
+        day: 1,
+        hour: 15,
+        minute: 0,
+        repeats: true,
+      },
+    });
+
     return status;
   };
 
