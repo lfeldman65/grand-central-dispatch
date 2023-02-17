@@ -135,7 +135,7 @@ export default function AddOrEditOtherTx2(props: any) {
         lastName: whoInvolved?.lastName,
       });
     } else {
-      navigation.navigate('RealEstateTransactions');
+      navigation.navigate('OtherTransactions');
     }
   }
 

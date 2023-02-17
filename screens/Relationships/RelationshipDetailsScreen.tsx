@@ -534,16 +534,41 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (notes != '') Alert.alert(notes);
   }
 
-  function handleToDoItemPressed(thisEventID: string) {
-    console.log('ToDo:' + thisEventID);
+  function handleToDoItemPressed(thisEventID: string, thisEventType: string) {
+    console.log('ID:' + thisEventID);
+    console.log('Type:' + thisEventType);
+    if (thisEventType == 'Appointment') {
+      navigation.navigate('ApptDetails', {
+        apptID: thisEventID,
+        lightOrDark: lightOrDark,
+      });
+    } else {
+      navigation.navigate('toDoDetails', {
+        toDoID: thisEventID,
+        lightOrDark: lightOrDark,
+      });
+    }
   }
 
-  function handleTransactionItemPressed(thisTransactionID: number) {
-    console.log('Tx: ' + thisTransactionID);
-    navigation.navigate('RealEstateTxDetails', {
-      dealID: thisTransactionID,
-      lightOrDark: lightOrDark,
-    });
+  function handleTransactionItemPressed(thisTransactionID: number, thisTxType: string) {
+    console.log('ID: ' + thisTransactionID);
+    console.log('Type: ' + thisTxType);
+    if (thisTxType == 'Realtor') {
+      navigation.navigate('RealEstateTxDetails', {
+        dealID: thisTransactionID,
+        lightOrDark: lightOrDark,
+      });
+    } else if (thisTxType == 'Lender') {
+      navigation.navigate('LenderTxDetails', {
+        dealID: thisTransactionID,
+        lightOrDark: lightOrDark,
+      });
+    } else {
+      navigation.navigate('OtherTxDetails', {
+        dealID: thisTransactionID,
+        lightOrDark: lightOrDark,
+      });
+    }
   }
 
   function handleGroupPressed(thisGroupID: string, thisGroupName: string) {
@@ -1106,7 +1131,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {showToDos && showSection2() && (
           <React.Fragment>
             {dataToDos.map((item, index) => (
-              <TouchableOpacity onPress={() => handleToDoItemPressed(item.EventID)}>
+              <TouchableOpacity onPress={() => handleToDoItemPressed(item.EventID, item.EventType)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
@@ -1136,7 +1161,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         {showTransactions && showSection3() && (
           <React.Fragment>
             {dataDetails?.transactions.map((item, index) => (
-              <TouchableOpacity onPress={() => handleTransactionItemPressed(item.dealId)}>
+              <TouchableOpacity onPress={() => handleTransactionItemPressed(item.dealId, item.transactionType)}>
                 <View style={styles.textAndChevronRow}>
                   <View style={styles.referralAndSpouseText}>
                     <React.Fragment>

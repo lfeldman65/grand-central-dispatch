@@ -151,6 +151,7 @@ export default function AddOrEditLenderTx3(props: any) {
   }
 
   function leaveHere() {
+    console.log('Leave: ' + source);
     if (source == 'Relationships') {
       navigation.navigate('RelDetails', {
         contactId: borrower?.id,
@@ -158,7 +159,7 @@ export default function AddOrEditLenderTx3(props: any) {
         lastName: borrower?.lastName,
       });
     } else {
-      navigation.navigate('RealEstateTransactions');
+      navigation.navigate('LenderTransactions');
     }
   }
 

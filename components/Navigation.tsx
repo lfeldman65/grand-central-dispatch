@@ -1128,8 +1128,60 @@ export const RelStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="toDoDetails"
+        component={ToDoDetails}
+        options={{
+          title: 'To Do Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="ApptDetails"
+        component={ApptDetails}
+        options={{
+          title: 'Appointment Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
         name="RealEstateTxDetails"
         component={TransactionDetailsRE}
+        options={{
+          title: 'Transaction Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="LenderTxDetails"
+        component={TransactionDetailsLender}
+        options={{
+          title: 'Transaction Details',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
+        name="OtherTxDetails"
+        component={TransactionDetailsOther}
         options={{
           title: 'Transaction Details',
           headerTintColor: 'white',
@@ -1145,6 +1197,32 @@ export const RelStackNavigator = () => {
         component={RealEstateTransactionsScreen}
         options={{
           title: 'Real Estate Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="LenderTransactions"
+        component={LenderTransactionsScreen}
+        options={{
+          title: 'Lender Transactions',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="OtherTransactions"
+        component={OtherTransactionsScreen}
+        options={{
+          title: 'Other Transactions',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',
