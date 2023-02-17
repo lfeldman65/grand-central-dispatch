@@ -78,6 +78,7 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     hasWatchedTutorial();
+    LogBox.ignoreAllLogs(true);
   }, [isFocused]);
 
   useEffect(() => {
@@ -208,7 +209,6 @@ export default function DashboardScreen() {
 
   const handleNavigation = (props: DashboardNavigationProps) => {
     // SentryTest();
-    LogBox.ignoreAllLogs(true);
     console.log('parent screen1: ' + props.parentScreen);
     var newLabel = props.label;
     if (props.label == 'To-Do') {
