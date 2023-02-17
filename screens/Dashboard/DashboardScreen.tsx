@@ -248,10 +248,13 @@ export default function DashboardScreen() {
       navigation.navigate(props.parentScreen, {
         screen: props.screen,
         params: props.params ? props.params : null,
+        animationEnabled: false,
       });
     } else {
       console.log('propsscreen: ' + props.screen);
-      props.params ? navigation.navigate(props.screen, { ...props.params }) : navigation.navigate(props.screen);
+      props.params
+        ? navigation.navigate(props.screen, { ...props.params, animationEnabled: false })
+        : navigation.navigate(props.screen, { animationEnabled: false });
     }
   };
 
