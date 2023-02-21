@@ -1193,45 +1193,6 @@ export const RelStackNavigator = () => {
       />
 
       <Stack.Screen
-        name="RealEstateTransactions"
-        component={RealEstateTransactionsScreen}
-        options={{
-          title: 'Real Estate Transactions',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: false,
-        }}
-      />
-
-      <Stack.Screen
-        name="LenderTransactions"
-        component={LenderTransactionsScreen}
-        options={{
-          title: 'Lender Transactions',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: false,
-        }}
-      />
-
-      <Stack.Screen
-        name="OtherTransactions"
-        component={OtherTransactionsScreen}
-        options={{
-          title: 'Other Transactions',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: false,
-        }}
-      />
-
-      <Stack.Screen
         name="AddTxMenu"
         component={AddTxMenu}
         options={{
@@ -1685,6 +1646,32 @@ export const HomeStackNavigator = () => {
         options={{
           headerBackVisible: false,
           headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="ImportRel1"
+        component={ImportRel1}
+        options={{
+          title: 'Import Relationships',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="ImportRel2"
+        component={ImportRel2}
+        options={{
+          title: 'Import Relationships',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
         }}
       />
     </Stack.Navigator>

@@ -760,7 +760,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           setTheRank(res.data.ranking);
           setIsQual(res.data.qualified);
           setIsFavorite(res.data.address.isFavorite);
-          console.log('dataDetails:' + res.data.address.country);
+          console.log('dataDetails:' + res.data);
         }
         setIsLoading(false);
       })

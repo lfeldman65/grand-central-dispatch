@@ -49,6 +49,7 @@ export default function DashboardScreen() {
   }
 
   const requestNotificationPermissions = async () => {
+    // runs in background or killed
     const { status } = await Notifications.requestPermissionsAsync();
     setNotificationPermissions(status);
     console.log('Import Notif');
@@ -65,9 +66,10 @@ export default function DashboardScreen() {
         color: '#000000',
       },
       trigger: {
-        day: 1,
-        hour: 15,
-        minute: 0,
+        day: 20,
+        hour: 16,
+        minute: 32,
+        second: 0,
         repeats: true,
       },
     });
@@ -88,6 +90,20 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     requestNotificationPermissions();
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log('response from tap');
+      console.log(response.notification.request.content);
+      navigation.navigate('ImportRel1');
+      handleNavigation({
+        screen: 'ImportRel1',
+        label: 'ImportRel1',
+        itemID: 'none',
+      });
+      //const url = response.notification.request.content.data.url;
+
+      //Linking.openURL(url);
+    });
+    return () => subscription.remove();
     if (watchedTut == 'true') {
       console.log('HEREA');
       getLandingPage();

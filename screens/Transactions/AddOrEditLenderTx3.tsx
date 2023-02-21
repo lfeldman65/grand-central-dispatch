@@ -159,7 +159,9 @@ export default function AddOrEditLenderTx3(props: any) {
         lastName: borrower?.lastName,
       });
     } else {
-      navigation.navigate('LenderTransactions');
+      navigation.popToTop();
+      navigation.navigate('Home');
+      navigation.navigate('LenderTransactionsMenu', { screen: 'LenderTransactions' });
     }
   }
 

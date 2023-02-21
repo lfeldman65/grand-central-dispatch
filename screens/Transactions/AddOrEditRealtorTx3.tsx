@@ -202,7 +202,9 @@ export default function AddOrEditRealtorTx3(props: any) {
         lastName: buyer?.lastName,
       });
     } else {
-      navigation.navigate('RealEstateTransactions');
+      navigation.popToTop();
+      navigation.navigate('Home');
+      navigation.navigate('RETransactionsMenu', { screen: 'RealEstateTransactions' });
     }
   }
 

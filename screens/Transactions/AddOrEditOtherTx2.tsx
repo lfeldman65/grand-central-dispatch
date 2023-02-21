@@ -135,7 +135,9 @@ export default function AddOrEditOtherTx2(props: any) {
         lastName: whoInvolved?.lastName,
       });
     } else {
-      navigation.navigate('OtherTransactions');
+      navigation.popToTop();
+      navigation.navigate('Home');
+      navigation.navigate('OtherTransactionsMenu', { screen: 'OtherTransactions' });
     }
   }
 
