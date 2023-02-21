@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { Image, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import TransactionRow from './TransactionRow';
@@ -12,6 +12,8 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { changeTxStatus } from './api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 type TabType = 'Potential' | 'Active' | 'Pending' | 'Closed';
 
@@ -62,6 +64,14 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
       lightOrDark: lightOrDark,
     });
   };
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   function tabPressed(type: TabType) {
     console.log(type);
@@ -116,6 +126,16 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation, lightOrDark]);
 

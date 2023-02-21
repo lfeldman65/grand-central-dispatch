@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, Image, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -16,7 +16,8 @@ import { AlphabetList, IData } from 'react-native-section-alphabet-list';
 import { ga4Analytics } from '../../utils/general';
 import { styles } from './styles';
 import { storage } from '../../utils/storage';
-
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 type TabType = 'a-z' | 'ranking' | 'groups';
 var localDisplay = 'First Last';
 
@@ -86,6 +87,16 @@ export default function ManageRelationshipsScreen() {
     navigation.setOptions({
       title: 'Relationships',
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
       tab: tabSelected,
     });
   }, [navigation]);
@@ -104,6 +115,14 @@ export default function ManageRelationshipsScreen() {
       return 'Rel';
     }
     return 'Biz';
+  }
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
   }
 
   function prettyTabName(ugly: TabType) {

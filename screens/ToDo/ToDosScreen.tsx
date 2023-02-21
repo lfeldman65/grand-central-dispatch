@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert, ActivityIndicator, Modal } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, ActivityIndicator, Modal } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
@@ -12,6 +12,8 @@ import AddToDo from './AddToDoScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 export default function ToDosScreen() {
   const filters = {
@@ -54,6 +56,16 @@ export default function ToDosScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation, lightOrDark]);
 
@@ -65,7 +77,13 @@ export default function ToDosScreen() {
     };
   }, [isFocused]);
 
-  //useEffect(() => {}); // this will run on every render
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   function addNewToDoPressed() {
     ga4Analytics('To_Do_Add_New', {

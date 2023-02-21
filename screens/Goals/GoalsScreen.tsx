@@ -14,6 +14,8 @@ import { testForNotificationTrack } from './handleWinNotifications';
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 var localGoalID = '0';
 
@@ -27,6 +29,13 @@ export default function GoalsScreen() {
   const [addRelModalVisible, setAddRelModalVisible] = useState(false);
   const isFocused = useIsFocused();
 
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
   function trackActivityPressed() {
     ga4Analytics('Goals_Track_Activity', {
       contentType: 'none',
@@ -342,6 +351,16 @@ export default function GoalsScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
     console.log('Goals: ' + lightOrDark);
   }, [navigation, localGoalID, goalList]);

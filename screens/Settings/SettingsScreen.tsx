@@ -10,9 +10,12 @@ import Constants from 'expo-constants';
 import { landingPages, displayAZRows, prettyText } from './settingsHelpers';
 import { ga4Analytics } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import globalStyles from '../../globalStyles';
 
 const chevron = require('../../images/chevron_white_right.png');
 const person = require('../Settings/images/user.png');
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
@@ -23,6 +26,14 @@ export default function SettingsScreen() {
   const isFocused = useIsFocused();
   const [landingPage, setLandingPage] = useState(landingPages[0]);
   const [displayAZ, setDisplayAZ] = useState(displayAZRows[0]);
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   function signOutPressed() {
     ga4Analytics('Settings_Sign_Out', {
@@ -189,6 +200,16 @@ export default function SettingsScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation, lightOrDark, lightOrDarkLabel]);
 

@@ -1,5 +1,5 @@
-import { Fragment, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, Image, View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
@@ -11,6 +11,8 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 export default function RecentActivityScreenScreen() {
   const filters = {
@@ -35,6 +37,14 @@ export default function RecentActivityScreenScreen() {
     filterSheet: 'filter_sheet_id',
   };
 
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
+
   const handleRowPress = (index: number) => {
     ga4Analytics('Recent_Activity_Row', {
       contentType: 'none',
@@ -50,6 +60,16 @@ export default function RecentActivityScreenScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation, lightOrDark]);
 

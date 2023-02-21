@@ -36,6 +36,7 @@ var newRoute: PopByRadiusDataProps[] = [];
 var locationCallBack: { remove: any };
 
 const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 const closeButton = require('../../images/button_close_white.png');
 const saveAll = require('./images/saveAll.png');
 const unsaveAll = require('./images/removeAll.png');
@@ -91,6 +92,14 @@ export default function ManageRelationshipsScreen() {
       );
     }
   };
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   async function calculateAndNotify(loc: Location.LocationObject, data: PopByRadiusDataProps[], notify: boolean) {
     var notifOn = await getNotificationStatus('notifPopBys');
@@ -237,6 +246,16 @@ export default function ManageRelationshipsScreen() {
     navigation.setOptions({
       title: 'Pop-By',
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
       tab: tabSelected,
     });
   }, [navigation, tabSelected]);

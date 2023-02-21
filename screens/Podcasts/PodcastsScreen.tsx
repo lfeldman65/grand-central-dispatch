@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { View, Modal, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Modal, ScrollView, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getPodcastData } from './api';
 import { PodcastDataProps } from './interfaces';
@@ -12,6 +12,8 @@ import globalStyles from '../../globalStyles';
 import { getSeasonAndEpisode } from './PodcastPlayer';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();
@@ -34,6 +36,16 @@ export default function PodcastsScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation]);
 
@@ -44,6 +56,14 @@ export default function PodcastsScreen() {
       isMounted = false;
     };
   }, [isFocused]);
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   function getPodcastList(isMounted: boolean) {
     setIsLoading(true);

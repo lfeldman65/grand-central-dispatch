@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native';
-import { Moment, MomentInput } from 'moment';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ActivityIndicator, Image } from 'react-native';
+import { Moment } from 'moment';
 import CalendarPicker, { DateChangedCallback } from 'react-native-calendar-picker';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
@@ -15,6 +15,8 @@ import AddAppointmentScreen from './AddAppointmentScreen';
 import { getDayNumber, getMonthNumber, getYear } from './calendarHelpers';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 export default function CalendarScreen() {
   const navigation = useNavigation();
@@ -40,6 +42,16 @@ export default function CalendarScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation, lightOrDark]);
 
@@ -55,6 +67,14 @@ export default function CalendarScreen() {
       isMounted = false;
     };
   }, [isFocused]);
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   function addAppointmentPressed() {
     ga4Analytics('Calendar_Add_Appointment', {

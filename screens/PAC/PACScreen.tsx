@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Text, View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { Modal, Text, View, TouchableOpacity, ScrollView, Image, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import PACCallsRow from './PACCallsRow';
@@ -14,6 +14,8 @@ import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 type TabType = 'calls' | 'notes' | 'popby';
 
@@ -44,6 +46,14 @@ export default function PACScreen(props: PACScreenProps) {
       lightOrDark: lightOrDark,
     });
   };
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   function rowAnalytics() {
     var mainEvent = 'Error';
@@ -129,6 +139,16 @@ export default function PACScreen(props: PACScreenProps) {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation]);
 

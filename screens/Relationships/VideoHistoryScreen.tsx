@@ -1,7 +1,7 @@
-import { Fragment, useState } from 'react';
-import { StyleSheet, View, ScrollView, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
+import { Image, StyleSheet, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getVideoSummaryData } from './api';
 import { VideoSummaryDataProps } from './interfaces';
@@ -10,6 +10,8 @@ import VideoHistoryRow from './VideoHistoryRow';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 export default function VideoHistoryScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
@@ -32,6 +34,16 @@ export default function VideoHistoryScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }, [navigation]);
 
@@ -40,6 +52,14 @@ export default function VideoHistoryScreen() {
   }, [isFocused]);
 
   //useEffect(() => {}); // this will run on every render
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   function getThatData() {
     setIsLoading(true);
