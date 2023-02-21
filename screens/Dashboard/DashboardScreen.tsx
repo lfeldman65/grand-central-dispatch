@@ -54,7 +54,7 @@ export default function DashboardScreen() {
     setNotificationPermissions(status);
     console.log('Import Notif');
     await Notifications.scheduleNotificationAsync({
-      identifier: 'afternoon-notification',
+      identifier: 'import-notification',
       content: {
         title: `Reminder`,
         subtitle: '',
@@ -66,10 +66,9 @@ export default function DashboardScreen() {
         color: '#000000',
       },
       trigger: {
-        day: 20,
-        hour: 16,
-        minute: 32,
-        second: 0,
+        day: 1,
+        hour: 15,
+        minute: 0,
         repeats: true,
       },
     });
