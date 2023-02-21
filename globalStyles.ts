@@ -125,4 +125,17 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
+
+  // Global Search
+
+  searchGlass: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+    marginLeft: 10,
+  },
+  searchAndAdd: {
+    width: '30%',
+    flexDirection: 'row',
+  },
 });

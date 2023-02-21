@@ -11,6 +11,8 @@ import { Notification } from 'expo-notifications';
 import { ga4Analytics } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { LogBox } from 'react-native';
+const searchGlass = require('../../images/whiteSearch.png');
+const quickAdd = require('../../images/addWhite.png');
 
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
@@ -40,6 +42,14 @@ export default function DashboardScreen() {
   const [notificationPermissions, setNotificationPermissions] = useState<PermissionStatus>(
     PermissionStatus.UNDETERMINED
   );
+
+  function searchPressed() {
+    console.log('search pressed');
+  }
+
+  function quickAddPressed() {
+    console.log('quick add pressed');
+  }
 
   function SentryTest() {
     console.log('sentry test');
@@ -84,6 +94,16 @@ export default function DashboardScreen() {
   useEffect(() => {
     navigation.setOptions({
       headerLeft: () => <MenuIcon />,
+      headerRight: () => (
+        <View style={globalStyles.searchAndAdd}>
+          <TouchableOpacity onPress={searchPressed}>
+            <Image source={searchGlass} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={quickAddPressed}>
+            <Image source={quickAdd} style={globalStyles.searchGlass} />
+          </TouchableOpacity>
+        </View>
+      ),
     });
   });
 
