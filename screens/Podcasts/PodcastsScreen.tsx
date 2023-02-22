@@ -12,6 +12,8 @@ import globalStyles from '../../globalStyles';
 import { getSeasonAndEpisode } from './PodcastPlayer';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
@@ -23,6 +25,7 @@ export default function PodcastsScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
   const [modalPlayerVisible, setModalPlayerVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const handleRowPress = (index: number) => {
     ga4Analytics('Podcast_Row', {
@@ -59,6 +62,7 @@ export default function PodcastsScreen() {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -121,6 +125,18 @@ export default function PodcastsScreen() {
               dataList={data}
               setModalPlayerVisible={setModalPlayerVisible}
             />
+          </Modal>
+        )}
+        {quickSearchVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={quickSearchVisible}
+            onRequestClose={() => {
+              setQuickSearchVisible(!quickSearchVisible);
+            }}
+          >
+            <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
           </Modal>
         )}
       </View>

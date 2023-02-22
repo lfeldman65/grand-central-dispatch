@@ -14,6 +14,8 @@ import IdeasPop from '../PAC/IdeasPopScreen';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
@@ -33,6 +35,7 @@ export default function PACScreen(props: PACScreenProps) {
   const [lightOrDark, setLightOrDark] = useState('light');
   const [data, setData] = useState<PACDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const handleRowPress = (index: number) => {
     rowAnalytics();
@@ -49,6 +52,7 @@ export default function PACScreen(props: PACScreenProps) {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -264,6 +268,18 @@ export default function PACScreen(props: PACScreenProps) {
           </React.Fragment>
         )}
       </View>
+      {quickSearchVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={quickSearchVisible}
+          onRequestClose={() => {
+            setQuickSearchVisible(!quickSearchVisible);
+          }}
+        >
+          <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+        </Modal>
+      )}
     </>
   );
 }

@@ -9,6 +9,7 @@ import {
   Image,
   TextInput,
   Alert,
+  Modal,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp, DarkTheme } from '@react-navigation/native';
@@ -27,6 +28,7 @@ import * as Location from 'expo-location';
 import { scheduleNotifications, getNotificationStatus } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 var northEast: LatLng | null = null;
@@ -72,6 +74,8 @@ export default function ManageRelationshipsScreen() {
   const [mapRef, updateMapRef] = useState<MapView>();
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const popByDataRef = useRef(popByData);
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
+
   popByDataRef.current = popByData;
 
   const requestPermissions = async () => {
@@ -95,6 +99,7 @@ export default function ManageRelationshipsScreen() {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -812,6 +817,18 @@ export default function ManageRelationshipsScreen() {
               </View>
             )}
           </ScrollView>
+          {quickSearchVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={quickSearchVisible}
+              onRequestClose={() => {
+                setQuickSearchVisible(!quickSearchVisible);
+              }}
+            >
+              <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+            </Modal>
+          )}
         </View>
       </>
     );

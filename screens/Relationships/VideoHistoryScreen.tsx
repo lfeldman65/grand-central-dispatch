@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Modal, Image, StyleSheet, View, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -10,6 +10,8 @@ import VideoHistoryRow from './VideoHistoryRow';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
@@ -19,6 +21,7 @@ export default function VideoHistoryScreen() {
   const navigation = useNavigation<any>();
   const [dataVid, setDataVid] = useState<VideoSummaryDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const handleRowPress = (index: number) => {
     ga4Analytics('Video_History_Summary_Row', {
@@ -55,6 +58,7 @@ export default function VideoHistoryScreen() {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -105,6 +109,18 @@ export default function VideoHistoryScreen() {
             </ScrollView>
           </React.Fragment>
         </View>
+        {quickSearchVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={quickSearchVisible}
+            onRequestClose={() => {
+              setQuickSearchVisible(!quickSearchVisible);
+            }}
+          >
+            <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+          </Modal>
+        )}
       </>
     );
   }

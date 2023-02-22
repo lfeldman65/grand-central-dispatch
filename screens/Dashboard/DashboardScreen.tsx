@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,8 @@ import { Notification } from 'expo-notifications';
 import { ga4Analytics } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { LogBox } from 'react-native';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
@@ -38,6 +40,7 @@ export default function DashboardScreen() {
   const navigation = useNavigation();
   const [lightOrDark, setLightOrDark] = useState('');
   const isFocused = useIsFocused();
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const [notificationPermissions, setNotificationPermissions] = useState<PermissionStatus>(
     PermissionStatus.UNDETERMINED
@@ -45,6 +48,7 @@ export default function DashboardScreen() {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -443,6 +447,18 @@ export default function DashboardScreen() {
             </TouchableOpacity>
             {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Calendar</Text>}
           </View>
+          {quickSearchVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={quickSearchVisible}
+              onRequestClose={() => {
+                setQuickSearchVisible(!quickSearchVisible);
+              }}
+            >
+              <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+            </Modal>
+          )}
         </View>
       </View>
     </>

@@ -11,6 +11,8 @@ import AddRelScreen from '../Relationships/AddRelationshipScreen';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics, isNullOrEmpty } from '../../utils/general';
 import { testForNotificationTrack } from './handleWinNotifications';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
 const noTrophy = require('../Goals/images/noTrophy.png');
@@ -28,9 +30,11 @@ export default function GoalsScreen() {
   const [trackModalVisible, setTrackModalVisible] = useState(false);
   const [addRelModalVisible, setAddRelModalVisible] = useState(false);
   const isFocused = useIsFocused();
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -475,6 +479,18 @@ export default function GoalsScreen() {
             </Modal>
           )}
         </View>
+        {quickSearchVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={quickSearchVisible}
+            onRequestClose={() => {
+              setQuickSearchVisible(!quickSearchVisible);
+            }}
+          >
+            <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+          </Modal>
+        )}
       </>
     );
   }

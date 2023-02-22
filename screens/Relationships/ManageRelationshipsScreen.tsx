@@ -16,8 +16,11 @@ import { AlphabetList, IData } from 'react-native-section-alphabet-list';
 import { ga4Analytics } from '../../utils/general';
 import { styles } from './styles';
 import { storage } from '../../utils/storage';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
+
 type TabType = 'a-z' | 'ranking' | 'groups';
 var localDisplay = 'First Last';
 
@@ -32,6 +35,7 @@ export default function ManageRelationshipsScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
   const [alphaIndex, setAlphaIndex] = useState<IData[]>([]);
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const handleRowPress = (index: number) => {
     ga4Analytics('Relationships_Row', {
@@ -119,6 +123,7 @@ export default function ManageRelationshipsScreen() {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -357,6 +362,18 @@ export default function ManageRelationshipsScreen() {
           </Modal>
         )}
       </View>
+      {quickSearchVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={quickSearchVisible}
+          onRequestClose={() => {
+            setQuickSearchVisible(!quickSearchVisible);
+          }}
+        >
+          <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+        </Modal>
+      )}
     </>
   );
 }

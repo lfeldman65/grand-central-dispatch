@@ -15,6 +15,8 @@ import AddAppointmentScreen from './AddAppointmentScreen';
 import { getDayNumber, getMonthNumber, getYear } from './calendarHelpers';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
@@ -27,6 +29,7 @@ export default function CalendarScreen() {
   const [startDate, setStartDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const handleRowPress = (index: number) => {
     ga4Analytics('Calendar_Row', {
@@ -70,6 +73,7 @@ export default function CalendarScreen() {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -172,6 +176,18 @@ export default function CalendarScreen() {
             }}
           >
             <AddAppointmentScreen title={'New Appointment'} onSave={saveComplete} setModalVisible={setModalVisible} />
+          </Modal>
+        )}
+        {quickSearchVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={quickSearchVisible}
+            onRequestClose={() => {
+              setQuickSearchVisible(!quickSearchVisible);
+            }}
+          >
+            <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
           </Modal>
         )}
       </View>

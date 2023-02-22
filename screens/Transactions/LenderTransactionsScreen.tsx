@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Image, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { Modal, Image, Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import TransactionRow from './TransactionRow';
@@ -12,6 +12,8 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { changeTxStatus } from './api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
@@ -42,8 +44,8 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
   const [isLoading, setIsLoading] = useState(true);
   const actionSheetRef = useRef<ActionSheet>(null);
   const [statusChoice, setStatusChoice] = useState('potential');
-
   const [currentId, setCurrentId] = useState(0);
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const handleRowPress = (index: number) => {
     ga4Analytics('Lender_Transactions_Row', {
@@ -69,6 +71,7 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -284,6 +287,18 @@ export default function LenderTransactionsScreen(props: TransactionScreenProps) 
                 </ScrollView>
               </View>
             </ActionSheet>
+            {quickSearchVisible && (
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={quickSearchVisible}
+                onRequestClose={() => {
+                  setQuickSearchVisible(!quickSearchVisible);
+                }}
+              >
+                <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+              </Modal>
+            )}
           </React.Fragment>
         </>
       )}

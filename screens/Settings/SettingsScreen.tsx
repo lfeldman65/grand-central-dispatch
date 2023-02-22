@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import { Modal, StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Linking } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -11,6 +11,7 @@ import { landingPages, displayAZRows, prettyText } from './settingsHelpers';
 import { ga4Analytics } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import globalStyles from '../../globalStyles';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 
 const chevron = require('../../images/chevron_white_right.png');
 const person = require('../Settings/images/user.png');
@@ -26,9 +27,11 @@ export default function SettingsScreen() {
   const isFocused = useIsFocused();
   const [landingPage, setLandingPage] = useState(landingPages[0]);
   const [displayAZ, setDisplayAZ] = useState(displayAZRows[0]);
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -421,6 +424,18 @@ export default function SettingsScreen() {
           </Text>
         </View>
       </View>
+      {quickSearchVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={quickSearchVisible}
+          onRequestClose={() => {
+            setQuickSearchVisible(!quickSearchVisible);
+          }}
+        >
+          <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+        </Modal>
+      )}
     </>
   );
 }

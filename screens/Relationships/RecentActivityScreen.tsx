@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, Image, View, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, Image, View, Modal, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
@@ -11,8 +11,10 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
-const searchGlass = require('../../images/whiteSearch.png');
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const quickAdd = require('../../images/addWhite.png');
+const searchGlass = require('../../images/whiteSearch.png');
 
 export default function RecentActivityScreenScreen() {
   const filters = {
@@ -30,6 +32,7 @@ export default function RecentActivityScreenScreen() {
   const [dataActivity, setdataActivity] = useState<RecentActivityDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const actionSheetRef = useRef<ActionSheet>(null);
 
@@ -39,6 +42,7 @@ export default function RecentActivityScreenScreen() {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -208,6 +212,18 @@ export default function RecentActivityScreenScreen() {
             </ActionSheet>
           </React.Fragment>
         </View>
+        {quickSearchVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={quickSearchVisible}
+            onRequestClose={() => {
+              setQuickSearchVisible(!quickSearchVisible);
+            }}
+          >
+            <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+          </Modal>
+        )}
       </>
     );
   }

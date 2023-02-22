@@ -12,6 +12,8 @@ import AddToDo from './AddToDoScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
+import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
@@ -32,6 +34,8 @@ export default function ToDosScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [quickSearchVisible, setQuickSearchVisible] = useState(false);
+
   const actionSheetRef = useRef<ActionSheet>(null);
 
   const Sheets = {
@@ -79,6 +83,7 @@ export default function ToDosScreen() {
 
   function searchPressed() {
     console.log('search pressed');
+    setQuickSearchVisible(true);
   }
 
   function quickAddPressed() {
@@ -245,6 +250,18 @@ export default function ToDosScreen() {
                 </ScrollView>
               </View>
             </ActionSheet>
+            {quickSearchVisible && (
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={quickSearchVisible}
+                onRequestClose={() => {
+                  setQuickSearchVisible(!quickSearchVisible);
+                }}
+              >
+                <QuickSearch title={'Quick Search'} setModalVisible={setQuickSearchVisible} lightOrDark={lightOrDark} />
+              </Modal>
+            )}
           </React.Fragment>
         </View>
       </>
