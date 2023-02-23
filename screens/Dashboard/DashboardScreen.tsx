@@ -75,18 +75,18 @@ export default function DashboardScreen() {
         body: `Would you like to see if there are any new relationships to import?`,
         sound: true,
         data: {
-          to: 'new-log',
+          id: 'import',
         },
         color: '#000000',
       },
       trigger: {
-        day: 1,
+        day: 23,
         hour: 15,
-        minute: 0,
+        minute: 35,
+        second: 20,
         repeats: true,
       },
     });
-
     return status;
   };
 
@@ -115,18 +115,16 @@ export default function DashboardScreen() {
     requestNotificationPermissions();
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       console.log('response from tap');
-      console.log(response.notification.request.content);
-      navigation.navigate('ImportRel1');
-      handleNavigation({
-        screen: 'ImportRel1',
-        label: 'ImportRel1',
-        itemID: 'none',
-      });
-      //const url = response.notification.request.content.data.url;
-
-      //Linking.openURL(url);
+      const id = response.notification.request.content.data.id;
+      console.log(id);
+      if (id == 'import') {
+        navigation.navigate('SettingsScreenNav', {
+          screen: 'ImportStackNavigator',
+        });
+      } else {
+        console.log('other notif');
+      }
     });
-    return () => subscription.remove();
     if (watchedTut == 'true') {
       console.log('HEREA');
       getLandingPage();
@@ -134,6 +132,7 @@ export default function DashboardScreen() {
       console.log('HEREB');
       showTutorial();
     }
+    return () => subscription.remove();
   }, []);
 
   useEffect(() => {

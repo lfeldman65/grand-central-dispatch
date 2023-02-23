@@ -1675,7 +1675,7 @@ export const HomeStackNavigator = () => {
         }}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="ImportRel1"
         component={ImportRel1}
         options={{
@@ -1699,7 +1699,7 @@ export const HomeStackNavigator = () => {
           },
           headerBackVisible: true,
         }}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };
