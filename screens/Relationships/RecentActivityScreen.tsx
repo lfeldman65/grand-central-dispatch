@@ -47,6 +47,11 @@ export default function RecentActivityScreenScreen() {
 
   function quickAddPressed() {
     console.log('quick add pressed');
+    navigation.navigate('QuickAdd', {
+      person: null,
+      source: 'Transactions',
+      lightOrDark: lightOrDark,
+    });
   }
 
   const handleRowPress = (index: number) => {

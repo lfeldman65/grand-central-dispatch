@@ -104,6 +104,11 @@ export default function ManageRelationshipsScreen() {
 
   function quickAddPressed() {
     console.log('quick add pressed');
+    navigation.navigate('QuickAdd', {
+      person: null,
+      source: 'Transactions',
+      lightOrDark: lightOrDark,
+    });
   }
 
   async function calculateAndNotify(loc: Location.LocationObject, data: PopByRadiusDataProps[], notify: boolean) {

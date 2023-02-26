@@ -39,7 +39,13 @@ export default function GoalsScreen() {
 
   function quickAddPressed() {
     console.log('quick add pressed');
+    navigation.navigate('QuickAdd', {
+      person: null,
+      source: 'Transactions',
+      lightOrDark: lightOrDark,
+    });
   }
+
   function trackActivityPressed() {
     ga4Analytics('Goals_Track_Activity', {
       contentType: 'none',

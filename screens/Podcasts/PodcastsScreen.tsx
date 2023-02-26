@@ -67,6 +67,11 @@ export default function PodcastsScreen() {
 
   function quickAddPressed() {
     console.log('quick add pressed');
+    navigation.navigate('QuickAdd', {
+      person: null,
+      source: 'Transactions',
+      lightOrDark: lightOrDark,
+    });
   }
 
   function getPodcastList(isMounted: boolean) {
