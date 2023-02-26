@@ -51,6 +51,7 @@ import LandingScreen from '../screens/Settings/LandingScreen';
 import RelOrderScreen from '../screens/Settings/RelOrderScreen';
 import LightOrDarkScreen from '../screens/Settings/LightOrDarkScreen';
 import NotificationsScreen from '../screens/Settings/NotificationsScreen';
+import QuickAdd from '../screens/QuickAddAndSearch/QuickAdd';
 
 export type RootStackParamList = {
   [x: string]: any;
@@ -1516,6 +1517,19 @@ export const HomeStackNavigator = () => {
       />
 
       <Stack.Screen
+        name="QuickAdd"
+        component={QuickAdd}
+        options={{
+          title: 'Quick Add',
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#1A6295',
+          },
+          headerBackVisible: true,
+        }}
+      />
+
+      <Stack.Screen
         name="Tutorial"
         component={Tutorial}
         options={{
@@ -1674,32 +1688,6 @@ export const HomeStackNavigator = () => {
           headerShown: false,
         }}
       />
-
-      {/* <Stack.Screen
-        name="ImportRel1"
-        component={ImportRel1}
-        options={{
-          title: 'Import Relationships',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: false,
-        }}
-      />
-
-      <Stack.Screen
-        name="ImportRel2"
-        component={ImportRel2}
-        options={{
-          title: 'Import Relationships',
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#1A6295',
-          },
-          headerBackVisible: true,
-        }}
-      /> */}
     </Stack.Navigator>
   );
 };
