@@ -10,7 +10,6 @@ import { PermissionStatus } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
 import { ga4Analytics, getNotificationStatus } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import { LogBox } from 'react-native';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 
 const searchGlass = require('../../images/whiteSearch.png');
@@ -155,7 +154,6 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     hasWatchedTutorial();
-    LogBox.ignoreAllLogs(true);
     hasImportNotifications();
   }, [isFocused]);
 

@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking, Alert } from 'react-native';
 import { ga4Analytics } from '../../utils/general';
-
-const eyeClosed = require('../Login/images/eyeClosed.png');
-const eyeOpen = require('../Login/images/eyeOpen.png');
-const logo = require('../Login/images/iconLogo.png');
-
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { storage } from '../../utils/storage';
 import { loginToApp, getProfileData } from './api';
 import { useNavigation, useIsFocused } from '@react-navigation/native'; // branch
+import { LogBox } from 'react-native';
+
+const eyeClosed = require('../Login/images/eyeClosed.png');
+const eyeOpen = require('../Login/images/eyeOpen.png');
+const logo = require('../Login/images/iconLogo.png');
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -116,6 +116,7 @@ export default function LoginScreen() {
 
   useEffect(() => {
     // populateCredentialsIfRemembered();
+    LogBox.ignoreAllLogs(true);
   }, [isFocused]);
 
   async function handleLoginPressess() {
