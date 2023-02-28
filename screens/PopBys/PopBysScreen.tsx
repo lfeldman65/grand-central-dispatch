@@ -145,6 +145,7 @@ export default function ManageRelationshipsScreen() {
           alreadyScheduled = true;
           if (notify) {
             scheduleNotifications(
+              'popbys',
               'Pop-By Opportunity!',
               data[i].firstName + ' ' + data[i].lastName + ' is ' + mb.toFixed(1) + ' miles from you!',
               2

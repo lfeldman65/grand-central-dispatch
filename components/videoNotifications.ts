@@ -18,7 +18,7 @@ async function fetchVideoInfo() {
       } else {
         console.log(res.data);
         if (res.data.hasNewViews) {
-          scheduleNotifications('Video Message', res.data.summary, 1);
+          scheduleNotifications('video', 'Video Message', res.data.summary, 1);
         }
       }
     })

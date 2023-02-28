@@ -243,6 +243,7 @@ export default function GoalsScreen() {
           console.log('CALLS: ' + res.data[0].goal.title);
           console.log('CALLS: ' + res.data[0].achievedToday);
           if (afterTrack) {
+            console.log('localGoalID: ' + localGoalID);
             notifyIfWin(localGoalID, res.data);
             //  setTimeout(notifyIfWin, 5000, localGoalID);
           }
@@ -378,6 +379,7 @@ export default function GoalsScreen() {
   useEffect(() => {
     let isMounted = true;
     fetchGoals(isMounted, false);
+    console.log('USEEFFECT2');
     return () => {
       isMounted = false;
     };

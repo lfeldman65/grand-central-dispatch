@@ -46,11 +46,11 @@ export default function QuickAdd(props: any) {
         contentType: 'none',
         itemId: 'id1703',
       });
-      // navigation.navigate('AddTxMenu', {
-      //   person: null,
-      //   source: 'Transactions',
-      //   lightOrDark: lightOrDark,
-      // });
+      navigation.navigate('AddTxMenu', {
+        person: null,
+        source: 'Transactions',
+        lightOrDark: lightOrDark,
+      });
     }
   }
 

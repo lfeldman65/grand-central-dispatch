@@ -26,13 +26,13 @@ export async function testForNotificationPre(
 
   if (weeklyGoal == 0 && weeklyNum == 0) {
     // thresholds are 1 behind actual because we're getting values before this current activity
-    scheduleNotifications('Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
+    scheduleNotifications('wins', 'Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
   } else if (weeklyGoal != 0 && weeklyNum == weeklyGoal - 1) {
-    scheduleNotifications('Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
+    scheduleNotifications('wins', 'Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
   } else if (dailyGoal == 0 && dailyNum == 0) {
-    scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
+    scheduleNotifications('wins', 'Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
   } else if (dailyGoal != 0 && dailyNum == dailyGoal - 1) {
-    scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
+    scheduleNotifications('wins', 'Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
   }
 }
 
@@ -61,12 +61,12 @@ export async function testForNotificationTrack(
   console.log('TEST DAILY NUM: ' + dailyNum);
 
   if (weeklyGoal == 0 && weeklyNum == 1) {
-    scheduleNotifications('Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
+    scheduleNotifications('wins', 'Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
   } else if (weeklyGoal != 0 && weeklyNum == weeklyGoal) {
-    scheduleNotifications('Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
+    scheduleNotifications('wins', 'Congratulations! 🏆', 'You Won the Week for ' + newGoalName + '!', 1);
   } else if (dailyGoal == 0 && dailyNum == 1) {
-    scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
+    scheduleNotifications('wins', 'Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
   } else if (dailyGoal != 0 && dailyNum == dailyGoal) {
-    scheduleNotifications('Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
+    scheduleNotifications('wins', 'Congratulations! 🏆', 'You Won the Day for ' + newGoalName + '!', 1);
   }
 }

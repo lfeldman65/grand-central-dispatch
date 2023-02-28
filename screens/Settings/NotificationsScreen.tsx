@@ -22,6 +22,7 @@ import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { notificationRowsWithVid, notificationRowsNoVid } from './settingsHelpers';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import * as Notifications from 'expo-notifications';
 
 export default function NotificationsScreen(props: any) {
   const [lightOrDark, setLightOrDark] = useState('');
@@ -83,6 +84,8 @@ export default function NotificationsScreen(props: any) {
     state = 'false';
     if (notifImport) {
       state = 'true';
+    } else {
+      Notifications.cancelScheduledNotificationAsync('import-notification');
     }
     storage.setItem('notifImport', state);
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Modal } from 'react-native';
+import { Alert, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Modal } from 'react-native';
 const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useIsFocused } from '@react-navigation/native';
@@ -34,12 +34,12 @@ export default function AddRelationshipScreen(props: any) {
   }
 
   function savePressed() {
-    if (firstName == ' ' && lastName == ' ') {
-      console.error('Please enter a First Name and/or Last Name');
+    if (firstName == '' && lastName == '') {
+      Alert.alert('Please enter a First Name and/or Last Name');
       return;
     }
     if (bizChecked && company == '') {
-      console.error('Please enter a Company Name');
+      Alert.alert('Please enter a Company Name');
       return;
     }
     console.log(company);
@@ -92,6 +92,7 @@ export default function AddRelationshipScreen(props: any) {
     var i = 0;
     while (i < data.length) {
       if (data[i].goal.id == goalId) {
+        console.log('i: ' + i);
         testForNotificationTrack(
           data[i].goal.title,
           data[i].goal.weeklyTarget,

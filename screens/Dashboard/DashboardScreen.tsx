@@ -8,7 +8,7 @@ import { storage } from '../../utils/storage';
 import * as Notifications from 'expo-notifications';
 import { PermissionStatus } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
-import { ga4Analytics } from '../../utils/general';
+import { ga4Analytics, getNotificationStatus } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { LogBox } from 'react-native';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
@@ -27,6 +27,7 @@ const todoImage = require('../Dashboard/images/quickToDo.png');
 const calendarImage = require('../Dashboard/images/quickCalendar.png');
 
 var watchedTut = 'false';
+var importNotifBool = false;
 
 interface DashboardNavigationProps {
   parentScreen?: string;
@@ -71,28 +72,32 @@ export default function DashboardScreen() {
     // runs in background or killed
     const { status } = await Notifications.requestPermissionsAsync();
     setNotificationPermissions(status);
-    console.log('Import Notif');
-    await Notifications.scheduleNotificationAsync({
-      identifier: 'import-notification',
-      content: {
-        title: `Reminder`,
-        subtitle: '',
-        body: `Would you like to see if there are any new relationships to import?`,
-        sound: true,
-        data: {
-          id: 'import',
+    console.log('Import Notif:' + importNotifBool);
+    if (importNotifBool) {
+      const importNotif = await Notifications.scheduleNotificationAsync({
+        identifier: 'import-notification',
+        content: {
+          title: `Reminder`,
+          subtitle: '',
+          body: `Would you like to see if there are any new relationships to import?`,
+          sound: true,
+          data: {
+            id: 'import',
+          },
+          color: '#000000',
         },
-        color: '#000000',
-      },
-      trigger: {
-        day: 23,
-        hour: 15,
-        minute: 35,
-        second: 20,
-        repeats: true,
-      },
-    });
-    return status;
+        trigger: {
+          day: 1,
+          hour: 15,
+          minute: 0,
+          second: 0,
+          repeats: true,
+        },
+      });
+      console.log('notif id:' + importNotif);
+      storage.setItem('importNotifID', importNotif);
+      return status;
+    }
   };
 
   const handleNotification = (notification: Notification) => {
@@ -121,11 +126,19 @@ export default function DashboardScreen() {
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       console.log('response from tap');
       const id = response.notification.request.content.data.id;
-      console.log(id);
+      console.log('id:' + id);
       if (id == 'import') {
         navigation.navigate('SettingsScreenNav', {
           screen: 'ImportStackNavigator',
         });
+      } else if (id == 'wins') {
+        navigation.navigate('goals');
+      } else if (id == 'video') {
+        navigation.navigate('VideoStack', {
+          screen: 'VideoHistoryScreen',
+        });
+      } else if (id == 'popbys') {
+        navigation.navigate('PopBysScreen');
       } else {
         console.log('other notif');
       }
@@ -143,6 +156,7 @@ export default function DashboardScreen() {
   useEffect(() => {
     hasWatchedTutorial();
     LogBox.ignoreAllLogs(true);
+    hasImportNotifications();
   }, [isFocused]);
 
   useEffect(() => {
@@ -161,6 +175,20 @@ export default function DashboardScreen() {
     }
     storage.setItem('watchedTutorial', 'true');
     console.log(watchedTut);
+  }
+
+  async function hasImportNotifications() {
+    var notifOn = await getNotificationStatus('notifImport');
+    if (notifOn == null) {
+      importNotifBool = false;
+      return false;
+    }
+    if (!notifOn) {
+      importNotifBool = false;
+      return false;
+    }
+    importNotifBool = true;
+    return true;
   }
 
   function navigateToLandingPage(landingPage?: string) {

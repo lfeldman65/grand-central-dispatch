@@ -51,13 +51,16 @@ export function prettyTime(uglyTime: string) {
   return timeOnly;
 }
 
-export function scheduleNotifications(title: string, body: string, seconds: number) {
+export function scheduleNotifications(id: string, title: string, body: string, seconds: number) {
   console.log('SCHEDULE');
   const schedulingOptions = {
     content: {
       title: title,
       body: body,
       sound: true,
+      data: {
+        id: id,
+      },
       priority: Notifications.AndroidNotificationPriority.HIGH,
       color: 'blue',
     },
