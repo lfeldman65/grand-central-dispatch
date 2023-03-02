@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import globalStyles from '../../globalStyles';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { RolodexDataProps, AttendeesProps } from './interfaces';
-import { prettyDate, isNullOrEmpty } from '../../utils/general';
+import { RolodexDataProps } from './interfaces';
+import { prettyDate } from '../../utils/general';
 import { editToDo } from './api';
 import Attendees from '../ToDo/AttendeesScreen';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -37,21 +35,21 @@ export default function EditToDoScreen(props: any) {
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
   const [attendee, setAttendees] = useState<RolodexDataProps[]>([]);
 
-  const showDateTopPicker = () => {
-    console.log('show date picker top');
-    showDateTopMode('date');
-  };
-
-  const onDatePickerTopChange = (event: any, selectedDate: any) => {
+  const handleConfirm = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
     setNewDate(currentDate);
+    setShowTopDate(false);
   };
 
   const showDateTopMode = (currentMode: any) => {
     console.log(currentMode);
     setShowTopDate(true);
   };
+
+  function hideDatePicker() {
+    setShowTopDate(false);
+  }
 
   useEffect(() => {
     setNewTitle(titleFromParent);
@@ -147,7 +145,7 @@ export default function EditToDoScreen(props: any) {
         </View>
       </View>
       <Text style={styles.nameTitle}>Date</Text>
-      <TouchableOpacity onPress={showDateTopPicker}>
+      <TouchableOpacity onPress={showDateTopMode}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <Text style={styles.textInput}>{prettyDate(newDate.toISOString())}</Text>
@@ -155,27 +153,7 @@ export default function EditToDoScreen(props: any) {
         </View>
       </TouchableOpacity>
 
-      {showTopDate && (
-        <TouchableOpacity
-          onPress={() => {
-            setShowTopDate(false);
-          }}
-        >
-          <Text style={styles.saveButton}>Close</Text>
-        </TouchableOpacity>
-      )}
-
-      {showTopDate && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={newDate}
-          mode={'date'}
-          is24Hour={true}
-          onChange={onDatePickerTopChange}
-          display="spinner"
-          textColor="white"
-        />
-      )}
+      <DateTimePickerModal isVisible={showTopDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
 
       <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
         size={25}

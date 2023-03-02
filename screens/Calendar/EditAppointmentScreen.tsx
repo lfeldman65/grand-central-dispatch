@@ -4,9 +4,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { storage } from '../../utils/storage';
 import { useIsFocused } from '@react-navigation/native';
 import { RolodexDataProps } from '../Relationships/interfaces';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { editAppointment } from './api';
 import Attendees from '../ToDo/AttendeesScreen';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
 const closeButton = require('../../images/button_close_white.png');
 
 export default function EditAppointmentScreen(props: any) {
@@ -61,7 +62,7 @@ export default function EditAppointmentScreen(props: any) {
           console.log(res);
           console.error(res.error);
         } else {
-          console.log('here 2' + res);
+          // console.log('here 2' + res);
           setModalVisible(false);
           onSave();
         }
@@ -69,15 +70,18 @@ export default function EditAppointmentScreen(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  const showFromDatePicker = () => {
-    showDateFromMode('time');
-  };
-
-  const onDatePickerFromChange = (event: any, selectedDate: any) => {
+  const handleConfirmFrom = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
-    //  setShowFromDate(false);
     setNewFromDate(currentDate);
+    setShowFromDate(false);
+  };
+
+  const handleConfirmTo = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setNewToDate(currentDate);
+    setShowToDate(false);
   };
 
   const showDateFromMode = (currentMode: any) => {
@@ -85,21 +89,18 @@ export default function EditAppointmentScreen(props: any) {
     setShowFromDate(true);
   };
 
-  const showToDatePicker = () => {
-    showDateToMode('date');
-  };
-
   const showDateToMode = (currentMode: any) => {
     console.log(currentMode);
     setShowToDate(true);
   };
 
-  const onDatePickerToChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log(currentDate);
-    //   setShowToDate(false);
-    setNewToDate(currentDate);
-  };
+  function hideDatePickerFrom() {
+    setShowFromDate(false);
+  }
+
+  function hideDatePickerTo() {
+    setShowToDate(false);
+  }
 
   function deleteAttendee(index: number) {
     console.log(index);
@@ -166,7 +167,7 @@ export default function EditAppointmentScreen(props: any) {
         </View>
       </View>
       <Text style={styles.nameTitle}>From</Text>
-      <TouchableOpacity onPress={showFromDatePicker}>
+      <TouchableOpacity onPress={showDateFromMode}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <Text style={styles.textInput}>
@@ -182,29 +183,15 @@ export default function EditAppointmentScreen(props: any) {
         </View>
       </TouchableOpacity>
 
-      {showFromDate && (
-        <TouchableOpacity
-          onPress={() => {
-            setShowFromDate(false);
-          }}
-        >
-          <Text style={styles.saveButton}>Close</Text>
-        </TouchableOpacity>
-      )}
+      <DateTimePickerModal
+        isVisible={showFromDate}
+        mode="date"
+        onConfirm={handleConfirmFrom}
+        onCancel={hideDatePickerFrom}
+      />
 
-      {showFromDate && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={newFromDate}
-          mode={'date'}
-          is24Hour={true}
-          onChange={onDatePickerFromChange}
-          display="spinner"
-          textColor="white"
-        />
-      )}
       <Text style={styles.nameTitle}>To</Text>
-      <TouchableOpacity onPress={showToDatePicker}>
+      <TouchableOpacity onPress={showDateToMode}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <Text style={styles.textInput}>
@@ -220,27 +207,7 @@ export default function EditAppointmentScreen(props: any) {
         </View>
       </TouchableOpacity>
 
-      {showToDate && (
-        <TouchableOpacity
-          onPress={() => {
-            setShowToDate(false);
-          }}
-        >
-          <Text style={styles.saveButton}>Close</Text>
-        </TouchableOpacity>
-      )}
-
-      {showToDate && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={newToDate}
-          mode={'date'}
-          is24Hour={true}
-          onChange={onDatePickerToChange}
-          display="spinner"
-          textColor="white"
-        />
-      )}
+      <DateTimePickerModal isVisible={showToDate} mode="date" onConfirm={handleConfirmTo} onCancel={hideDatePickerTo} />
 
       <Text style={styles.nameTitle}>Location</Text>
       <View style={styles.mainContent}>

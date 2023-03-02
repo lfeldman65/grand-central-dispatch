@@ -5,10 +5,10 @@ import { useRef, useEffect } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, loanTypeMenu, styles, roundToInt } from './transactionHelpers';
 import ChooseLoanDescription from './ChooseLoanDescription';
 import { shouldRunTests } from '../../utils/general';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 var grossComm1 = 0;
 
@@ -130,6 +130,38 @@ export default function AddOrEditLenderTx2(props: any) {
     calculateGrossCommission();
   }, [isFocused]);
 
+  const handleConfirmClosingDate = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setClosingDate(currentDate);
+    setShowClosingDate(false);
+  };
+
+  const handleConfirmApplicationDate = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setApplicationDate(currentDate);
+    setShowApplicationDate(false);
+  };
+
+  const showClosingDateMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowClosingDate(true);
+  };
+
+  const showApplicationDateMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowApplicationDate(true);
+  };
+
+  function hideClosingDatePicker() {
+    setShowClosingDate(false);
+  }
+
+  function hideApplicationDatePicker() {
+    setShowApplicationDate(false);
+  }
+
   function backPressed() {
     navigation.goBack();
   }
@@ -171,7 +203,7 @@ export default function AddOrEditLenderTx2(props: any) {
       } else {
         addIncomeFloat = parseFloat(additionalIncome);
       }
-      //S   console.log('ADD INCOME: ' + additionalIncome);
+      //   console.log('ADD INCOME: ' + additionalIncome);
       if (dOrPBuyerCommission == 'percent') {
         buyerCommFloat = (closingPriceFloat * buyerCommFloat) / 100;
         console.log('BUYER COMM 2: ' + buyerCommFloat);
@@ -262,38 +294,6 @@ export default function AddOrEditLenderTx2(props: any) {
     SheetManager.show(AddTxBuyerAndSellerSheets.probabilitySheet);
   }
 
-  const onApplicationDatePickerChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log(currentDate);
-    setApplicationDate(currentDate);
-  };
-
-  const showApplicationDateMode = (currentMode: any) => {
-    console.log(currentMode);
-    setShowApplicationDate(true);
-  };
-
-  const showApplicationDatePicker = () => {
-    console.log('show date picker application date');
-    showApplicationDateMode('date');
-  };
-
-  const onClosingDatePickerChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log(currentDate);
-    setClosingDate(currentDate);
-  };
-
-  const showClosingDateMode = (currentMode: any) => {
-    console.log(currentMode);
-    setShowClosingDate(true);
-  };
-
-  const showClosingDatePicker = () => {
-    console.log('show date picker closing');
-    showClosingDateMode('date');
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -374,7 +374,7 @@ export default function AddOrEditLenderTx2(props: any) {
           </View>
 
           <Text style={styles.nameTitle}>{'Loan Application Date'}</Text>
-          <TouchableOpacity onPress={showApplicationDatePicker}>
+          <TouchableOpacity onPress={showApplicationDateMode}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
@@ -389,26 +389,12 @@ export default function AddOrEditLenderTx2(props: any) {
             </View>
           </TouchableOpacity>
 
-          {showApplicationDate && (
-            <TouchableOpacity
-              onPress={() => {
-                setShowApplicationDate(false);
-              }}
-            >
-              <Text style={styles.closePicker}>Close</Text>
-            </TouchableOpacity>
-          )}
-          {showApplicationDate && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={applicationDate}
-              mode={'date'}
-              is24Hour={true}
-              onChange={onApplicationDatePickerChange}
-              display="spinner"
-              textColor="white"
-            />
-          )}
+          <DateTimePickerModal
+            isVisible={showApplicationDate}
+            mode="date"
+            onConfirm={handleConfirmApplicationDate}
+            onCancel={hideApplicationDatePicker}
+          />
 
           <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
           <View style={styles.mainContent}>
@@ -432,7 +418,7 @@ export default function AddOrEditLenderTx2(props: any) {
           </View>
 
           <Text style={styles.nameTitle}>{'Closing Date (Projected)'}</Text>
-          <TouchableOpacity onPress={showClosingDatePicker}>
+          <TouchableOpacity onPress={showClosingDateMode}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
@@ -447,26 +433,12 @@ export default function AddOrEditLenderTx2(props: any) {
             </View>
           </TouchableOpacity>
 
-          {showClosingDate && (
-            <TouchableOpacity
-              onPress={() => {
-                setShowClosingDate(false);
-              }}
-            >
-              <Text style={styles.closePicker}>Close</Text>
-            </TouchableOpacity>
-          )}
-          {showClosingDate && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={closingDate}
-              mode={'date'}
-              is24Hour={true}
-              onChange={onClosingDatePickerChange}
-              display="spinner"
-              textColor="white"
-            />
-          )}
+          <DateTimePickerModal
+            isVisible={showClosingDate}
+            mode="date"
+            onConfirm={handleConfirmClosingDate}
+            onCancel={hideClosingDatePicker}
+          />
 
           <Text style={styles.nameTitle}>Interest Rate</Text>
           <View style={styles.mainContent}>

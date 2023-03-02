@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Button, StyleSheet, ScrollView, Text, View, TextInput, Image, TouchableOpacity, Modal } from 'react-native';
-import { storage } from '../../utils/storage';
+import { StyleSheet, ScrollView, Text, View, TextInput, Image, TouchableOpacity, Modal } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { isNullOrEmpty, prettyDate } from '../../utils/general';
 import { editContact, changeRankAndQual } from './api';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import AddRel from './SelectRelationshipScreen';
 import { RolodexDataProps, RelDetailsSpouse, RelDetailsReferredBy } from './interfaces';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const aPlusSel = require('../Relationships/images/aPlusSel.png');
 const aPlusReg = require('../Relationships/images/aPlusReg.png');
@@ -57,41 +56,41 @@ export default function EditRelationshipScreen(props: any) {
   const [services, setServices] = useState(data.businessAndCareer.occupation);
   const [bizNotes, setBizNotes] = useState(data.businessAndCareer.careerNotes);
   const [interests, setInterests] = useState(data.interestsAndFavorites.notes);
-  const [isReferral, setIsReferral] = useState(data.referral);
   const [modalRelVisible, setModalRelVisible] = useState(false);
-  const [modalSpouseVisible, setModalSpouseVisibile] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [modalSpouseVisible, setModalSpouseVisible] = useState(false);
   const isFocused = useIsFocused();
   const navigation = useNavigation();
 
-  function showBirthDatePicker() {
-    console.log('show birthday picker');
-    setShowBirthDate(true);
+  const handleConfirmWeddingDate = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    //    setWedding(currentDate);
+    setShowWeddingDate(false);
+  };
+
+  const showWeddingDatePicker = (currentMode: any) => {
+    console.log(currentMode);
+    setShowWeddingDate(true);
+  };
+
+  function hideWeddingDatePicker() {
+    setShowWeddingDate(false);
   }
 
-  const onDatePickerBdayChange = (event: any, selectedDate: any) => {
-    setBirthday(
-      selectedDate.toLocaleDateString('en-us', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-      })
-    );
+  const handleConfirmBirthday = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setBirthday(currentDate);
+    setShowBirthDate(false);
   };
 
-  const onDatePickerWeddingChange = (event: any, selectedDate: any) => {
-    setWedding(
-      selectedDate.toLocaleDateString('en-us', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-      })
-    );
+  const showBirthdayPicker = (currentMode: any) => {
+    console.log(currentMode);
+    setShowBirthDate(true);
   };
 
-  function showWeddingDatePicker() {
-    console.log('show wedding picker');
-    setShowWeddingDate(true);
+  function hideBirthdayPicker() {
+    setShowBirthDate(false);
   }
 
   function changeType() {
@@ -105,12 +104,14 @@ export default function EditRelationshipScreen(props: any) {
   }
 
   function handleSpousePressed() {
-    setModalSpouseVisibile(!modalSpouseVisible);
+    setModalSpouseVisible(!modalSpouseVisible);
   }
 
   function savePressed() {
-    console.log('edit save pressed');
-    console.log('mobile: ' + mobilePhone);
+    // console.log('ref id: ' + referral.id);
+    // console.log('ref name: ' + referral.name);
+    // console.log('spouse id: ' + spouse.id);
+    // console.log('spouse name: ' + spouse.name);
     updateContact();
   }
 
@@ -277,11 +278,6 @@ export default function EditRelationshipScreen(props: any) {
     setReferral(dp);
   }
 
-  function spousePressed() {
-    console.log('spouse pressed');
-    handleSpousePressed();
-  }
-
   function referralPressed() {
     console.log('referral pressed');
     handleRefPressed();
@@ -352,7 +348,6 @@ export default function EditRelationshipScreen(props: any) {
     } else {
       setChangeTypeButtonText('Change to Business');
     }
-    console.log('BIRTHDAY1120A:' + birthday);
   }, [isFocused]);
 
   useEffect(() => {
@@ -483,6 +478,24 @@ export default function EditRelationshipScreen(props: any) {
       <View style={styles.divider}></View>
 
       <View style={styles.textAndButtonRow}>
+        <Text style={styles.subTitle}>Referred By</Text>
+        {referral != null && referral.id != '' && referral.id != null && (
+          <TouchableOpacity style={styles.inlineButtons} onPress={removeReferralPressed}>
+            <Text style={styles.inlineButtons}>Remove</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <TouchableOpacity onPress={referralPressed}>
+        <View>
+          {referral != null && referral.id != '' && referral.id != null && (
+            <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{referral.name}</Text>
+          )}
+          {(referral == null || referral.id == '' || referral.id == null) && <Text style={styles.addText}>+Add</Text>}
+        </View>
+      </TouchableOpacity>
+
+      <View style={styles.textAndButtonRow}>
         <Text style={styles.subTitle}>Spouse</Text>
         {spouse != null && spouse.id != '' && spouse.id != null && (
           <TouchableOpacity style={styles.inlineButtons} onPress={removeSpousePressed}>
@@ -491,7 +504,7 @@ export default function EditRelationshipScreen(props: any) {
         )}
       </View>
 
-      <TouchableOpacity onPress={referralPressed}>
+      <TouchableOpacity onPress={handleSpousePressed}>
         <View>
           {spouse != null && spouse.id != '' && spouse.id != null && (
             <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{spouse.name}</Text>
@@ -506,13 +519,13 @@ export default function EditRelationshipScreen(props: any) {
           transparent={true}
           visible={modalSpouseVisible}
           onRequestClose={() => {
-            setModalSpouseVisibile(!modalSpouseVisible);
+            setModalSpouseVisible(!modalSpouseVisible);
           }}
         >
           <AddRel
             title={'Select Relationship'}
             setReferral={setSpouseFromModal}
-            setModalVisible={setModalSpouseVisibile}
+            setModalVisible={setModalSpouseVisible}
           />
         </Modal>
       )}
@@ -587,8 +600,7 @@ export default function EditRelationshipScreen(props: any) {
         onChangeText={(text) => setGenNotes(text)}
         defaultValue={genNotes}
       />
-      <View style={styles.divider}></View>
-
+      {/* <View style={styles.divider}></View>
       <View style={styles.textAndButtonRow}>
         <Text style={styles.subTitle}>Referred By</Text>
         {referral != null && referral.id != '' && referral.id != null && (
@@ -605,7 +617,7 @@ export default function EditRelationshipScreen(props: any) {
           )}
           {(referral == null || referral.id == '' || referral.id == null) && <Text style={styles.addText}>+Add</Text>}
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {modalRelVisible && (
         <Modal
@@ -629,7 +641,7 @@ export default function EditRelationshipScreen(props: any) {
       <View style={styles.divider}></View>
 
       <Text style={styles.subTitle}>Birthday</Text>
-      <TouchableOpacity onPress={showBirthDatePicker}>
+      <TouchableOpacity onPress={showBirthdayPicker}>
         <View>
           {birthday != null && birthday != '' && (
             <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{birthday}</Text>
@@ -638,58 +650,30 @@ export default function EditRelationshipScreen(props: any) {
         </View>
       </TouchableOpacity>
 
-      {showBirthDate && (
-        <TouchableOpacity
-          onPress={() => {
-            setShowBirthDate(false);
-          }}
-        >
-          <Text style={lightOrDark == 'dark' ? styles.closePickerDark : styles.closePickerLight}>Close</Text>
-        </TouchableOpacity>
-      )}
-
-      {showBirthDate && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={birthday == '' ? new Date() : new Date(birthday)}
-          mode={'date'}
-          is24Hour={true}
-          onChange={onDatePickerBdayChange}
-          display="spinner"
-          textColor={lightOrDark == 'dark' ? 'white' : 'black'}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={showBirthDate}
+        mode="date"
+        onConfirm={handleConfirmBirthday}
+        onCancel={hideBirthdayPicker}
+      />
       <View style={styles.divider}></View>
 
       <Text style={styles.subTitle}>Wedding</Text>
       <TouchableOpacity onPress={showWeddingDatePicker}>
-        <View style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>
-          {wedding != null && wedding != '' && <Text>{wedding}</Text>}
+        <View>
+          {wedding != null && wedding != '' && (
+            <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{wedding}</Text>
+          )}
           {(wedding == null || wedding == '') && <Text style={styles.addText}>+Add</Text>}
         </View>
       </TouchableOpacity>
 
-      {showWeddingDate && (
-        <TouchableOpacity
-          onPress={() => {
-            setShowWeddingDate(false);
-          }}
-        >
-          <Text style={lightOrDark == 'dark' ? styles.closePickerDark : styles.closePickerLight}>Close</Text>
-        </TouchableOpacity>
-      )}
-
-      {showWeddingDate && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={wedding == '' ? new Date() : new Date(wedding)}
-          mode={'date'}
-          is24Hour={true}
-          onChange={onDatePickerWeddingChange}
-          display="spinner"
-          textColor={lightOrDark == 'dark' ? 'white' : 'black'}
-        />
-      )}
+      <DateTimePickerModal
+        isVisible={showWeddingDate}
+        mode="date"
+        onConfirm={handleConfirmWeddingDate}
+        onCancel={hideWeddingDatePicker}
+      />
       <View style={styles.divider}></View>
 
       <Text style={styles.subTitle}>Children's Names</Text>

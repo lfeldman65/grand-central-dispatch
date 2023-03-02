@@ -42,9 +42,9 @@ export default function AddOrEditRealtorTx3(props: any) {
   } = route.params;
   const isFocused = useIsFocused();
   const [dollarOrPercentB4, setDollarOrPercentB4] = useState('dollar');
-  const [miscBeforeFees, setMiscBeforeFees] = useState(''); // 2000
-  const [myPortion, setMyPortion] = useState(''); // 50
-  const [miscAfterFees, setMiscAfterFees] = useState('1500'); // 1500
+  const [miscBeforeFees, setMiscBeforeFees] = useState('');
+  const [myPortion, setMyPortion] = useState('50');
+  const [miscAfterFees, setMiscAfterFees] = useState('0');
   const [dollarOrPercentAfter, setDollarOrPercentAfter] = useState('dollar');
   const [notes, setNotes] = useState('');
   const [lightOrDark, setIsLightOrDark] = useState('');

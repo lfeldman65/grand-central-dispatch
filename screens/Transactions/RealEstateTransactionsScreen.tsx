@@ -75,6 +75,11 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
 
   function quickAddPressed() {
     console.log('quick add pressed');
+    navigation.navigate('QuickAdd', {
+      person: null,
+      source: 'Transactions',
+      lightOrDark: lightOrDark,
+    });
   }
 
   function tabPressed(type: TabType) {

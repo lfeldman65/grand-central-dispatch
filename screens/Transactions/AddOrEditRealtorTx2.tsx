@@ -5,9 +5,9 @@ import { useRef, useEffect } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from './transactionHelpers';
 import { shouldRunTests } from '../../utils/general';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 var grossComm = 0;
 
@@ -110,6 +110,22 @@ export default function AddOrEditRealtorTx2(props: any) {
       setOriginalPrice('500000');
     }
   }, [isFocused]);
+
+  const handleConfirm = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setClosingDate(currentDate);
+    setShowClosingDate(false);
+  };
+
+  const showDateTopMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowClosingDate(true);
+  };
+
+  function hideDatePicker() {
+    setShowClosingDate(false);
+  }
 
   function populateDataIfEdit(isMounted: boolean) {
     if (!isMounted) {
@@ -287,12 +303,6 @@ export default function AddOrEditRealtorTx2(props: any) {
     SheetManager.show(AddTxBuyerAndSellerSheets.probabilitySheet);
   }
 
-  const onOriginalDatePickerChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log('picker:' + currentDate);
-    setOriginalDate(currentDate);
-  };
-
   const showOriginalDateMode = (currentMode: any) => {
     console.log(currentMode);
     setShowOriginalDate(true);
@@ -303,20 +313,9 @@ export default function AddOrEditRealtorTx2(props: any) {
     showOriginalDateMode('date');
   };
 
-  const onClosingDatePickerChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log('picker:' + currentDate);
-    setClosingDate(currentDate);
-  };
-
   const showClosingDateMode = (currentMode: any) => {
     console.log(currentMode);
     setShowClosingDate(true);
-  };
-
-  const showClosingDatePicker = () => {
-    console.log('show date picker top');
-    showClosingDateMode('date');
   };
 
   return (
@@ -419,26 +418,12 @@ export default function AddOrEditRealtorTx2(props: any) {
             </TouchableOpacity>
           )}
 
-          {showOriginalDate && (
-            <TouchableOpacity
-              onPress={() => {
-                setShowOriginalDate(false);
-              }}
-            >
-              <Text style={styles.closePicker}>Close</Text>
-            </TouchableOpacity>
-          )}
-          {showOriginalDate && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={originalDate}
-              mode={'date'}
-              is24Hour={true}
-              onChange={onOriginalDatePickerChange}
-              display="spinner"
-              textColor="white"
-            />
-          )}
+          <DateTimePickerModal
+            isVisible={showClosingDate}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
 
           <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
           <View style={styles.mainContent}>
@@ -462,7 +447,7 @@ export default function AddOrEditRealtorTx2(props: any) {
           </View>
 
           <Text style={styles.nameTitle}>{'Closing Date (Projected)'}</Text>
-          <TouchableOpacity onPress={showClosingDatePicker}>
+          <TouchableOpacity onPress={showDateTopMode}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
@@ -478,26 +463,12 @@ export default function AddOrEditRealtorTx2(props: any) {
             </View>
           </TouchableOpacity>
 
-          {showClosingDate && (
-            <TouchableOpacity
-              onPress={() => {
-                setShowClosingDate(false);
-              }}
-            >
-              <Text style={styles.closePicker}>Close</Text>
-            </TouchableOpacity>
-          )}
-          {showClosingDate && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={closingDate}
-              mode={'date'}
-              is24Hour={true}
-              onChange={onClosingDatePickerChange}
-              display="spinner"
-              textColor="white"
-            />
-          )}
+          <DateTimePickerModal
+            isVisible={showClosingDate}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
 
           {type.includes('Buyer') && <Text style={styles.nameTitle}>{"Buyer's Commission"}</Text>}
           {type.includes('Buyer') && (

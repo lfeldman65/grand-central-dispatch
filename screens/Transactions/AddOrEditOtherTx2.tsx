@@ -9,7 +9,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactionHelpers';
 import { storage } from '../../utils/storage';
 import { addOrEditOtherTransaction } from './api';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 export default function AddOrEditOtherTx2(props: any) {
   const { route } = props;
@@ -145,21 +145,21 @@ export default function AddOrEditOtherTx2(props: any) {
     SheetManager.show(AddTxBuyerAndSellerSheets.probabilitySheet);
   }
 
-  const onDatePickerChange = (event: any, selectedDate: any) => {
+  const handleConfirm = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
     setClosingDate(currentDate);
+    setShowDate(false);
   };
 
-  const showDateMode = (currentMode: any) => {
+  const showDatePicker = (currentMode: any) => {
     console.log(currentMode);
     setShowDate(true);
   };
 
-  const showDateTopPicker = () => {
-    console.log('show date picker top');
-    showDateMode('date');
-  };
+  function hideDatePicker() {
+    setShowDate(false);
+  }
 
   return (
     <View style={styles.container}>
@@ -240,7 +240,7 @@ export default function AddOrEditOtherTx2(props: any) {
         </View>
 
         <Text style={styles.nameTitle}>{'Closing Date (Projected)'}</Text>
-        <TouchableOpacity onPress={showDateTopPicker}>
+        <TouchableOpacity onPress={showDatePicker}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
               <Text style={styles.textInput}>
@@ -255,27 +255,7 @@ export default function AddOrEditOtherTx2(props: any) {
           </View>
         </TouchableOpacity>
 
-        {showDate && (
-          <TouchableOpacity
-            onPress={() => {
-              setShowDate(false);
-            }}
-          >
-            <Text style={styles.closePicker}>Close</Text>
-          </TouchableOpacity>
-        )}
-
-        {showDate && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={closingDate}
-            mode={'date'}
-            is24Hour={true}
-            onChange={onDatePickerChange}
-            display="spinner"
-            textColor="white"
-          />
-        )}
+        <DateTimePickerModal isVisible={showDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
 
         <Text style={styles.nameTitle}>Notes</Text>
         <View style={styles.mainContent}>

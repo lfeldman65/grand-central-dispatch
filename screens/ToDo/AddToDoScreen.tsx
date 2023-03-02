@@ -24,13 +24,13 @@ import { frequencyYearMenu } from './toDoHelpersAndMenus';
 import { untilTypeMenu } from './toDoHelpersAndMenus';
 import { reminderMenu } from './toDoHelpersAndMenus';
 import { ga4Analytics } from '../../utils/general';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 export default function AddToDoScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName, lightOrDark } = props;
   const [toDoTitle, setTitle] = useState('');
   const [date, setDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [toDoAnnualDate, setToDoAnnualDate] = useState(new Date());
   const [priority, setPriority] = useState('False');
   const [recurrence, setRecurrence] = useState('Never');
   const [weeklyFrequency, setWeeklyFrequency] = useState('Every Week');
@@ -70,16 +70,18 @@ export default function AddToDoScreen(props: any) {
     orderMenu: 'filter_sheet_order',
   };
 
-  const onDatePickerTopChange = (event: any, selectedDate: any) => {
+  const handleConfirmTop = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
     setDate(currentDate);
+    setShowTopDate(false);
   };
 
-  const onDatePickerEndChange = (event: any, selectedDate: any) => {
+  const handleConfirmEnd = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
     setEndDate(currentDate);
+    setShowEndDate(false);
   };
 
   const showDateTopMode = (currentMode: any) => {
@@ -92,15 +94,13 @@ export default function AddToDoScreen(props: any) {
     setShowEndDate(true);
   };
 
-  const showDateTopPicker = () => {
-    console.log('show date picker top');
-    showDateTopMode('date');
-  };
+  function hideDatePickerTop() {
+    setShowTopDate(false);
+  }
 
-  const showDateEndPicker = () => {
-    console.log('show date picker end');
-    showDateEndMode('date');
-  };
+  function hideDatePickerEnd() {
+    setShowEndDate(false);
+  }
 
   function handleRecurrenceChange() {
     if (reminder == 'None') {
@@ -388,7 +388,7 @@ export default function AddToDoScreen(props: any) {
         </View>
 
         <Text style={styles.nameTitle}>Date</Text>
-        <TouchableOpacity onPress={showDateTopPicker}>
+        <TouchableOpacity onPress={showDateTopMode}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
               <Text style={styles.textInput}>
@@ -403,26 +403,12 @@ export default function AddToDoScreen(props: any) {
           </View>
         </TouchableOpacity>
 
-        {showTopDate && (
-          <TouchableOpacity
-            onPress={() => {
-              setShowTopDate(false);
-            }}
-          >
-            <Text style={styles.saveButton}>Close</Text>
-          </TouchableOpacity>
-        )}
-        {showTopDate && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode={'date'}
-            is24Hour={true}
-            onChange={onDatePickerTopChange}
-            display="spinner"
-            textColor="white"
-          />
-        )}
+        <DateTimePickerModal
+          isVisible={showTopDate}
+          mode="date"
+          onConfirm={handleConfirmTop}
+          onCancel={hideDatePickerTop}
+        />
 
         <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
           size={25}
@@ -579,7 +565,7 @@ export default function AddToDoScreen(props: any) {
 
         {recurrence != 'Never' && untilType == 'Until' && <Text style={styles.nameTitle}>End Date</Text>}
         {recurrence != 'Never' && untilType == 'Until' && (
-          <TouchableOpacity onPress={showDateEndPicker}>
+          <TouchableOpacity onPress={showDateEndMode}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
@@ -595,27 +581,12 @@ export default function AddToDoScreen(props: any) {
           </TouchableOpacity>
         )}
 
-        {showEndDate && (
-          <TouchableOpacity
-            onPress={() => {
-              setShowEndDate(false);
-            }}
-          >
-            <Text style={styles.saveButton}>Close</Text>
-          </TouchableOpacity>
-        )}
-
-        {showEndDate && (
-          <DateTimePicker
-            testID="dateTimePicker2"
-            value={endDate}
-            mode={'date'}
-            is24Hour={true}
-            onChange={onDatePickerEndChange}
-            display="spinner"
-            textColor="white"
-          />
-        )}
+        <DateTimePickerModal
+          isVisible={showEndDate}
+          mode="date"
+          onConfirm={handleConfirmEnd}
+          onCancel={hideDatePickerEnd}
+        />
 
         <ActionSheet // recurrence
           initialOffsetFromBottom={10}

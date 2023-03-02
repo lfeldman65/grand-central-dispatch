@@ -8,7 +8,6 @@ import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import Attendees from '../ToDo/AttendeesScreen';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { RolodexDataProps, AttendeesProps } from '../ToDo/interfaces'; // test.
 import {
   convertFrequency,
@@ -26,6 +25,7 @@ import {
   reminderUnitBeforeMenu,
   reminderTimeBeforeMenu,
 } from '../Calendar/calendarHelpers';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 export default function AddAppointmentScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName } = props;
@@ -76,51 +76,53 @@ export default function AddAppointmentScreen(props: any) {
     orderMenu: 'filter_sheet_order',
   };
 
-  const onDatePickerStartChange = (event: any, selectedDate: any) => {
+  const handleConfirmFrom = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
     setStartDate(currentDate);
+    setShowFromDate(false);
   };
 
-  const onDatePickerToChange = (event: any, selectedDate: any) => {
+  const handleConfirmTo = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
     setToDate(currentDate);
+    setShowToDate(false);
   };
 
-  const onDatePickerEndChange = (event: any, selectedDate: any) => {
+  const handleConfirmEnd = (selectedDate: any) => {
     const currentDate = selectedDate;
+    console.log(currentDate);
     setEndDate(currentDate);
+    setShowEndDate(false);
   };
 
-  const showStartDateMode = (currentMode: any) => {
+  const showDateFromMode = (currentMode: any) => {
     console.log(currentMode);
     setShowFromDate(true);
   };
 
-  const showToDateMode = (currentMode: any) => {
+  const showDateToMode = (currentMode: any) => {
     console.log(currentMode);
     setShowToDate(true);
   };
 
-  const showEndDateMode = (currentMode: any) => {
+  const showDateEndMode = (currentMode: any) => {
     console.log(currentMode);
     setShowEndDate(true);
   };
 
-  const showStartDatePicker = () => {
-    console.log('from picker');
-    showStartDateMode('time');
-  };
+  function hideDatePickerFrom() {
+    setShowFromDate(false);
+  }
 
-  const showToDatePicker = () => {
-    showToDateMode('date');
-  };
+  function hideDatePickerTo() {
+    setShowToDate(false);
+  }
 
-  const showEndDatePicker = () => {
-    console.log('show date picker end');
-    showEndDateMode('date');
-  };
+  function hideDatePickerEnd() {
+    setShowEndDate(false);
+  }
 
   function handleRecurrenceChange() {
     if (reminderType == 'None') {
@@ -432,7 +434,7 @@ export default function AddAppointmentScreen(props: any) {
         </View>
 
         <Text style={styles.nameTitle}>From</Text>
-        <TouchableOpacity onPress={showStartDatePicker}>
+        <TouchableOpacity onPress={showDateFromMode}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
               <Text style={styles.textInput}>
@@ -448,30 +450,15 @@ export default function AddAppointmentScreen(props: any) {
           </View>
         </TouchableOpacity>
 
-        {showFromDate && (
-          <TouchableOpacity
-            onPress={() => {
-              setShowFromDate(false);
-            }}
-          >
-            <Text style={styles.saveButton}>Close</Text>
-          </TouchableOpacity>
-        )}
-
-        {showFromDate && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={startDate}
-            mode={'date'}
-            is24Hour={true}
-            onChange={onDatePickerStartChange}
-            display="spinner"
-            textColor="white"
-          />
-        )}
+        <DateTimePickerModal
+          isVisible={showFromDate}
+          mode="date"
+          onConfirm={handleConfirmFrom}
+          onCancel={hideDatePickerFrom}
+        />
 
         <Text style={styles.nameTitle}>To</Text>
-        <TouchableOpacity onPress={showToDatePicker}>
+        <TouchableOpacity onPress={showDateToMode}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
               <Text style={styles.textInput}>
@@ -487,27 +474,12 @@ export default function AddAppointmentScreen(props: any) {
           </View>
         </TouchableOpacity>
 
-        {showToDate && (
-          <TouchableOpacity
-            onPress={() => {
-              setShowToDate(false);
-            }}
-          >
-            <Text style={styles.saveButton}>Close</Text>
-          </TouchableOpacity>
-        )}
-
-        {showToDate && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={toDate}
-            mode={'date'}
-            is24Hour={true}
-            onChange={onDatePickerToChange}
-            display="spinner"
-            textColor="white"
-          />
-        )}
+        <DateTimePickerModal
+          isVisible={showToDate}
+          mode="date"
+          onConfirm={handleConfirmTo}
+          onCancel={hideDatePickerTo}
+        />
 
         <Text style={styles.nameTitle}>Recurrence</Text>
         <TouchableOpacity onPress={recurrenceMenuPressed}>
@@ -651,7 +623,7 @@ export default function AddAppointmentScreen(props: any) {
 
         {recurrence != 'Never' && untilType == 'Until' && <Text style={styles.nameTitle}>End Date</Text>}
         {recurrence != 'Never' && untilType == 'Until' && (
-          <TouchableOpacity onPress={showEndDatePicker}>
+          <TouchableOpacity onPress={showDateEndMode}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
@@ -668,27 +640,12 @@ export default function AddAppointmentScreen(props: any) {
           </TouchableOpacity>
         )}
 
-        {showEndDate && (
-          <TouchableOpacity
-            onPress={() => {
-              setShowEndDate(false);
-            }}
-          >
-            <Text style={styles.saveButton}>Close</Text>
-          </TouchableOpacity>
-        )}
-
-        {showEndDate && (
-          <DateTimePicker
-            testID="dateTimePicker2"
-            value={endDate}
-            mode={'date'}
-            is24Hour={true}
-            onChange={onDatePickerEndChange}
-            display="spinner"
-            textColor="white"
-          />
-        )}
+        <DateTimePickerModal
+          isVisible={showEndDate}
+          mode="date"
+          onConfirm={handleConfirmEnd}
+          onCancel={hideDatePickerEnd}
+        />
 
         <ActionSheet // recurrence
           initialOffsetFromBottom={10}

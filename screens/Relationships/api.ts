@@ -147,7 +147,11 @@ export function editContact(
   birthday: string,
   wedding: string
 ): Promise<RelDetailsResponse> {
-  console.log('api last:' + last);
+  console.log('api spouseid:' + spouse.id);
+  console.log('api spousename:' + spouse.name);
+  console.log('api referralid:' + referredBy.id);
+  console.log('api referralname:' + referredBy.name);
+
   return http.put(`contacts/${guid}`, {
     body: {
       ranking: rank,
@@ -160,7 +164,10 @@ export function editContact(
       officePhone: officePhone,
       email: email,
       spouse: spouse,
-      referredBy: referredBy,
+      referredBy: {
+        id: referredBy.id,
+        name: referredBy.name,
+      },
       website: website,
       address: {
         street: street1,

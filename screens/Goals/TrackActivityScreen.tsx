@@ -9,6 +9,7 @@ import { RolodexDataProps, GoalDataConciseProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import { ga4Analytics } from '../../utils/general';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -20,7 +21,7 @@ export default function TrackActivityScreen(props: any) {
   const [goal, setGoal] = useState<GoalDataConciseProps>();
   const [refType, setRefType] = useState('1');
   const [date, setDate] = useState(new Date());
-  const [subject, setSubject] = useState('test');
+  const [subject, setSubject] = useState('');
   const [askedReferral, setAskedReferral] = useState(true);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
@@ -39,6 +40,22 @@ export default function TrackActivityScreen(props: any) {
   const Sheets = {
     filterSheet: 'filter_sheet_id',
   };
+
+  const handleConfirm = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setDate(currentDate);
+    setShowDate(false);
+  };
+
+  const showDateTopMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowDate(true);
+  };
+
+  function hideDatePicker() {
+    setShowDate(false);
+  }
 
   function convertToText(refType: string) {
     if (refType == '1') {
@@ -326,17 +343,7 @@ export default function TrackActivityScreen(props: any) {
         </TouchableOpacity>
       )}
 
-      {showDate && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={'date'}
-          is24Hour={true}
-          onChange={onDatePickerChange}
-          display="spinner"
-          textColor="white"
-        />
-      )}
+      <DateTimePickerModal isVisible={showDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
 
       <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
         size={25}
