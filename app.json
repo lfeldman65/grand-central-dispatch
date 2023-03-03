@@ -2,7 +2,7 @@
   "expo": {
     "name": "Referral Maker",
     "slug": "referralMaker",
-    "version": "3.4.2",
+    "version": "3.6.0",
     "orientation": "portrait",
     "icon": "./images/icon.png",
     "userInterfaceStyle": "automatic",
@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
@@ -51,6 +53,11 @@
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f0fb0e2d-593f-46f3-805e-6df158477c4d"
+      }
+    }
   }
 }
