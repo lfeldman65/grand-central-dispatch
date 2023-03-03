@@ -64,7 +64,13 @@ export default function EditRelationshipScreen(props: any) {
   const handleConfirmWeddingDate = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
-    //    setWedding(currentDate);
+    setWedding(
+      selectedDate.toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      })
+    );
     setShowWeddingDate(false);
   };
 
@@ -80,10 +86,15 @@ export default function EditRelationshipScreen(props: any) {
   const handleConfirmBirthday = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
-    setBirthday(currentDate);
+    setBirthday(
+      selectedDate.toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      })
+    );
     setShowBirthDate(false);
   };
-
   const showBirthdayPicker = (currentMode: any) => {
     console.log(currentMode);
     setShowBirthDate(true);
