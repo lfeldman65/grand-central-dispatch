@@ -101,13 +101,16 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [modalCallsVisible, setModalCallsVisible] = useState(false);
   const [modalNotesVisible, setModalNotesVisible] = useState(false);
   const [modalPopVisible, setModalPopVisible] = useState(false);
-  const [addActivityVisible, setAddActivityVisible] = useState(false);
+  const [trackActivityVisible, setTrackActivityVisible] = useState(false);
   const [addToDoVisible, setAddToDoVisible] = useState(false);
   const [addAppointmentVisible, setAddAppointmentVisible] = useState(false);
   const [isFavorite, setIsFavorite] = useState('False');
   const [vidTitle, setVidTitle] = useState('');
   const [showVidTitle, setShowVidTitle] = useState(false);
   const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
+  const [goalID2, setGoalID2] = useState('1');
+  const [goalName2, setGoalName2] = useState('Calls Made');
+  const [subject2, setSubject2] = useState('');
 
   async function getVidTutWatched() {
     const vidTutWatched = await storage.getItem('videoTutorialWatched');
@@ -117,7 +120,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     return true;
   }
 
-  function saveActivityComplete(
+  function trackActivityComplete( // see "savePressed" in TrackActivityScreen
     guid: string,
     refGUID: string,
     gaveRef: boolean,
@@ -202,6 +205,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           console.error(res.error);
         } else {
           setGoalList(res.data);
+          console.log('Notes: ' + res.data[1].goal.title);
           console.log('CALLS: ' + res.data[0].goal.title);
           console.log('CALLS: ' + res.data[0].achievedToday);
           notifyIfWin(localGoalID, res.data);
@@ -328,11 +332,17 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleHomePressed() {
+    setGoalID2('1');
+    setGoalName2('Calls Made');
+    setSubject2('Mobile Call');
     ga4Analytics('Relationships_Phone_Call', {
       contentType: 'Home',
       itemId: 'id0520',
     });
-    handlePhonePressed(dataDetails?.homePhone!, () => setAddActivityVisible(true));
+    setGoalID2('1');
+    setGoalName2('Calls Made');
+    setSubject2('Mobile Call');
+    handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
   }
 
   function handleOfficePressed() {
@@ -340,7 +350,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       contentType: 'Office',
       itemId: 'id0520',
     });
-    handlePhonePressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
+    setGoalID2('7');
+    setGoalName2('Other');
+    setSubject2('Text Message');
+    handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
   }
 
   function handleCallPressed() {
@@ -396,11 +409,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       Alert.alert('Please enter a valid phone number');
       return;
     }
+    setGoalID2('7');
+    setGoalName2('Other');
+    setSubject2('Text Message');
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
-      handleTextPressed(dataDetails?.mobile!, () => setAddActivityVisible(true));
+      handleTextPressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
     }
-    setAddActivityVisible(true);
+    setTrackActivityVisible(true);
   }
 
   async function handleVideoPressed() {
@@ -420,32 +436,8 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     SheetManager.show(Sheets.vidSheet);
   }
 
-  function dialPhone(phoneType: string) {
-    console.log('PHONETYPE: ' + phoneType);
-    if (phoneType == 'Mobile') {
-      if (dataDetails?.mobile == null || dataDetails?.mobile.length < 7) {
-        Alert.alert('Please enter a mobile number');
-        return;
-      }
-      handlePhonePressed(dataDetails?.mobile!, () => setAddActivityVisible(true));
-    } else if (phoneType == 'Home') {
-      if (dataDetails?.homePhone == null || dataDetails?.homePhone.length < 7) {
-        Alert.alert('Please enter a home number');
-        return;
-      }
-      handlePhonePressed(dataDetails?.homePhone!, () => setAddActivityVisible(true));
-    } else if (phoneType == 'Office') {
-      if (dataDetails?.officePhone == null || dataDetails?.officePhone.length < 7) {
-        Alert.alert('Please enter an office number');
-        return;
-      }
-      handlePhonePressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
-    }
-  }
-
   function handleEmailPressed() {
     // Linking.openURL(`mailto:${dataDetails?.email}`);
-
     ga4Analytics('Relationships_Email_Top', {
       contentType: 'none',
       itemId: 'id0513',
@@ -454,7 +446,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       Alert.alert('Please enter an email address');
       return;
     }
-    handleEmailPressed2(dataDetails?.email!, () => setAddActivityVisible(true));
+    setGoalID2('7');
+    setGoalName2('Other');
+    setSubject2('Email Sent');
+    handleEmailPressed2(dataDetails?.email!, () => setTrackActivityVisible(true));
   }
 
   function handleMapPressed() {
@@ -462,7 +457,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       contentType: 'none',
       itemId: 'id0514',
     });
-    handleMapPressed2(completeAddress(), () => setAddActivityVisible(true));
+    setGoalID2('3');
+    setGoalName2('Pop-By Made');
+    setSubject2('Pop-By');
+    handleMapPressed2(completeAddress(), () => setTrackActivityVisible(true));
     //  handleDirectionsPressed();
   }
 
@@ -473,7 +471,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       contentType: 'none',
       itemId: 'id0515',
     });
-    setAddActivityVisible(!addActivityVisible);
+    setTrackActivityVisible(!trackActivityVisible);
   }
 
   function handleToDoPressed() {
@@ -731,7 +729,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   function handleDirectionsPressed() {
     // openMap({ latitude: 33.1175, longitude: -117.0722, zoom: 10 });
     //   openMap({ query: '7743 Royal Park Dr. Lewis Center OH 43035' });
-    handleMapPressed2(completeAddress(), () => setAddActivityVisible(true));
+    setGoalID2('3');
+    setGoalName2('Pop-By Made');
+    setSubject2('Pop-By');
+    handleMapPressed2(completeAddress(), () => setTrackActivityVisible(true));
     //  openMap({ query: completeAddress() });
   }
 
@@ -1396,9 +1397,10 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                           contentType: value,
                           itemId: 'id0510',
                         });
-                        handlePhonePressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
-
-                        //  dialPhone(value);
+                        setGoalID2('1');
+                        setGoalName2('Calls Made');
+                        setSubject2('Mobile Call');
+                        handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
                       });
                     }}
                     style={globalStyles.listItemCell}
@@ -1448,13 +1450,19 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                             contentType: 'Mobile',
                             itemId: 'id0520',
                           });
-                          handlePhonePressed(dataDetails?.mobile!, () => setAddActivityVisible(true));
+                          setGoalID2('1');
+                          setGoalName2('Calls Made');
+                          setSubject2('Mobile Call');
+                          handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
                         } else {
                           ga4Analytics('Relationships_Mobile_Text', {
                             contentType: 'Mobile',
                             itemId: 'id0521',
                           });
-                          handleTextPressed(dataDetails?.mobile!, () => setAddActivityVisible(true));
+                          setGoalID2('7');
+                          setGoalName2('Other');
+                          setSubject2('Text Message');
+                          handleTextPressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
                         }
                       });
                     }}
@@ -1501,9 +1509,15 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                       SheetManager.hide(Sheets.homeSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
-                          handlePhonePressed(dataDetails?.homePhone!, () => setAddActivityVisible(true));
+                          setGoalID2('1');
+                          setGoalName2('Calls Made');
+                          setSubject2('Mobile Call');
+                          handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
                         } else {
-                          handleTextPressed(dataDetails?.homePhone!, () => setAddActivityVisible(true));
+                          setGoalID2('7');
+                          setGoalName2('Other');
+                          setSubject2('Text Message');
+                          handleTextPressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
                         }
                       });
                     }}
@@ -1550,9 +1564,15 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                       SheetManager.hide(Sheets.officeSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
-                          handlePhonePressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
+                          setGoalID2('7');
+                          setGoalName2('Other');
+                          setSubject2('Text Message');
+                          handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
                         } else {
-                          handleTextPressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
+                          setGoalID2('7');
+                          setGoalName2('Other');
+                          setSubject2('Text Message');
+                          handleTextPressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
                         }
                       });
                     }}
@@ -1676,22 +1696,25 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </View>
         </ActionSheet>
       </View>
-      {addActivityVisible && (
+      {trackActivityVisible && (
         <Modal
           animationType="slide"
           transparent={true}
-          visible={addActivityVisible}
+          visible={trackActivityVisible}
           onRequestClose={() => {
-            setAddActivityVisible(!addActivityVisible);
+            setTrackActivityVisible(!trackActivityVisible);
           }}
         >
           <TrackActivity
             title="Track Activity Goal"
             guid={dataDetails?.id!}
+            goalID={goalID2}
+            goalName={goalName2}
+            subjectP={subject2}
             firstName={dataDetails?.firstName}
             lastName={dataDetails?.lastName}
-            onSave={saveActivityComplete}
-            setModalVisible={setAddActivityVisible}
+            onSave={trackActivityComplete}
+            setModalVisible={setTrackActivityVisible}
           />
         </Modal>
       )}

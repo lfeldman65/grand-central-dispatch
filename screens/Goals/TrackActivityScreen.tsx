@@ -14,14 +14,14 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function TrackActivityScreen(props: any) {
-  const { setModalVisible, title, onSave, guid, firstName, lastName, lightOrDark } = props;
+  const { setModalVisible, title, onSave, guid, firstName, lastName, goalID, goalName, subjectP, lightOrDark } = props;
   const [note, onNoteChange] = useState('');
   const [relationship, setRelationship] = useState<RolodexDataProps>();
   const [referral, setReferral] = useState<RolodexDataProps>();
   const [goal, setGoal] = useState<GoalDataConciseProps>();
   const [refType, setRefType] = useState('1');
   const [date, setDate] = useState(new Date());
-  const [subject, setSubject] = useState('');
+  const [subject, setSubject] = useState(subjectP);
   const [askedReferral, setAskedReferral] = useState(true);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
@@ -46,11 +46,6 @@ export default function TrackActivityScreen(props: any) {
     console.log(currentDate);
     setDate(currentDate);
     setShowDate(false);
-  };
-
-  const showDateTopMode = (currentMode: any) => {
-    console.log(currentMode);
-    setShowDate(true);
   };
 
   function hideDatePicker() {
@@ -83,10 +78,9 @@ export default function TrackActivityScreen(props: any) {
   }
 
   useEffect(() => {
-    console.log('TRACKACTIVITY: ' + lightOrDark);
     var initialGoal: GoalDataConciseProps = {
-      id: '1',
-      title: 'Calls Made',
+      id: goalID ?? 1,
+      title: goalName ?? 'Calls Made',
     };
     setGoal(initialGoal);
   }, [isFocused]);
@@ -107,36 +101,6 @@ export default function TrackActivityScreen(props: any) {
     }
   }, [isFocused]);
 
-  function getReferralTitle() {
-    if (refType == '1') {
-      if (relationship?.id == '' || relationship?.id == null) {
-        return 'This relationship gave me a referral:';
-      }
-      if (referral?.id == '' || referral?.id == null) {
-        return 'This relationship gave me a referral:';
-      }
-      return relationship?.firstName + ' gave me a referral named ' + referral?.firstName;
-    }
-    if (refType == '2') {
-      if (relationship?.id == '' || relationship?.id == null) {
-        return 'This relationship gave me a referral:';
-      }
-      if (referral?.id == '' || referral?.id == null) {
-        return 'This relationship gave me a referral:';
-      }
-      return referral?.firstName + ' was referred to me by ' + relationship?.firstName;
-    }
-    if (refType == '3') {
-      if (relationship?.id == '' || relationship?.id == null) {
-        return 'I gave this relationship a referral:';
-      }
-      if (referral?.id == '' || referral?.id == null) {
-        return 'I gave this relationship a referral:';
-      }
-      return 'I gave ' + relationship?.firstName + ' a referral';
-    }
-  }
-
   function handleRelPressed() {
     setModalRelVisible(!modalRelVisible);
   }
@@ -156,12 +120,6 @@ export default function TrackActivityScreen(props: any) {
   function showDatePicker() {
     setShowDate(true);
   }
-
-  const onDatePickerChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log(currentDate);
-    setDate(currentDate);
-  };
 
   function savePressed() {
     ga4Analytics('Goals_Track_Save', {
