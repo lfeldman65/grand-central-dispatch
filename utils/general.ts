@@ -1,3 +1,6 @@
+import { Linking } from 'react-native';
+import openMap from 'react-native-open-maps';
+
 import * as Notifications from 'expo-notifications';
 import { storage } from './storage';
 import { Platform } from 'react-native';
@@ -95,13 +98,98 @@ export function ga4Analytics(mainEvent: string, other: any) {
   Analytics.logEvent(mainEvent + '_' + determineDeviceType(), other);
 }
 
-export async function handleTextPressed(number: string) {
+export async function handleTextPressed(number: string, cb?: () => void) {
   const isAvailable = await SMS.isAvailableAsync();
-  const timer = setInterval(() => {
+  const timer = setInterval(async () => {
     clearInterval(timer);
     console.log('ISAVAILABLE: ' + isAvailable);
     if (isAvailable) {
-      SMS.sendSMSAsync(number, '');
+      await SMS.sendSMSAsync(number, '');
+      if (typeof cb !== 'undefined') {
+        const timer2 = setInterval(() => {
+          clearInterval(timer2);
+          cb();
+        }, 500);
+      }
+    }
+  }, 500);
+}
+
+export async function handleTextVideoBBPressed(number: string, url: string, cb?: () => void) {
+  const isAvailable = await SMS.isAvailableAsync();
+  const timer = setInterval(async () => {
+    clearInterval(timer);
+    console.log('ISAVAILABLE: ' + isAvailable);
+    if (isAvailable) {
+      SMS.sendSMSAsync([number ?? ''], 'Here is the video ' + url);
+      if (typeof cb !== 'undefined') {
+        const timer2 = setInterval(() => {
+          clearInterval(timer2);
+          cb();
+        }, 500);
+      }
+    }
+  }, 500);
+}
+
+export async function handleTextVideoAttachedPressed(number: string, result: any, cb?: () => void) {
+  const isAvailable = await SMS.isAvailableAsync();
+  const timer = setInterval(async () => {
+    clearInterval(timer);
+    console.log('ISAVAILABLE: ' + isAvailable);
+    if (isAvailable) {
+      await SMS.sendSMSAsync([number ?? ''], 'Here is the video', {
+        attachments: {
+          uri: result.uri,
+          mimeType: 'video/mp4',
+          filename: 'myvid.mp4',
+        },
+      });
+      if (typeof cb !== 'undefined') {
+        const timer2 = setInterval(() => {
+          clearInterval(timer2);
+          cb();
+        }, 500);
+      }
+    }
+  }, 500);
+}
+
+export async function handlePhonePressed(number: string, cb?: () => void) {
+  const timer = setInterval(async () => {
+    clearInterval(timer);
+    Linking.openURL(`tel:${number}`);
+    if (typeof cb !== 'undefined') {
+      const timer2 = setInterval(() => {
+        clearInterval(timer2);
+        cb();
+      }, 500);
+    }
+  }, 500);
+}
+
+export async function handleEmailPressed2(address: string, cb?: () => void) {
+  const timer = setInterval(async () => {
+    clearInterval(timer);
+    Linking.openURL(`mailto:${address}`);
+    if (typeof cb !== 'undefined') {
+      const timer2 = setInterval(() => {
+        clearInterval(timer2);
+        cb();
+      }, 500);
+    }
+  }, 500);
+}
+
+export async function handleMapPressed2(directions: string, cb?: () => void) {
+  const timer = setInterval(async () => {
+    clearInterval(timer);
+    openMap({ query: directions });
+    if (typeof cb !== 'undefined') {
+      const timer2 = setInterval(() => {
+        clearInterval(timer2);
+        cb();
+      }, 500);
     }
   }, 500);
 }

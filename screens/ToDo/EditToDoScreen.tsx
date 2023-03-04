@@ -37,6 +37,8 @@ export default function EditToDoScreen(props: any) {
 
   const handleConfirm = (selectedDate: any) => {
     const currentDate = selectedDate;
+    //todo dates don't need time information, we will set time to 0:00 for local timezone
+    currentDate.setHours(0, 0, 0, 0);
     console.log(currentDate);
     setNewDate(currentDate);
     setShowTopDate(false);
@@ -148,12 +150,25 @@ export default function EditToDoScreen(props: any) {
       <TouchableOpacity onPress={showDateTopMode}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput}>{prettyDate(newDate.toISOString())}</Text>
+            <Text style={styles.textInput}>
+              {newDate.toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                //   hour: 'numeric',
+              })}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
 
-      <DateTimePickerModal isVisible={showTopDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
+      <DateTimePickerModal
+        isVisible={showTopDate}
+        mode="date"
+        date={newDate}
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
 
       <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
         size={25}

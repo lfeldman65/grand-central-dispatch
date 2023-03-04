@@ -16,12 +16,14 @@ export default function GroupsRow(props: GroupsRowProps) {
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      <View style={props.lightOrDark == 'dark' ? styles.groupRowDark : styles.groupRowLight}>
-        <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
-          {props.data.groupName + ' (' + props.data.groupSizeLabel + ')'}
-        </Text>
-        <Image source={chevron} style={styles.chevron} />
-      </View>
+      {props.data.groupName != null && (
+        <View style={props.lightOrDark == 'dark' ? styles.groupRowDark : styles.groupRowLight}>
+          <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+            {props.data.groupName + ' (' + props.data.groupSizeLabel + ')'}
+          </Text>
+          <Image source={chevron} style={styles.chevron} />
+        </View>
+      )}
     </TouchableOpacity>
   );
 }

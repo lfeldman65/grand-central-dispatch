@@ -3,6 +3,7 @@ import * as SMS from 'expo-sms';
 import { RelDetailsProps, FileUpload } from './interfaces';
 import { ga4Analytics } from '../../utils/general';
 import * as MediaLibrary from 'expo-media-library';
+import { handleTextVideoBBPressed, handleTextVideoAttachedPressed } from '../../utils/general';
 
 function prettyVideoType(hasBB: boolean) {
   if (hasBB) {
@@ -82,17 +83,11 @@ async function composeSMS(vidTitle: string, relationship: RelDetailsProps | unde
     var url = await uploadVideoTOBB(result.uri, vidTitle, relationship);
     console.log('sms this ' + url);
     if (isAvailable) {
-      SMS.sendSMSAsync([relationship?.mobile ?? ''], 'Here is the video ' + url);
+      handleTextVideoBBPressed(relationship?.mobile!, url!);
     }
   } else {
     if (isAvailable) {
-      await SMS.sendSMSAsync([relationship?.mobile ?? ''], 'Here is the video', {
-        attachments: {
-          uri: result.uri,
-          mimeType: 'video/mp4',
-          filename: 'myvid.mp4',
-        },
-      });
+      handleTextVideoAttachedPressed(relationship?.mobile!, result);
     }
   }
 }

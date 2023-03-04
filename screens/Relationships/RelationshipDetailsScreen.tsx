@@ -7,7 +7,13 @@ import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual, editCon
 import { RelDetailsProps, ToDoAndApptProps, RolodexDataProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isNullOrEmpty } from '../../utils/general';
-import { formatDate, handleTextPressed } from '../../utils/general';
+import {
+  formatDate,
+  handleTextPressed,
+  handlePhonePressed,
+  handleEmailPressed2,
+  handleMapPressed2,
+} from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
@@ -326,7 +332,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       contentType: 'Home',
       itemId: 'id0520',
     });
-    Linking.openURL(`tel:${dataDetails?.homePhone}`);
+    handlePhonePressed(dataDetails?.homePhone!, () => setAddActivityVisible(true));
   }
 
   function handleOfficePressed() {
@@ -334,7 +340,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       contentType: 'Office',
       itemId: 'id0520',
     });
-    Linking.openURL(`tel:${dataDetails?.officePhone}`);
+    handlePhonePressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
   }
 
   function handleCallPressed() {
@@ -354,7 +360,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       }
       console.log('NEWWEB: ' + newWeb);
       Linking.openURL(newWeb);
-      //  Linking.openURL('www.yahoo.com');
     } catch {
       Alert.alert('Error loading website');
     }
@@ -386,14 +391,16 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       contentType: 'none',
       itemId: 'id0509',
     });
+    console.log(dataDetails?.mobile);
     if (dataDetails?.mobile == null || dataDetails?.mobile.length < 7) {
       Alert.alert('Please enter a valid phone number');
       return;
     }
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
-      SMS.sendSMSAsync([dataDetails?.mobile], '', {});
+      handleTextPressed(dataDetails?.mobile!, () => setAddActivityVisible(true));
     }
+    setAddActivityVisible(true);
   }
 
   async function handleVideoPressed() {
@@ -420,23 +427,25 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         Alert.alert('Please enter a mobile number');
         return;
       }
-      Linking.openURL(`tel:${dataDetails?.mobile}`);
+      handlePhonePressed(dataDetails?.mobile!, () => setAddActivityVisible(true));
     } else if (phoneType == 'Home') {
       if (dataDetails?.homePhone == null || dataDetails?.homePhone.length < 7) {
         Alert.alert('Please enter a home number');
         return;
       }
-      Linking.openURL(`tel:${dataDetails?.homePhone}`);
+      handlePhonePressed(dataDetails?.homePhone!, () => setAddActivityVisible(true));
     } else if (phoneType == 'Office') {
       if (dataDetails?.officePhone == null || dataDetails?.officePhone.length < 7) {
         Alert.alert('Please enter an office number');
         return;
       }
-      Linking.openURL(`tel:${dataDetails?.officePhone}`);
+      handlePhonePressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
     }
   }
 
   function handleEmailPressed() {
+    // Linking.openURL(`mailto:${dataDetails?.email}`);
+
     ga4Analytics('Relationships_Email_Top', {
       contentType: 'none',
       itemId: 'id0513',
@@ -445,7 +454,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       Alert.alert('Please enter an email address');
       return;
     }
-    Linking.openURL(`mailto:${dataDetails?.email}`);
+    handleEmailPressed2(dataDetails?.email!, () => setAddActivityVisible(true));
   }
 
   function handleMapPressed() {
@@ -453,7 +462,8 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       contentType: 'none',
       itemId: 'id0514',
     });
-    handleDirectionsPressed();
+    handleMapPressed2(completeAddress(), () => setAddActivityVisible(true));
+    //  handleDirectionsPressed();
   }
 
   // bottom row
@@ -653,7 +663,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (!isNullOrEmpty(lastName)) {
       newLast = lastName;
     }
-    return newFirst + ' ' + newLast;
+    return ' ' + newFirst + ' ' + newLast;
   }
 
   function handleSectionTap(sectionIndex: number) {
@@ -721,7 +731,8 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   function handleDirectionsPressed() {
     // openMap({ latitude: 33.1175, longitude: -117.0722, zoom: 10 });
     //   openMap({ query: '7743 Royal Park Dr. Lewis Center OH 43035' });
-    openMap({ query: completeAddress() });
+    handleMapPressed2(completeAddress(), () => setAddActivityVisible(true));
+    //  openMap({ query: completeAddress() });
   }
 
   function completeAddress() {
@@ -1385,7 +1396,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                           contentType: value,
                           itemId: 'id0510',
                         });
-                        dialPhone(value);
+                        handlePhonePressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
+
+                        //  dialPhone(value);
                       });
                     }}
                     style={globalStyles.listItemCell}
@@ -1435,13 +1448,13 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                             contentType: 'Mobile',
                             itemId: 'id0520',
                           });
-                          Linking.openURL(`tel:${dataDetails?.mobile}`);
+                          handlePhonePressed(dataDetails?.mobile!, () => setAddActivityVisible(true));
                         } else {
                           ga4Analytics('Relationships_Mobile_Text', {
                             contentType: 'Mobile',
                             itemId: 'id0521',
                           });
-                          handleTextPressed(dataDetails?.mobile!);
+                          handleTextPressed(dataDetails?.mobile!, () => setAddActivityVisible(true));
                         }
                       });
                     }}
@@ -1488,9 +1501,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                       SheetManager.hide(Sheets.homeSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
-                          Linking.openURL(`tel:${dataDetails?.homePhone}`);
+                          handlePhonePressed(dataDetails?.homePhone!, () => setAddActivityVisible(true));
                         } else {
-                          handleTextPressed(dataDetails?.homePhone!);
+                          handleTextPressed(dataDetails?.homePhone!, () => setAddActivityVisible(true));
                         }
                       });
                     }}
@@ -1537,9 +1550,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                       SheetManager.hide(Sheets.officeSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
-                          Linking.openURL(`tel:${dataDetails?.officePhone}`);
+                          handlePhonePressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
                         } else {
-                          handleTextPressed(dataDetails?.officePhone!);
+                          handleTextPressed(dataDetails?.officePhone!, () => setAddActivityVisible(true));
                         }
                       });
                     }}

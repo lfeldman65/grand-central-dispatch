@@ -72,13 +72,17 @@ export default function AddToDoScreen(props: any) {
 
   const handleConfirmTop = (selectedDate: any) => {
     const currentDate = selectedDate;
-    console.log(currentDate);
+    //todo dates don't need time information, we will set time to 0:00 for local timezone
+    currentDate.setHours(0, 0, 0, 0);
+    console.log(currentDate.toISOString());
     setDate(currentDate);
     setShowTopDate(false);
   };
 
   const handleConfirmEnd = (selectedDate: any) => {
-    const currentDate = selectedDate;
+    var currentDate = selectedDate;
+    //todo dates don't need time information, we will set time to 0:00 for local timezone
+    currentDate.setHours(0, 0, 0, 0);
     console.log(currentDate);
     setEndDate(currentDate);
     setShowEndDate(false);
@@ -123,6 +127,11 @@ export default function AddToDoScreen(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
+
+  useEffect(() => {
+    date.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+  }, []);
 
   useEffect(() => {
     if (guid != null) {
@@ -256,12 +265,14 @@ export default function AddToDoScreen(props: any) {
 
     addNewToDo(
       toDoTitle,
-      date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+      //date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+      date.toISOString(),
       priority,
       location,
       notes,
       untilType,
-      endDate.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+      //endDate.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
+      endDate.toISOString(),
       untilVal,
       convertRecurrence(recurrence),
       monday,
@@ -406,6 +417,7 @@ export default function AddToDoScreen(props: any) {
         <DateTimePickerModal
           isVisible={showTopDate}
           mode="date"
+          date={date}
           onConfirm={handleConfirmTop}
           onCancel={hideDatePickerTop}
         />
@@ -584,6 +596,7 @@ export default function AddToDoScreen(props: any) {
         <DateTimePickerModal
           isVisible={showEndDate}
           mode="date"
+          date={endDate}
           onConfirm={handleConfirmEnd}
           onCancel={hideDatePickerEnd}
         />
