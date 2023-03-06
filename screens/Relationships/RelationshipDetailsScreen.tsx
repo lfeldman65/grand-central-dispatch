@@ -315,16 +315,19 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleVidTitleOK() {
-    //  console.log('HANDLE VID SOURCE: ' + vidSource);
+    console.log('HANDLE VID SOURCE: ' + vidSource);
     setShowVidTitle(false);
     const timer = setInterval(() => {
       clearInterval(timer);
+      setGoalID2('7');
+      setGoalName2('Other');
+      setSubject2('Text Video');
       if (vidSource == 'Use Video Album') {
-        handleVideoFromAlbum(vidTitle, dataDetails);
+        handleVideoFromAlbum(vidTitle, dataDetails, () => setTrackActivityVisible(true));
       } else {
-        handleVideoFromCamera(vidTitle, dataDetails);
+        handleVideoFromCamera(vidTitle, dataDetails, () => setTrackActivityVisible(true));
       }
-    }, 1000); // wait for dialog to close
+    }, 2000); // wait for dialog to close
   }
 
   function handleMobilePressed() {
@@ -416,7 +419,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (isAvailable) {
       handleTextPressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
     }
-    setTrackActivityVisible(true);
   }
 
   async function handleVideoPressed() {
@@ -1678,10 +1680,13 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                         if (dataDetails?.hasBombBombPermission!) {
                           showDialog(value);
                         } else {
+                          setGoalID2('7');
+                          setGoalName2('Other');
+                          setSubject2('Text Video');
                           if (value == 'Use Video Album') {
-                            handleVideoFromAlbum('none', dataDetails);
+                            handleVideoFromAlbum('none', dataDetails, () => setTrackActivityVisible(true));
                           } else {
-                            handleVideoFromCamera('none', dataDetails);
+                            handleVideoFromCamera('none', dataDetails, () => setTrackActivityVisible(true));
                           }
                         }
                       }, 250);

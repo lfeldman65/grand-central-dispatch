@@ -106,46 +106,8 @@ export async function handleTextPressed(number: string, cb?: () => void) {
     if (isAvailable) {
       await SMS.sendSMSAsync(number, '');
       if (typeof cb !== 'undefined') {
-        const timer2 = setInterval(() => {
-          clearInterval(timer2);
-          cb();
-        }, 500);
-      }
-    }
-  }, 500);
-}
-
-export async function handleTextVideoBBPressed(number: string, url: string, cb?: () => void) {
-  const isAvailable = await SMS.isAvailableAsync();
-  const timer = setInterval(async () => {
-    clearInterval(timer);
-    console.log('ISAVAILABLE: ' + isAvailable);
-    if (isAvailable) {
-      SMS.sendSMSAsync([number ?? ''], 'Here is the video ' + url);
-      if (typeof cb !== 'undefined') {
-        const timer2 = setInterval(() => {
-          clearInterval(timer2);
-          cb();
-        }, 500);
-      }
-    }
-  }, 500);
-}
-
-export async function handleTextVideoAttachedPressed(number: string, result: any, cb?: () => void) {
-  const isAvailable = await SMS.isAvailableAsync();
-  const timer = setInterval(async () => {
-    clearInterval(timer);
-    console.log('ISAVAILABLE: ' + isAvailable);
-    if (isAvailable) {
-      await SMS.sendSMSAsync([number ?? ''], 'Here is the video', {
-        attachments: {
-          uri: result.uri,
-          mimeType: 'video/mp4',
-          filename: 'myvid.mp4',
-        },
-      });
-      if (typeof cb !== 'undefined') {
+        console.log('ISAVAILABLE: ' + isAvailable);
+        console.log('Handle text pressed: ' + isAvailable);
         const timer2 = setInterval(() => {
           clearInterval(timer2);
           cb();
