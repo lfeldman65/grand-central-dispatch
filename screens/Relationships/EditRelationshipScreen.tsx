@@ -489,24 +489,6 @@ export default function EditRelationshipScreen(props: any) {
       <View style={styles.divider}></View>
 
       <View style={styles.textAndButtonRow}>
-        <Text style={styles.subTitle}>Referred By</Text>
-        {referral != null && referral.id != '' && referral.id != null && (
-          <TouchableOpacity style={styles.inlineButtons} onPress={removeReferralPressed}>
-            <Text style={styles.inlineButtons}>Remove</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-
-      <TouchableOpacity onPress={referralPressed}>
-        <View>
-          {referral != null && referral.id != '' && referral.id != null && (
-            <Text style={lightOrDark == 'dark' ? styles.textInputDark : styles.textInputLight}>{referral.name}</Text>
-          )}
-          {(referral == null || referral.id == '' || referral.id == null) && <Text style={styles.addText}>+Add</Text>}
-        </View>
-      </TouchableOpacity>
-
-      <View style={styles.textAndButtonRow}>
         <Text style={styles.subTitle}>Spouse</Text>
         {spouse != null && spouse.id != '' && spouse.id != null && (
           <TouchableOpacity style={styles.inlineButtons} onPress={removeSpousePressed}>
@@ -611,7 +593,7 @@ export default function EditRelationshipScreen(props: any) {
         onChangeText={(text) => setGenNotes(text)}
         defaultValue={genNotes}
       />
-      {/* <View style={styles.divider}></View>
+      <View style={styles.divider}></View>
       <View style={styles.textAndButtonRow}>
         <Text style={styles.subTitle}>Referred By</Text>
         {referral != null && referral.id != '' && referral.id != null && (
@@ -628,7 +610,7 @@ export default function EditRelationshipScreen(props: any) {
           )}
           {(referral == null || referral.id == '' || referral.id == null) && <Text style={styles.addText}>+Add</Text>}
         </View>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
       {modalRelVisible && (
         <Modal
