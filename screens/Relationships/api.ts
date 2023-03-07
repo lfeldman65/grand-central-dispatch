@@ -20,7 +20,7 @@ import {
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
   console.log('api type:' + type);
-  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=100`);
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=50000`);
 } // back tick (`) only necessary for string interpolation
 
 export function getToDos(guid: string): Promise<ToDoAndApptResponse> {
@@ -32,7 +32,7 @@ export function getRelDetails(guid: string): Promise<RelDetailsResponse> {
 } // back tick (`) only necessary for string interpolation
 
 export function getGroupsData(): Promise<GroupsDataResponse> {
-  return http.get('groups?batchSize=500&lastItem=0');
+  return http.get('groups?batchSize=50&lastItem=0');
 }
 
 export function getGroupMembers(groupID: string): Promise<GroupMembersDataResponse> {

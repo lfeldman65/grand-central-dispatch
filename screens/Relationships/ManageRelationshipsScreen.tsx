@@ -150,30 +150,36 @@ export default function ManageRelationshipsScreen() {
   }
 
   function azPressed() {
-    ga4Analytics('Relationships_AZ_Tab', {
-      contentType: 'none',
-      itemId: 'id0501',
-    });
-    setTabSelected('a-z');
-    fetchRolodexPressed('alpha', true);
+    if (!isLoading) {
+      ga4Analytics('Relationships_AZ_Tab', {
+        contentType: 'none',
+        itemId: 'id0501',
+      });
+      setTabSelected('a-z');
+      fetchRolodexPressed('alpha', true);
+    }
   }
 
   function rankingPressed() {
-    ga4Analytics('Relationships_Ranking_Tab', {
-      contentType: 'none',
-      itemId: 'id0502',
-    });
-    setTabSelected('ranking');
-    fetchRolodexPressed('ranking', true);
+    if (!isLoading) {
+      ga4Analytics('Relationships_Ranking_Tab', {
+        contentType: 'none',
+        itemId: 'id0502',
+      });
+      setTabSelected('ranking');
+      fetchRolodexPressed('ranking', true);
+    }
   }
 
   function groupsPressed() {
-    ga4Analytics('Relationships_Groups_Tab', {
-      contentType: 'none',
-      itemId: 'id0503',
-    });
-    setTabSelected('groups');
-    fetchGroupsPressed(true);
+    if (!isLoading) {
+      ga4Analytics('Relationships_Groups_Tab', {
+        contentType: 'none',
+        itemId: 'id0503',
+      });
+      setTabSelected('groups');
+      fetchGroupsPressed(true);
+    }
   }
 
   function filterPressed() {
