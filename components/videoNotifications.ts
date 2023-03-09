@@ -1,9 +1,11 @@
 import { storage } from '../utils/storage';
 import { scheduleNotifications, getNotificationStatus } from '../utils/general';
 import { getVideoNotificationInfo } from '../screens/Relationships/api';
+import { cancelScheduledNotificationAsync } from 'expo-notifications';
 
 export async function handleVideoNotifications() {
   var hasBombBombString = await storage.getItem('hasBombBomb');
+  await cancelScheduledNotificationAsync('video-notification');
   if (hasBombBombString == 'true' && (await hasVideoNotifications()) && (await enoughTimePassedNotif(60 * 5))) {
     fetchVideoInfo();
   }
@@ -18,7 +20,7 @@ async function fetchVideoInfo() {
       } else {
         console.log(res.data);
         if (res.data.hasNewViews) {
-          scheduleNotifications('video', 'Video Message', res.data.summary, 1);
+          scheduleNotifications('video-notification', 'Video Message', res.data.summary, 1);
         }
       }
     })

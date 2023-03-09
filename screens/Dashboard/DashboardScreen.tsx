@@ -81,7 +81,7 @@ export default function DashboardScreen() {
           body: `Would you like to see if there are any new relationships to import?`,
           sound: true,
           data: {
-            id: 'import',
+            id: 'import-notification',
           },
           color: '#000000',
         },
@@ -94,7 +94,6 @@ export default function DashboardScreen() {
         },
       });
       console.log('notif id:' + importNotif);
-      storage.setItem('importNotifID', importNotif);
       return status;
     }
   };
@@ -126,18 +125,27 @@ export default function DashboardScreen() {
       console.log('response from tap');
       const id = response.notification.request.content.data.id;
       console.log('id:' + id);
-      if (id == 'import') {
+      if (id == 'import-notification') {
         navigation.navigate('SettingsScreenNav', {
           screen: 'ImportStackNavigator',
         });
-      } else if (id == 'wins') {
+      } else if (id == 'win-notification') {
         navigation.navigate('goals');
-      } else if (id == 'video') {
+      } else if (id == 'video-notification') {
         navigation.navigate('VideoStack', {
           screen: 'VideoHistoryScreen',
         });
-      } else if (id == 'popbys') {
+      } else if (id == 'popby-notification') {
         navigation.navigate('PopBysScreen');
+      } else if (id == 'pac-notification') {
+        console.log('pac navigation');
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'calls' },
+        });
+      } else if (id == 'todo-notification') {
+        console.log('todo navigation');
+        navigation.navigate('To-Do');
       } else {
         console.log('other notif');
       }
@@ -154,7 +162,6 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     hasWatchedTutorial();
-    hasImportNotifications();
   }, [isFocused]);
 
   useEffect(() => {
@@ -173,20 +180,6 @@ export default function DashboardScreen() {
     }
     storage.setItem('watchedTutorial', 'true');
     console.log(watchedTut);
-  }
-
-  async function hasImportNotifications() {
-    var notifOn = await getNotificationStatus('notifImport');
-    if (notifOn == null) {
-      importNotifBool = false;
-      return false;
-    }
-    if (!notifOn) {
-      importNotifBool = false;
-      return false;
-    }
-    importNotifBool = true;
-    return true;
   }
 
   function navigateToLandingPage(landingPage?: string) {

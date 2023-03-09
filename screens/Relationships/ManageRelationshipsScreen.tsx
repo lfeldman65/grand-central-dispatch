@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import * as FileSystem from 'expo-file-system';
 import { Text, View, TouchableOpacity, Modal, Image, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
@@ -30,11 +31,15 @@ export default function ManageRelationshipsScreen() {
   const isFocused = useIsFocused();
   const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]); // A-Z and Ranking tabs
+  const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]); // A-Z
+  const [rankingRolodex, setRankingRolodex] = useState<RolodexDataProps[]>([]); //Ranking tabs
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingForRolodex, setIsLoadingForRolodex] = useState(true);
+  const [isLoadingForRanking, setIsLoadingForRanking] = useState(true);
+  const [isLoadingForGroups, setIsLoadingForGroups] = useState(true);
+
   const [lightOrDark, setLightOrDark] = useState('');
-  const [alphaIndex, setAlphaIndex] = useState<IData[]>([]);
+
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const handleRowPress = (index: number) => {
@@ -60,31 +65,29 @@ export default function ManageRelationshipsScreen() {
     }
   };
 
-  useEffect(() => {
-    let isMounted = true;
-    getCurrentDisplayAZ(true);
-    if (tabSelected == 'a-z') {
-      fetchRolodexPressed('alpha', isMounted);
-    } else if (tabSelected == 'ranking') {
-      fetchRolodexPressed('ranking', isMounted);
-    } else {
-      fetchGroupsPressed(isMounted);
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
+  function getIndex() {
+    if (tabSelected == 'a-z')
+      return dataRolodex.map((e) => {
+        if (localDisplay == 'First Last') return { value: e.firstName, key: e.id };
+        else return { value: e.lastName, key: e.id };
+      });
+    if (tabSelected == 'ranking')
+      return rankingRolodex.map((e) => {
+        if (localDisplay == 'First Last') return { value: e.firstName, key: e.id };
+        else return { value: e.lastName, key: e.id };
+      });
+    else if (tabSelected == 'groups')
+      return dataGroups.map((e) => {
+        return { value: e.groupName, key: e.id };
+      });
+  }
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    let isMounted = true;
+    getCurrentDisplayAZ(true);
     showFilterTitle();
-    if (tabSelected == 'a-z') {
-      fetchRolodexPressed('alpha', isMounted);
-    } else if (tabSelected == 'ranking') {
-      fetchRolodexPressed('ranking', isMounted);
-    } else {
-      fetchGroupsPressed(isMounted);
-    }
+    fetchData(tabSelected);
   }, [isFilterRel]);
 
   useEffect(() => {
@@ -105,15 +108,6 @@ export default function ManageRelationshipsScreen() {
     });
   }, [navigation]);
 
-  useEffect(() => {
-    fetchRolodexPressed(tabSelected, true);
-    console.log(tabSelected);
-  }, [isFilterRel]);
-
-  useEffect(() => {
-    showFilterTitle();
-  }, [isFilterRel]);
-
   function showFilterTitle() {
     if (isFilterRel) {
       return 'Rel';
@@ -128,11 +122,6 @@ export default function ManageRelationshipsScreen() {
 
   function quickAddPressed() {
     console.log('quick add pressed');
-    navigation.navigate('QuickAdd', {
-      person: null,
-      source: 'Transactions',
-      lightOrDark: lightOrDark,
-    });
   }
 
   function prettyTabName(ugly: TabType) {
@@ -150,36 +139,30 @@ export default function ManageRelationshipsScreen() {
   }
 
   function azPressed() {
-    if (!isLoading) {
-      ga4Analytics('Relationships_AZ_Tab', {
-        contentType: 'none',
-        itemId: 'id0501',
-      });
-      setTabSelected('a-z');
-      fetchRolodexPressed('alpha', true);
-    }
+    ga4Analytics('Relationships_AZ_Tab', {
+      contentType: 'none',
+      itemId: 'id0501',
+    });
+    setTabSelected('a-z');
+    fetchData('a-z');
   }
 
   function rankingPressed() {
-    if (!isLoading) {
-      ga4Analytics('Relationships_Ranking_Tab', {
-        contentType: 'none',
-        itemId: 'id0502',
-      });
-      setTabSelected('ranking');
-      fetchRolodexPressed('ranking', true);
-    }
+    ga4Analytics('Relationships_Ranking_Tab', {
+      contentType: 'none',
+      itemId: 'id0502',
+    });
+    setTabSelected('ranking');
+    fetchData('ranking');
   }
 
   function groupsPressed() {
-    if (!isLoading) {
-      ga4Analytics('Relationships_Groups_Tab', {
-        contentType: 'none',
-        itemId: 'id0503',
-      });
-      setTabSelected('groups');
-      fetchGroupsPressed(true);
-    }
+    ga4Analytics('Relationships_Groups_Tab', {
+      contentType: 'none',
+      itemId: 'id0503',
+    });
+    setTabSelected('groups');
+    fetchData('groups');
   }
 
   function filterPressed() {
@@ -206,15 +189,67 @@ export default function ManageRelationshipsScreen() {
     var saved = await storage.getItem('displayAZ');
     if (saved != null) {
       localDisplay = saved;
-      console.log('getCurrent1: ' + localDisplay);
+      //console.log('getCurrent1: ' + localDisplay);
     } else {
       localDisplay = 'First Last';
-      console.log('getCurrent2: ' + localDisplay);
+      //console.log('getCurrent2: ' + localDisplay);
     }
   }
 
-  async function fetchRolodexPressed(type: string, isMounted: boolean) {
-    setIsLoading(true);
+  const checkFileExists = async (filename: any) => {
+    //const fileUri = FileSystem.documentDirectory + filename;
+    try {
+      const fileInfo = await FileSystem.getInfoAsync(filename);
+      return fileInfo.exists;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  async function readFromFile(param: TabType) {
+    //the file is the source of truth for data, this should be only place where data is set
+    const fileUri = FileSystem.documentDirectory + 'cache_' + param;
+    //console.log('read ' + fileUri);
+    const fileExists = await checkFileExists(fileUri);
+    console.log('file exists ' + fileExists); // Output: true or false
+    if (fileExists) {
+      const readData = await FileSystem.readAsStringAsync(fileUri);
+      //console.log('readData: ' + readData);
+      const rawData = JSON.parse(readData);
+      if (param == 'a-z') {
+        setDataRolodex(rawData);
+        setIsLoadingForRolodex(false);
+      } else if (param == 'ranking') {
+        setRankingRolodex(rawData);
+        setIsLoadingForRanking(false);
+      } else if (param == 'groups') {
+        setDataGroups(rawData);
+        setIsLoadingForGroups(false);
+      }
+    }
+  }
+
+  async function saveDataToFile(param: TabType, data: RolodexDataProps[] | GroupsDataProps[]) {
+    const fileUri = FileSystem.documentDirectory + 'cache_' + param;
+    //console.log(fileUri);
+    var r = await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(data));
+    //console.log('write ' + r);
+  }
+
+  function fetchData(param: TabType) {
+    setIsLoadingForTab(param, true);
+    if (param != 'groups') {
+      fetchRolodex(param, true);
+    } else {
+      fetchGroups(true);
+    }
+    readFromFile(param);
+  }
+
+  async function fetchRolodex(param: TabType, isMounted: boolean) {
+    var type = param == 'a-z' ? 'alpha' : param == 'ranking' ? 'ranking' : '';
+
     getRolodexData(type)
       .then((res) => {
         if (!isMounted) {
@@ -223,28 +258,16 @@ export default function ManageRelationshipsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          setDataRolodex(res.data);
-          var ad: IData[] = [];
-          //  console.log('LOCAL: ' + localDisplay);
-          if (localDisplay == 'First Last') {
-            res.data.forEach((e) => {
-              ad.push({ value: e.firstName, key: e.id });
-              //   console.log('FIRSTNAME: ' + e.firstName);
-            });
-          } else {
-            res.data.forEach((e) => {
-              ad.push({ value: e.lastName, key: e.id });
-            });
-          }
-          setAlphaIndex(ad);
+          const filteredRolodex = res.data.filter((d) => typeof d.contactTypeID !== 'undefined');
+          param == 'a-z' ? setDataRolodex(filteredRolodex) : setRankingRolodex(filteredRolodex);
+          saveDataToFile(param, filteredRolodex);
         }
-        setIsLoading(false);
+        setIsLoadingForTab(param, false);
       })
       .catch((error) => console.error('failure ' + error));
   }
 
-  function fetchGroupsPressed(isMounted: boolean) {
-    setIsLoading(true);
+  function fetchGroups(isMounted: boolean) {
     getGroupsData()
       .then((res) => {
         if (!isMounted) {
@@ -253,20 +276,30 @@ export default function ManageRelationshipsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          setDataGroups(res.data);
-          var ad: IData[] = [];
-          res.data.forEach((e) => {
-            ad.push({ value: e.groupName, key: e.id });
-          });
-          setAlphaIndex(ad);
+          const filteredGroups = res.data.filter((d) => typeof d.groupName !== 'undefined');
+          setDataGroups(filteredGroups);
+          saveDataToFile('groups', filteredGroups);
+          setIsLoadingForTab('groups', false);
         }
-        setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
 
   function saveComplete() {
-    fetchRolodexPressed('alpha', true);
+    fetchData(tabSelected);
+  }
+
+  function shouldShowSpinner() {
+    if (tabSelected == 'a-z' && isLoadingForRolodex) return true;
+    else if (tabSelected == 'ranking' && isLoadingForRanking) return true;
+    else if (tabSelected == 'groups' && isLoadingForGroups) return true;
+    return false;
+  }
+
+  function setIsLoadingForTab(param: TabType, value: boolean) {
+    if (param == 'a-z') setIsLoadingForRolodex(value);
+    if (param == 'ranking') setIsLoadingForRanking(value);
+    if (param == 'groups') setIsLoadingForGroups(value);
   }
 
   return (
@@ -291,7 +324,7 @@ export default function ManageRelationshipsScreen() {
           </Text>
         </View>
 
-        {isLoading ? (
+        {shouldShowSpinner() ? (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="large" color="#AAA" />
           </View>
@@ -306,53 +339,56 @@ export default function ManageRelationshipsScreen() {
             )}
 
             <View style={styles.rolodex}>
-              <AlphabetList
-                data={alphaIndex}
-                indexLetterContainerStyle={{
-                  width: 20,
-                }}
-                letterListContainerStyle={{
-                  width: 40,
-                  alignItems: 'flex-start',
-                }}
-                indexLetterStyle={{
-                  color: '#1398f5',
-                  fontSize: 14,
-                  height: 60,
-                }}
-                indexContainerStyle={{
-                  width: 20,
-                }}
-                renderCustomItem={(item) =>
-                  tabSelected == 'a-z' ? (
-                    <AtoZRow
-                      relFromAbove={showFilterTitle()}
-                      data={dataRolodex.find((e) => e.id == item.key)!}
-                      onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
-                      lightOrDark={lightOrDark}
-                    />
-                  ) : tabSelected == 'ranking' ? (
-                    <RankingRow
-                      relFromAbove={showFilterTitle()}
-                      data={dataRolodex.find((e) => e.id == item.key)!}
-                      onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
-                      lightOrDark={lightOrDark}
-                    />
-                  ) : (
-                    <GroupsRow
-                      data={dataGroups.find((e) => e.id == item.key)!}
-                      onPress={() => handleRowPress(dataGroups.findIndex((e) => e.id == item.key))}
-                      lightOrDark={lightOrDark}
-                    />
-                  )
-                }
-                renderCustomSectionHeader={(section) => (
-                  <View style={styles.sectionHeaderContainer}>
-                    <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
-                  </View>
-                )}
-              />
+              {true && (
+                <AlphabetList
+                  data={getIndex()!}
+                  indexLetterContainerStyle={{
+                    width: 20,
+                  }}
+                  letterListContainerStyle={{
+                    width: 40,
+                    alignItems: 'flex-start',
+                  }}
+                  indexLetterStyle={{
+                    color: '#1398f5',
+                    fontSize: 14,
+                    height: 60,
+                  }}
+                  indexContainerStyle={{
+                    width: 20,
+                  }}
+                  renderCustomItem={(item) =>
+                    tabSelected == 'a-z' ? (
+                      <AtoZRow
+                        relFromAbove={showFilterTitle()}
+                        data={dataRolodex.find((e) => e.id == item.key)!}
+                        onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
+                        lightOrDark={lightOrDark}
+                      />
+                    ) : tabSelected == 'ranking' ? (
+                      <RankingRow
+                        relFromAbove={showFilterTitle()}
+                        data={rankingRolodex.find((e) => e.id == item.key)!}
+                        onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
+                        lightOrDark={lightOrDark}
+                      />
+                    ) : (
+                      <GroupsRow
+                        data={dataGroups.find((e) => e.id == item.key)!}
+                        onPress={() => handleRowPress(dataGroups.findIndex((e) => e.id == item.key))}
+                        lightOrDark={lightOrDark}
+                      />
+                    )
+                  }
+                  renderCustomSectionHeader={(section) => (
+                    <View style={styles.sectionHeaderContainer}>
+                      <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
+                    </View>
+                  )}
+                />
+              )}
             </View>
+
             <TouchableOpacity style={globalStyles.bottomContainer} onPress={() => handleAddRelPressed()}>
               <View style={globalStyles.addButton}>
                 <Text style={globalStyles.addText}>{'Add Relationship'}</Text>

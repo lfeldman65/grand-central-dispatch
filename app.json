@@ -14,14 +14,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.referralmaker.referralmaker",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "accessesContactNotes": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses your location to show contacts that are near you."

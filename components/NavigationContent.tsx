@@ -5,6 +5,8 @@ import Collapsible from 'react-native-collapsible';
 import { storage } from '../utils/storage';
 import { ga4Analytics } from '../utils/general';
 import { handleVideoNotifications } from '../components/videoNotifications';
+import { handlePACNotifications } from '../components/pacNotifications';
+import { handleToDoNotifications } from '../components/toDoNotifications';
 
 const rmLogo = require('../images/logoWide.png');
 
@@ -100,6 +102,8 @@ function CustomDrawerContent(props: any) {
     navigation.navigate(screenName);
     trackPressed(screenName);
     handleVideoNotifications();
+    handlePACNotifications();
+    handleToDoNotifications();
   };
 
   function pressed2(screenName: string) {

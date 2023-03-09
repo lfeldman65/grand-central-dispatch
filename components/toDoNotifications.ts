@@ -1,32 +1,34 @@
-import { storage } from '../utils/storage';
-import { scheduleNotifications, getNotificationStatus } from '../utils/general';
-import { getVideoNotificationInfo } from '../screens/Relationships/api';
+import { scheduleToDoNotifications, getNotificationStatus } from '../utils/general';
+import { getToDoData } from '../screens/ToDo/api';
+import { cancelScheduledNotificationAsync } from 'expo-notifications';
 
 export async function handleToDoNotifications() {
-  var hasBombBombString = await storage.getItem('hasBombBomb');
-  if (hasBombBombString == 'true' && (await hasVideoNotifications()) && (await enoughTimePassedNotif(60 * 5))) {
-    fetchVideoInfo();
+  await cancelScheduledNotificationAsync('todo-notification');
+  if (await hasToDoNotifications()) {
+    fetchToDoInfo();
   }
 }
 
-async function fetchVideoInfo() {
-  console.log('yep');
-  getVideoNotificationInfo()
+async function fetchToDoInfo() {
+  console.log('ToDoo fetch');
+  getToDoData('0')
     .then((res) => {
       if (res.status == 'error') {
         console.error(res.error);
       } else {
-        console.log(res.data);
-        if (res.data.hasNewViews) {
-          scheduleNotifications('video', 'Video Message', res.data.summary, 1);
-        }
+        console.log(res.data.length.toString());
+        scheduleToDoNotifications(1, res.data.length.toString()); // Monday
+        scheduleToDoNotifications(2, res.data.length.toString());
+        scheduleToDoNotifications(3, res.data.length.toString());
+        scheduleToDoNotifications(4, res.data.length.toString());
+        scheduleToDoNotifications(5, res.data.length.toString());
       }
     })
     .catch((error) => console.error('failure ' + error));
 }
 
-async function hasVideoNotifications() {
-  var notifOn = await getNotificationStatus('notifVideos');
+async function hasToDoNotifications() {
+  var notifOn = await getNotificationStatus('notifToDo');
   if (notifOn == null) {
     return false;
   }
@@ -34,20 +36,4 @@ async function hasVideoNotifications() {
     return false;
   }
   return true;
-}
-
-async function enoughTimePassedNotif(secondsBetween: number) {
-  // Must have at least y seconds between successive notifications
-  var now = Date.now();
-  const lastNotif = await storage.getItem('lastVidNotification');
-  if (lastNotif == null) {
-    storage.setItem('lastVidNotification', now.toString());
-    return true;
-  }
-  const nextNotif = parseFloat(lastNotif) + secondsBetween * 1000;
-  if (now > nextNotif) {
-    storage.setItem('lastVidNotification', now.toString());
-    return true;
-  }
-  return false;
 }

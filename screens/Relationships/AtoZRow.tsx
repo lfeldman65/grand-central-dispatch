@@ -63,7 +63,7 @@ export default function AtoZRow(props: AtoZRowProps) {
 
   return (
     <TouchableOpacity onPress={props.onPress}>
-      {props.data.contactTypeID != null && props.data.contactTypeID == relFromAbove && (
+      {props.data.contactTypeID == relFromAbove && (
         <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
           <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>

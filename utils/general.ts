@@ -74,17 +74,65 @@ export function scheduleNotifications(id: string, title: string, body: string, s
   Notifications.scheduleNotificationAsync(schedulingOptions);
 }
 
+export function schedulePACNotifications(day: number, person: string) {
+  console.log('SCHEDULE pac:' + day.toString());
+  const schedulingOptions = {
+    content: {
+      title: "Top O' the Morning to You!",
+      body: 'Would you like to call ' + person + '?',
+      sound: true,
+      data: {
+        id: 'pac-notification',
+      },
+      priority: Notifications.AndroidNotificationPriority.HIGH,
+      color: 'blue',
+    },
+    trigger: {
+      hour: 9,
+      minute: 0,
+      second: 0,
+      weekday: day,
+      repeat: 'week',
+    },
+  };
+  Notifications.scheduleNotificationAsync(schedulingOptions);
+}
+
+export function scheduleToDoNotifications(day: number, count: string) {
+  console.log('SCHEDULE todo:' + day.toString());
+  var message = " To-Do's Today!";
+  if (count == '1') {
+    message = ' To-Do Today!';
+  }
+  const schedulingOptions = {
+    content: {
+      title: "Top O' the Morning to You!",
+      body: 'You have ' + count + message,
+      sound: true,
+      data: {
+        id: 'todo-notification',
+      },
+      priority: Notifications.AndroidNotificationPriority.HIGH,
+      color: 'blue',
+    },
+    trigger: {
+      hour: 9,
+      minute: 15,
+      second: 0,
+      weekday: day,
+      repeat: 'week',
+    },
+  };
+  Notifications.scheduleNotificationAsync(schedulingOptions);
+}
 export async function getNotificationStatus(key: string) {
   var notifStatus = await storage.getItem(key);
   if (notifStatus == null || notifStatus == undefined) {
-    console.log('RETURN Notif TRUE');
     return true;
   }
   if (notifStatus == 'true') {
-    console.log('RETURN Notif 2 TRUE');
     return true;
   }
-  console.log('RETURN Notif FALSE');
   return false;
 }
 

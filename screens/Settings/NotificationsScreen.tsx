@@ -1,22 +1,8 @@
-import { Fragment, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Modal,
-  ScrollView,
-  ActivityIndicator,
-  Button,
-} from 'react-native';
-import MenuIcon from '../../components/MenuIcon';
+import { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import React from 'react';
-import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler';
 import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -59,6 +45,8 @@ export default function NotificationsScreen(props: any) {
     var state = 'false';
     if (notifCall) {
       state = 'true';
+    } else {
+      Notifications.cancelScheduledNotificationAsync('pac-notification');
     }
     storage.setItem('notifCall', state);
     console.log('save: ' + state);
@@ -66,18 +54,24 @@ export default function NotificationsScreen(props: any) {
     state = 'false';
     if (notifToDo) {
       state = 'true';
+    } else {
+      Notifications.cancelScheduledNotificationAsync('todo-notification');
     }
     storage.setItem('notifToDo', state);
 
     state = 'false';
     if (notifWins) {
       state = 'true';
+    } else {
+      Notifications.cancelScheduledNotificationAsync('win-notification');
     }
     storage.setItem('notifWins', state);
 
     state = 'false';
     if (notifPopBys) {
       state = 'true';
+    } else {
+      Notifications.cancelScheduledNotificationAsync('pop-notification');
     }
     storage.setItem('notifPopBys', state);
 
@@ -92,6 +86,8 @@ export default function NotificationsScreen(props: any) {
     state = 'false';
     if (notifVideos) {
       state = 'true';
+    } else {
+      Notifications.cancelScheduledNotificationAsync('video-notification');
     }
     storage.setItem('notifVideos', state);
 
@@ -143,7 +139,6 @@ export default function NotificationsScreen(props: any) {
   }
 
   function selectAllPressed() {
-    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
     console.log('select all pressed');
     setNotifCall(true);
     setNotifToDo(true);
@@ -154,7 +149,6 @@ export default function NotificationsScreen(props: any) {
   }
 
   function deselectAllPressed() {
-    //  analytics.event(new Event('Manage Relationships', 'Tab Button', 'Near Me', 0));
     setNotifCall(false);
     setNotifToDo(false);
     setNotifWins(false);
