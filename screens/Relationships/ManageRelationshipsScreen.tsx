@@ -55,16 +55,24 @@ export default function ManageRelationshipsScreen() {
         groupName: dataGroups[index].groupName,
         lightOrDark: lightOrDark,
       });
-    } else {
+    } else if (tabSelected == 'a-z') {
       navigation.navigate('RelDetails', {
         contactId: dataRolodex[index].id,
         firstName: dataRolodex[index].firstName,
         lastName: dataRolodex[index].lastName,
         lightOrDark: lightOrDark,
       });
+    } else if (tabSelected == 'ranking') {
+      navigation.navigate('RelDetails', {
+        contactId: rankingRolodex[index].id,
+        firstName: rankingRolodex[index].firstName,
+        lastName: rankingRolodex[index].lastName,
+        lightOrDark: lightOrDark,
+      });
     }
   };
 
+  //get indexes for each tab
   function getIndex() {
     if (tabSelected == 'a-z')
       return dataRolodex.map((e) => {
@@ -73,10 +81,10 @@ export default function ManageRelationshipsScreen() {
       });
     if (tabSelected == 'ranking')
       return rankingRolodex.map((e) => {
-        if (localDisplay == 'First Last') return { value: e.firstName, key: e.id };
-        else return { value: e.lastName, key: e.id };
+        return { value: e.ranking, key: e.id };
       });
     else if (tabSelected == 'groups')
+      //console.log('groups ' + dataGroups.length)
       return dataGroups.map((e) => {
         return { value: e.groupName, key: e.id };
       });
@@ -87,7 +95,7 @@ export default function ManageRelationshipsScreen() {
   useEffect(() => {
     getCurrentDisplayAZ(true);
     showFilterTitle();
-    fetchData(tabSelected);
+    fetchData(tabSelected, true);
   }, [isFilterRel]);
 
   useEffect(() => {
@@ -144,7 +152,7 @@ export default function ManageRelationshipsScreen() {
       itemId: 'id0501',
     });
     setTabSelected('a-z');
-    fetchData('a-z');
+    fetchData('a-z', false);
   }
 
   function rankingPressed() {
@@ -153,7 +161,7 @@ export default function ManageRelationshipsScreen() {
       itemId: 'id0502',
     });
     setTabSelected('ranking');
-    fetchData('ranking');
+    fetchData('ranking', false);
   }
 
   function groupsPressed() {
@@ -162,7 +170,7 @@ export default function ManageRelationshipsScreen() {
       itemId: 'id0503',
     });
     setTabSelected('groups');
-    fetchData('groups');
+    fetchData('groups', false);
   }
 
   function filterPressed() {
@@ -237,14 +245,29 @@ export default function ManageRelationshipsScreen() {
     //console.log('write ' + r);
   }
 
-  function fetchData(param: TabType) {
+  function isDataEmpty(param: TabType) {
+    if (param == 'a-z' && dataRolodex.length == 0) return true;
+    else if (param == 'ranking' && rankingRolodex.length == 0) return true;
+    else if (param == 'groups' && dataGroups.length == 0) return true;
+
+    return false;
+  }
+
+  function fetchData(param: TabType, makeAPICall: boolean) {
+    //console.log('param:' + param);
+
     setIsLoadingForTab(param, true);
-    if (param != 'groups') {
-      fetchRolodex(param, true);
-    } else {
-      fetchGroups(true);
+
+    if (makeAPICall || isDataEmpty(param)) {
+      if (param != 'groups') {
+        fetchRolodex(param, true);
+      } else {
+        fetchGroups(true);
+      }
     }
-    readFromFile(param);
+
+    //we don't have to always read from file
+    if (isDataEmpty(param)) readFromFile(param);
   }
 
   async function fetchRolodex(param: TabType, isMounted: boolean) {
@@ -264,7 +287,10 @@ export default function ManageRelationshipsScreen() {
         }
         setIsLoadingForTab(param, false);
       })
-      .catch((error) => console.error('failure ' + error));
+      .catch((error) => {
+        setIsLoadingForTab(param, false);
+        console.error('failure ' + error);
+      });
   }
 
   function fetchGroups(isMounted: boolean) {
@@ -277,16 +303,21 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           const filteredGroups = res.data.filter((d) => typeof d.groupName !== 'undefined');
+          //console.log(filteredGroups);
           setDataGroups(filteredGroups);
           saveDataToFile('groups', filteredGroups);
           setIsLoadingForTab('groups', false);
         }
       })
-      .catch((error) => console.error('failure ' + error));
+      .catch((error) => {
+        setIsLoadingForTab('groups', false);
+        console.error('failure ' + error);
+      });
   }
 
   function saveComplete() {
-    fetchData(tabSelected);
+    //we can optimize this in the future, no need to fetch everything where only 1 record has changed
+    fetchData(tabSelected, true);
   }
 
   function shouldShowSpinner() {
@@ -297,9 +328,9 @@ export default function ManageRelationshipsScreen() {
   }
 
   function setIsLoadingForTab(param: TabType, value: boolean) {
-    if (param == 'a-z') setIsLoadingForRolodex(value);
-    if (param == 'ranking') setIsLoadingForRanking(value);
-    if (param == 'groups') setIsLoadingForGroups(value);
+    if (param == 'a-z') setIsLoadingForRolodex(value && dataRolodex.length == 0);
+    if (param == 'ranking') setIsLoadingForRanking(value && rankingRolodex.length == 0);
+    if (param == 'groups') setIsLoadingForGroups(value && dataGroups.length == 0);
   }
 
   return (
@@ -342,6 +373,9 @@ export default function ManageRelationshipsScreen() {
               {true && (
                 <AlphabetList
                   data={getIndex()!}
+                  extraData={
+                    tabSelected == 'a-z' ? dataRolodex : tabSelected == 'ranking' ? rankingRolodex : dataGroups
+                  }
                   indexLetterContainerStyle={{
                     width: 20,
                   }}
@@ -358,26 +392,28 @@ export default function ManageRelationshipsScreen() {
                     width: 20,
                   }}
                   renderCustomItem={(item) =>
-                    tabSelected == 'a-z' ? (
+                    tabSelected == 'a-z' && dataRolodex.some((e) => e.id == item.key) ? (
                       <AtoZRow
                         relFromAbove={showFilterTitle()}
                         data={dataRolodex.find((e) => e.id == item.key)!}
                         onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
                         lightOrDark={lightOrDark}
                       />
-                    ) : tabSelected == 'ranking' ? (
+                    ) : tabSelected == 'ranking' && rankingRolodex.some((e) => e.id == item.key) ? (
                       <RankingRow
                         relFromAbove={showFilterTitle()}
                         data={rankingRolodex.find((e) => e.id == item.key)!}
-                        onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
+                        onPress={() => handleRowPress(rankingRolodex.findIndex((e) => e.id == item.key))}
                         lightOrDark={lightOrDark}
                       />
-                    ) : (
+                    ) : tabSelected == 'groups' && dataGroups.some((e) => e.id == item.key) ? (
                       <GroupsRow
                         data={dataGroups.find((e) => e.id == item.key)!}
                         onPress={() => handleRowPress(dataGroups.findIndex((e) => e.id == item.key))}
                         lightOrDark={lightOrDark}
                       />
+                    ) : (
+                      <View></View>
                     )
                   }
                   renderCustomSectionHeader={(section) => (
