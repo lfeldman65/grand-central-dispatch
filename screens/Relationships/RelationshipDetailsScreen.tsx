@@ -759,7 +759,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function fetchRelDetails(isMounted: boolean) {
-    console.log('fetch rel details');
     setIsLoading(true);
     getRelDetails(contactId)
       .then((res) => {

@@ -69,8 +69,8 @@ export default function GroupMembersScreen(props: any) {
   }
 
   useEffect(() => {
-    console.log('group:' + groupID);
-    console.log('set member:' + member?.id);
+    //  console.log('group:' + groupID);
+    //  console.log('set member:' + member?.id);
     if (member != null) {
       addRelationshipToGroup(member?.id!, groupID);
     }

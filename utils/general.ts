@@ -75,7 +75,6 @@ export function scheduleNotifications(id: string, title: string, body: string, s
 }
 
 export function schedulePACNotifications(day: number, person: string) {
-  console.log('SCHEDULE pac:' + day.toString());
   const schedulingOptions = {
     content: {
       title: "Top O' the Morning to You!",
@@ -99,7 +98,6 @@ export function schedulePACNotifications(day: number, person: string) {
 }
 
 export function scheduleToDoNotifications(day: number, count: string) {
-  console.log('SCHEDULE todo:' + day.toString());
   var message = " To-Do's Today!";
   if (count == '1') {
     message = ' To-Do Today!';
@@ -142,7 +140,7 @@ export function determineDeviceType() {
 }
 
 export function ga4Analytics(mainEvent: string, other: any) {
-  console.log('MAINEVENT:' + mainEvent);
+  //  console.log('MAINEVENT:' + mainEvent);
   Analytics.logEvent(mainEvent + '_' + determineDeviceType(), other);
 }
 
@@ -205,5 +203,5 @@ export async function handleMapPressed2(directions: string, cb?: () => void) {
 }
 
 export function shouldRunTests() {
-  return false;
+  return true;
 }

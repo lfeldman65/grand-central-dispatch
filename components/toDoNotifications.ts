@@ -10,13 +10,11 @@ export async function handleToDoNotifications() {
 }
 
 async function fetchToDoInfo() {
-  console.log('ToDoo fetch');
   getToDoData('0')
     .then((res) => {
       if (res.status == 'error') {
         console.error(res.error);
       } else {
-        console.log(res.data.length.toString());
         scheduleToDoNotifications(1, res.data.length.toString()); // Monday
         scheduleToDoNotifications(2, res.data.length.toString());
         scheduleToDoNotifications(3, res.data.length.toString());

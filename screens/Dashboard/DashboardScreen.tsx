@@ -8,13 +8,18 @@ import { storage } from '../../utils/storage';
 import * as Notifications from 'expo-notifications';
 import { PermissionStatus } from 'expo-modules-core';
 import { Notification } from 'expo-notifications';
-import { ga4Analytics, getNotificationStatus } from '../../utils/general';
+import { ga4Analytics, shouldRunTests } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import { getNotificationStatus } from '../../utils/general';
+import { goalTests } from '../Goals/testGoals';
+import { pacTestComplete } from '../PAC/testPACComplete';
+import { pacTestPostpone } from '../PAC/testPACPostpone';
+import { testAddRelationship } from '../Relationships/testAddRelationship';
+import { testAddRelationshipToGroup } from '../Relationships/testAddRelToGroup';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
-
 const callImage = require('../Dashboard/images/quickCalls.png');
 const noteImage = require('../Dashboard/images/quickNotes.png');
 const popImage = require('../Dashboard/images/quickPop.png');
@@ -26,7 +31,6 @@ const todoImage = require('../Dashboard/images/quickToDo.png');
 const calendarImage = require('../Dashboard/images/quickCalendar.png');
 
 var watchedTut = 'false';
-var importNotifBool = false;
 
 interface DashboardNavigationProps {
   parentScreen?: string;
@@ -67,12 +71,22 @@ export default function DashboardScreen() {
     Sentry.Native.captureException(new Error('Oops!'));
   }
 
+  async function hasImportNotifications() {
+    var notif = await getNotificationStatus('notifImport');
+    if (notif == null) {
+      return false;
+    }
+    if (!notif) {
+      return false;
+    }
+    return true;
+  }
+
   const requestNotificationPermissions = async () => {
     // runs in background or killed
     const { status } = await Notifications.requestPermissionsAsync();
     setNotificationPermissions(status);
-    console.log('Import Notif:' + importNotifBool);
-    if (importNotifBool) {
+    if (await hasImportNotifications()) {
       const importNotif = await Notifications.scheduleNotificationAsync({
         identifier: 'import-notification',
         content: {
@@ -93,7 +107,7 @@ export default function DashboardScreen() {
           repeats: true,
         },
       });
-      console.log('notif id:' + importNotif);
+      //  console.log('notif id:' + importNotif);
       return status;
     }
   };
@@ -138,23 +152,19 @@ export default function DashboardScreen() {
       } else if (id == 'popby-notification') {
         navigation.navigate('PopBysScreen');
       } else if (id == 'pac-notification') {
-        console.log('pac navigation');
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
       } else if (id == 'todo-notification') {
-        console.log('todo navigation');
         navigation.navigate('To-Do');
       } else {
         console.log('other notif');
       }
     });
     if (watchedTut == 'true') {
-      console.log('HEREA');
       getLandingPage();
     } else {
-      console.log('HEREB');
       showTutorial();
     }
     return () => subscription.remove();
@@ -162,6 +172,10 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     hasWatchedTutorial();
+    if (shouldRunTests()) {
+      runTests();
+      return;
+    }
   }, [isFocused]);
 
   useEffect(() => {
@@ -170,8 +184,16 @@ export default function DashboardScreen() {
     return () => listener.remove();
   }, [notificationPermissions]);
 
+  function runTests() {
+    // goalTests();
+    // pacTestComplete(); // only one pac test at a time
+    // pacTestPostpone();
+    // testAddRelationship();
+    testAddRelationshipToGroup();
+    return;
+  }
+
   async function hasWatchedTutorial() {
-    console.log('WATCHEDTUT');
     const localWatched = await storage.getItem('watchedTutorial');
     if (localWatched == null) {
       watchedTut = 'false';
@@ -179,11 +201,10 @@ export default function DashboardScreen() {
       watchedTut = localWatched;
     }
     storage.setItem('watchedTutorial', 'true');
-    console.log(watchedTut);
   }
 
   function navigateToLandingPage(landingPage?: string) {
-    console.log('landing page:' + landingPage);
+    // console.log('landing page:' + landingPage);
     if (landingPage == 'Priority Action Center') {
       handleNavigation({
         parentScreen: 'PAC',
@@ -275,7 +296,7 @@ export default function DashboardScreen() {
   async function getLandingPage() {
     var savedLanding = await storage.getItem('landingPage');
     if (savedLanding != null) {
-      console.log('getCurrent: ' + savedLanding);
+      //  console.log('getCurrent: ' + savedLanding);
       if (savedLanding != 'Dashboard') {
         navigateToLandingPage(savedLanding);
       }
@@ -292,7 +313,7 @@ export default function DashboardScreen() {
 
   const handleNavigation = (props: DashboardNavigationProps) => {
     // SentryTest();
-    console.log('parent screen1: ' + props.parentScreen);
+    //   console.log('parent screen1: ' + props.parentScreen);
     var newLabel = props.label;
     if (props.label == 'To-Do') {
       newLabel = 'To_Do';
@@ -301,7 +322,7 @@ export default function DashboardScreen() {
       newLabel = 'Pop_Bys';
     }
     const mainEvent = 'Dashboard_' + newLabel;
-    console.log('MAINEVENT: ' + mainEvent);
+    //   console.log('MAINEVENT: ' + mainEvent);
     ga4Analytics(mainEvent, {
       contentType: 'none',
       itemId: props.itemID,
@@ -313,7 +334,7 @@ export default function DashboardScreen() {
         animationEnabled: false,
       });
     } else {
-      console.log('propsscreen: ' + props.screen);
+      // console.log('propsscreen: ' + props.screen);
       props.params
         ? navigation.navigate(props.screen, { ...props.params, animationEnabled: false })
         : navigation.navigate(props.screen, { animationEnabled: false });

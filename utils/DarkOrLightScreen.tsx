@@ -13,20 +13,13 @@ export default function DarkOrLightScreen(props: any) {
   const isFocused = useIsFocused();
 
   const onThemeChange = ({ colorScheme }) => {
-    // console.log('onThemeChange', colorScheme);
-    //  console.log('lightOrDarkLocal ' + lightOrDarkLocal);
-
     if (lightOrDarkLocal == 'automatic') {
       setLightOrDark(colorScheme);
-      console.log('color scheme: ' + colorScheme);
     } else {
       setLightOrDark(lightOrDarkLocal);
     }
-    //  console.log('LIGHTORDARKLOCAL1: ' + typeof lightOrDarkLocal);
 
     if (typeof setLightOrDarkLabel !== 'undefined') {
-      console.log('LIGHTORDARKLOCAL1: ' + lightOrDarkLocal);
-
       setLightOrDarkLabel(lightOrDarkLocal);
     }
   };

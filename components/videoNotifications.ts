@@ -12,13 +12,11 @@ export async function handleVideoNotifications() {
 }
 
 async function fetchVideoInfo() {
-  console.log('yep');
   getVideoNotificationInfo()
     .then((res) => {
       if (res.status == 'error') {
         console.error(res.error);
       } else {
-        console.log(res.data);
         if (res.data.hasNewViews) {
           scheduleNotifications('video-notification', 'Video Message', res.data.summary, 1);
         }

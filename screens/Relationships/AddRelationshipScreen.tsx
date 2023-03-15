@@ -56,7 +56,7 @@ export default function AddRelationshipScreen(props: any) {
           console.log(res);
           console.error(res.error);
         } else {
-          console.log(res);
+          //  console.log(res);
           setModalVisible(false);
           afterSave();
         }

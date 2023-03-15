@@ -89,7 +89,6 @@ function CustomDrawerContent(props: any) {
   }
 
   const trackPressed = (screenName: string) => {
-    console.log('SCREEN: ' + screenName);
     ga4Analytics(getPrettyEvent(screenName), {
       contentType: 'none',
       itemId: getItemID(screenName),

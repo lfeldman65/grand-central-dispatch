@@ -240,12 +240,9 @@ export default function GoalsScreen() {
           console.error(res.error);
         } else {
           setGoalList(res.data);
-          console.log('CALLS: ' + res.data[0].goal.title);
-          console.log('CALLS: ' + res.data[0].achievedToday);
           if (afterTrack) {
             console.log('localGoalID: ' + localGoalID);
             notifyIfWin(localGoalID, res.data);
-            //  setTimeout(notifyIfWin, 5000, localGoalID);
           }
         }
         setIsLoading(false);
@@ -318,8 +315,8 @@ export default function GoalsScreen() {
     onFailure: any
   ) {
     localGoalID = goalId;
-    console.log('CONTACTID: ' + contactId);
-    console.log('GOALID: ' + goalId);
+    // console.log('CONTACTID: ' + contactId);
+    // console.log('GOALID: ' + goalId);
 
     trackAction(
       contactId,
@@ -373,13 +370,11 @@ export default function GoalsScreen() {
         </View>
       ),
     });
-    console.log('Goals: ' + lightOrDark);
   }, [navigation, localGoalID, goalList]);
 
   useEffect(() => {
     let isMounted = true;
     fetchGoals(isMounted, false);
-    console.log('USEEFFECT2');
     return () => {
       isMounted = false;
     };

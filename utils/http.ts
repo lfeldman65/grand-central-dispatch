@@ -30,11 +30,11 @@ export async function httpBase(endpoint: string, { body, ...customConfig }: Http
   };
   if (body) {
     config.body = JSON.stringify(body);
-    console.log('CONFIGBODY: ' + config.body);
+    // console.log('CONFIGBODY: ' + config.body);
   }
   return fetch(`${apiBaseUrl}/${endpoint}`, config).then(async (response) => {
     if (response.ok) {
-      console.log('response is ok');
+      //   console.log('response is ok');
       const contentType = response.headers.get('content-type');
       if (contentType && contentType.indexOf('application/json') !== -1) {
         return await response.json();

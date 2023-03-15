@@ -10,13 +10,11 @@ export async function handlePACNotifications() {
 }
 
 async function fetchPACInfo() {
-  console.log('pac fetch');
   getPACData('calls')
     .then((res) => {
       if (res.status == 'error') {
         console.error(res.error);
       } else {
-        console.log(res.data[0].contactName);
         schedulePACNotifications(2, res.data[0].contactName); // Monday
         schedulePACNotifications(3, res.data[0].contactName);
         schedulePACNotifications(4, res.data[0].contactName);
