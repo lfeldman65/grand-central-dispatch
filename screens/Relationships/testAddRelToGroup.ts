@@ -31,12 +31,12 @@ function fetchGroupMembers(guid: string, groupID: string) {
           if (item.id == guid) {
             match = true;
           }
-          if (match) {
-            console.log('Add Rel to Group test passed');
-          } else {
-            console.log('Add Rel to Group test fail');
-          }
         });
+        if (match) {
+          console.log('Add Rel to Group test passed');
+        } else {
+          console.log('Add Rel to Group test fail');
+        }
       }
     })
     .catch((error) => console.error('failure ' + error));

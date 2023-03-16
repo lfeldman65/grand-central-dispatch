@@ -17,6 +17,7 @@ import { pacTestComplete } from '../PAC/testPACComplete';
 import { pacTestPostpone } from '../PAC/testPACPostpone';
 import { testAddRelationship } from '../Relationships/testAddRelationship';
 import { testAddRelationshipToGroup } from '../Relationships/testAddRelToGroup';
+import { testRemoveRelationshipFromGroup } from '../Relationships/testRemoveRelFromGroup';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
@@ -189,7 +190,8 @@ export default function DashboardScreen() {
     // pacTestComplete(); // only one pac test at a time
     // pacTestPostpone();
     // testAddRelationship();
-    testAddRelationshipToGroup();
+    //  testAddRelationshipToGroup();
+    testRemoveRelationshipFromGroup();
     return;
   }
 
