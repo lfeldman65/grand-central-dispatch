@@ -18,6 +18,11 @@ import { pacTestPostpone } from '../PAC/testPACPostpone';
 import { testAddRelationship } from '../Relationships/testAddRelationship';
 import { testAddRelationshipToGroup } from '../Relationships/testAddRelToGroup';
 import { testRemoveRelationshipFromGroup } from '../Relationships/testRemoveRelFromGroup';
+import { testAddTransaction } from '../Transactions/testAddTransaction';
+import { testAddToDo } from '../ToDo/testAddToDo';
+import { testDeleteToDo } from '../ToDo/testDeleteToDo';
+import { testAddAppointment } from '../Calendar/testAddNewAppointment';
+import { testDeleteAppointment } from '../Calendar/testDeleteAppointment';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
@@ -135,10 +140,12 @@ export default function DashboardScreen() {
   });
 
   useEffect(() => {
+    console.log('useEffect');
     requestNotificationPermissions();
+    console.log('response from tap');
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log('response from tap');
-      const id = response.notification.request.content.data.id;
+      var id = response.notification.request.content.data.id;
+      console.log(typeof id);
       console.log('id:' + id);
       if (id == 'import-notification') {
         navigation.navigate('SettingsScreenNav', {
@@ -152,12 +159,45 @@ export default function DashboardScreen() {
         });
       } else if (id == 'popby-notification') {
         navigation.navigate('PopBysScreen');
-      } else if (id == 'pac-notification') {
+      } else if (id == 'pac-notification-1') {
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
-      } else if (id == 'todo-notification') {
+      } else if (id == 'pac-notification-2') {
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'calls' },
+        });
+      } else if (id == 'pac-notification-3') {
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'calls' },
+        });
+      } else if (id == 'pac-notification-4') {
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'calls' },
+        });
+      } else if (id == 'pac-notification-5') {
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'calls' },
+        });
+      } else if (id == 'pac-notification-6') {
+        navigation.navigate('PAC', {
+          screen: 'PAC1',
+          params: { defaultTab: 'calls' },
+        });
+      } else if (id == 'todo-notification-2') {
+        navigation.navigate('To-Do');
+      } else if (id == 'todo-notification-3') {
+        navigation.navigate('To-Do');
+      } else if (id == 'todo-notification-4') {
+        navigation.navigate('To-Do');
+      } else if (id == 'todo-notification-5') {
+        navigation.navigate('To-Do');
+      } else if (id == 'todo-notification-6') {
         navigation.navigate('To-Do');
       } else {
         console.log('other notif');
@@ -190,8 +230,13 @@ export default function DashboardScreen() {
     // pacTestComplete(); // only one pac test at a time
     // pacTestPostpone();
     // testAddRelationship();
-    //  testAddRelationshipToGroup();
-    testRemoveRelationshipFromGroup();
+    // testAddRelationshipToGroup();
+    // testRemoveRelationshipFromGroup();
+    // testAddTransaction();
+    // testAddToDo();
+    // testDeleteToDo();
+    // testAddAppointment();
+    testDeleteAppointment();
     return;
   }
 

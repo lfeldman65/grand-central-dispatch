@@ -38,7 +38,7 @@ export interface RecurrenceProps {
 }
 
 export interface ReminderProps {
-  daysBefore: number;
+  timeBefore: number;
   type: string;
 }
 
@@ -92,7 +92,7 @@ export interface RecurrenceProps {
 }
 
 export interface ReminderProps {
-  daysBefore: number;
+  timeBefore: number;
   type: string;
 }
 

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseGoal from '../Goals/ChooseGoalScreen';
@@ -12,6 +11,9 @@ import { ga4Analytics } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const closeButton = require('../../images/button_close_white.png');
+const refMenuChoice1 = 'Client gave me referral';
+const refMenuChoice2 = 'Client was referred to me';
+const refMenuChoice3 = 'I gave client a referral';
 
 export default function TrackActivityScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName, goalID, goalName, subjectP, lightOrDark } = props;
@@ -32,9 +34,9 @@ export default function TrackActivityScreen(props: any) {
   const isFocused = useIsFocused();
 
   const filters = {
-    'Relationship gave me referral Referral': 'Relationship gave me referral Referral',
-    'Relationship was referred to me by Referrer': 'Relationship was referred to me by Referrer',
-    'I gave Relationship referral Referral': 'I gave Relationship referral Referral',
+    'Client gave me referral': 'Client gave me referral',
+    'Client was referred to me': 'Client was referred to me',
+    'I gave client a referral': 'I gave client a referral',
   };
 
   const Sheets = {
@@ -53,25 +55,33 @@ export default function TrackActivityScreen(props: any) {
   }
 
   function convertToText(refType: string) {
+    console.log('rel: ' + relationship?.firstName);
+    console.log('ref: ' + referral?.firstName);
+    var newRel = relationship?.firstName ?? 'Client';
+    var newRef = referral?.firstName ?? '';
+
     if (refType == '1') {
-      return relationship?.firstName + ' referred ' + referral?.firstName;
+      return newRel + ' gave me a referral ';
     }
     if (refType == '2') {
-      return 'Relationship was referred to me by Referrer';
+      return newRel + ' was referred to me';
     }
     if (refType == '3') {
-      return 'I gave Relationship referral Referral';
+      return 'I gave ' + relationship?.firstName + ' a referral';
     }
   }
 
   function convertToString(filterItem: string) {
-    if (filterItem == 'Relationship gave me referral Referral') {
+    console.log(filterItem);
+    if (filterItem == refMenuChoice1) {
       return '1';
     }
-    if (filterItem == 'Relationship was referred to me by Referrer') {
+    if (filterItem == refMenuChoice2) {
       return '2';
     }
-    if (filterItem == 'I gave Relationship referral Referral') {
+    if (filterItem == refMenuChoice3) {
+      console.log('3333');
+
       return '3';
     }
     return '4';

@@ -1,4 +1,3 @@
-import { timestampInSeconds } from '@sentry/utils';
 import { http } from '../../utils/http';
 import {
   ToDoDataResponse,
@@ -52,7 +51,6 @@ export function addNewToDo(
   type: string,
   attendees: AttendeesProps[]
 ): Promise<AddToDoDataResponse> {
-  console.log('add new to do: ' + title);
   return http.post('todos', {
     body: {
       // no bracket since not an array

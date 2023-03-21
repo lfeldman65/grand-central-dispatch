@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Linking, Alert } from 'react-native';
-import { ga4Analytics } from '../../utils/general';
+import { ga4Analytics, shouldRunTests } from '../../utils/general';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { storage } from '../../utils/storage';
@@ -115,8 +115,13 @@ export default function LoginScreen() {
   }
 
   useEffect(() => {
-    populateCredentialsIfRemembered();
     LogBox.ignoreAllLogs(true);
+    if (shouldRunTests()) {
+      setUserName('larryf@buffiniandcompany.com');
+      setPassword('success');
+    } else {
+      populateCredentialsIfRemembered();
+    }
   }, [isFocused]);
 
   async function handleLoginPressess() {

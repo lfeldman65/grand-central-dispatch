@@ -60,7 +60,7 @@ export interface RecurrenceProps {
 }
 
 export interface ReminderProps {
-  daysBefore: number;
+  timeBefore: number;
   type: string;
 }
 
@@ -98,6 +98,7 @@ export interface ToDoDeleteProps {
 // Add New To Do in Postman
 
 export interface AddToDoDataProps {
+  id: string;
   title: string;
   dueDate: string;
   priority: string;

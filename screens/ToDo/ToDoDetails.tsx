@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Modal, Button, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Modal, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getToDoDetails, markCompleteToDo, deleteToDo } from './api';

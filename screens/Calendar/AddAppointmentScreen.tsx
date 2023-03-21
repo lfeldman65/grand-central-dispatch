@@ -679,7 +679,7 @@ export default function AddAppointmentScreen(props: any) {
                     onPress={() => {
                       SheetManager.hide(Sheets.recurrenceSheet, null);
                       console.log('filter: ' + value);
-                      setRecurrence(value);
+                      setRecurrence(value); // frequencyType
                       // fetchData();
                     }}
                     style={globalStyles.listItemCell}

@@ -75,13 +75,14 @@ export function scheduleNotifications(id: string, title: string, body: string, s
 }
 
 export function schedulePACNotifications(day: number, person: string) {
+  console.log('schedule pac:' + person);
   const schedulingOptions = {
     content: {
-      title: "Top O' the Morning to You!",
+      title: "Top O' the Morning to You PAC!",
       body: 'Would you like to call ' + person + '?',
       sound: true,
       data: {
-        id: 'pac-notification',
+        id: 'pac-notification-' + day.toString(),
       },
       priority: Notifications.AndroidNotificationPriority.HIGH,
       color: 'blue',
@@ -98,17 +99,22 @@ export function schedulePACNotifications(day: number, person: string) {
 }
 
 export function scheduleToDoNotifications(day: number, count: string) {
-  var message = " To-Do's Today!";
+  var message = '';
+  if (count == '0') {
+    message = "You're all caught up!";
+  }
   if (count == '1') {
-    message = ' To-Do Today!';
+    message = 'You have 1 To-Do Today!';
+  } else {
+    message = 'You have ' + count.toString() + " To-Do's today!";
   }
   const schedulingOptions = {
     content: {
       title: "Top O' the Morning to You!",
-      body: 'You have ' + count + message,
+      body: message,
       sound: true,
       data: {
-        id: 'todo-notification',
+        id: 'todo-notification-' + day.toString(),
       },
       priority: Notifications.AndroidNotificationPriority.HIGH,
       color: 'blue',
@@ -203,5 +209,5 @@ export async function handleMapPressed2(directions: string, cb?: () => void) {
 }
 
 export function shouldRunTests() {
-  return true;
+  return false;
 }

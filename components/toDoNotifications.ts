@@ -3,7 +3,13 @@ import { getToDoData } from '../screens/ToDo/api';
 import { cancelScheduledNotificationAsync } from 'expo-notifications';
 
 export async function handleToDoNotifications() {
-  await cancelScheduledNotificationAsync('todo-notification');
+  console.log('cancel to do notifs');
+  await cancelScheduledNotificationAsync('todo-notification-2');
+  await cancelScheduledNotificationAsync('todo-notification-3');
+  await cancelScheduledNotificationAsync('todo-notification-4');
+  await cancelScheduledNotificationAsync('todo-notification-5');
+  await cancelScheduledNotificationAsync('todo-notification-6');
+
   if (await hasToDoNotifications()) {
     fetchToDoInfo();
   }

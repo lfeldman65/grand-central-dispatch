@@ -63,9 +63,10 @@ export default function CalendarScreen() {
     var day = getDayNumber(startDate.toString());
     var month = getMonthNumber(startDate.toString());
     var year = getYear(startDate.toString());
+    console.log('day: ' + day);
     console.log('MONTH2112: ' + month);
     console.log('YEAR: ' + year);
-    fetchAppointments(day, month, year, isMounted); // '00' returns every day in month
+    fetchAppointments(day, month, year, isMounted); // day = '00' returns every day in month and year
     return () => {
       isMounted = false;
     };

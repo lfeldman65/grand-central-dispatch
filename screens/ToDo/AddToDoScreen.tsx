@@ -7,7 +7,6 @@ import { addNewToDo } from './api';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import Attendees from '../ToDo/AttendeesScreen';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { RolodexDataProps, AttendeesProps } from './interfaces';
 import {
   convertFrequency,

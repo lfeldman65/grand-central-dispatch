@@ -6,6 +6,37 @@ export function getAppointments(day: string, month: string, year: string): Promi
   return http.get(`calendarEventsDay?day=${day}&month=${month}&year=${year}`);
 }
 
+export function addNewAppointmentTest(
+  title: string,
+  startTime: string,
+  endTime: string,
+  location: string,
+  notes: string,
+  untilType: string,
+  frequencyType: string,
+  timeBefore: number,
+  type: string
+): Promise<AddAppointmentDataResponse> {
+  return http.post('calendarEvents', {
+    body: {
+      // no bracket since not an array
+      title: title,
+      startTime: startTime,
+      endTime: endTime,
+      untilType: untilType,
+      location: location,
+      notes: notes,
+      recurrence: {
+        frequencyType: frequencyType,
+      },
+      reminder: {
+        timeBefore: timeBefore,
+        type: type,
+      },
+    },
+  });
+}
+
 export function addNewAppointment(
   title: string,
   startTime: string,
