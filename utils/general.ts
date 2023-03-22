@@ -78,7 +78,7 @@ export function schedulePACNotifications(day: number, person: string) {
   console.log('schedule pac:' + person);
   const schedulingOptions = {
     content: {
-      title: "Top O' the Morning to You PAC!",
+      title: "Top O' the Morning to You!",
       body: 'Would you like to call ' + person + '?',
       sound: true,
       data: {
