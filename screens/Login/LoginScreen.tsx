@@ -5,7 +5,7 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { StatusBar } from 'expo-status-bar';
 import { storage } from '../../utils/storage';
 import { loginToApp, getProfileData } from './api';
-import { useNavigation, useIsFocused } from '@react-navigation/native'; // branch
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { LogBox } from 'react-native';
 
 const eyeClosed = require('../Login/images/eyeClosed.png');
@@ -13,13 +13,11 @@ const eyeOpen = require('../Login/images/eyeOpen.png');
 const logo = require('../Login/images/iconLogo.png');
 
 let deviceWidth = Dimensions.get('window').width;
+var rememberChecked = false;
 
 export default function LoginScreen() {
-  //  const [userName, setUserName] = useState('larryf@buffiniandcompany.com');
-  // const [password, setPassword] = useState('success');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberChecked, setRememberCheck] = useState(false);
   const [showPW, setShowPW] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const isFocused = useIsFocused();
@@ -34,8 +32,22 @@ export default function LoginScreen() {
   }
 
   async function populateCredentialsIfRemembered() {
+    console.log('populate');
     const userNameFromStorage = await storage.getItem('userName');
     const pwFromStorage = await storage.getItem('password');
+    const rememberFromStorage = await storage.getItem('rememberMe');
+    if (rememberFromStorage != '' && rememberFromStorage != null) {
+      if (rememberFromStorage == 'true') {
+        rememberChecked = true;
+      } else {
+        rememberChecked = false;
+      }
+    } else {
+      rememberChecked = false;
+    }
+    console.log('popRemStorage: ' + rememberFromStorage);
+    console.log('popRem: ' + rememberChecked);
+
     if (rememberChecked) {
       if (userNameFromStorage != '' && userNameFromStorage != null) {
         setUserName(userNameFromStorage);
@@ -50,9 +62,9 @@ export default function LoginScreen() {
   }
 
   function toggleRememberMe() {
+    rememberChecked = !rememberChecked;
     console.log('REMEMBER: ' + rememberChecked);
-    if (rememberChecked) {
-      // seems backwards, but only because analytics are before check is toggled
+    if (!rememberChecked) {
       ga4Analytics('Remember_Me_Uncheck', {
         contentType: 'none',
         itemId: 'id0005',
@@ -63,7 +75,6 @@ export default function LoginScreen() {
         itemId: 'id0004',
       });
     }
-    setRememberCheck(!rememberChecked);
   }
 
   function toggleEye() {
@@ -108,9 +119,11 @@ export default function LoginScreen() {
     if (rememberChecked) {
       storage.setItem('userName', userName);
       storage.setItem('password', password);
+      storage.setItem('rememberMe', 'true');
     } else {
       storage.setItem('userName', '');
       storage.setItem('password', '');
+      storage.setItem('rememberMe', 'false');
     }
   }
 
@@ -122,18 +135,17 @@ export default function LoginScreen() {
     } else {
       populateCredentialsIfRemembered();
     }
-  }, [isFocused]);
+  }, [isFocused]); // blank is like viewDidLoad, isFocused is like viewDidAppear
 
   async function handleLoginPressess() {
     setIsLoading(true);
-    console.log(userName);
-    console.log(password);
-
+    console.log('LoginName:' + userName);
+    console.log('LoginPW:' + password);
+    console.log('LoginRemember:' + rememberChecked);
     ga4Analytics('Login_Button', {
       contentType: 'none',
       itemId: 'id0000',
     });
-
     if (userName == '' || password == '') {
       Alert.alert('Please enter a Username and Password');
       return;
@@ -197,6 +209,7 @@ export default function LoginScreen() {
           unfillColor="#004F89"
           iconStyle={{ borderColor: 'white' }}
           text="Remember Me"
+          isChecked={rememberChecked}
           textContainerStyle={{ marginLeft: 10 }}
           style={styles.checkBox}
           onPress={() => {
