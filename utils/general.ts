@@ -1,6 +1,5 @@
 import { Linking } from 'react-native';
 import openMap from 'react-native-open-maps';
-
 import * as Notifications from 'expo-notifications';
 import { storage } from './storage';
 import { Platform } from 'react-native';
@@ -74,8 +73,7 @@ export function scheduleNotifications(id: string, title: string, body: string, s
   Notifications.scheduleNotificationAsync(schedulingOptions);
 }
 
-export function schedulePACNotifications(day: number, person: string) {
-  // console.log('schedule pac:' + person);
+export async function schedulePACNotifications(day: number, person: string) {
   const schedulingOptions = {
     content: {
       title: "Top O' the Morning to You!",
@@ -95,15 +93,17 @@ export function schedulePACNotifications(day: number, person: string) {
       repeat: 'week',
     },
   };
-  Notifications.scheduleNotificationAsync(schedulingOptions);
+  var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
+  console.log('pac notification ' + JSON.stringify(identifier));
+  storage.setItem('pac-notification-' + day.toString(), identifier);
+  return identifier;
 }
 
-export function scheduleToDoNotifications(day: number, count: string) {
+export async function scheduleToDoNotifications(day: number, count: string) {
   var message = '';
   if (count == '0') {
     message = "You're all caught up!";
-  }
-  if (count == '1') {
+  } else if (count == '1') {
     message = 'You have 1 To-Do Today!';
   } else {
     message = 'You have ' + count.toString() + " To-Do's today!";
@@ -127,7 +127,10 @@ export function scheduleToDoNotifications(day: number, count: string) {
       repeat: 'week',
     },
   };
-  Notifications.scheduleNotificationAsync(schedulingOptions);
+  var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
+  console.log('notification ' + JSON.stringify(identifier));
+  storage.setItem('todo-notification-' + day.toString(), identifier);
+  return identifier;
 }
 export async function getNotificationStatus(key: string) {
   var notifStatus = await storage.getItem(key);

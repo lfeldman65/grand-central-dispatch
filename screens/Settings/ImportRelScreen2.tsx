@@ -73,7 +73,7 @@ export default function ImportRelScreen2(props: any) {
                   Contacts.Fields.FirstName,
                   Contacts.Fields.PhoneNumbers,
                   Contacts.Fields.Emails,
-                  //  Contacts.Fields.Note,
+                  Contacts.Fields.Note,
                 ],
               }).then((cs) => {
                 const { data } = cs;
