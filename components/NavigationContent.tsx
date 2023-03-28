@@ -101,8 +101,8 @@ function CustomDrawerContent(props: any) {
     navigation.navigate(screenName);
     trackPressed(screenName);
     handleVideoNotifications();
-    handlePACNotifications();
-    handleToDoNotifications();
+    // handlePACNotifications();
+    // handleToDoNotifications();
   };
 
   function pressed2(screenName: string) {
