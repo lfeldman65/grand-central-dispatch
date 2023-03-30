@@ -21,6 +21,7 @@ import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
+const cache_prefix = 'cache_relationship_';
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 var localDisplay = 'First Last';
@@ -72,7 +73,6 @@ export default function ManageRelationshipsScreen() {
     }
   };
 
-  //get indexes for each tab
   function getIndex() {
     if (tabSelected == 'a-z')
       return dataRolodex.map((e) => {
@@ -90,13 +90,17 @@ export default function ManageRelationshipsScreen() {
       });
   }
 
-  useEffect(() => {}, []);
+  // useEffect(() => {}, []);
 
   useEffect(() => {
     getCurrentDisplayAZ(true);
     showFilterTitle();
-    fetchData(tabSelected, true);
+    //  fetchData(tabSelected, true);
   }, [isFilterRel]);
+
+  useEffect(() => {
+    fetchData(tabSelected, true);
+  }, [isFocused]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -217,7 +221,7 @@ export default function ManageRelationshipsScreen() {
 
   async function readFromFile(param: TabType) {
     //the file is the source of truth for data, this should be only place where data is set
-    const fileUri = FileSystem.documentDirectory + 'cache_' + param;
+    const fileUri = FileSystem.documentDirectory + cache_prefix + param;
     //console.log('read ' + fileUri);
     const fileExists = await checkFileExists(fileUri);
     console.log('file exists ' + fileExists); // Output: true or false
@@ -239,7 +243,7 @@ export default function ManageRelationshipsScreen() {
   }
 
   async function saveDataToFile(param: TabType, data: RolodexDataProps[] | GroupsDataProps[]) {
-    const fileUri = FileSystem.documentDirectory + 'cache_' + param;
+    const fileUri = FileSystem.documentDirectory + cache_prefix + param;
     //console.log(fileUri);
     var r = await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(data));
     //console.log('write ' + r);
@@ -247,17 +251,14 @@ export default function ManageRelationshipsScreen() {
 
   function isDataEmpty(param: TabType) {
     if (param == 'a-z' && dataRolodex.length == 0) return true;
-    else if (param == 'ranking' && rankingRolodex.length == 0) return true;
-    else if (param == 'groups' && dataGroups.length == 0) return true;
-
+    if (param == 'ranking' && rankingRolodex.length == 0) return true;
+    if (param == 'groups' && dataGroups.length == 0) return true;
     return false;
   }
 
   function fetchData(param: TabType, makeAPICall: boolean) {
-    //console.log('param:' + param);
-
+    console.log('fetchData:' + param);
     setIsLoadingForTab(param, true);
-
     if (makeAPICall || isDataEmpty(param)) {
       if (param != 'groups') {
         fetchRolodex(param, true);
@@ -265,14 +266,11 @@ export default function ManageRelationshipsScreen() {
         fetchGroups(true);
       }
     }
-
-    //we don't have to always read from file
     if (isDataEmpty(param)) readFromFile(param);
   }
 
   async function fetchRolodex(param: TabType, isMounted: boolean) {
     var type = param == 'a-z' ? 'alpha' : param == 'ranking' ? 'ranking' : '';
-
     getRolodexData(type)
       .then((res) => {
         if (!isMounted) {

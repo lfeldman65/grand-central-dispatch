@@ -236,7 +236,7 @@ export default function DashboardScreen() {
     // testAddToDo();
     // testDeleteToDo();
     // testAddAppointment();
-    testDeleteAppointment();
+    //  testDeleteAppointment();
     return;
   }
 

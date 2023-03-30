@@ -13,9 +13,11 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import * as FileSystem from 'expo-file-system';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
+const cache_prefix = 'cache_todo_';
 
 export default function ToDosScreen() {
   const filters = {
@@ -30,7 +32,12 @@ export default function ToDosScreen() {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const [filterSetting, setFilterSetting] = useState('all');
-  const [dataActivity, setdataActivity] = useState<ToDoDataProps[]>([]);
+  const [dataAll, setDataAll] = useState<ToDoDataProps[]>([]);
+  const [dataToday, setDataToday] = useState<ToDoDataProps[]>([]);
+  const [dataWeek, setDataWeek] = useState<ToDoDataProps[]>([]);
+  const [dataMonth, setDataMonth] = useState<ToDoDataProps[]>([]);
+  const [dataOverdue, setDataOverdue] = useState<ToDoDataProps[]>([]);
+  const [dataCompleted, setDataCompleted] = useState<ToDoDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -48,7 +55,7 @@ export default function ToDosScreen() {
       itemId: 'id1203',
     });
     navigation.navigate('toDoDetails', {
-      toDoID: dataActivity[index].id,
+      toDoID: dataAll[index].id,
       lightOrDark: lightOrDark,
     });
   };
@@ -112,24 +119,12 @@ export default function ToDosScreen() {
   }
 
   function prettyFilter(uglyFilter: string) {
-    if (uglyFilter == 'all') {
-      return 'All';
-    }
-    if (uglyFilter == '0') {
-      return 'Today';
-    }
-    if (uglyFilter == '7') {
-      return 'Week';
-    }
-    if (uglyFilter == '30') {
-      return 'Month';
-    }
-    if (uglyFilter == 'overdue') {
-      return 'Overdue';
-    }
-    if (uglyFilter == 'completed') {
-      return 'Completed';
-    }
+    if (uglyFilter == 'all') return 'All';
+    if (uglyFilter == '0') return 'Today';
+    if (uglyFilter == '7') return 'Week';
+    if (uglyFilter == '30') return 'Month';
+    if (uglyFilter == 'overdue') return 'Overdue';
+    if (uglyFilter == 'completed') return 'Completed';
     return 'Error';
   }
 
@@ -137,8 +132,18 @@ export default function ToDosScreen() {
     fetchData(true);
   }
 
-  function fetchData(isMounted: boolean) {
+  function fetchData(makeAPICall: boolean) {
+    console.log('fetchDataA:' + filterSetting);
+    //  setIsLoadingForTab(param, true);
+    if (makeAPICall || isDataEmpty()) {
+      fetchToDos(true);
+    }
+    if (isDataEmpty()) readFromFile();
+  }
+
+  function fetchToDos(isMounted: boolean) {
     setIsLoading(true);
+    console.log('filter 142: ' + filterSetting);
     getToDoData(filterSetting)
       .then((res) => {
         if (!isMounted) {
@@ -147,12 +152,114 @@ export default function ToDosScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          setdataActivity(res.data);
+          if (filterSetting == 'all') {
+            setDataAll(res.data);
+            console.log('line 153: ' + filterSetting);
+          } else if (filterSetting == '0') {
+            console.log('line 155: ' + filterSetting);
+            setDataToday(res.data);
+          } else if (filterSetting == '0') {
+            console.log('line 155: ' + filterSetting);
+            setDataWeek(res.data);
+          } else if (filterSetting == '0') {
+            console.log('line 155: ' + filterSetting);
+            setDataMonth(res.data);
+          } else if (filterSetting == '0') {
+            console.log('line 155: ' + filterSetting);
+            setDataOverdue(res.data);
+          } else if (filterSetting == '0') {
+            console.log('line 155: ' + filterSetting);
+            setDataCompleted(res.data);
+          }
+          saveDataToFile(res.data);
         }
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
+
+  const checkFileExists = async (filename: any) => {
+    try {
+      const fileInfo = await FileSystem.getInfoAsync(filename);
+      return fileInfo.exists;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  async function readFromFile() {
+    //the file is the source of truth for data, this should be only place where data is set
+    const fileUri = FileSystem.documentDirectory + cache_prefix + prettyFilter(filterSetting);
+    console.log('read ' + fileUri);
+    const fileExists = await checkFileExists(fileUri);
+    console.log('file exists ' + fileExists); // Output: true or false
+    if (fileExists) {
+      const readData = await FileSystem.readAsStringAsync(fileUri);
+      //   console.log('readData: ' + readData);
+      console.log('filterSetting: ' + filterSetting);
+      const rawData = JSON.parse(readData);
+      if (filterSetting == 'all') {
+        setDataAll(rawData);
+        //  setIsLoadingForRolodex(false);
+      } else if (filterSetting == '0') {
+        setDataToday(rawData);
+        //  setIsLoadingForRanking(false);
+      } else if (filterSetting == '7') {
+        setDataWeek(rawData);
+        //  setIsLoadingForRanking(false);
+      } else if (filterSetting == '30') {
+        setDataMonth(rawData);
+        //  setIsLoadingForRanking(false);
+      } else if (filterSetting == 'overdue') {
+        setDataOverdue(rawData);
+        //  setIsLoadingForRanking(false);
+      } else if (filterSetting == 'completed') {
+        setDataCompleted(rawData);
+        //  setIsLoadingForRanking(false);
+      }
+    }
+  }
+
+  async function saveDataToFile(data: ToDoDataProps[]) {
+    const fileUri = FileSystem.documentDirectory + cache_prefix + prettyFilter(filterSetting);
+    //console.log(fileUri);
+    var r = await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(data));
+    //console.log('write ' + r);
+  }
+
+  function isDataEmpty() {
+    console.log('isemptyA: ' + filterSetting);
+    if (filterSetting == 'all' && dataAll.length == 0) return true;
+    if (filterSetting == '0' && dataToday.length == 0) {
+      console.log('isemptyB: ' + filterSetting);
+      return true;
+    }
+    if (filterSetting == '7' && dataWeek.length == 0) {
+      console.log('isemptyB: ' + filterSetting);
+      return true;
+    }
+    if (filterSetting == '30' && dataMonth.length == 0) {
+      console.log('isemptyB: ' + filterSetting);
+      return true;
+    }
+    if (filterSetting == 'overdue' && dataOverdue.length == 0) {
+      console.log('isemptyB: ' + filterSetting);
+      return true;
+    }
+    if (filterSetting == 'completed' && dataCompleted.length == 0) {
+      console.log('isemptyB: ' + filterSetting);
+      return true;
+    }
+    console.log('data not empty');
+    return false;
+  }
+
+  // function setIsLoadingForTab(param: TabType, value: boolean) {
+  //   if (filterSetting == 'all') setIsLoadingForRolodex(value && dataRolodex.length == 0);
+  //   if (param == 'ranking') setIsLoadingForRanking(value && rankingRolodex.length == 0);
+  //   if (param == 'groups') setIsLoadingForGroups(value && dataGroups.length == 0);
+  // }
 
   if (isLoading) {
     return (
@@ -177,11 +284,48 @@ export default function ToDosScreen() {
             </View>
 
             <ScrollView>
-              <View>
-                {dataActivity.map((item, index) => (
-                  <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
-                ))}
-              </View>
+              {filterSetting == 'all' && (
+                <View>
+                  {dataAll.map((item, index) => (
+                    <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+                  ))}
+                </View>
+              )}
+              {filterSetting == '0' && (
+                <View>
+                  {dataToday.map((item, index) => (
+                    <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+                  ))}
+                </View>
+              )}
+              {filterSetting == '7' && (
+                <View>
+                  {dataWeek.map((item, index) => (
+                    <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+                  ))}
+                </View>
+              )}
+              {filterSetting == '30' && (
+                <View>
+                  {dataMonth.map((item, index) => (
+                    <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+                  ))}
+                </View>
+              )}
+              {filterSetting == 'overdue' && (
+                <View>
+                  {dataOverdue.map((item, index) => (
+                    <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+                  ))}
+                </View>
+              )}
+              {filterSetting == 'completed' && (
+                <View>
+                  {dataCompleted.map((item, index) => (
+                    <ToDoRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+                  ))}
+                </View>
+              )}
             </ScrollView>
 
             <TouchableOpacity style={styles.bottomContainer} onPress={() => addNewToDoPressed()}>
@@ -209,7 +353,7 @@ export default function ToDosScreen() {
             )}
             <ActionSheet
               initialOffsetFromBottom={10}
-              onBeforeShow={(data) => console.log('action sheet')}
+              onBeforeShow={(data) => console.log('')}
               id={Sheets.filterSheet}
               ref={actionSheetRef}
               statusBarTranslucent

@@ -94,7 +94,7 @@ export async function schedulePACNotifications(day: number, person: string) {
     },
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
-  console.log('pac notification ' + JSON.stringify(identifier));
+  //  console.log('pac notification ' + JSON.stringify(identifier));
   storage.setItem('pac-notification-' + day.toString(), identifier);
   return identifier;
 }
@@ -128,7 +128,7 @@ export async function scheduleToDoNotifications(day: number, count: string) {
     },
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
-  console.log('notification ' + JSON.stringify(identifier));
+  // console.log('todo notification ' + JSON.stringify(identifier));
   storage.setItem('todo-notification-' + day.toString(), identifier);
   return identifier;
 }
