@@ -17,7 +17,7 @@ import * as FileSystem from 'expo-file-system';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
-const cache_prefix = 'cache_todo_';
+const cache_prefix = 'cache_todo_'; // branch
 
 export default function ToDosScreen() {
   const filters = {
@@ -82,7 +82,7 @@ export default function ToDosScreen() {
 
   useEffect(() => {
     let isMounted = true;
-    fetchData(isMounted);
+    //fetchData(isMounted);
     return () => {
       isMounted = false;
     };
@@ -143,7 +143,7 @@ export default function ToDosScreen() {
 
   function fetchToDos(isMounted: boolean) {
     setIsLoading(true);
-    console.log('filter 142: ' + filterSetting);
+    console.log('XXXXXXXX filter 142: ' + filterSetting);
     getToDoData(filterSetting)
       .then((res) => {
         if (!isMounted) {
@@ -158,21 +158,23 @@ export default function ToDosScreen() {
           } else if (filterSetting == '0') {
             console.log('line 155: ' + filterSetting);
             setDataToday(res.data);
-          } else if (filterSetting == '0') {
+          } else if (filterSetting == '7') {
             console.log('line 155: ' + filterSetting);
             setDataWeek(res.data);
-          } else if (filterSetting == '0') {
+          } else if (filterSetting == '30') {
             console.log('line 155: ' + filterSetting);
             setDataMonth(res.data);
-          } else if (filterSetting == '0') {
+          } else if (filterSetting == 'overdue') {
             console.log('line 155: ' + filterSetting);
             setDataOverdue(res.data);
-          } else if (filterSetting == '0') {
+          } else if (filterSetting == 'completed') {
             console.log('line 155: ' + filterSetting);
             setDataCompleted(res.data);
           }
           saveDataToFile(res.data);
         }
+
+        console.log('finish fetching data');
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
@@ -218,6 +220,7 @@ export default function ToDosScreen() {
         setDataCompleted(rawData);
         //  setIsLoadingForRanking(false);
       }
+      console.log('finish reading from file');
     }
   }
 
