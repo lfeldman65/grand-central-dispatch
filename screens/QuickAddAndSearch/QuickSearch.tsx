@@ -9,10 +9,9 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { getRolodexData, getRolodexSearch } from '../ToDo/api';
+import { useNavigation } from '@react-navigation/native';
+import { getRolodexSearch } from '../ToDo/api';
 import { RolodexDataProps } from '../Relationships/interfaces';
-import globalStyles from '../../globalStyles';
 import AtoZRow from '../Relationships/AtoZRow';
 
 const closeButton = require('../../images/button_close_white.png');
@@ -23,9 +22,8 @@ const searchBlank = require('../../images/blankSearch.png'); // Preserves horizo
 export default function QuickSearch(props: any) {
   const { setModalVisible, title, lightOrDark } = props;
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
 
   const handleRowPress = (index: number) => {
@@ -43,14 +41,8 @@ export default function QuickSearch(props: any) {
     console.log('search: ' + search);
     if (search != '') {
       fetchRolodexSearch(search);
-    } else {
-      fetchRolodexPressed('alpha');
     }
   }, [search]);
-
-  useEffect(() => {
-    fetchRolodexPressed('alpha');
-  }, [isFocused]);
 
   function clearSearchPressed() {
     setSearch('');
@@ -78,31 +70,6 @@ export default function QuickSearch(props: any) {
       })
       .catch((error) => console.error('failure ' + error));
   }
-
-  function fetchRolodexPressed(type: string, isMounted: boolean = true) {
-    setIsLoading(true);
-    getRolodexData(type)
-      .then((res) => {
-        if (!isMounted) {
-          return;
-        }
-        if (res.status == 'error') {
-          console.error(res.error);
-        } else {
-          setDataRolodex(res.data);
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => console.error('failure ' + error));
-  }
-
-  useEffect(() => {
-    let isMounted = true;
-    fetchRolodexPressed('alpha', isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   return (
     <View style={styles2.container}>

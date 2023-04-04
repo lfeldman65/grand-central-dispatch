@@ -10,6 +10,7 @@ import ImportRelRow from './ImportRelRow';
 import * as Contacts from 'expo-contacts';
 import { addNewContact } from './api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { determineDeviceType } from '../../utils/general';
 
 // dataRM[] = rolodex in RM app
 // dataNative[] = native contacts
@@ -68,84 +69,143 @@ export default function ImportRelScreen2(props: any) {
 
           Contacts.requestPermissionsAsync().then((status) => {
             if (status.status === Contacts.PermissionStatus.GRANTED) {
-              Contacts.getContactsAsync({
-                fields: [
-                  Contacts.Fields.FirstName,
-                  Contacts.Fields.PhoneNumbers,
-                  Contacts.Fields.Emails,
-                  //   Contacts.Fields.Note,
-                ],
-              }).then((cs) => {
-                const { data } = cs;
-                data.forEach((nativeElement) => {
-                  var add = true;
+              if (determineDeviceType() == 'Android') {
+                Contacts.getContactsAsync({
+                  fields: [
+                    Contacts.Fields.FirstName,
+                    Contacts.Fields.PhoneNumbers,
+                    Contacts.Fields.Emails,
+                    Contacts.Fields.Note,
+                  ],
+                }).then((cs) => {
+                  const { data } = cs;
+                  data.forEach((nativeElement) => {
+                    var add = true;
+                    var firstName = nativeElement.firstName ?? '';
+                    var lastName = nativeElement.lastName ?? '';
+                    var homePhone: string | undefined = '';
+                    var mobile: string | undefined = '';
+                    var officePhone: string | undefined = '';
+                    var email: string | undefined = '';
+                    var notes: string | undefined = '';
 
-                  var firstName = nativeElement.firstName ?? '';
-                  var lastName = nativeElement.lastName ?? '';
-                  var homePhone: string | undefined = '';
-                  var mobile: string | undefined = '';
-                  var officePhone: string | undefined = '';
-                  var email: string | undefined = '';
-                  var notes: string | undefined = '';
-
-                  nativeElement.phoneNumbers?.forEach((e) => {
-                    if (e.label == 'mobile') {
-                      mobile = e.number;
-                    } else if (e.label == 'home' || e.label == 'main') {
-                      homePhone = e.number;
-                    } else if (e.label == 'work') {
-                      officePhone = e.number;
-                    }
-
-                    notes = nativeElement.note;
-                    //  console.log('NOTES: ' + notes);
-
-                    //    console.log(e.number + ' ' + e.label);
-                    nativeElement.emails?.forEach((e) => {
-                      email = e.email;
-                      //  console.log(e.email);
+                    nativeElement.phoneNumbers?.forEach((e) => {
+                      if (e.label == 'mobile') {
+                        mobile = e.number;
+                      } else if (e.label == 'home' || e.label == 'main') {
+                        homePhone = e.number;
+                      } else if (e.label == 'work') {
+                        officePhone = e.number;
+                      }
+                      notes = nativeElement.note;
+                      nativeElement.emails?.forEach((e) => {
+                        email = e.email;
+                      });
                     });
-                  });
-                  res.data.forEach((cloudElement) => {
-                    if (firstName == cloudElement.firstName && lastName == cloudElement.lastName) {
-                      add = false;
+                    res.data.forEach((cloudElement) => {
+                      if (firstName == cloudElement.firstName && lastName == cloudElement.lastName) {
+                        add = false;
+                      }
+                      if (firstName == '' && lastName == '') {
+                        add = false;
+                      }
+                    });
+
+                    if (add) {
+                      var rp: RolodexImportDataProps = {
+                        firstName: nativeElement.firstName ?? '',
+                        lastName: nativeElement.lastName ?? '',
+                        id: nativeElement.id,
+                        ranking: '',
+                        contactTypeID: '',
+                        employerName: '',
+                        qualified: false,
+                        selected: false,
+                        homePhone: homePhone,
+                        mobile: mobile,
+                        officePhone: officePhone,
+                        email: email,
+                        notes: notes,
+                        didChange: false,
+                      };
+                      contactsToDisplay.push(rp);
                     }
-                    if (firstName == '' && lastName == '') {
-                      add = false;
+                  });
+
+                  contactsToDisplay.sort(function (a, b) {
+                    return a.lastName.localeCompare(b.lastName);
+                  });
+
+                  setDataRM(contactsToDisplay);
+                  setIsLoading(false);
+                });
+              } else {
+                Contacts.getContactsAsync({
+                  fields: [Contacts.Fields.FirstName, Contacts.Fields.PhoneNumbers, Contacts.Fields.Emails],
+                }).then((cs) => {
+                  const { data } = cs;
+                  data.forEach((nativeElement) => {
+                    var add = true;
+
+                    var firstName = nativeElement.firstName ?? '';
+                    var lastName = nativeElement.lastName ?? '';
+                    var homePhone: string | undefined = '';
+                    var mobile: string | undefined = '';
+                    var officePhone: string | undefined = '';
+                    var email: string | undefined = '';
+
+                    nativeElement.phoneNumbers?.forEach((e) => {
+                      if (e.label == 'mobile') {
+                        mobile = e.number;
+                      } else if (e.label == 'home' || e.label == 'main') {
+                        homePhone = e.number;
+                      } else if (e.label == 'work') {
+                        officePhone = e.number;
+                      }
+
+                      nativeElement.emails?.forEach((e) => {
+                        email = e.email;
+                        //  console.log(e.email);
+                      });
+                    });
+                    res.data.forEach((cloudElement) => {
+                      if (firstName == cloudElement.firstName && lastName == cloudElement.lastName) {
+                        add = false;
+                      }
+                      if (firstName == '' && lastName == '') {
+                        add = false;
+                      }
+                    });
+
+                    if (add) {
+                      var rp: RolodexImportDataProps = {
+                        firstName: nativeElement.firstName ?? '',
+                        lastName: nativeElement.lastName ?? '',
+                        id: nativeElement.id,
+                        ranking: '',
+                        contactTypeID: '',
+                        employerName: '',
+                        qualified: false,
+                        selected: false,
+                        homePhone: homePhone,
+                        mobile: mobile,
+                        officePhone: officePhone,
+                        email: email,
+                        notes: '',
+                        didChange: false,
+                      };
+                      contactsToDisplay.push(rp);
                     }
                   });
 
-                  if (add) {
-                    //  console.log('adding ' + nativeElement.firstName + ' ' + nativeElement.lastName);
-                    //  console.log('adding ' + nativeElement.note);
+                  contactsToDisplay.sort(function (a, b) {
+                    return a.lastName.localeCompare(b.lastName);
+                  });
 
-                    var rp: RolodexImportDataProps = {
-                      firstName: nativeElement.firstName ?? '',
-                      lastName: nativeElement.lastName ?? '',
-                      id: nativeElement.id,
-                      ranking: '',
-                      contactTypeID: '',
-                      employerName: '',
-                      qualified: false,
-                      selected: false,
-                      homePhone: homePhone,
-                      mobile: mobile,
-                      officePhone: officePhone,
-                      email: email,
-                      notes: notes,
-                      didChange: false,
-                    };
-                    contactsToDisplay.push(rp);
-                  }
+                  setDataRM(contactsToDisplay);
+                  setIsLoading(false);
                 });
-
-                contactsToDisplay.sort(function (a, b) {
-                  return a.lastName.localeCompare(b.lastName);
-                });
-
-                setDataRM(contactsToDisplay);
-                setIsLoading(false);
-              });
+              }
             } else {
               setIsLoading(false);
             }
