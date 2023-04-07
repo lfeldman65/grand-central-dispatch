@@ -109,7 +109,7 @@ export default function DashboardScreen() {
           day: 1,
           hour: 15,
           minute: 0,
-          second: 0,
+          //   second: 0,
           repeats: true,
         },
       });

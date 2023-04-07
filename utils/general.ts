@@ -35,13 +35,13 @@ export function formatDateTime(datetime?: string) {
 }
 
 export function prettyDate(uglyDate: string) {
-  // 2019-05-22T00:00:00"
+  // example: 2019-05-22T00:00:00"
   if (uglyDate == null) return '';
   if (uglyDate == '') return '';
   var dateOnly = uglyDate.substring(0, 10);
   var dateParts = dateOnly.split('-');
   var year = dateParts[0].substring(2, 4);
-  // 05/22/2019
+  // example: 05/22/2019
   return dateParts[1] + '/' + dateParts[2] + '/' + year;
 }
 
@@ -74,6 +74,7 @@ export function scheduleNotifications(id: string, title: string, body: string, s
 }
 
 export async function schedulePACNotifications(day: number, person: string) {
+  console.log('shedule PAC Notifs');
   const schedulingOptions = {
     content: {
       title: "Top O' the Morning to You!",
@@ -88,9 +89,10 @@ export async function schedulePACNotifications(day: number, person: string) {
     trigger: {
       hour: 9,
       minute: 0,
-      second: 0,
+      //  second: 0,
       weekday: day,
-      repeat: 'week',
+      repeats: true,
+      //  repeat: 'week',
     },
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
@@ -100,6 +102,7 @@ export async function schedulePACNotifications(day: number, person: string) {
 }
 
 export async function scheduleToDoNotifications(day: number, count: string) {
+  console.log('shedule ToDo Notifs');
   var message = '';
   if (count == '0') {
     message = "You're all caught up!";
@@ -122,9 +125,10 @@ export async function scheduleToDoNotifications(day: number, count: string) {
     trigger: {
       hour: 9,
       minute: 15,
-      second: 0,
+      //  second: 0,
       weekday: day,
-      repeat: 'week',
+      repeats: true,
+      //  repeat: 'week',
     },
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
