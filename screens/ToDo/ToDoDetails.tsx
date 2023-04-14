@@ -9,6 +9,8 @@ import { prettyDate, isNullOrEmpty, ga4Analytics } from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import * as React from 'react';
 import EditToDo from './EditToDoScreen';
+import { getGoalDataConcise } from '../Goals/api';
+import { GoalDataConciseProps } from '../Goals/interfaces';
 
 export default function ToDoDetails(props: any) {
   const navigation = useNavigation();
@@ -18,10 +20,12 @@ export default function ToDoDetails(props: any) {
   const [data, setdata] = useState<ToDoDetailsDataProps>();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [goalList, setGoalList] = useState<GoalDataConciseProps[]>([]);
 
   useEffect(() => {
     let isMounted = true;
     fetchData(isMounted);
+    fetchGoalList(true);
     return () => {
       isMounted = false;
     };
@@ -104,6 +108,37 @@ export default function ToDoDetails(props: any) {
     fetchData(true);
   }
 
+  function fetchGoalList(isMounted: boolean) {
+    console.log('fetch goals');
+    getGoalDataConcise()
+      .then((res) => {
+        if (!isMounted) {
+          return;
+        }
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log(res.data);
+          setGoalList(res.data);
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function goalIDToTitle(id: number) {
+    if (id == null || id == 0) {
+      return 'None';
+    }
+    console.log('id: ' + id);
+    console.log('goallistlength: ' + goalList.length);
+    for (var i = 0; i < goalList.length; i++) {
+      if (goalList[i].id == id) {
+        console.log('i=: ' + i);
+        return goalList[i].title;
+      }
+    }
+  }
+
   function fetchData(isMounted: boolean) {
     setIsLoading(true);
     getToDoDetails(toDoID)
@@ -115,7 +150,6 @@ export default function ToDoDetails(props: any) {
           console.error(res.error);
         } else {
           setdata(res.data);
-          //   console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -148,6 +182,11 @@ export default function ToDoDetails(props: any) {
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       <View style={lightOrDark == 'dark' ? styles.topContainerDark : styles.topContainerLight}>
         <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>{data?.title}</Text>
+        {goalIDToTitle(data?.activityTypeId!) != 'None' && (
+          <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>
+            {goalIDToTitle(data?.activityTypeId!)}
+          </Text>
+        )}
         <View style={styles.dividingLine}></View>
 
         <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
@@ -205,6 +244,8 @@ export default function ToDoDetails(props: any) {
           <EditToDo
             title={'Edit To-Do'}
             todoID={data?.id}
+            activityTypeId={data?.activityTypeId}
+            activityTypeTitle={goalIDToTitle(data?.activityTypeId!)}
             titleFromParent={data?.title}
             dateFromParent={data?.dueDate}
             priorityFromParent={data?.priority}

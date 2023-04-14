@@ -80,8 +80,6 @@ export default function TrackActivityScreen(props: any) {
       return '2';
     }
     if (filterItem == refMenuChoice3) {
-      console.log('3333');
-
       return '3';
     }
     return '4';
@@ -417,6 +415,7 @@ export default function TrackActivityScreen(props: any) {
             title="Choose Goal"
             setModalGoalVisible={setModalGoalVisible}
             setSelectedGoal={setGoal}
+            showSelectOne={false}
             lightOrDark={lightOrDark}
           />
         </Modal>

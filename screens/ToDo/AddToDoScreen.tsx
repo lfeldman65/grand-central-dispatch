@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, Alert, ScrollView } from 'react-native';
-const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useIsFocused } from '@react-navigation/native';
 import { addNewToDo } from './api';
@@ -24,10 +23,15 @@ import { untilTypeMenu } from './toDoHelpersAndMenus';
 import { reminderMenu } from './toDoHelpersAndMenus';
 import { ga4Analytics } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { GoalDataConciseProps } from '../Goals/interfaces';
+import ChooseGoal from '../Goals/ChooseGoalScreen';
+
+const closeButton = require('../../images/button_close_white.png');
 
 export default function AddToDoScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName, lightOrDark } = props;
   const [toDoTitle, setTitle] = useState('');
+  const [goal, setGoal] = useState<GoalDataConciseProps>();
   const [date, setDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [priority, setPriority] = useState('False');
@@ -54,6 +58,7 @@ export default function AddToDoScreen(props: any) {
   const [showTopDate, setShowTopDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
+  const [modalGoalVisible, setModalGoalVisible] = useState(false);
 
   const [attendees, setAttendees] = useState<RolodexDataProps[]>([]);
 
@@ -122,6 +127,11 @@ export default function AddToDoScreen(props: any) {
   useEffect(() => {
     let isMounted = true;
     getCurrentDay(isMounted);
+    var initialGoal: GoalDataConciseProps = {
+      id: 0,
+      title: 'Select One (Optional)',
+    };
+    setGoal(initialGoal);
     return () => {
       isMounted = false;
     };
@@ -161,6 +171,10 @@ export default function AddToDoScreen(props: any) {
   function handleAttendeesPressed() {
     console.log('attendees pressed');
     setModalAttendeesVisible(!modalAttendeesVisible);
+  }
+
+  function handleGoalPressed() {
+    setModalGoalVisible(!modalGoalVisible);
   }
 
   function handleSelectedAttendees(selected: RolodexDataProps[]) {
@@ -261,9 +275,11 @@ export default function AddToDoScreen(props: any) {
     console.log('order: ' + order);
     console.log('until type: ' + untilType);
     console.log('until val: ' + untilVal);
+    console.log('goal id: ' + goal?.id!);
 
     addNewToDo(
       toDoTitle,
+      goal?.id!,
       //date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
       date.toISOString(),
       priority,
@@ -396,6 +412,17 @@ export default function AddToDoScreen(props: any) {
             />
           </View>
         </View>
+
+        <Text style={styles.nameTitle}>Activity Goal</Text>
+        <TouchableOpacity onPress={handleGoalPressed}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+                {goal?.id == 0 ? 'Select One (Optional)' : goal?.title}
+              </TextInput>
+            </View>
+          </View>
+        </TouchableOpacity>
 
         <Text style={styles.nameTitle}>Date</Text>
         <TouchableOpacity onPress={showDateTopMode}>
@@ -1047,6 +1074,24 @@ export default function AddToDoScreen(props: any) {
         )}
 
         <View style={styles.footer}></View>
+        {modalGoalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalGoalVisible}
+            onRequestClose={() => {
+              setModalGoalVisible(!modalGoalVisible);
+            }}
+          >
+            <ChooseGoal
+              title="Choose Goal"
+              showSelectOne={true}
+              setModalGoalVisible={setModalGoalVisible}
+              setSelectedGoal={setGoal}
+              lightOrDark={lightOrDark}
+            />
+          </Modal>
+        )}
       </ScrollView>
     </View>
   );

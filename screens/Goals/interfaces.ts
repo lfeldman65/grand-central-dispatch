@@ -23,7 +23,7 @@ export interface GoalDataResponse {
 // Goals Concise in Postman
 
 export interface GoalDataConciseProps {
-  id: string;
+  id: number;
   title: string;
 }
 

@@ -4,17 +4,19 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { RolodexDataProps } from './interfaces';
-import { prettyDate } from '../../utils/general';
 import { editToDo } from './api';
 import Attendees from '../ToDo/AttendeesScreen';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { GoalDataConciseProps } from '../Goals/interfaces';
+import ChooseGoal from '../Goals/ChooseGoalScreen';
 
 const closeButton = require('../../images/button_close_white.png');
 
 export default function EditToDoScreen(props: any) {
   const {
     setModalVisible,
-    title,
+    activityTypeId,
+    activityTypeTitle,
     todoID,
     titleFromParent,
     dateFromParent,
@@ -26,6 +28,7 @@ export default function EditToDoScreen(props: any) {
     lightOrDark,
   } = props;
   const [newTitle, setNewTitle] = useState('');
+  const [goal, setGoal] = useState<GoalDataConciseProps>();
   const isFocused = useIsFocused();
   const [showTopDate, setShowTopDate] = useState(false);
   const [newDate, setNewDate] = useState(new Date());
@@ -34,6 +37,7 @@ export default function EditToDoScreen(props: any) {
   const [newNotes, setNewNotes] = useState('');
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
   const [attendee, setAttendees] = useState<RolodexDataProps[]>([]);
+  const [modalGoalVisible, setModalGoalVisible] = useState(false);
 
   const handleConfirm = (selectedDate: any) => {
     const currentDate = selectedDate;
@@ -59,6 +63,11 @@ export default function EditToDoScreen(props: any) {
     setNewNotes(notesFromParent);
     setPriority(priorityFromParent);
     setNewDate(new Date(Date.parse(dateFromParent)));
+    var initialGoal: GoalDataConciseProps = {
+      id: activityTypeId,
+      title: activityTypeTitle,
+    };
+    setGoal(initialGoal);
   }, [isFocused]);
 
   function cancelPressed() {
@@ -68,6 +77,10 @@ export default function EditToDoScreen(props: any) {
   function handleAttendeesPressed() {
     console.log('handle attendee pressed');
     setModalAttendeesVisible(!modalAttendeesVisible);
+  }
+
+  function handleGoalPressed() {
+    setModalGoalVisible(!modalGoalVisible);
   }
 
   function handleSelectedAttendees(selected: RolodexDataProps[]) {
@@ -108,7 +121,7 @@ export default function EditToDoScreen(props: any) {
   function savePressed() {
     console.log('toDoID: ' + todoID);
     console.log('attendeeFromParent: ' + attendeeFromParent);
-    editToDo(todoID, newTitle, newDate.toISOString(), priority, newLocation, newNotes, attendeeFromParent)
+    editToDo(todoID, newTitle, goal?.id!, newDate.toISOString(), priority, newLocation, newNotes, attendeeFromParent)
       .then((res) => {
         if (res.status == 'error') {
           console.log(res);
@@ -128,7 +141,7 @@ export default function EditToDoScreen(props: any) {
         <TouchableOpacity onPress={cancelPressed}>
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
-        <Text style={styles.nameLabel}>{title}</Text>
+        <Text style={styles.nameLabel}>{titleFromParent}</Text>
         <TouchableOpacity onPress={savePressed}>
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
@@ -146,6 +159,18 @@ export default function EditToDoScreen(props: any) {
           />
         </View>
       </View>
+
+      <Text style={styles.nameTitle}>Activity Goal</Text>
+      <TouchableOpacity onPress={handleGoalPressed}>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+              {goal?.id == 0 ? 'Select One (Optional)' : goal?.title}
+            </TextInput>
+          </View>
+        </View>
+      </TouchableOpacity>
+
       <Text style={styles.nameTitle}>Date</Text>
       <TouchableOpacity onPress={showDateTopMode}>
         <View style={styles.mainContent}>
@@ -247,6 +272,24 @@ export default function EditToDoScreen(props: any) {
             title="Attendees"
             setModalAttendeesVisible={setModalAttendeesVisible}
             setSelectedAttendees={handleSelectedAttendees}
+            lightOrDark={lightOrDark}
+          />
+        </Modal>
+      )}
+      {modalGoalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalGoalVisible}
+          onRequestClose={() => {
+            setModalGoalVisible(!modalGoalVisible);
+          }}
+        >
+          <ChooseGoal
+            title="Choose Goal"
+            showSelectOne={true}
+            setModalGoalVisible={setModalGoalVisible}
+            setSelectedGoal={setGoal}
             lightOrDark={lightOrDark}
           />
         </Modal>

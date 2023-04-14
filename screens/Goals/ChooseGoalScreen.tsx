@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { getRolodexData, getGoalDataConcise } from './api';
+import { useIsFocused } from '@react-navigation/native';
+import { getGoalDataConcise } from './api';
 import { GoalDataConciseProps } from './interfaces';
 import GoalRow from './ChooseGoalRow';
 
-const closeButton = require('../../images/button_close_white.png');
 const backArrow = require('../../images/white_arrow_left.png');
 
 export default function ChooseGoalScreen(props: any) {
-  const { title, setModalGoalVisible, setSelectedGoal, lightOrDark } = props;
+  const { title, setModalGoalVisible, setSelectedGoal, showSelectOne, lightOrDark } = props;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [goalList, setGoalList] = useState<GoalDataConciseProps[]>([]);
@@ -26,13 +25,13 @@ export default function ChooseGoalScreen(props: any) {
 
   useEffect(() => {
     let isMounted = true;
-    fetchGoalList('alpha', isMounted);
+    fetchGoalList(isMounted);
     return () => {
       isMounted = false;
     };
   }, [isFocused]);
 
-  function fetchGoalList(type: string, isMounted: boolean) {
+  function fetchGoalList(isMounted: boolean) {
     console.log('fetch goals');
     setIsLoading(true);
     getGoalDataConcise()
@@ -43,8 +42,15 @@ export default function ChooseGoalScreen(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
+          if (showSelectOne) {
+            var initialGoal: GoalDataConciseProps = {
+              id: 0,
+              title: 'Select One (Optional)',
+            };
+            res.data.unshift(initialGoal);
+          }
+          console.log(res.data);
           setGoalList(res.data);
-          //   console.log(res.data);
         }
         setIsLoading(false);
       })

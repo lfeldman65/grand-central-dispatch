@@ -1,55 +1,151 @@
-import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Linking,
-  ScrollView,
-  TouchableHighlight,
-} from 'react-native';
-import MenuIcon from '../../components/menuIcon';
-import { useEffect } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal } from 'react-native';
 import { ToDoDataProps } from './interfaces';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import * as React from 'react';
 import { prettyDate } from '../../utils/general';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { deleteToDo, markCompleteToDo } from './api';
+import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+
 const bullsEye = require('../ToDo/images/campaign.png');
-const chevron = require('../../images/chevron_blue_right.png');
 
 interface ToDoRowProps {
   data: ToDoDataProps;
   onPress(): void;
   lightOrDark: string;
+  refresh(): void;
 }
 
 export default function ToDoRow(props: ToDoRowProps) {
-  const isFocused = useIsFocused();
+  const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const renderLeftActions = () => {
+    return (
+      <View style={styles.leftSwipeItem}>
+        <TouchableOpacity
+          style={styles.swipeButtonTouch}
+          onPress={() => {
+            deletePressed();
+          }}
+        >
+          <Text style={styles.leftButton}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const renderRightActions = () => {
+    return (
+      <View style={styles.rightSwipeItem}>
+        <TouchableOpacity
+          style={styles.swipeButtonTouch}
+          onPress={() => {
+            completePressed();
+          }}
+        >
+          <Text style={styles.leftButton}>Complete</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  async function completePressed() {
+    console.log('completePressed');
+    console.log(props.data.id);
+    // ga4Analytics('To_Do_Complete_Or_Close', {
+    //   contentType: 'none',
+    //   itemId: 'id1206',
+    // });
+    if (props.data?.isCampaign!) {
+      navigation.goBack();
+      return;
+    }
+    setIsLoading(true);
+    markCompleteToDo(props.data.id)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          props.refresh();
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  async function deletePressed() {
+    // ga4Analytics('PAC_Swipe_Complete', {
+    //   contentType: 'Calls',
+    //   itemId: 'id0416',
+    // });
+    // setModalVisible(true);
+    console.log('delete pressed');
+    Alert.alert(
+      'Are you sure you want to delete this To-Do?',
+      '',
+      [
+        {
+          text: 'Delete',
+          onPress: () => deletePressedContinue(),
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  function deletePressedContinue() {
+    console.log('delete pressed');
+    deleteToDo(props.data.id)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          props.refresh();
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
 
   return (
-    <TouchableOpacity onPress={props.onPress}>
-      <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-        <View style={styles.imageBox}>
-          {props.data.isCampaign && <Image source={bullsEye} style={styles.bullsEyeImage} />}
-        </View>
-        <View style={props.lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
-          <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
-            {props.data.title}
-          </Text>
-          <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.notes}</Text>
-        </View>
-        <View style={styles.dateColumn}>
-          <View style={props.lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
-            <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-              {'Due: ' + prettyDate(props.data.dueDate)}
+    <Swipeable
+      enableTrackpadTwoFingerGesture
+      leftThreshold={30}
+      rightThreshold={40}
+      overshootLeft={false}
+      overshootRight={false}
+      renderRightActions={renderRightActions}
+      renderLeftActions={renderLeftActions}
+    >
+      <TouchableOpacity onPress={props.onPress}>
+        <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
+          <View style={styles.imageBox}>
+            {props.data.isCampaign && <Image source={bullsEye} style={styles.bullsEyeImage} />}
+          </View>
+          <View style={props.lightOrDark == 'dark' ? styles.textBoxDark : styles.textBoxLight}>
+            <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
+              {props.data.title}
             </Text>
-            {props.data.priority && <Text style={styles.priorityText}>High Priority</Text>}
+            <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+              {props.data.notes}
+            </Text>
+          </View>
+          <View style={styles.dateColumn}>
+            <View style={props.lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
+              <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+                {'Due: ' + prettyDate(props.data.dueDate)}
+              </Text>
+              {props.data.priority && <Text style={styles.priorityText}>High Priority</Text>}
+            </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Swipeable>
   );
 }
 
@@ -145,15 +241,38 @@ const styles = StyleSheet.create({
     marginTop: -4,
     backgroundColor: 'white',
   },
-  chevron: {
-    backgroundColor: 'white',
-    height: 20,
-    width: 12,
-    marginTop: 15,
-  },
   priorityText: {
     marginTop: 5,
     color: '#F99055',
     fontSize: 14,
+  },
+  leftSwipeItem: {
+    justifyContent: 'center',
+    margin: 0,
+    alignContent: 'center',
+    width: 100,
+    backgroundColor: 'red',
+  },
+  rightSwipeItem: {
+    justifyContent: 'center',
+    margin: 0,
+    alignContent: 'center',
+    width: 120,
+    backgroundColor: '#56BE42',
+  },
+  leftButton: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignContent: 'center',
+    color: 'white',
+    fontSize: 18,
+  },
+  swipeButtonTouch: {
+    height: '100%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    alignContent: 'center',
+    color: 'white',
+    fontSize: 18,
   },
 });

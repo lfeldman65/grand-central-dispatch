@@ -1,5 +1,3 @@
-import { User } from 'react-native-feather';
-import { sub } from 'react-native-reanimated';
 import { http } from '../../utils/http';
 import { TrackDataResponse, GoalDataResponse, GoalDataConciseResponse, RolodexDataResponse } from './interfaces';
 

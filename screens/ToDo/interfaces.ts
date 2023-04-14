@@ -26,6 +26,7 @@ export interface ToDoDetailsDataResponse {
 
 export interface ToDoDetailsDataProps {
   id: string;
+  activityTypeId: number;
   title: string;
   dueDate: string;
   priority: string;

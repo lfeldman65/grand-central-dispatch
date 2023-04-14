@@ -10,7 +10,7 @@ import {
 } from './interfaces';
 
 export function getToDoData(type: string): Promise<ToDoDataResponse> {
-  return http.get(`todos?filter=${type}&batchSize=10000&lastItem=0`);
+  return http.get(`todos?filter=${type}&batchSize=10&lastItem=0`);
 }
 
 export function getToDoDetails(toDoID: string): Promise<ToDoDetailsDataResponse> {
@@ -27,6 +27,7 @@ export function deleteToDo(toDoID: string): Promise<ToDoDeleteDataResponse> {
 
 export function addNewToDo(
   title: string,
+  activityTypeId: number,
   dueDate: string,
   priority: string,
   location: string,
@@ -51,10 +52,11 @@ export function addNewToDo(
   type: string,
   attendees: AttendeesProps[]
 ): Promise<AddToDoDataResponse> {
-  return http.post('todos', {
+  return http.post('todosActivity', {
     body: {
       // no bracket since not an array
       title: title,
+      activityTypeId: 0,
       dueDate: dueDate,
       priority: priority,
       location: location,
@@ -89,6 +91,7 @@ export function addNewToDo(
 export function editToDo(
   todoID: string,
   title: string,
+  activityTypeId: number,
   dueDate: string,
   priority: string,
   location: string,
@@ -96,10 +99,11 @@ export function editToDo(
   attendees: AttendeesProps[]
 ): Promise<AddToDoDataResponse> {
   console.log('add new to do: ' + todoID);
-  return http.put(`todos?id=${todoID}`, {
+  return http.put(`todosActivity?id=${todoID}`, {
     body: {
       // no bracket since not an array
       title: title,
+      activityTypeId: activityTypeId,
       dueDate: dueDate,
       priority: priority,
       location: location,
