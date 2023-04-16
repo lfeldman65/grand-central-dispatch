@@ -11,16 +11,19 @@ import globalStyles from '../../globalStyles';
 import { handleTextPressed, ga4Analytics } from '../../utils/general';
 
 interface PACCallsRowProps {
+  key: number;
   data: PACDataProps;
   onPress(): void;
   refresh(): void;
   lightOrDark: string;
+  close(s: Swipeable): void;
 }
 
 export default function PACCallsRow(props: PACCallsRowProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
+  var _swipeableRow: Swipeable;
 
   async function completePressed() {
     ga4Analytics('PAC_Swipe_Complete', {
@@ -87,6 +90,21 @@ export default function PACCallsRow(props: PACCallsRowProps) {
     Linking.openURL(`tel:${props.data.officePhone}`);
   }
 
+  function handleSwipeBegin(rowKey: number) {
+    console.log('handle swipe');
+    props.close(_swipeableRow);
+    props.data.swipeRef = _swipeableRow;
+  }
+
+  function handleSwipeEnd() {
+    console.log('swipe end');
+    props.data.swipeRef = null;
+  }
+
+  function updateRef(ref: Swipeable) {
+    _swipeableRow = ref;
+  }
+
   const renderRightActions = () => {
     return (
       <View style={styles.rightSwipeItem}>
@@ -119,6 +137,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
 
   return (
     <Swipeable
+      ref={updateRef}
       enableTrackpadTwoFingerGesture
       leftThreshold={30}
       rightThreshold={40}
@@ -126,6 +145,9 @@ export default function PACCallsRow(props: PACCallsRowProps) {
       overshootRight={false}
       renderRightActions={renderRightActions}
       renderLeftActions={renderLeftActions}
+      onSwipeableWillOpen={() => handleSwipeBegin(props.key)}
+      onSwipeableWillClose={handleSwipeEnd}
+      friction={2}
     >
       <TouchableOpacity onPress={props.onPress}>
         <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>

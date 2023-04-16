@@ -1,3 +1,5 @@
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+
 // PAC List RN in Postman
 
 export interface PACDataProps {
@@ -17,6 +19,7 @@ export interface PACDataProps {
   city: string;
   state: string;
   zip: string;
+  swipeRef: Swipeable | null;
 }
 
 export interface PACDataResponse {

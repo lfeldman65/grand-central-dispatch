@@ -203,6 +203,12 @@ export default function PACScreen(props: PACScreenProps) {
                       onPress={() => handleRowPress(index)}
                       refresh={() => callsPressed()}
                       lightOrDark={lightOrDark}
+                      close={(s) => {
+                        data.forEach((item) => {
+                          if (item.swipeRef != null && item.swipeRef != s) item.swipeRef.close();
+                          item.swipeRef = null;
+                        });
+                      }}
                     />
                   ) : null}
                   {tabSelected == 'notes' ? (
@@ -212,6 +218,12 @@ export default function PACScreen(props: PACScreenProps) {
                       onPress={() => handleRowPress(index)}
                       refresh={() => notesPressed()}
                       lightOrDark={lightOrDark}
+                      close={(s) => {
+                        data.forEach((item) => {
+                          if (item.swipeRef != null && item.swipeRef != s) item.swipeRef.close();
+                          item.swipeRef = null;
+                        });
+                      }}
                     />
                   ) : null}
                   {tabSelected == 'popby' ? (
@@ -221,6 +233,12 @@ export default function PACScreen(props: PACScreenProps) {
                       onPress={() => handleRowPress(index)}
                       refresh={() => popPressed()}
                       lightOrDark={lightOrDark}
+                      close={(s) => {
+                        data.forEach((item) => {
+                          if (item.swipeRef != null && item.swipeRef != s) item.swipeRef.close();
+                          item.swipeRef = null;
+                        });
+                      }}
                     />
                   ) : null}
                 </View>

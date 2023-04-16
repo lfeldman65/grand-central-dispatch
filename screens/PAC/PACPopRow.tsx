@@ -14,10 +14,12 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
 
 interface PACRowProps {
+  key: number;
   data: PACDataProps;
   onPress(): void;
   refresh(): void;
   lightOrDark: string;
+  close(s: Swipeable): void;
 }
 
 export default function PACPopRow(props: PACRowProps) {
@@ -26,6 +28,7 @@ export default function PACPopRow(props: PACRowProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const actionSheetRef = useRef<ActionSheet>(null);
+  var _swipeableRow: Swipeable;
 
   async function completePressed() {
     ga4Analytics('PAC_Swipe_Complete', {
@@ -190,6 +193,21 @@ export default function PACPopRow(props: PACRowProps) {
       .catch((error) => console.error('failure ' + error));
   }
 
+  function handleSwipeBegin(rowKey: number) {
+    console.log('handle swipe');
+    props.close(_swipeableRow);
+    props.data.swipeRef = _swipeableRow;
+  }
+
+  function handleSwipeEnd() {
+    console.log('swipe end');
+    props.data.swipeRef = null;
+  }
+
+  function updateRef(ref: Swipeable) {
+    _swipeableRow = ref;
+  }
+
   const renderRightActions = () => {
     return (
       <View style={styles.rightSwipeItem}>
@@ -222,6 +240,7 @@ export default function PACPopRow(props: PACRowProps) {
 
   return (
     <Swipeable
+      ref={updateRef}
       enableTrackpadTwoFingerGesture
       leftThreshold={30}
       rightThreshold={40}
@@ -229,6 +248,9 @@ export default function PACPopRow(props: PACRowProps) {
       overshootRight={false}
       renderRightActions={renderRightActions}
       renderLeftActions={renderLeftActions}
+      onSwipeableWillOpen={() => handleSwipeBegin(props.key)}
+      onSwipeableWillClose={handleSwipeEnd}
+      friction={2}
     >
       <TouchableOpacity onPress={props.onPress}>
         <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
