@@ -285,6 +285,8 @@ const styles = StyleSheet.create({
   dividingLine: {
     backgroundColor: 'lightgray',
     height: 1,
+    marginTop: 10,
+    marginBottom: 10,
   },
   referralAndSpouseText: {
     width: '92%',
@@ -312,14 +314,14 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: 15,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     fontWeight: '500',
   },
   headerLight: {
     fontSize: 18,
     color: 'black',
     marginLeft: 15,
-    marginTop: 10,
+    marginTop: 5,
     marginBottom: 10,
     fontWeight: '500',
   },

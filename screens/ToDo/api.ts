@@ -56,7 +56,7 @@ export function addNewToDo(
     body: {
       // no bracket since not an array
       title: title,
-      activityTypeId: 0,
+      activityTypeId: activityTypeId,
       dueDate: dueDate,
       priority: priority,
       location: location,
