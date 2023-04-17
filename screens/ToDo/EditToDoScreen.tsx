@@ -160,7 +160,7 @@ export default function EditToDoScreen(props: any) {
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>Activity Goal</Text>
+      <Text style={styles.nameTitle}>Activity</Text>
       <TouchableOpacity onPress={handleGoalPressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>

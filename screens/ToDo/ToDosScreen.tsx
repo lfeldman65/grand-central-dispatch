@@ -186,6 +186,12 @@ export default function ToDosScreen() {
                     lightOrDark={lightOrDark}
                     onPress={() => handleRowPress(index)}
                     refresh={() => fetchData(true)}
+                    close={(s) => {
+                      dataActivity.forEach((item) => {
+                        if (item.swipeRef != null && item.swipeRef != s) item.swipeRef.close();
+                        item.swipeRef = null;
+                      });
+                    }}
                   />
                 ))}
               </View>

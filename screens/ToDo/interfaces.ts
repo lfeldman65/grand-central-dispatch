@@ -1,3 +1,5 @@
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+
 // ToDo in Postman
 
 export interface ToDoDataResponse {
@@ -14,6 +16,7 @@ export interface ToDoDataProps {
   priority: string;
   completedDate: string;
   isCampaign: boolean;
+  swipeRef: Swipeable | null;
 }
 
 // ToDo Details in Postman

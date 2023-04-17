@@ -226,7 +226,7 @@ export default function ToDoDetails(props: any) {
       <View style={lightOrDark == 'dark' ? styles.bottomContainerDark : styles.bottomContainerLight}>
         <Text style={styles.campaignText}>{data?.isCampaign ? 'This To-Do is part of a marketing campaign' : ''}</Text>
         <TouchableOpacity onPress={markComplete}>
-          <Text style={styles.completeText}>{data?.isCampaign ? 'Close' : 'Mark as Complete'}</Text>
+          <Text style={styles.completeText}>{data?.isCampaign ? 'Close' : 'Complete'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={deletePressed}>
           <Text style={styles.deleteText}>Delete</Text>

@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, Linking, Modal, ScrollView } from 'react-native';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { styles } from './styles';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { PACDataProps } from './interfaces';

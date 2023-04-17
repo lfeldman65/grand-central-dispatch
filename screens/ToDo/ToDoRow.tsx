@@ -10,15 +10,18 @@ import { useState } from 'react';
 const bullsEye = require('../ToDo/images/campaign.png');
 
 interface ToDoRowProps {
+  key: number;
   data: ToDoDataProps;
   onPress(): void;
   lightOrDark: string;
   refresh(): void;
+  close(s: Swipeable): void;
 }
 
 export default function ToDoRow(props: ToDoRowProps) {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
+  var _swipeableRow: Swipeable;
 
   const renderLeftActions = () => {
     return (
@@ -34,6 +37,21 @@ export default function ToDoRow(props: ToDoRowProps) {
       </View>
     );
   };
+
+  function handleSwipeBegin(rowKey: number) {
+    console.log('handle swipe');
+    props.close(_swipeableRow);
+    props.data.swipeRef = _swipeableRow;
+  }
+
+  function handleSwipeEnd() {
+    console.log('swipe end');
+    props.data.swipeRef = null;
+  }
+
+  function updateRef(ref: Swipeable) {
+    _swipeableRow = ref;
+  }
 
   const renderRightActions = () => {
     return (
@@ -114,6 +132,7 @@ export default function ToDoRow(props: ToDoRowProps) {
 
   return (
     <Swipeable
+      ref={updateRef}
       enableTrackpadTwoFingerGesture
       leftThreshold={30}
       rightThreshold={40}
@@ -121,6 +140,9 @@ export default function ToDoRow(props: ToDoRowProps) {
       overshootRight={false}
       renderRightActions={renderRightActions}
       renderLeftActions={renderLeftActions}
+      onSwipeableWillOpen={() => handleSwipeBegin(props.key)}
+      onSwipeableWillClose={handleSwipeEnd}
+      friction={2}
     >
       <TouchableOpacity onPress={props.onPress}>
         <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
@@ -138,7 +160,7 @@ export default function ToDoRow(props: ToDoRowProps) {
           <View style={styles.dateColumn}>
             <View style={props.lightOrDark == 'dark' ? styles.dateViewDark : styles.dateViewLight}>
               <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-                {'Due: ' + prettyDate(props.data.dueDate)}
+                {prettyDate(props.data.dueDate)}
               </Text>
               {props.data.priority && <Text style={styles.priorityText}>High Priority</Text>}
             </View>
@@ -187,7 +209,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     height: 75,
     backgroundColor: 'black',
-    width: '60%',
+    width: '70%',
     marginLeft: 5,
     textAlign: 'left',
   },
@@ -195,7 +217,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     height: 75,
     backgroundColor: 'white',
-    width: '60%',
+    width: '70%',
     marginLeft: 5,
     textAlign: 'left',
   },
