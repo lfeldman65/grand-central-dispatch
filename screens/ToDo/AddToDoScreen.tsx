@@ -1073,7 +1073,6 @@ export default function AddToDoScreen(props: any) {
           </Modal>
         )}
 
-        <View style={styles.footer}></View>
         {modalGoalVisible && (
           <Modal
             animationType="slide"
@@ -1092,6 +1091,7 @@ export default function AddToDoScreen(props: any) {
             />
           </Modal>
         )}
+        <View style={styles.footer}></View>
       </ScrollView>
     </View>
   );
@@ -1111,7 +1111,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     // Can't scroll to bottom of Notes without this
-    height: 250,
+    height: 500,
   },
   topRow: {
     flexDirection: 'row',
@@ -1168,7 +1168,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#002341',
     width: '90%',
-    height: '50%',
+    height: '40%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,

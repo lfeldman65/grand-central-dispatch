@@ -247,9 +247,9 @@ export default function EditToDoScreen(props: any) {
 
       <Text style={styles.nameTitle}>Notes</Text>
       <View style={styles.mainContent}>
-        <View style={lightOrDark == 'dark' ? styles.notesViewDark : styles.notesViewLight}>
+        <View style={styles.notesView}>
           <TextInput
-            style={lightOrDark == 'dark' ? styles.notesTextDark : styles.notesTextLight}
+            style={styles.notesText}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -294,6 +294,7 @@ export default function EditToDoScreen(props: any) {
           />
         </Modal>
       )}
+      <View style={styles.footer}></View>
     </ScrollView>
   );
 }
@@ -304,6 +305,10 @@ export const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
+  },
+  footer: {
+    // Can't scroll to bottom of Notes without this
+    height: 500,
   },
   nameTitle: {
     color: 'white',
@@ -353,35 +358,20 @@ export const styles = StyleSheet.create({
     left: 20,
     marginBottom: 25,
   },
-  notesViewDark: {
+  notesView: {
     marginTop: 10,
-    backgroundColor: 'black',
+    backgroundColor: '#002341',
     width: '90%',
-    height: '70%',
+    height: '40%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  notesViewLight: {
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: '90%',
-    height: '70%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  notesTextDark: {
+  notesText: {
     paddingTop: 5,
     fontSize: 18,
     color: 'white',
-  },
-  notesTextLight: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'black',
   },
   attendeeView: {
     backgroundColor: '#002341',
