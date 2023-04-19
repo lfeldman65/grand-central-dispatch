@@ -273,6 +273,7 @@ export default function EditAppointmentScreen(props: any) {
           />
         </Modal>
       )}
+      <View style={styles.footer}></View>
     </ScrollView>
   );
 }
@@ -289,6 +290,10 @@ export const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
+  },
+  footer: {
+    // Can't scroll to bottom of Notes without this
+    height: 500,
   },
   closeX: {
     width: 15,
@@ -356,7 +361,7 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#002341',
     width: '90%',
-    height: '70%',
+    height: '40%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
