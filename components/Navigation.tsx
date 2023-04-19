@@ -869,7 +869,7 @@ export const ImportStackNavigator = () => {
           headerStyle: {
             backgroundColor: '#1A6295',
           },
-          headerBackVisible: true,
+          headerBackVisible: false,
         }}
       />
 

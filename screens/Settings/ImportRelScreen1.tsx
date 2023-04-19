@@ -49,9 +49,9 @@ export default function ImportRelScreen1(props: any) {
           worry, you don't have to import everyone into the app, and your contacts will not be notified. Also,
           duplicates will not be shown. In the next step, you can select who'd you'd like to import.
         </Text>
-        <View style={styles.imageBox}>
-          <Image source={rmLogo} style={styles.logoImage} />
-        </View>
+      </View>
+      <View style={styles.imageBox}>
+        <Image source={rmLogo} style={styles.logoImage} />
       </View>
     </ScrollView>
   );
@@ -63,8 +63,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   saveButton: {
-    padding: 10,
-    // backgroundColor: '#00AAAA'
+    padding: 5,
   },
   saveText: {
     color: 'white',
@@ -83,15 +82,11 @@ const styles = StyleSheet.create({
   imageBox: {
     width: 232,
     height: 167,
-    marginTop: 20,
-    marginRight: 30,
     alignSelf: 'center',
   },
   logoImage: {
     width: 232,
     height: 167,
-    marginLeft: 15,
-    marginRight: 5,
     alignItems: 'center',
   },
   fieldText: {
