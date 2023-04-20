@@ -7,6 +7,9 @@ export interface RolodexDataProps {
   contactTypeID: string;
   employerName: string;
   qualified: boolean;
+  mobile: string;
+  homePhone: string;
+  officePhone: string;
 }
 
 export interface RolodexDataResponse {

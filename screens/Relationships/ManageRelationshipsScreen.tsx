@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as FileSystem from 'expo-file-system';
-import { Text, View, TouchableOpacity, Modal, Image, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, Image, ActivityIndicator, Alert } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -18,6 +18,7 @@ import { ga4Analytics } from '../../utils/general';
 import { styles } from './styles';
 import { storage } from '../../utils/storage';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import NetInfo from '@react-native-community/netinfo';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
@@ -33,17 +34,94 @@ export default function ManageRelationshipsScreen() {
   const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]); // A-Z
-  const [rankingRolodex, setRankingRolodex] = useState<RolodexDataProps[]>([]); //Ranking tabs
+  const [rankingRolodex, setRankingRolodex] = useState<RolodexDataProps[]>([]); // Ranking tabs
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
   const [isLoadingForRolodex, setIsLoadingForRolodex] = useState(true);
   const [isLoadingForRanking, setIsLoadingForRanking] = useState(true);
   const [isLoadingForGroups, setIsLoadingForGroups] = useState(true);
-
   const [lightOrDark, setLightOrDark] = useState('');
-
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
 
   const handleRowPress = (index: number) => {
+    if (isConnected) {
+      handleNavigation(index);
+    } else {
+      if (tabSelected == 'a-z') {
+        showAZWithoutInternet(index);
+      } else if (tabSelected == 'ranking') {
+        showRankingWithoutInternet(index);
+      } else {
+        Alert.alert('Please connect to the internet');
+      }
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      if (state != null && state.isConnected != null) {
+        setIsConnected(state.isConnected);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  function showAZWithoutInternet(index: number) {
+    var message = '';
+    var mobile = '';
+    var home = '';
+    var work = '';
+    console.log(dataRolodex[index].firstName);
+
+    if (dataRolodex[index].mobile != '') {
+      mobile = 'mobile: ' + dataRolodex[index].mobile;
+      message = message + mobile + '\n';
+    }
+    if (dataRolodex[index].homePhone != '') {
+      home = 'home: ' + dataRolodex[index].homePhone;
+      message = message + home + '\n';
+    }
+    if (dataRolodex[index].officePhone != '') {
+      work = 'office: ' + dataRolodex[index].officePhone;
+      message = message + work + '\n';
+    }
+    if (message != '') {
+      Alert.alert(message);
+    } else {
+      Alert.alert('Sorry, there is no information to display');
+    }
+  }
+
+  function showRankingWithoutInternet(index: number) {
+    var message = '';
+    var mobile = '';
+    var home = '';
+    var work = '';
+    console.log(rankingRolodex[index].firstName);
+
+    if (rankingRolodex[index].mobile != '') {
+      mobile = 'mobile: ' + rankingRolodex[index].mobile;
+      message = message + mobile + '\n';
+    }
+    if (rankingRolodex[index].homePhone != '') {
+      home = 'home: ' + rankingRolodex[index].homePhone;
+      message = message + home + '\n';
+    }
+    if (rankingRolodex[index].officePhone != '') {
+      work = 'office: ' + rankingRolodex[index].officePhone;
+      message = message + work + '\n';
+    }
+    if (message != '') {
+      Alert.alert(message);
+    } else {
+      Alert.alert('Sorry, there is no information to display');
+    }
+  }
+
+  function handleNavigation(index: number) {
     ga4Analytics('Relationships_Row', {
       contentType: prettyTabName(tabSelected),
       itemId: 'id0507',
@@ -71,7 +149,7 @@ export default function ManageRelationshipsScreen() {
         lightOrDark: lightOrDark,
       });
     }
-  };
+  }
 
   function getIndex() {
     if (tabSelected == 'a-z')
