@@ -1,4 +1,4 @@
-import { Fragment, useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { Modal, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';

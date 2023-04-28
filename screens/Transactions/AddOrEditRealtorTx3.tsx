@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { useEffect } from 'react';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useEffect, useRef } from 'react';
 import React from 'react';
 import { styles, roundToInt } from './transactionHelpers';
 import { storage } from '../../utils/storage';
 import { addOrEditTransaction } from './api';
 import { shouldRunTests } from '../../utils/general';
+import globalStyles from '../../globalStyles';
 
 var incomeAfterCosts = 0;
 
@@ -49,6 +50,7 @@ export default function AddOrEditRealtorTx3(props: any) {
   const [notes, setNotes] = useState('');
   const [lightOrDark, setIsLightOrDark] = useState('');
   const navigation = useNavigation<any>();
+  const notesInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -113,6 +115,12 @@ export default function AddOrEditRealtorTx3(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
+
+  function handleNotesFocus() {
+    if (notesInputRef != null && notesInputRef.current != null) {
+      notesInputRef.current.focus();
+    }
+  }
 
   function populateDataIfEdit(isMounted: boolean) {
     if (!isMounted) {
@@ -355,20 +363,25 @@ export default function AddOrEditRealtorTx3(props: any) {
 
           <Text style={styles.nameTitle}>Notes</Text>
           <View style={styles.mainContent}>
-            <View style={styles.noteView}>
+            <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
               <TextInput
-                style={styles.noteText}
+                onPressIn={handleNotesFocus}
+                ref={notesInputRef}
+                multiline={true}
+                numberOfLines={5}
+                style={globalStyles.notesInput}
                 placeholder="Type Here"
                 placeholderTextColor="#AFB9C2"
                 textAlign="left"
                 value={notes}
                 onChangeText={(text) => setNotes(text)}
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.bottom}></View>
+        <View style={styles.footer}></View>
       </ScrollView>
+
       <View style={styles.bottomContainer}>
         <Text style={styles.summaryText}>Income After Broker's Split and Fees</Text>
         <Text style={styles.summaryText}>{calculateIncome()}</Text>

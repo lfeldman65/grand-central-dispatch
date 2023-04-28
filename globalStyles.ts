@@ -138,4 +138,22 @@ export default StyleSheet.create({
     width: '30%',
     flexDirection: 'row',
   },
+
+  // Notes Box
+
+  notesView: {
+    marginTop: 10,
+    backgroundColor: '#002341',
+    width: '90%',
+    marginBottom: 2,
+    paddingLeft: 10,
+    fontSize: 29,
+    alignItems: 'flex-start',
+  },
+  notesInput: {
+    paddingTop: 5,
+    fontSize: 18,
+    color: 'white',
+    height: '40%',
+  },
 });

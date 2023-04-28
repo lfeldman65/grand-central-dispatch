@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import Attendees from '../ToDo/AttendeesScreen';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { GoalDataConciseProps } from '../Goals/interfaces';
 import ChooseGoal from '../Goals/ChooseGoalScreen';
+import globalStyles from '../../globalStyles';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -38,6 +39,7 @@ export default function EditToDoScreen(props: any) {
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
   const [attendee, setAttendees] = useState<RolodexDataProps[]>([]);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
+  const notesInputRef = useRef<TextInput>(null);
 
   const handleConfirm = (selectedDate: any) => {
     const currentDate = selectedDate;
@@ -133,6 +135,12 @@ export default function EditToDoScreen(props: any) {
         }
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  function handleNotesFocus() {
+    if (notesInputRef != null && notesInputRef.current != null) {
+      notesInputRef.current.focus();
+    }
   }
 
   return (
@@ -247,18 +255,22 @@ export default function EditToDoScreen(props: any) {
 
       <Text style={styles.nameTitle}>Notes</Text>
       <View style={styles.mainContent}>
-        <View style={styles.notesView}>
+        <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
           <TextInput
-            style={styles.notesText}
+            onPressIn={handleNotesFocus}
+            ref={notesInputRef}
+            multiline={true}
+            numberOfLines={5}
+            style={globalStyles.notesInput}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
             value={newNotes}
             onChangeText={(text) => setNewNotes(text)}
-            defaultValue={notesFromParent}
           />
-        </View>
+        </TouchableOpacity>
       </View>
+
       {modalAttendeesVisible && (
         <Modal
           animationType="slide"
@@ -305,10 +317,6 @@ export const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
-  },
-  footer: {
-    // Can't scroll to bottom of Notes without this
-    height: 500,
   },
   nameTitle: {
     color: 'white',
@@ -358,20 +366,35 @@ export const styles = StyleSheet.create({
     left: 20,
     marginBottom: 25,
   },
-  notesView: {
+  notesViewDark: {
     marginTop: 10,
-    backgroundColor: '#002341',
+    backgroundColor: 'black',
     width: '90%',
-    height: '40%',
+    height: '70%',
     marginBottom: 2,
     paddingLeft: 10,
     fontSize: 29,
     alignItems: 'flex-start',
   },
-  notesText: {
+  notesViewLight: {
+    marginTop: 10,
+    backgroundColor: 'white',
+    width: '90%',
+    height: '70%',
+    marginBottom: 2,
+    paddingLeft: 10,
+    fontSize: 29,
+    alignItems: 'flex-start',
+  },
+  notesTextDark: {
     paddingTop: 5,
     fontSize: 18,
     color: 'white',
+  },
+  notesTextLight: {
+    paddingTop: 5,
+    fontSize: 18,
+    color: 'black',
   },
   attendeeView: {
     backgroundColor: '#002341',
@@ -397,5 +420,9 @@ export const styles = StyleSheet.create({
   deleteAttendeeX: {
     width: 10,
     height: 10,
+  },
+  footer: {
+    // Can't scroll to bottom of Notes without this
+    height: 500,
   },
 });

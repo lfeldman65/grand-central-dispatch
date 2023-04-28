@@ -6,7 +6,7 @@ export const recurrenceMenu = {
   'Monthly on the': 'Monthly on the',
   'Every _ week of the month': 'Every _ week of the month',
   Yearly: 'Yearly',
-};
+}; // branch
 
 export const untilTypeMenu = {
   Times: 'Times',
@@ -272,3 +272,10 @@ export function getYear(prettyDate: string) {
   let datePieces = prettyDate.split(' ');
   return datePieces[3];
 }
+
+export const apptStartDateLabel = 'Start Date';
+export const apptStartTimeLabel = 'Start Time';
+export const apptEndDateLabel = 'End Date';
+export const apptEndTimeLabel = 'End Time';
+export const apptDetailStartLabel = 'Start';
+export const apptDetailEndLabel = 'End';

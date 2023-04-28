@@ -17,7 +17,7 @@ const refMenuChoice3 = 'I gave client a referral';
 
 export default function TrackActivityScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName, goalID, goalName, subjectP, lightOrDark } = props;
-  const [note, onNoteChange] = useState('');
+  const [notes, setNotes] = useState('');
   const [relationship, setRelationship] = useState<RolodexDataProps>();
   const [referral, setReferral] = useState<RolodexDataProps>();
   const [goal, setGoal] = useState<GoalDataConciseProps>();
@@ -32,6 +32,7 @@ export default function TrackActivityScreen(props: any) {
   const [showDate, setShowDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const isFocused = useIsFocused();
+  const notesInputRef = useRef<TextInput>(null);
 
   const filters = {
     'Client gave me referral': 'Client gave me referral',
@@ -49,6 +50,12 @@ export default function TrackActivityScreen(props: any) {
     setDate(currentDate);
     setShowDate(false);
   };
+
+  function handleNotesFocus() {
+    if (notesInputRef != null && notesInputRef.current != null) {
+      notesInputRef.current.focus();
+    }
+  }
 
   function hideDatePicker() {
     setShowDate(false);
@@ -149,7 +156,7 @@ export default function TrackActivityScreen(props: any) {
       subject,
       date.toISOString(),
       askedReferral,
-      note,
+      notes,
       refInPast
     );
   }
@@ -329,17 +336,22 @@ export default function TrackActivityScreen(props: any) {
 
       <Text style={styles.fieldTitle}>Notes</Text>
       <View style={styles.mainContent}>
-        <View style={styles.notesView}>
+        <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
           <TextInput
-            style={styles.notesText}
+            onPressIn={handleNotesFocus}
+            ref={notesInputRef}
+            multiline={true}
+            numberOfLines={5}
+            style={globalStyles.notesInput}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
-            value={note}
-            onChangeText={onNoteChange}
+            value={notes}
+            onChangeText={(text) => setNotes(text)}
           />
-        </View>
+        </TouchableOpacity>
       </View>
+
       {modalRelVisible && (
         <Modal
           animationType="slide"
@@ -397,8 +409,6 @@ export default function TrackActivityScreen(props: any) {
                 </TouchableOpacity>
               ))}
             </View>
-
-            {/*  Add a Small Footer at Bottom */}
           </ScrollView>
         </View>
       </ActionSheet>

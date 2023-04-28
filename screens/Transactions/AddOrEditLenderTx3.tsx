@@ -1,11 +1,10 @@
-import { Fragment, useLayoutEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { useRef, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { styles, roundToInt } from './transactionHelpers';
-import { storage } from '../../utils/storage';
 import { addOrEditTransaction } from './api';
+import globalStyles from '../../globalStyles';
 
 var incomeAfterCosts = 0;
 
@@ -48,6 +47,7 @@ export default function AddOrEditLenderTx3(props: any) {
   const [miscAfterFees, setMiscAfterFees] = useState('255');
   const [notes, setNotes] = useState('');
   const navigation = useNavigation<any>();
+  const notesInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -221,6 +221,12 @@ export default function AddOrEditLenderTx3(props: any) {
     }
   }
 
+  function handleNotesFocus() {
+    if (notesInputRef != null && notesInputRef.current != null) {
+      notesInputRef.current.focus();
+    }
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -313,18 +319,23 @@ export default function AddOrEditLenderTx3(props: any) {
 
           <Text style={styles.nameTitle}>Notes</Text>
           <View style={styles.mainContent}>
-            <View style={styles.noteView}>
+            <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
               <TextInput
-                style={styles.noteText}
+                onPressIn={handleNotesFocus}
+                ref={notesInputRef}
+                multiline={true}
+                numberOfLines={5}
+                style={globalStyles.notesInput}
                 placeholder="Type Here"
                 placeholderTextColor="#AFB9C2"
                 textAlign="left"
                 value={notes}
                 onChangeText={(text) => setNotes(text)}
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
+        <View style={styles.footer}></View>
       </ScrollView>
 
       <View style={styles.bottomContainer}>

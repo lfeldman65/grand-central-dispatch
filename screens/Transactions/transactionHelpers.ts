@@ -129,7 +129,7 @@ export const styles = StyleSheet.create({
     borderBottomColor: '#1A6295',
   },
   topContainer: {
-    height: '93%',
+    height: '100%',
   },
   mainContent: {
     alignItems: 'center',
@@ -244,23 +244,8 @@ export const styles = StyleSheet.create({
     marginTop: 12,
     opacity: 0.4,
   },
-  noteView: {
-    marginTop: 10,
-    backgroundColor: '#002341',
-    width: '90%',
-    height: '80%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  noteText: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'white',
-  },
   bottom: {
-    height: 1000, // leave room for keyboard
+    height: 500, // leave room for keyboard
   },
   placeholderText: {
     fontSize: 18,
@@ -297,5 +282,9 @@ export const styles = StyleSheet.create({
   deleteAttendeeX: {
     width: 10,
     height: 10,
+  },
+  footer: {
+    // Can't scroll to bottom of Notes without this
+    height: 500,
   },
 });

@@ -12,10 +12,7 @@ interface ApptRowProps {
 }
 
 export default function AppointmentRow(props: ApptRowProps) {
-  // const { appID } = props;
-  // const [lightOrDark, setIsLightOrDark] = useState('');
   const isFocused = useIsFocused();
-  const [isFavorite, setIsFavorite] = useState('False');
 
   return (
     <TouchableOpacity onPress={props.onPress}>
@@ -28,14 +25,20 @@ export default function AppointmentRow(props: ApptRowProps) {
           <Text style={props.lightOrDark == 'dark' ? styles.appTitleDark : styles.appTitleLight}>
             {props.data.title}
           </Text>
-          <Text>{new Date(props.data.startTime).toLocaleTimeString()}</Text>
+          <Text>
+            {new Date(props.data.startTime).toLocaleTimeString('en-us', {
+              hour12: true,
+              hour: 'numeric',
+              minute: '2-digit',
+            })}
+          </Text>
         </View>
 
         {props.data.notes != '' && (
           <Text style={props.lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>{props.data.notes}</Text>
         )}
 
-        {/* <Text>{appID}</Text>
+        {/* <Text>{props.appID}</Text>
         <Text>{new Date(props.data.startTime).toLocaleTimeString()}</Text>
         <Text>{props.data.startTime}</Text> */}
       </View>

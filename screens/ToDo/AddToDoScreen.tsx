@@ -59,8 +59,8 @@ export default function AddToDoScreen(props: any) {
   const [showEndDate, setShowEndDate] = useState(false);
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
-
   const [attendees, setAttendees] = useState<RolodexDataProps[]>([]);
+  const notesInputRef = useRef<TextInput>(null);
 
   var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -234,6 +234,12 @@ export default function AddToDoScreen(props: any) {
         break;
       default:
         break;
+    }
+  }
+
+  function handleNotesFocus() {
+    if (notesInputRef != null && notesInputRef.current != null) {
+      notesInputRef.current.focus();
     }
   }
 
@@ -668,7 +674,6 @@ export default function AddToDoScreen(props: any) {
                   </TouchableOpacity>
                 ))}
               </View>
-              {/*  Add a Small Footer at Bottom */}
             </ScrollView>
           </View>
         </ActionSheet>
@@ -1042,18 +1047,21 @@ export default function AddToDoScreen(props: any) {
 
         <Text style={styles.nameTitle}>Notes</Text>
         <View style={styles.mainContent}>
-          <View style={styles.notesView}>
+          <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
             <TextInput
-              style={styles.notesText}
+              onPressIn={handleNotesFocus}
+              ref={notesInputRef}
+              multiline={true}
+              numberOfLines={5}
+              style={globalStyles.notesInput}
               placeholder="Type Here"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
               value={notes}
               onChangeText={(text) => setNotes(text)}
             />
-          </View>
+          </TouchableOpacity>
         </View>
-        <Text></Text>
 
         {modalAttendeesVisible && (
           <Modal
@@ -1073,6 +1081,7 @@ export default function AddToDoScreen(props: any) {
           </Modal>
         )}
 
+        <View style={styles.footer}></View>
         {modalGoalVisible && (
           <Modal
             animationType="slide"
@@ -1091,7 +1100,6 @@ export default function AddToDoScreen(props: any) {
             />
           </Modal>
         )}
-        <View style={styles.footer}></View>
       </ScrollView>
     </View>
   );
@@ -1163,21 +1171,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 20,
     marginRight: 20,
-  },
-  notesView: {
-    marginTop: 10,
-    backgroundColor: '#002341',
-    width: '90%',
-    height: '40%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  notesText: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'white',
   },
   textInput: {
     fontSize: 18,

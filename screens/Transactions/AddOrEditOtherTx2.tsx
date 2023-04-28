@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactionHelpers';
 import { storage } from '../../utils/storage';
 import { addOrEditOtherTransaction } from './api';
@@ -23,6 +21,7 @@ export default function AddOrEditOtherTx2(props: any) {
   const [showDate, setShowDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
+  const notesInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -56,6 +55,12 @@ export default function AddOrEditOtherTx2(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
+
+  function handleNotesFocus() {
+    if (notesInputRef != null && notesInputRef.current != null) {
+      notesInputRef.current.focus();
+    }
+  }
 
   function populateDataIfEdit(isMounted: boolean) {
     console.log('guid: ' + data?.id);
@@ -163,7 +168,7 @@ export default function AddOrEditOtherTx2(props: any) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
+      <ScrollView style={styles.topContainer}>
         <Text style={styles.nameTitle}>Probability to Close</Text>
         <TouchableOpacity onPress={probabilityPressed}>
           <View style={styles.mainContent}>
@@ -259,18 +264,23 @@ export default function AddOrEditOtherTx2(props: any) {
 
         <Text style={styles.nameTitle}>Notes</Text>
         <View style={styles.mainContent}>
-          <View style={styles.noteView}>
+          <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
             <TextInput
-              style={styles.noteText}
+              onPressIn={handleNotesFocus}
+              ref={notesInputRef}
+              multiline={true}
+              numberOfLines={5}
+              style={globalStyles.notesInput}
               placeholder="Type Here"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
               value={notes}
               onChangeText={(text) => setNotes(text)}
             />
-          </View>
+          </TouchableOpacity>
         </View>
-      </View>
+        <View style={styles.footer}></View>
+      </ScrollView>
 
       <View style={styles.bottomContainer}>
         <Text style={styles.summaryText}>Additional Income</Text>

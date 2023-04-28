@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import { StyleSheet, Modal, Button, Text, View, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Modal, Button, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getAppointmentDetails } from './api';
 import { deleteToDo } from '../ToDo/api'; // Don't let the name fool you. Deletes To-Do's and Appointments.
 import { AppointmentDataProps } from './interfaces';
-import { storage } from '../../utils/storage';
 import globalStyles from '../../globalStyles';
-import { prettyDate, isNullOrEmpty, prettyTime } from '../../utils/general';
+import { isNullOrEmpty } from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import * as React from 'react';
 import EditAppointment from './EditAppointmentScreen';
 import { ga4Analytics } from '../../utils/general';
+import { apptDetailStartLabel, apptDetailEndLabel } from './calendarHelpers';
 
 export default function AppointmentDetails(props: any) {
   const navigation = useNavigation();
@@ -132,17 +132,27 @@ export default function AppointmentDetails(props: any) {
         <View style={styles.dividingLine}></View>
 
         <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-          {'Start Time: ' +
+          {apptDetailStartLabel +
+            ': ' +
             new Date(apptData?.startTime!).toLocaleDateString() +
             ' ' +
-            new Date(apptData?.startTime!).toLocaleTimeString()}
+            new Date(apptData?.startTime!).toLocaleTimeString('en-us', {
+              hour12: true,
+              hour: 'numeric',
+              minute: '2-digit',
+            })}
         </Text>
 
         <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-          {'End Time: ' +
+          {apptDetailEndLabel +
+            ': ' +
             new Date(apptData?.endTime!).toLocaleDateString() +
             ' ' +
-            new Date(apptData?.endTime!).toLocaleTimeString()}
+            new Date(apptData?.endTime!).toLocaleTimeString('en-us', {
+              hour12: true,
+              hour: 'numeric',
+              minute: '2-digit',
+            })}
         </Text>
 
         {!isNullOrEmpty(apptData?.location) && (

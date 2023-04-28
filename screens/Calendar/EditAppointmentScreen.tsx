@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Modal } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { storage } from '../../utils/storage';
 import { useIsFocused } from '@react-navigation/native';
 import { RolodexDataProps } from '../Relationships/interfaces';
 import { editAppointment } from './api';
 import Attendees from '../ToDo/AttendeesScreen';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-
+import { apptStartDateLabel, apptStartTimeLabel, apptEndDateLabel, apptEndTimeLabel } from './calendarHelpers';
+import globalStyles from '../../globalStyles';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function EditAppointmentScreen(props: any) {
@@ -24,22 +24,26 @@ export default function EditAppointmentScreen(props: any) {
     onSave,
   } = props;
   const [newTitle, setNewTitle] = useState('');
-  const [showFromDate, setShowFromDate] = useState(false);
-  const [newFromDate, setNewFromDate] = useState(new Date());
-  const [showToDate, setShowToDate] = useState(false);
-  const [newToDate, setNewToDate] = useState(new Date());
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [showStartDate, setShowStartDate] = useState(false);
+  const [showStartTime, setShowStartTime] = useState(false);
+  const [showEndDate, setShowEndDate] = useState(false);
+  const [showEndTime, setShowEndTime] = useState(false);
   const [newLocation, setNewLocation] = useState('');
   const [newNotes, setNewNotes] = useState('');
   const [modalAttendeesVisible, setModalAttendeesVisible] = useState(false);
   const [attendee, setAttendees] = useState<RolodexDataProps[]>([]);
   const isFocused = useIsFocused();
+  const notesInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     setNewTitle(titleFromParent);
     setNewLocation(locationFromParent);
     setNewNotes(notesFromParent);
-    setNewFromDate(new Date(Date.parse(startDateFromParent)));
-    setNewToDate(new Date(Date.parse(toDateFromParent)));
+    setStartDate(new Date(Date.parse(startDateFromParent)));
+    setEndDate(new Date(Date.parse(toDateFromParent)));
   }, [isFocused]);
 
   function CancelPressed() {
@@ -51,8 +55,8 @@ export default function EditAppointmentScreen(props: any) {
     editAppointment(
       apptID,
       newTitle,
-      newFromDate.toISOString(),
-      newToDate.toISOString(),
+      startDate.toISOString(),
+      endDate.toISOString(),
       newLocation,
       newNotes,
       attendeeFromParent
@@ -70,36 +74,74 @@ export default function EditAppointmentScreen(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  const handleConfirmFrom = (selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log(currentDate);
-    setNewFromDate(currentDate);
-    setShowFromDate(false);
-  };
-
-  const handleConfirmTo = (selectedDate: any) => {
-    const currentDate = selectedDate;
-    console.log(currentDate);
-    setNewToDate(currentDate);
-    setShowToDate(false);
-  };
-
-  const showDateFromMode = (currentMode: any) => {
-    console.log(currentMode);
-    setShowFromDate(true);
-  };
-
-  const showDateToMode = (currentMode: any) => {
-    console.log(currentMode);
-    setShowToDate(true);
-  };
-
-  function hideDatePickerFrom() {
-    setShowFromDate(false);
+  function handleNotesFocus() {
+    if (notesInputRef != null && notesInputRef.current != null) {
+      notesInputRef.current.focus();
+    }
   }
 
-  function hideDatePickerTo() {
-    setShowToDate(false);
+  const handleConfirmStartDate = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setStartDate(currentDate);
+    setShowStartDate(false);
+  };
+
+  const handleConfirmStartTime = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setStartDate(currentDate);
+    setShowStartTime(false);
+  };
+
+  const handleConfirmEndDate = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setEndDate(currentDate);
+    setShowEndDate(false);
+  };
+
+  const handleConfirmEndTime = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setEndDate(currentDate);
+    setShowEndTime(false);
+  };
+
+  const showStartDateMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowStartDate(true);
+  };
+
+  const showStartTimeMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowStartTime(true);
+  };
+
+  const showEndDateMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowEndDate(true);
+  };
+
+  const showEndTimeMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowEndTime(true);
+  };
+
+  function hideStartDatePicker() {
+    setShowStartDate(false);
+  }
+
+  function hideStartTimePicker() {
+    setShowEndDate(false);
+  }
+
+  function hideEndDatePicker() {
+    setShowEndDate(false);
+  }
+
+  function hideEndTimePicker() {
+    setShowEndTime(false);
   }
 
   function deleteAttendee(index: number) {
@@ -166,17 +208,16 @@ export default function EditAppointmentScreen(props: any) {
           />
         </View>
       </View>
-      <Text style={styles.nameTitle}>From</Text>
-      <TouchableOpacity onPress={showDateFromMode}>
+
+      <Text style={styles.nameTitle}>{apptStartDateLabel}</Text>
+      <TouchableOpacity onPress={showStartDateMode}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <Text style={styles.textInput}>
-              {newFromDate.toLocaleDateString('en-us', {
+              {startDate.toLocaleDateString('en-us', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
               })}
             </Text>
           </View>
@@ -184,30 +225,81 @@ export default function EditAppointmentScreen(props: any) {
       </TouchableOpacity>
 
       <DateTimePickerModal
-        isVisible={showFromDate}
+        isVisible={showStartDate}
+        date={startDate}
         mode="date"
-        onConfirm={handleConfirmFrom}
-        onCancel={hideDatePickerFrom}
+        onConfirm={handleConfirmStartDate}
+        onCancel={hideStartDatePicker}
       />
 
-      <Text style={styles.nameTitle}>To</Text>
-      <TouchableOpacity onPress={showDateToMode}>
+      <Text style={styles.nameTitle}>{apptStartTimeLabel}</Text>
+      <TouchableOpacity onPress={showStartTimeMode}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <Text style={styles.textInput}>
-              {newToDate.toLocaleDateString('en-us', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
+              {startDate.toLocaleTimeString('en-us', {
+                hour12: true,
                 hour: 'numeric',
-                minute: 'numeric',
+                minute: '2-digit',
               })}
             </Text>
           </View>
         </View>
       </TouchableOpacity>
 
-      <DateTimePickerModal isVisible={showToDate} mode="date" onConfirm={handleConfirmTo} onCancel={hideDatePickerTo} />
+      <DateTimePickerModal
+        isVisible={showStartTime}
+        date={startDate}
+        mode="time"
+        onConfirm={handleConfirmStartTime}
+        onCancel={hideStartTimePicker}
+      />
+
+      <Text style={styles.nameTitle}>{apptEndDateLabel}</Text>
+      <TouchableOpacity onPress={showEndDateMode}>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <Text style={styles.textInput}>
+              {endDate.toLocaleDateString('en-us', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <DateTimePickerModal
+        isVisible={showEndDate}
+        date={endDate}
+        mode="date"
+        onConfirm={handleConfirmEndDate}
+        onCancel={hideEndDatePicker}
+      />
+
+      <Text style={styles.nameTitle}>{apptEndTimeLabel}</Text>
+      <TouchableOpacity onPress={showEndTimeMode}>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <Text style={styles.textInput}>
+              {endDate.toLocaleTimeString('en-us', {
+                hour12: true,
+                hour: 'numeric',
+                minute: '2-digit',
+              })}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <DateTimePickerModal
+        isVisible={showEndTime}
+        date={endDate}
+        mode="time"
+        onConfirm={handleConfirmEndTime}
+        onCancel={hideEndTimePicker}
+      />
 
       <Text style={styles.nameTitle}>Location</Text>
       <View style={styles.mainContent}>
@@ -245,18 +337,22 @@ export default function EditAppointmentScreen(props: any) {
 
       <Text style={styles.nameTitle}>Notes</Text>
       <View style={styles.mainContent}>
-        <View style={styles.notesView}>
+        <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
           <TextInput
-            style={styles.notesText}
+            onPressIn={handleNotesFocus}
+            ref={notesInputRef}
+            multiline={true}
+            numberOfLines={5}
+            style={globalStyles.notesInput}
             placeholder="Type Here"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
             value={newNotes}
             onChangeText={(text) => setNewNotes(text)}
-            defaultValue={notesFromParent}
           />
-        </View>
+        </TouchableOpacity>
       </View>
+
       {modalAttendeesVisible && (
         <Modal
           animationType="slide"
@@ -356,20 +452,5 @@ export const styles = StyleSheet.create({
   deleteAttendeeX: {
     width: 10,
     height: 10,
-  },
-  notesView: {
-    marginTop: 10,
-    backgroundColor: '#002341',
-    width: '90%',
-    height: '40%',
-    marginBottom: 2,
-    paddingLeft: 10,
-    fontSize: 29,
-    alignItems: 'flex-start',
-  },
-  notesText: {
-    paddingTop: 5,
-    fontSize: 18,
-    color: 'white',
   },
 });
