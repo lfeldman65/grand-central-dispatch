@@ -172,7 +172,13 @@ export default function EditToDoScreen(props: any) {
       <TouchableOpacity onPress={handleGoalPressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+            <TextInput
+              onPressIn={handleGoalPressed}
+              editable={false}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              style={styles.nameLabel}
+            >
               {goal?.id == 0 ? 'Select One (Optional)' : goal?.title}
             </TextInput>
           </View>

@@ -3,14 +3,13 @@ import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ActivityIn
 import { Moment } from 'moment';
 import CalendarPicker, { DateChangedCallback } from 'react-native-calendar-picker';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import AppointmentRow from './AppointmentRow';
 import { getAppointments } from './api';
 import { AppointmentDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
-import { storage } from '../../utils/storage';
 import AddAppointmentScreen from './AddAppointmentScreen';
 import { getDayNumber, getMonthNumber, getYear } from './calendarHelpers';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
@@ -66,7 +65,7 @@ export default function CalendarScreen() {
     console.log('day: ' + day);
     console.log('MONTH2112: ' + month);
     console.log('YEAR: ' + year);
-    fetchAppointments(day, month, year, isMounted); // day = '00' returns every day in month and year
+    fetchAppointments('00', month, year, isMounted); // day = '00' returns every day in month and year
     return () => {
       isMounted = false;
     };
