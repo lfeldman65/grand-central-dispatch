@@ -199,11 +199,17 @@ export default function TrackActivityScreen(props: any) {
         </View>
       </TouchableOpacity>
 
-      <Text style={styles.fieldTitle}>Activity Goal</Text>
+      <Text style={styles.fieldTitle}>Activity</Text>
       <TouchableOpacity onPress={handleGoalPressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+            <TextInput
+              onPressIn={handleGoalPressed}
+              editable={false}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              style={styles.nameLabel}
+            >
               {goal == null ? 'Calls Made' : goal.title}
             </TextInput>
           </View>

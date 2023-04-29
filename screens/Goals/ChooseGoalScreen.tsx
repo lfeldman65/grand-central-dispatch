@@ -43,11 +43,18 @@ export default function ChooseGoalScreen(props: any) {
           console.error(res.error);
         } else {
           if (showSelectOne) {
+            console.log('show: ' + showSelectOne);
             var initialGoal: GoalDataConciseProps = {
               id: 0,
               title: 'Select One (Optional)',
             };
             res.data.unshift(initialGoal);
+            if (res.data.length >= 6) {
+              // magic numbers are bad
+              if (res.data[5].title.includes('Referrals')) {
+                res.data.splice(5, 1);
+              }
+            }
           }
           console.log(res.data);
           setGoalList(res.data);
