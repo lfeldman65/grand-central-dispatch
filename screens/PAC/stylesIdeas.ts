@@ -2,18 +2,14 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   containerDark: {
-    marginTop: 30,
+    marginTop: '10%',
     backgroundColor: 'black',
-    width: '95%',
-    height: '95%',
-    alignSelf: 'center',
+    flex: 1,
   },
   containerLight: {
-    marginTop: 30,
+    marginTop: '10%',
     backgroundColor: 'white',
-    width: '95%',
-    height: '95%',
-    alignSelf: 'center',
+    flex: 1,
   },
   mainContent: {
     alignSelf: 'flex-start',
@@ -84,5 +80,8 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     marginRight: 20,
+  },
+  footer: {
+    height: 250,
   },
 });

@@ -176,6 +176,7 @@ export default function IdeasPopScreen(props: any) {
           </Text>
         )}
       </View>
+      <Text style={styles.footer}></Text>
     </ScrollView>
   );
 }

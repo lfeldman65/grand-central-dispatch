@@ -181,7 +181,7 @@ export default function PACScreen(props: PACScreenProps) {
             Notes
           </Text>
           <Text style={tabSelected == 'popby' ? globalStyles.selected : globalStyles.unselected} onPress={popPressed}>
-            Pop-By
+            {'Pop-Bys'}
           </Text>
         </View>
 

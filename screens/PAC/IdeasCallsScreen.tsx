@@ -220,6 +220,7 @@ export default function IdeasCallsScreen(props: any) {
           </Text>
         )}
       </View>
+      <Text style={styles.footer}></Text>
     </ScrollView>
   );
 }

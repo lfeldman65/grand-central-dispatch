@@ -143,6 +143,7 @@ export default function IdeasNotesScreen(props: any) {
           </Text>
         )}
       </View>
+      <Text style={styles.footer}></Text>
     </ScrollView>
   );
 }
