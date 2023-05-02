@@ -216,7 +216,7 @@ function CustomDrawerContent(props: any) {
         <TouchableOpacity onPress={() => pressed('PopBysScreen')}>
           <View style={styles.menuItem}>
             <Image source={popIcon} style={styles.menuIcon} />
-            <Text style={styles.menuItemText}>Pop-By</Text>
+            <Text style={styles.menuItemText}>Pop-By Map</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => pressed('To-Do')}>
