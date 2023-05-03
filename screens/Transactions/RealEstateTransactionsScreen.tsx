@@ -30,6 +30,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
     Active: 'Active',
     Pending: 'Pending',
     Closed: 'Closed',
+    'Not Converted': 'Not Converted',
   };
 
   const Sheets = {

@@ -150,7 +150,7 @@ export default function AddOrEditRealtorTx3(props: any) {
         Alert.alert('Test Failed');
       }
     }
-    console.log('CLOSING DATE: ' + closingDate);
+    console.log('status: ' + status);
     addOrEditTransaction(
       data == null ? 0 : data?.id,
       type,

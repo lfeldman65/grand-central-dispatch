@@ -23,7 +23,10 @@ export function changeTxStatus(idDeal: number, newStatus: string): Promise<TxCha
   console.log(idDeal);
   console.log(newStatus);
   var paramStatus = newStatus.toLocaleLowerCase();
-  console.log('New status: ' + paramStatus);
+  if (paramStatus == 'not converted') {
+    paramStatus = 'Not Converted';
+  }
+  console.log('param status: ' + paramStatus);
   return http.post('dealChangeStatus', {
     body: { idDeal: idDeal, newStatus: paramStatus },
   });

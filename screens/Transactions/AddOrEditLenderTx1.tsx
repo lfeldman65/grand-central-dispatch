@@ -34,6 +34,11 @@ export default function AddOrEditLenderTx1(props: any) {
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
+  const street1Ref = useRef<TextInput>(null);
+  const street2Ref = useRef<TextInput>(null);
+  const cityRef = useRef<TextInput>(null);
+  const stateRef = useRef<TextInput>(null);
+  const zipRef = useRef<TextInput>(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -75,6 +80,32 @@ export default function AddOrEditLenderTx1(props: any) {
       isMounted = false;
     };
   }, [isFocused]);
+
+  function handleStreet1Focus() {
+    if (street1Ref != null && street1Ref.current != null) {
+      street1Ref.current.focus();
+    }
+  }
+  function handleStreet2Focus() {
+    if (street2Ref != null && street2Ref.current != null) {
+      street2Ref.current.focus();
+    }
+  }
+  function handleCityFocus() {
+    if (cityRef != null && cityRef.current != null) {
+      cityRef.current.focus();
+    }
+  }
+  function handleStateFocus() {
+    if (stateRef != null && stateRef.current != null) {
+      stateRef.current.focus();
+    }
+  }
+  function handleZipFocus() {
+    if (zipRef != null && zipRef.current != null) {
+      zipRef.current.focus();
+    }
+  }
 
   function populateDataIfEdit(isMounted: boolean) {
     if (!isMounted) {
@@ -389,8 +420,10 @@ export default function AddOrEditLenderTx1(props: any) {
       {address == 'Enter Manually' && <Text style={styles.nameTitle}>Street</Text>}
       {address == 'Enter Manually' && (
         <View style={styles.mainContent}>
-          <View style={styles.inputView}>
+          <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
             <TextInput
+              onPressIn={handleStreet1Focus}
+              ref={street1Ref}
               style={styles.textInput}
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
@@ -398,47 +431,53 @@ export default function AddOrEditLenderTx1(props: any) {
               onChangeText={(text) => setStreet1(text)}
               defaultValue={street1}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       )}
 
       {address == 'Enter Manually' && <Text style={styles.nameTitle}>Street 2</Text>}
       {address == 'Enter Manually' && (
         <View style={styles.mainContent}>
-          <View style={styles.inputView}>
+          <TouchableOpacity style={styles.inputView} onPress={handleStreet2Focus}>
             <TextInput
+              onPressIn={handleStreet2Focus}
               style={styles.textInput}
+              ref={street2Ref}
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
               onChangeText={(text) => setStreet2(text)}
               defaultValue={street2}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       )}
 
       {address == 'Enter Manually' && <Text style={styles.nameTitle}>City</Text>}
       {address == 'Enter Manually' && (
         <View style={styles.mainContent}>
-          <View style={styles.inputView}>
+          <TouchableOpacity style={styles.inputView} onPress={handleCityFocus}>
             <TextInput
               style={styles.textInput}
+              onPressIn={handleCityFocus}
+              ref={cityRef}
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
               onChangeText={(text) => setCity(text)}
               defaultValue={city}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       )}
 
       {address == 'Enter Manually' && <Text style={styles.nameTitle}>State / Province</Text>}
       {address == 'Enter Manually' && (
         <View style={styles.mainContent}>
-          <View style={styles.inputView}>
+          <TouchableOpacity style={styles.inputView} onPress={handleStateFocus}>
             <TextInput
+              onPressIn={handleStateFocus}
+              ref={stateRef}
               style={styles.textInput}
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
@@ -446,15 +485,17 @@ export default function AddOrEditLenderTx1(props: any) {
               onChangeText={(text) => setState(text)}
               defaultValue={state}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       )}
 
       {address == 'Enter Manually' && <Text style={styles.nameTitle}>Zip / Postal Code</Text>}
       {address == 'Enter Manually' && (
         <View style={styles.mainContent}>
-          <View style={styles.inputView}>
+          <TouchableOpacity style={styles.inputView} onPress={handleZipFocus}>
             <TextInput
+              onPressIn={handleZipFocus}
+              ref={zipRef}
               style={styles.textInput}
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
@@ -462,7 +503,7 @@ export default function AddOrEditLenderTx1(props: any) {
               onChangeText={(text) => setZip(text)}
               defaultValue={zip}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       )}
       <View style={styles.bottom}></View>
