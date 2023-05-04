@@ -74,7 +74,7 @@ export function scheduleNotifications(id: string, title: string, body: string, s
 }
 
 export async function schedulePACNotifications(day: number, person: string) {
-  console.log('shedule PAC Notifs');
+  // console.log('shedule PAC Notifs');
   const schedulingOptions = {
     content: {
       title: "Top O' the Morning to You!",
@@ -88,7 +88,7 @@ export async function schedulePACNotifications(day: number, person: string) {
     },
     trigger: {
       hour: 9,
-      minute: 0,
+      minute: 34,
       //  second: 0,
       weekday: day,
       repeats: true,
@@ -96,8 +96,8 @@ export async function schedulePACNotifications(day: number, person: string) {
     },
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
-  //  console.log('pac notification ' + JSON.stringify(identifier));
-  storage.setItem('pac-notification-' + day.toString(), identifier);
+  console.log('pac notification ' + identifier);
+  await storage.setItem('pac-notification-' + day.toString(), identifier);
   return identifier;
 }
 
@@ -133,7 +133,7 @@ export async function scheduleToDoNotifications(day: number, count: string) {
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
   // console.log('todo notification ' + JSON.stringify(identifier));
-  storage.setItem('todo-notification-' + day.toString(), identifier);
+  await storage.setItem('todo-notification-' + day.toString(), identifier);
   return identifier;
 }
 export async function getNotificationStatus(key: string) {
