@@ -267,7 +267,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Title</Text>
+      <Text style={styles.nameTitle}>Title*</Text>
       <View style={styles.mainContent}>
         <TouchableOpacity style={styles.inputView} onPress={handleTitleFocus}>
           <TextInput
@@ -283,7 +283,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Who's Involved</Text>
+      <Text style={styles.nameTitle}>Who's Involved*</Text>
       <TouchableOpacity onPress={handleWhoPressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>

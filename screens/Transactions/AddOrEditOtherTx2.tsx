@@ -227,7 +227,7 @@ export default function AddOrEditOtherTx2(props: any) {
           </View>
         </ActionSheet>
 
-        <Text style={styles.nameTitle}>{'Amount (Projected)'}</Text>
+        <Text style={styles.nameTitle}>{'Amount* (Projected)'}</Text>
         <View style={styles.mainContent}>
           <View style={styles.dollarAndPercentRow}>
             <View style={styles.dollarView}>

@@ -193,15 +193,15 @@ export const styles = StyleSheet.create({
   dollarView: {
     backgroundColor: '#002341',
     height: 50,
-    width: '5%',
+    width: '7%',
   },
   dollarAndPercentView: {
     backgroundColor: '#002341',
-    width: '78%',
+    width: '75%',
     height: 50,
     marginBottom: 20,
     justifyContent: 'center',
-    paddingLeft: 10,
+    paddingLeft: 5,
     fontSize: 29,
   },
   numberAndPercentView: {

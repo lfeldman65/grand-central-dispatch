@@ -81,7 +81,7 @@ export async function schedulePACNotifications(day: number, person: string) {
   const schedulingOptions = {
     content: {
       title: "Top O' the Morning to You!",
-      body: 'Would you like to call ' + person + '?',
+      body: 'Time to make your first call to ' + person,
       sound: true,
       data: {
         id: 'pac-notification-' + day.toString(),
@@ -91,7 +91,7 @@ export async function schedulePACNotifications(day: number, person: string) {
     },
     trigger: {
       hour: 9,
-      minute: 34,
+      minute: 0,
       //  second: 0,
       weekday: day,
       repeats: true,
@@ -108,7 +108,7 @@ export async function scheduleToDoNotifications(day: number, count: string) {
   console.log('shedule ToDo Notifs');
   var message = '';
   if (count == '0') {
-    message = "You're all caught up!";
+    message = "You're all caught up for today! Tap here to see other To-Do's";
   } else if (count == '1') {
     message = 'You have 1 To-Do Today!';
   } else {
