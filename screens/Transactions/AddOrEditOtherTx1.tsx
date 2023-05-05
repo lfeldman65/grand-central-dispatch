@@ -5,9 +5,9 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { AddTxBuyerAndSellerSheets, statusMenu, propertyAddressMenu, styles } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, statusMenu, styles } from './transactionHelpers';
 import ChooseOtherTxType from './ChooseOtherTxType';
-import ChooseRelationship from '../Goals/ChooseRelationship';
+import ChooseRelationship from '../Goals/ChooseRelationship'; // branch
 
 export default function AddOrEditOtherTx1(props: any) {
   const { route } = props;
