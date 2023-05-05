@@ -1,10 +1,10 @@
 import { addOrEditTransaction } from './api';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { getTransactionDetails, deleteTx } from './api';
+import { getTransactionDetails } from './api';
 
 const id = 0;
 const transactionType = 'Buyer';
-const status = 'Potential';
+const status = 'Closed';
 const title = 'TestAddTx';
 const street = 'TestTxStreet1';
 const street2 = 'TestTxStreet2';
@@ -15,8 +15,8 @@ const country = 'TestTxCountry';
 const buyerLeadSource = 'Advertising';
 const sellerLeadSource = 'none';
 const probabilityToClose = 'Certain';
-const listDate = '2023-03-17T23:09:21.103Z';
-const closingDate = '2023-03-17T23:09:21.103Z';
+const listDate = '2023-05-04T23:09:21.103Z';
+const closingDate = '2023-05-04T23:09:21.103Z';
 const listAmount = '500000';
 const projectedAmount = '400000';
 const rateType = 'Fixed';

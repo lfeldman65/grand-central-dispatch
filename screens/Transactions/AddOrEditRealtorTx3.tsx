@@ -81,9 +81,9 @@ export default function AddOrEditRealtorTx3(props: any) {
   useEffect(() => {
     calculateIncome();
     if (shouldRunTests()) {
-      // setMiscBeforeFees('2000');
-      // setMiscAfterFees('1500');
-      // setMyPortion('50');
+      setMiscBeforeFees('2000');
+      setMiscAfterFees('1500');
+      setMyPortion('50');
     }
     console.log('SCREEN3: ' + data?.id!);
   }, [isFocused]);

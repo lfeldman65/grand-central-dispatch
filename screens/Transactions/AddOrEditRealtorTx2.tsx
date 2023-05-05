@@ -104,10 +104,10 @@ export default function AddOrEditRealtorTx2(props: any) {
 
   useEffect(() => {
     if (shouldRunTests()) {
-      // setBuyerCommission('20'); // % by default
-      // setAdditionalIncome('10'); // % by default
-      // setClosingPrice('400000');
-      // setOriginalPrice('500000');
+      setBuyerCommission('20'); // % by default
+      setAdditionalIncome('10'); // % by default
+      setClosingPrice('400000');
+      setOriginalPrice('500000');
     }
   }, [isFocused]);
 

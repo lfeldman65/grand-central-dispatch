@@ -232,10 +232,6 @@ export default function AddOrEditRealtorTx1(props: any) {
     setModalSellerVisible(!modalSellerVisible);
   }
 
-  function addressPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.addressSheet);
-  }
-
   function backPressed() {
     navigation.goBack();
   }
