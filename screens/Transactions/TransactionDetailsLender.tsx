@@ -127,7 +127,7 @@ export default function TransactionDetailsLender(props: any) {
       <Text style={styles.header}>{'Status'}</Text>
       <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.status}</Text>
 
-      {!isNullOrEmpty(data?.contacts[0].userID) && <Text style={styles.header}>Buyer</Text>}
+      {!isNullOrEmpty(data?.contacts[0].userID) && <Text style={styles.header}>Borrower</Text>}
       {data?.contacts.map((item, index) => (
         <TouchableOpacity onPress={() => handlePersonPressed(index)}>
           <View style={styles.referralAndSpouseRow}>
@@ -179,19 +179,19 @@ export default function TransactionDetailsLender(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.probabilityToClose}</Text>
       )}
 
-      {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
+      {/* {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
         <Text style={styles.header}>{'Original List Price'}</Text>
       )}
       {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{'$' + data?.listAmount}</Text>
-      )}
+      )} */}
 
-      {!isNullOrEmpty(data?.listDate) && <Text style={styles.header}>{'Original List Date'}</Text>}
+      {!isNullOrEmpty(data?.listDate) && <Text style={styles.header}>{'Loan Application Date'}</Text>}
       {!isNullOrEmpty(data?.listDate) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.listDate!)}</Text>
       )}
 
-      {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Closing Price (Projected)'}</Text>}
+      {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Loan Amount (Projected)'}</Text>}
       {!isNullOrEmpty(data?.projectedAmount) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{'$' + data?.projectedAmount}</Text>
       )}
@@ -208,11 +208,14 @@ export default function TransactionDetailsLender(props: any) {
         </Text>
       )}
 
+      {!isNullOrEmpty(data?.loanType) && <Text style={styles.header}>{'Rate Type'}</Text>}
+      {!isNullOrEmpty(data?.loanType) && (
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.rateType}</Text>
+      )}
+
       {!isNullOrEmpty(data?.loanType) && <Text style={styles.header}>{'Loan Type'}</Text>}
       {!isNullOrEmpty(data?.loanType) && (
-        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {data?.rateType + ' ' + data?.loanType}
-        </Text>
+        <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.loanType}</Text>
       )}
 
       {!isNullOrEmpty(data?.sellerCommission) && <Text style={styles.header}>{'Origination Fees'}</Text>}
@@ -222,7 +225,7 @@ export default function TransactionDetailsLender(props: any) {
         </Text>
       )}
 
-      {!isNullOrEmpty(data?.buyerCommission) && <Text style={styles.header}>{"Buyer's Commission"}</Text>}
+      {!isNullOrEmpty(data?.buyerCommission) && <Text style={styles.header}>{'Yield Spread Premium'}</Text>}
       {!isNullOrEmpty(data?.buyerCommission) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
           {formatDollarOrPercent(data?.buyerCommission!, data?.buyerCommissionType!)}

@@ -87,7 +87,7 @@ export default function AddTransactionMenu(props: any) {
       {profileData?.businessType.includes('realtor') && (
         <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(0)}>
           <View style={styles.buttonView}>
-            <Text style={styles.buttonText}>{'Realtor Transactions'}</Text>
+            <Text style={styles.buttonText}>{'Real Estate Transactions'}</Text>
           </View>
         </TouchableOpacity>
       )}

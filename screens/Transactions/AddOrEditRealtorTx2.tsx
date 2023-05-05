@@ -104,27 +104,33 @@ export default function AddOrEditRealtorTx2(props: any) {
 
   useEffect(() => {
     if (shouldRunTests()) {
-      setBuyerCommission('20'); // % by default
-      setAdditionalIncome('10'); // % by default
-      setClosingPrice('400000');
-      setOriginalPrice('500000');
+      // setBuyerCommission('20'); // % by default
+      // setAdditionalIncome('10'); // % by default
+      // setClosingPrice('400000');
+      // setOriginalPrice('500000');
     }
   }, [isFocused]);
 
-  const handleConfirm = (selectedDate: any) => {
+  const handleConfirmClosingDate = (selectedDate: any) => {
     const currentDate = selectedDate;
     console.log(currentDate);
     setClosingDate(currentDate);
     setShowClosingDate(false);
   };
 
-  const showDateTopMode = (currentMode: any) => {
-    console.log(currentMode);
-    setShowClosingDate(true);
+  const handleConfirmOriginalDate = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setOriginalDate(currentDate);
+    setShowOriginalDate(false);
   };
 
-  function hideDatePicker() {
+  function hideClosingDatePicker() {
     setShowClosingDate(false);
+  }
+
+  function hideOriginalDatePicker() {
+    setShowOriginalDate(false);
   }
 
   function populateDataIfEdit(isMounted: boolean) {
@@ -309,13 +315,18 @@ export default function AddOrEditRealtorTx2(props: any) {
   };
 
   const showOriginalDatePicker = () => {
-    console.log('show date picker top');
+    console.log('show original date picker');
     showOriginalDateMode('date');
   };
 
   const showClosingDateMode = (currentMode: any) => {
     console.log(currentMode);
     setShowClosingDate(true);
+  };
+
+  const showClosingDatePicker = () => {
+    console.log('show closing date picker');
+    showClosingDateMode('date');
   };
 
   return (
@@ -419,13 +430,13 @@ export default function AddOrEditRealtorTx2(props: any) {
           )}
 
           <DateTimePickerModal
-            isVisible={showClosingDate}
+            isVisible={showOriginalDate}
             mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
+            onConfirm={handleConfirmOriginalDate}
+            onCancel={hideOriginalDatePicker}
           />
 
-          <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
+          <Text style={styles.nameTitle}>{'Closing Price* (Projected)'}</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
               <View style={styles.dollarView}>
@@ -446,8 +457,8 @@ export default function AddOrEditRealtorTx2(props: any) {
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>{'Closing Date (Projected)'}</Text>
-          <TouchableOpacity onPress={showDateTopMode}>
+          <Text style={styles.nameTitle}>{'Closing Date* (Projected)'}</Text>
+          <TouchableOpacity onPress={showClosingDatePicker}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
@@ -466,8 +477,8 @@ export default function AddOrEditRealtorTx2(props: any) {
           <DateTimePickerModal
             isVisible={showClosingDate}
             mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
+            onConfirm={handleConfirmClosingDate}
+            onCancel={hideClosingDatePicker}
           />
 
           {type.includes('Buyer') && <Text style={styles.nameTitle}>{"Buyer's Commission"}</Text>}

@@ -6,6 +6,9 @@ import { Platform } from 'react-native';
 import * as Analytics from 'expo-firebase-analytics';
 import * as SMS from 'expo-sms';
 
+export function shouldRunTests() {
+  return true;
+}
 export function isNullOrEmpty(value: any) {
   if (value == null) return true;
   if (value == '') return true;
@@ -213,8 +216,4 @@ export async function handleMapPressed2(directions: string, cb?: () => void) {
       }, 500);
     }
   }, 500);
-}
-
-export function shouldRunTests() {
-  return false;
 }

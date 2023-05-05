@@ -363,149 +363,87 @@ export default function AddOrEditLenderTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Property Address</Text>
-      <TouchableOpacity onPress={addressPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{address}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <Text style={styles.nameTitle}>Street</Text>
 
-      <ActionSheet // Property Address
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('type address')} // here
-        id={AddTxBuyerAndSellerSheets.addressSheet} // here
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={false}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.4}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={globalStyles.filterView}
-          >
-            <View>
-              {Object.entries(propertyAddressMenu).map(([index, value]) => (
-                <TouchableOpacity // line above
-                  key={index}
-                  onPress={() => {
-                    SheetManager.hide(AddTxBuyerAndSellerSheets.addressSheet, null); // here
-                    console.log('type: ' + value);
-                    setAddress(value); // here
-                    // fetchData();
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{index}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
+      <View style={styles.mainContent}>
+        <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
+          <TextInput
+            onPressIn={handleStreet1Focus}
+            ref={street1Ref}
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setStreet1(text)}
+            defaultValue={street1}
+          />
+        </TouchableOpacity>
+      </View>
 
-      {address == 'Enter Manually' && <Text style={styles.nameTitle}>Street</Text>}
-      {address == 'Enter Manually' && (
-        <View style={styles.mainContent}>
-          <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
-            <TextInput
-              onPressIn={handleStreet1Focus}
-              ref={street1Ref}
-              style={styles.textInput}
-              placeholder="+ Add"
-              placeholderTextColor="#AFB9C2"
-              textAlign="left"
-              onChangeText={(text) => setStreet1(text)}
-              defaultValue={street1}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
+      <Text style={styles.nameTitle}>Street 2</Text>
+      <View style={styles.mainContent}>
+        <TouchableOpacity style={styles.inputView} onPress={handleStreet2Focus}>
+          <TextInput
+            onPressIn={handleStreet2Focus}
+            style={styles.textInput}
+            ref={street2Ref}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setStreet2(text)}
+            defaultValue={street2}
+          />
+        </TouchableOpacity>
+      </View>
 
-      {address == 'Enter Manually' && <Text style={styles.nameTitle}>Street 2</Text>}
-      {address == 'Enter Manually' && (
-        <View style={styles.mainContent}>
-          <TouchableOpacity style={styles.inputView} onPress={handleStreet2Focus}>
-            <TextInput
-              onPressIn={handleStreet2Focus}
-              style={styles.textInput}
-              ref={street2Ref}
-              placeholder="+ Add"
-              placeholderTextColor="#AFB9C2"
-              textAlign="left"
-              onChangeText={(text) => setStreet2(text)}
-              defaultValue={street2}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
+      <Text style={styles.nameTitle}>City</Text>
+      <View style={styles.mainContent}>
+        <TouchableOpacity style={styles.inputView} onPress={handleCityFocus}>
+          <TextInput
+            style={styles.textInput}
+            onPressIn={handleCityFocus}
+            ref={cityRef}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setCity(text)}
+            defaultValue={city}
+          />
+        </TouchableOpacity>
+      </View>
 
-      {address == 'Enter Manually' && <Text style={styles.nameTitle}>City</Text>}
-      {address == 'Enter Manually' && (
-        <View style={styles.mainContent}>
-          <TouchableOpacity style={styles.inputView} onPress={handleCityFocus}>
-            <TextInput
-              style={styles.textInput}
-              onPressIn={handleCityFocus}
-              ref={cityRef}
-              placeholder="+ Add"
-              placeholderTextColor="#AFB9C2"
-              textAlign="left"
-              onChangeText={(text) => setCity(text)}
-              defaultValue={city}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
+      <Text style={styles.nameTitle}>State / Province</Text>
+      <View style={styles.mainContent}>
+        <TouchableOpacity style={styles.inputView} onPress={handleStateFocus}>
+          <TextInput
+            onPressIn={handleStateFocus}
+            ref={stateRef}
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setState(text)}
+            defaultValue={state}
+          />
+        </TouchableOpacity>
+      </View>
 
-      {address == 'Enter Manually' && <Text style={styles.nameTitle}>State / Province</Text>}
-      {address == 'Enter Manually' && (
-        <View style={styles.mainContent}>
-          <TouchableOpacity style={styles.inputView} onPress={handleStateFocus}>
-            <TextInput
-              onPressIn={handleStateFocus}
-              ref={stateRef}
-              style={styles.textInput}
-              placeholder="+ Add"
-              placeholderTextColor="#AFB9C2"
-              textAlign="left"
-              onChangeText={(text) => setState(text)}
-              defaultValue={state}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
+      <Text style={styles.nameTitle}>Zip / Postal Code</Text>
+      <View style={styles.mainContent}>
+        <TouchableOpacity style={styles.inputView} onPress={handleZipFocus}>
+          <TextInput
+            onPressIn={handleZipFocus}
+            ref={zipRef}
+            style={styles.textInput}
+            placeholder="+ Add"
+            placeholderTextColor="#AFB9C2"
+            textAlign="left"
+            onChangeText={(text) => setZip(text)}
+            defaultValue={zip}
+          />
+        </TouchableOpacity>
+      </View>
 
-      {address == 'Enter Manually' && <Text style={styles.nameTitle}>Zip / Postal Code</Text>}
-      {address == 'Enter Manually' && (
-        <View style={styles.mainContent}>
-          <TouchableOpacity style={styles.inputView} onPress={handleZipFocus}>
-            <TextInput
-              onPressIn={handleZipFocus}
-              ref={zipRef}
-              style={styles.textInput}
-              placeholder="+ Add"
-              placeholderTextColor="#AFB9C2"
-              textAlign="left"
-              onChangeText={(text) => setZip(text)}
-              defaultValue={zip}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
       <View style={styles.bottom}></View>
     </ScrollView>
   );

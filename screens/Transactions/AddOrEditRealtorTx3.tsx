@@ -81,9 +81,9 @@ export default function AddOrEditRealtorTx3(props: any) {
   useEffect(() => {
     calculateIncome();
     if (shouldRunTests()) {
-      setMiscBeforeFees('2000');
-      setMiscAfterFees('1500');
-      setMyPortion('50');
+      // setMiscBeforeFees('2000');
+      // setMiscAfterFees('1500');
+      // setMyPortion('50');
     }
     console.log('SCREEN3: ' + data?.id!);
   }, [isFocused]);
@@ -150,13 +150,17 @@ export default function AddOrEditRealtorTx3(props: any) {
         Alert.alert('Test Failed');
       }
     }
-    console.log('status: ' + status);
+    var newStreet1 = '';
+    if (street1 == null || street1 == '' || street1 == 'TBD') {
+      newStreet1 = 'TBD';
+    }
+    console.log('street1: ' + street1);
     addOrEditTransaction(
       data == null ? 0 : data?.id,
       type,
       status,
       'title',
-      street1,
+      newStreet1,
       street2,
       city,
       state,

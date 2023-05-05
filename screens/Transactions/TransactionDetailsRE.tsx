@@ -114,7 +114,7 @@ export default function TransactionDetailsRE(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          //  console.log(res);
+          console.log(res);
         }
         setIsLoading(false);
       })
@@ -262,15 +262,17 @@ export default function TransactionDetailsRE(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.probabilityToClose}</Text>
       )}
 
-      {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
+      {data?.transactionType != 'Buyer' && !isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
         <Text style={styles.header}>{'Original List Price'}</Text>
       )}
-      {!isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
+      {data?.transactionType != 'Buyer' && !isNullOrEmpty(data?.listAmount) && data?.listAmount != '0' && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{'$' + data?.listAmount}</Text>
       )}
 
-      {!isNullOrEmpty(data?.listDate) && <Text style={styles.header}>{'Original List Date'}</Text>}
-      {!isNullOrEmpty(data?.listDate) && (
+      {data?.transactionType != 'Buyer' && !isNullOrEmpty(data?.listDate) && (
+        <Text style={styles.header}>{'Original List Date'}</Text>
+      )}
+      {data?.transactionType != 'Buyer' && !isNullOrEmpty(data?.listDate) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.listDate!)}</Text>
       )}
 
