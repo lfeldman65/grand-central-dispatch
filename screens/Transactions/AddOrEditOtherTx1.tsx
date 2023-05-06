@@ -8,6 +8,7 @@ import { RolodexDataProps } from '../ToDo/interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, styles } from './transactionHelpers';
 import ChooseOtherTxType from './ChooseOtherTxType';
 import ChooseRelationship from '../Goals/ChooseRelationship'; // branch
+import ChooseWho from '../ToDo/AttendeesScreen';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -359,6 +360,13 @@ export default function AddOrEditOtherTx1(props: any) {
             setSelectedRel={handleSelectedWhoInvolved}
             lightOrDark={lightOrDark}
           />
+
+          {/* <ChooseWho
+            title="Who's Involved"
+            setModalAttendeesVisible={setModalRelVisible}
+            setSelectedAttendees={setWhoInvolved}
+            lightOrDark={lightOrDark}
+          /> */}
         </Modal>
       )}
 
