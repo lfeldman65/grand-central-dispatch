@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
+import { Text,Image, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
@@ -9,13 +9,15 @@ import { AddTxBuyerAndSellerSheets, statusMenu, styles } from './transactionHelp
 import ChooseOtherTxType from './ChooseOtherTxType';
 import ChooseRelationship from '../Goals/ChooseRelationship'; // branch
 
+const closeButton = require('../../images/button_close_white.png');
+
 export default function AddOrEditOtherTx1(props: any) {
   const { route } = props;
   const { data, person, lightOrDark } = route.params;
   const [status, setStatus] = useState('Potential');
   const [type, setType] = useState('Lease');
   const [txTitle, setTxTitle] = useState('');
-  const [whoInvolved, setWhoInvolved] = useState<RolodexDataProps>();
+  const [whoInvolved, setWhoInvolved] = useState<RolodexDataProps[]>([]);
   const [address, setAddress] = useState('TBD');
   const [street1, setStreet1] = useState('');
   const [street2, setStreet2] = useState('');
@@ -93,6 +95,27 @@ export default function AddOrEditOtherTx1(props: any) {
     }
   }
 
+  function handleSelectedWhoInvolved(selected: RolodexDataProps[]) {
+    var toBeRemoved = new Array();
+    const combined = [...whoInvolved, ...selected];
+    combined.forEach((item, index) => {
+      // remove duplicates
+      console.log('in loop');
+      console.log(whoInvolved);
+      combined.forEach((item2, index2) => {
+        console.log('in 2nd loop');
+        console.log('item id: ' + item.id);
+        console.log('item2 id: ' + item2.id);
+        if (item.id == item2.id && index != index2) combined.splice(index2, 1);
+      });
+    });
+
+    console.log('to be added: ' + toBeRemoved.length);
+    setWhoInvolved(combined);
+  }
+
+
+
   function populateDataIfEdit(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -114,10 +137,13 @@ export default function AddOrEditOtherTx1(props: any) {
   }
 
   function populateWho() {
-    if (data != null && data?.contacts[0] != null) {
+
+    var who : RolodexDataProps[] = [];
+
+    data?.contacts.forEach((item, index) => {
       var txWho: RolodexDataProps = {
-        id: data?.contacts[0].userID,
-        firstName: data.contacts[0].contactName,
+        id:item.userID,
+        firstName: item.contactName,
         lastName: '',
         ranking: '',
         contactTypeID: '',
@@ -125,9 +151,21 @@ export default function AddOrEditOtherTx1(props: any) {
         qualified: false,
         selected: false,
       };
-      setWhoInvolved(txWho);
-    }
+      who.push(txWho);
+    });
+    
+      setWhoInvolved(who);
+    
   }
+
+  function deleteWhoInvolved(index: number) {
+    console.log(index);
+    whoInvolved.splice(index, 1);
+    const newWhoInvolved = [...whoInvolved, ...[]];
+    //   console.log(attendees.length);
+    setWhoInvolved(newWhoInvolved);
+  }
+
 
   function populateAddress() {
     if (data != null && data?.address != null && data?.address.street != '') {
@@ -284,15 +322,28 @@ export default function AddOrEditOtherTx1(props: any) {
       </View>
 
       <Text style={styles.nameTitle}>Who's Involved*</Text>
-      <TouchableOpacity onPress={handleWhoPressed}>
-        <View style={styles.mainContent}>
+
+      {whoInvolved.map((item, index) => (
+          <View style={styles.mainContent}>
+            <View style={styles.attendeeView}>
+              <Text style={styles.attendeeInput}>{item.firstName}</Text>
+              <TouchableOpacity key={index} onPress={() => deleteWhoInvolved(index)}>
+                <Image source={closeButton} style={styles.deleteAttendeeX} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+      <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={whoInvolved == null ? styles.placeholderText : styles.textInput}>
-              {whoInvolved == null ? '+ Add' : whoInvolved?.firstName + ' ' + whoInvolved?.lastName}
+            <Text style={styles.addAttendee} onPress={handleWhoPressed}>
+              + Add
             </Text>
           </View>
         </View>
-      </TouchableOpacity>
+
+
+
+
       {modalRelVisible && (
         <Modal
           animationType="slide"
@@ -305,7 +356,7 @@ export default function AddOrEditOtherTx1(props: any) {
           <ChooseRelationship
             title="Choose Relationship"
             setModalRelVisible={setModalRelVisible}
-            setSelectedRel={setWhoInvolved}
+            setSelectedRel={handleSelectedWhoInvolved}
             lightOrDark={lightOrDark}
           />
         </Modal>

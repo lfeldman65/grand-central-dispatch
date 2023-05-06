@@ -18,9 +18,14 @@ export default function ChooseRelationship(props: any) {
 
   const handleRowPress = (index: number) => {
     console.log(dataRolodex[index].firstName);
-    setSelectedRel(dataRolodex[index]);
-    setModalRelVisible(false);
+    //setSelectedRel(dataRolodex[index]);
+    //setModalRelVisible(false);
   };
+
+  function savePressed() {
+    setModalRelVisible(false);
+    setSelectedRel(dataRolodex.filter((item) => item.selected));
+  }
 
   function clearSearchPressed() {
     setSearch('');
@@ -90,9 +95,11 @@ export default function ChooseRelationship(props: any) {
 
         <Text style={styles.nameLabel}>{'       ' + title}</Text>
 
-        <TouchableOpacity>
-          <Text style={styles.saveButton}>{'        '}</Text>
+        <TouchableOpacity onPress={savePressed}>
+          <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
+
+    
       </View>
 
       <View style={styles.searchView}>
