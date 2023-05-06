@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { getRolodexData, getRolodexSearch } from './api';
 import { RolodexDataProps } from './interfaces';
 import AttendeeRow from './AttendeeRow';
