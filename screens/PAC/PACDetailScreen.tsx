@@ -52,7 +52,7 @@ export default function PACDetailScreen(props: any) {
       contentType: 'Details',
       itemId: 'id0410',
     });
-    Linking.openURL(`tel:${props.data.homePhone}`);
+    Linking.openURL(`tel:${data!.homePhone}`);
   }
 
   function handleOfficePressed() {
@@ -332,19 +332,19 @@ export default function PACDetailScreen(props: any) {
                   key={index}
                   onPress={() => {
                     SheetManager.hide(Sheets.mobileSheet, null).then(() => {
-                      console.log('CALLTYPE1: ' + props.data.mobilePhone);
+                      console.log('CALLTYPE1: ' + data?.mobile);
                       if (value == 'Call') {
                         ga4Analytics('PAC_Mobile_Call', {
                           contentType: 'Details',
                           itemId: 'id0408',
                         });
-                        Linking.openURL(`tel:${props.data.mobilePhone}`);
+                        Linking.openURL(`tel:${data?.mobile}`);
                       } else {
                         ga4Analytics('PAC_Mobile_Text', {
                           contentType: 'Details',
                           itemId: 'id0409',
                         });
-                        handleTextPressed(props.data.mobilePhone);
+                        handleTextPressed(data?.mobile!);
                       }
                     });
                   }}

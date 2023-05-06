@@ -12,7 +12,7 @@ export function getPACData(type: string): Promise<PACDataResponse> {
 } // back tick (`) only necessary for string interpolation
 
 export function getPACDetails(guid: string): Promise<ContactDetailDataResponse> {
-  return http.get(`contacts/${guid}`);
+  return http.get(`contactsrn/${guid}`);
 }
 
 export function saveAsFavorite(guid: string): Promise<SaveAsFavoriteResponse> {
