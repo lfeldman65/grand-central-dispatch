@@ -150,6 +150,7 @@ export default function AddOrEditOtherTx1(props: any) {
         id: item.userID,
         firstName: item.contactName,
         lastName: '',
+        typeOfContact: 'Who',
         ranking: '',
         contactTypeID: '',
         employerName: '',
