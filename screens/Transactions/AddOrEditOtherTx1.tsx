@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Text,Image, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
+import { Text, Image, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
@@ -65,6 +65,13 @@ export default function AddOrEditOtherTx1(props: any) {
     };
   }, [isFocused]);
 
+  useEffect(() => {
+    var now = new Date();
+    const timeString = now.toLocaleTimeString();
+    console.log('now:' + timeString.toString());
+    setTxTitle(timeString.toString());
+  }, [isFocused]);
+
   function handleTitleFocus() {
     if (titleRef != null && titleRef.current != null) {
       titleRef.current.focus();
@@ -115,8 +122,6 @@ export default function AddOrEditOtherTx1(props: any) {
     setWhoInvolved(combined);
   }
 
-
-
   function populateDataIfEdit(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -138,12 +143,11 @@ export default function AddOrEditOtherTx1(props: any) {
   }
 
   function populateWho() {
+    var who: RolodexDataProps[] = [];
 
-    var who : RolodexDataProps[] = [];
-
-    data?.contacts.forEach((item, index) => {
+    data?.contacts.forEach((item: any, index: number) => {
       var txWho: RolodexDataProps = {
-        id:item.userID,
+        id: item.userID,
         firstName: item.contactName,
         lastName: '',
         ranking: '',
@@ -154,9 +158,8 @@ export default function AddOrEditOtherTx1(props: any) {
       };
       who.push(txWho);
     });
-    
-      setWhoInvolved(who);
-    
+
+    setWhoInvolved(who);
   }
 
   function deleteWhoInvolved(index: number) {
@@ -166,7 +169,6 @@ export default function AddOrEditOtherTx1(props: any) {
     //   console.log(attendees.length);
     setWhoInvolved(newWhoInvolved);
   }
-
 
   function populateAddress() {
     if (data != null && data?.address != null && data?.address.street != '') {
@@ -325,25 +327,22 @@ export default function AddOrEditOtherTx1(props: any) {
       <Text style={styles.nameTitle}>Who's Involved*</Text>
 
       {whoInvolved.map((item, index) => (
-          <View style={styles.mainContent}>
-            <View style={styles.attendeeView}>
-              <Text style={styles.attendeeInput}>{item.firstName}</Text>
-              <TouchableOpacity key={index} onPress={() => deleteWhoInvolved(index)}>
-                <Image source={closeButton} style={styles.deleteAttendeeX} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-      <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.addAttendee} onPress={handleWhoPressed}>
-              + Add
-            </Text>
+        <View style={styles.mainContent}>
+          <View style={styles.attendeeView}>
+            <Text style={styles.attendeeInput}>{item.firstName}</Text>
+            <TouchableOpacity key={index} onPress={() => deleteWhoInvolved(index)}>
+              <Image source={closeButton} style={styles.deleteAttendeeX} />
+            </TouchableOpacity>
           </View>
         </View>
-
-
-
+      ))}
+      <View style={styles.mainContent}>
+        <View style={styles.inputView}>
+          <Text style={styles.addAttendee} onPress={handleWhoPressed}>
+            + Add
+          </Text>
+        </View>
+      </View>
 
       {modalRelVisible && (
         <Modal

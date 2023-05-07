@@ -10,6 +10,7 @@ import {
   TransactionContacts,
   TransactionAddress,
 } from './interfaces';
+import { AttendeesProps } from '../ToDo/interfaces';
 
 export function getTransactionData(status: string, type: string): Promise<TransactionDataResponse> {
   return http.get(`deals?filter=${status}&lastItem=0&batchSize=100&dealType=${type}`);
@@ -60,8 +61,7 @@ export function addOrEditOtherTransaction(
   additionalIncome: string,
   additionalIncomeType: string,
   notes: string,
-  buyer?: RolodexDataProps | null | undefined,
-  seller?: RolodexDataProps | null | undefined
+  contacts: AttendeesProps[]
 ): Promise<AddOrEditTransactionDataResponse> {
   var address: TransactionAddress = {
     street: street,
@@ -71,39 +71,16 @@ export function addOrEditOtherTransaction(
     zip: zip,
     country: country,
   };
-  var txBuyer: TransactionContacts = {
-    userID: buyer?.id ?? '',
-    contactName: buyer?.firstName ?? '' + ' ' + buyer?.lastName ?? '',
-    typeOfContact: transactionType,
-    leadSource: 'related',
-  };
 
-  var txSeller: TransactionContacts = {
-    userID: seller?.id ?? '',
-    contactName: seller?.firstName ?? '' + ' ' + seller?.lastName ?? '',
-    typeOfContact: transactionType,
-    leadSource: 'related',
-  };
-
-  var a = [];
-
-  if (buyer === undefined || buyer == null) {
-    a.push(txSeller);
-  } else if (seller === undefined || seller == null) {
-    a.push(txBuyer);
-  } else {
-    a.push(txBuyer);
-    a.push(txSeller);
-  }
-
-  console.log('contacts: ' + (seller === undefined ? 'hello' : 'ddfd'));
+  console.log('contacts: ' + (contacts === undefined ? 'hello' : 'ddfd'));
+  console.log('notes: ' + notes);
   return http.post('deal', {
     body: {
       id: id,
       transactionType: transactionType,
       status: status,
       title: title,
-      contacts: a,
+      contacts: contacts,
       address: address,
       probabilityToClose: probabilityToClose,
       closingDate: closingDate,
