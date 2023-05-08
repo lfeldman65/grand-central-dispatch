@@ -13,6 +13,7 @@ interface AtoZRowProps {
   data: RolodexDataProps;
   onPress(): void;
   lightOrDark: string;
+  allowMultipleSelects: boolean;
 }
 
 function chooseImage(rank: string) {
@@ -46,7 +47,9 @@ export default function ChooseRelRow(props: AtoZRowProps) {
             true
           )}
         </Text>
-        <View style={styles.checkView}>
+
+     
+       { props.allowMultipleSelects &&  <View style={styles.checkView}>
           <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
             size={25}
             textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
@@ -60,7 +63,7 @@ export default function ChooseRelRow(props: AtoZRowProps) {
               props.data.selected = isChecked;
             }}
           />
-        </View>
+        </View>}
       </View>
     </TouchableOpacity>
   );

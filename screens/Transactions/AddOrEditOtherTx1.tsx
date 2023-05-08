@@ -58,7 +58,7 @@ export default function AddOrEditOtherTx1(props: any) {
     populateDataIfEdit(isMounted);
     if (person != null) {
       console.log('PERSON:' + person.firstName);
-      setWhoInvolved(person);
+      setWhoInvolved([person]);
     }
     return () => {
       isMounted = false;
@@ -150,7 +150,6 @@ export default function AddOrEditOtherTx1(props: any) {
         id: item.userID,
         firstName: item.contactName,
         lastName: '',
-        typeOfContact: 'Who',
         ranking: '',
         contactTypeID: '',
         employerName: '',
@@ -359,6 +358,7 @@ export default function AddOrEditOtherTx1(props: any) {
             setModalRelVisible={setModalRelVisible}
             setSelectedRel={handleSelectedWhoInvolved}
             lightOrDark={lightOrDark}
+            allowMultipleSelects={true}
           />
 
           {/* <ChooseWho
