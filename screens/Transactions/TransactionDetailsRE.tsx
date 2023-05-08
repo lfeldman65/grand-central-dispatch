@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
-import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import globalStyles from '../../globalStyles';
 import { TransactionDetailsProps } from './interfaces';
@@ -42,6 +41,7 @@ export default function TransactionDetailsRE(props: any) {
   }
 
   useEffect(() => {
+    console.log('street1: ' + data?.address.street);
     let isMounted = true;
     fetchDetails(dealID, isMounted);
     return () => {

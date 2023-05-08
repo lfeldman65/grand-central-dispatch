@@ -150,17 +150,12 @@ export default function AddOrEditRealtorTx3(props: any) {
         Alert.alert('Test Failed');
       }
     }
-    var newStreet1 = '';
-    if (street1 == null || street1 == '' || street1 == 'TBD') {
-      newStreet1 = 'TBD';
-    }
-    console.log('street1: ' + street1);
     addOrEditTransaction(
       data == null ? 0 : data?.id,
       type,
       status,
       'title',
-      newStreet1,
+      street1,
       street2,
       city,
       state,

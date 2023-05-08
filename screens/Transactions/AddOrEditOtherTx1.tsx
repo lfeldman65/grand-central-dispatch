@@ -7,8 +7,7 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, styles } from './transactionHelpers';
 import ChooseOtherTxType from './ChooseOtherTxType';
-import ChooseRelationship from '../Goals/ChooseRelationship'; // branch
-import ChooseWho from '../ToDo/AttendeesScreen';
+import ChooseRelationship from '../Goals/ChooseRelationship';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -19,8 +18,7 @@ export default function AddOrEditOtherTx1(props: any) {
   const [type, setType] = useState('Lease');
   const [txTitle, setTxTitle] = useState('');
   const [whoInvolved, setWhoInvolved] = useState<RolodexDataProps[]>([]);
-  const [address, setAddress] = useState('TBD');
-  const [street1, setStreet1] = useState('');
+  const [street1, setStreet1] = useState('TBD');
   const [street2, setStreet2] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
@@ -69,7 +67,7 @@ export default function AddOrEditOtherTx1(props: any) {
     var now = new Date();
     const timeString = now.toLocaleTimeString();
     console.log('now:' + timeString.toString());
-    setTxTitle(timeString.toString());
+    //  setTxTitle(timeString.toString());
   }, [isFocused]);
 
   function handleTitleFocus() {
@@ -117,8 +115,6 @@ export default function AddOrEditOtherTx1(props: any) {
         if (item.id == item2.id && index != index2) combined.splice(index2, 1);
       });
     });
-
-    console.log('to be added: ' + toBeRemoved.length);
     setWhoInvolved(combined);
   }
 
@@ -144,7 +140,6 @@ export default function AddOrEditOtherTx1(props: any) {
 
   function populateWho() {
     var who: RolodexDataProps[] = [];
-
     data?.contacts.forEach((item: any, index: number) => {
       var txWho: RolodexDataProps = {
         id: item.userID,
@@ -158,7 +153,6 @@ export default function AddOrEditOtherTx1(props: any) {
       };
       who.push(txWho);
     });
-
     setWhoInvolved(who);
   }
 
@@ -166,13 +160,11 @@ export default function AddOrEditOtherTx1(props: any) {
     console.log(index);
     whoInvolved.splice(index, 1);
     const newWhoInvolved = [...whoInvolved, ...[]];
-    //   console.log(attendees.length);
     setWhoInvolved(newWhoInvolved);
   }
 
   function populateAddress() {
-    if (data != null && data?.address != null && data?.address.street != '') {
-      setAddress('Enter Manually');
+    if (data != null && data?.address != null) {
       setStreet1(data?.address.street);
       setStreet2(data?.address.street2);
       setCity(data?.address.city);
@@ -187,10 +179,6 @@ export default function AddOrEditOtherTx1(props: any) {
 
   function typeMenuPressed() {
     setModalTypeVisible(!modalTypeVisible);
-  }
-
-  function addressPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.addressSheet);
   }
 
   function backPressed() {

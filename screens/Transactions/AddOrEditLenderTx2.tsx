@@ -396,7 +396,7 @@ export default function AddOrEditLenderTx2(props: any) {
             onCancel={hideApplicationDatePicker}
           />
 
-          <Text style={styles.nameTitle}>{'Closing Price (Projected)'}</Text>
+          <Text style={styles.nameTitle}>{'Closing Price* (Projected)'}</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
               <View style={styles.dollarView}>

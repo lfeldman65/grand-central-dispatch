@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
-import { storage } from '../../utils/storage';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import globalStyles from '../../globalStyles';
 import { TransactionDetailsProps } from './interfaces';

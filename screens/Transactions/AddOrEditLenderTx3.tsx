@@ -98,17 +98,12 @@ export default function AddOrEditLenderTx3(props: any) {
   }
 
   function completePressed() {
-    var newStreet1 = '';
-    if (street1 == null || street1 == '' || street1 == 'TBD') {
-      newStreet1 = 'TBD';
-    }
-    console.log('NOTES: ' + notes);
     addOrEditTransaction(
       data == null ? 0 : data?.id,
       type,
       status,
       'titleNA',
-      newStreet1,
+      street1,
       street2,
       city,
       state,

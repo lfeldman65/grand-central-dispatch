@@ -1,17 +1,11 @@
-import { Fragment, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
+import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import {
-  AddTxBuyerAndSellerSheets,
-  statusMenu,
-  purchaseLoanTypeMenu,
-  propertyAddressMenu,
-  styles,
-} from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, statusMenu, purchaseLoanTypeMenu, styles } from './transactionHelpers';
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseLeadSource from './ChooseBorrowerLeadSource';
 
@@ -23,8 +17,7 @@ export default function AddOrEditLenderTx1(props: any) {
   const [seller, setSeller] = useState<RolodexDataProps>();
   const [borrower, setBorrower] = useState<RolodexDataProps>();
   const [borrowerLeadSource, setBorrowerLeadSource] = useState('Advertising');
-  const [address, setAddress] = useState('TBD');
-  const [street1, setStreet1] = useState('');
+  const [street1, setStreet1] = useState('TBD');
   const [street2, setStreet2] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
@@ -54,21 +47,7 @@ export default function AddOrEditLenderTx1(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [
-    navigation,
-    status,
-    type,
-    borrower,
-    seller,
-    borrowerLeadSource,
-    address,
-    street1,
-    street2,
-    city,
-    state,
-    zip,
-    lightOrDark,
-  ]);
+  }, [navigation, status, type, borrower, seller, borrowerLeadSource, street1, street2, city, state, zip, lightOrDark]);
 
   useEffect(() => {
     let isMounted = true;
@@ -137,8 +116,7 @@ export default function AddOrEditLenderTx1(props: any) {
   }
 
   function populateAddress() {
-    if (data?.address != null && data?.address.street != '') {
-      setAddress('Enter Manually');
+    if (data != null && data?.address != null) {
       setStreet1(data?.address.street);
       setStreet2(data?.address.street2);
       setCity(data?.address.city);
@@ -164,10 +142,6 @@ export default function AddOrEditLenderTx1(props: any) {
     setModalRelVisible(!modalRelVisible);
   }
 
-  function addressPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.addressSheet);
-  }
-
   function backPressed() {
     navigation.goBack();
   }
@@ -187,7 +161,6 @@ export default function AddOrEditLenderTx1(props: any) {
         leadSource: borrowerLeadSource,
         borrower: borrower,
         seller: seller,
-        address: address,
         street1: street1,
         street2: street2,
         city: city,
@@ -308,7 +281,7 @@ export default function AddOrEditLenderTx1(props: any) {
         </View>
       </ActionSheet>
 
-      <Text style={styles.nameTitle}>Borrower</Text>
+      <Text style={styles.nameTitle}>Borrower*</Text>
       <TouchableOpacity onPress={buyerPressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>

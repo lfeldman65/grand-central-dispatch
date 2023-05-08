@@ -5,7 +5,7 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, propertyAddressMenu, styles } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, styles } from './transactionHelpers';
 import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseLeadSource from './ChooseLeadSource';
 
@@ -18,8 +18,7 @@ export default function AddOrEditRealtorTx1(props: any) {
   const [sellerLeadSource, setSellerLeadSource] = useState('Advertising');
   const [buyer, setBuyer] = useState<RolodexDataProps>();
   const [seller, setSeller] = useState<RolodexDataProps>();
-  const [address, setAddress] = useState('TBD');
-  const [street1, setStreet1] = useState('');
+  const [street1, setStreet1] = useState('TBD');
   const [street2, setStreet2] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
@@ -59,7 +58,6 @@ export default function AddOrEditRealtorTx1(props: any) {
     type,
     buyerLeadSource,
     sellerLeadSource,
-    address,
     street1,
     street2,
     city,
@@ -196,8 +194,8 @@ export default function AddOrEditRealtorTx1(props: any) {
   }
 
   function populateAddress() {
-    if (data?.address != null && data?.address.street != '') {
-      setAddress('Enter Manually');
+    console.log('populate address');
+    if (data?.address != null) {
       setStreet1(data?.address.street);
       setStreet2(data?.address.street2);
       setCity(data?.address.city);
@@ -241,9 +239,6 @@ export default function AddOrEditRealtorTx1(props: any) {
       return false;
     }
     if (type.includes('Seller') && seller == null) {
-      return false;
-    }
-    if (address == 'Enter Manually' && (street1 == '' || street1 == null)) {
       return false;
     }
     return true;
