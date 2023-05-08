@@ -146,9 +146,9 @@ export default function AddOrEditOtherTx2(props: any) {
     console.log('LEAVE: ' + source);
     if (source == 'Relationships') {
       navigation.navigate('RelDetails', {
-        contactId: whoInvolved?.id,
-        firstName: whoInvolved?.firstName,
-        lastName: whoInvolved?.lastName,
+        contactId: whoInvolved[0].id,
+        firstName: whoInvolved[0].firstName,
+        lastName: whoInvolved[0].lastName,
       });
     } else {
       navigation.popToTop();

@@ -493,7 +493,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       id: dataDetails?.id!,
       firstName: dataDetails?.firstName!,
       lastName: dataDetails?.lastName!,
-      typeOfContact: 'Who',
       ranking: '',
       contactTypeID: '',
       employerName: '',
