@@ -108,7 +108,9 @@ export default function TransactionDetailsOther(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          //   console.log(res);
+             console.log(res);
+             
+             console.log('contacts' + JSON.stringify(res.data.contacts));
         }
         setIsLoading(false);
       })

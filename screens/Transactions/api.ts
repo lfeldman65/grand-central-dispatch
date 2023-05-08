@@ -9,6 +9,7 @@ import {
   AddOrEditTransactionDataResponse,
   TransactionContacts,
   TransactionAddress,
+  TxContactProps
 } from './interfaces';
 import { AttendeesProps } from '../ToDo/interfaces';
 
@@ -61,7 +62,7 @@ export function addOrEditOtherTransaction(
   additionalIncome: string,
   additionalIncomeType: string,
   notes: string,
-  contacts: AttendeesProps[]
+  contacts: RolodexDataProps[]
 ): Promise<AddOrEditTransactionDataResponse> {
   var address: TransactionAddress = {
     street: street,
@@ -72,16 +73,29 @@ export function addOrEditOtherTransaction(
     country: country,
   };
 
-  console.log('contacts' + JSON.stringify(contacts));
-  console.log('contacts: ' + (contacts === undefined ? 'hello' : 'ddfd'));
-  console.log('notes: ' + notes);
+  //console.log('contacts' + JSON.stringify(contacts));
+  //console.log('contacts: ' + (contacts === undefined ? 'hello' : 'ddfd'));
+  //console.log('notes: ' + notes);
+
+  var newContacts = new Array();
+  contacts.forEach((item, index) => {
+      var contactProps: TxContactProps = {
+        userID: item.id,
+        contactName: item.firstName + ' ' + item.lastName,
+        typeOfContact :'related',
+        leadSource : ""
+      };
+      newContacts.push(contactProps);
+    }); 
+
+    console.log('contacts' + JSON.stringify(newContacts));
   return http.post('deal', {
     body: {
       id: id,
       transactionType: transactionType,
       status: status,
       title: title,
-      contacts: contacts,
+      contacts: newContacts,
       address: address,
       probabilityToClose: probabilityToClose,
       closingDate: closingDate,
