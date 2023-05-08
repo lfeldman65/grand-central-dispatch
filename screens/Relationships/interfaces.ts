@@ -10,6 +10,7 @@ export interface RolodexDataProps {
   mobile: string;
   homePhone: string;
   officePhone: string;
+  typeOfContact: string;
 }
 
 export interface RolodexDataResponse {

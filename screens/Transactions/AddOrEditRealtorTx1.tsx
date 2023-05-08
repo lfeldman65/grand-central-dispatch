@@ -404,6 +404,7 @@ export default function AddOrEditRealtorTx1(props: any) {
             setModalRelVisible={setModalBuyerVisible}
             setSelectedRel={setBuyer}
             lightOrDark={lightOrDark}
+            allowMultipleSelects={false}
           />
         </Modal>
       )}

@@ -15,13 +15,20 @@ export default function AddOrEditOtherTx2(props: any) {
   const isFocused = useIsFocused();
   const [probability, setProbability] = useState('Uncertain');
   const [lightOrDark, setIsLightOrDark] = useState('');
-  const [closingPrice, setClosingPrice] = useState('');
+  const [closingPrice, setClosingPrice] = useState('800');
   const [closingDate, setClosingDate] = useState(new Date());
   const [notes, setNotes] = useState('');
   const [showDate, setShowDate] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
   const notesInputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    var now = new Date();
+    const timeString = now.toLocaleTimeString();
+    setNotes('Notes: ' + timeString.toString());
+    //  console.log('contacts from previous screen: ' + whoInvolved[0].id);
+  }, [isFocused]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -37,7 +44,7 @@ export default function AddOrEditOtherTx2(props: any) {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, probability, closingDate, closingPrice, notes, data]);
+  }, [navigation, probability, closingDate, whoInvolved, closingPrice, notes, data]);
 
   useEffect(() => {
     let isMounted = true;
@@ -101,7 +108,7 @@ export default function AddOrEditOtherTx2(props: any) {
     if (street1 == null || street1 == '' || street1 == 'TBD') {
       newStreet1 = 'TBD';
     }
-    console.log('CLOSING DATE: ' + closingDate);
+    //  console.log('who: ' + whoInvolved[0].id);
     addOrEditOtherTransaction(
       data == null ? 0 : data?.id,
       type,

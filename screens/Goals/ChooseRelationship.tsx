@@ -10,7 +10,7 @@ const backArrow = require('../../images/white_arrow_left.png');
 const searchGlass = require('../../images/whiteSearch.png');
 
 export default function ChooseRelationship(props: any) {
-  const { title, setModalRelVisible, setSelectedRel, lightOrDark } = props;
+  const { title, setModalRelVisible, setSelectedRel, lightOrDark, allowMultipleSelects } = props;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
@@ -18,9 +18,18 @@ export default function ChooseRelationship(props: any) {
 
   const handleRowPress = (index: number) => {
     console.log(dataRolodex[index].firstName);
-    setSelectedRel(dataRolodex[index]);
-    setModalRelVisible(false);
+
+    if (!allowMultipleSelects) {
+        setSelectedRel(dataRolodex[index]);
+        setModalRelVisible(false);
+    }
+    
   };
+
+  function savePressed() {
+    setModalRelVisible(false);
+    setSelectedRel(dataRolodex.filter((item) => item.selected));
+  }
 
   function clearSearchPressed() {
     setSearch('');
@@ -90,9 +99,11 @@ export default function ChooseRelationship(props: any) {
 
         <Text style={styles.nameLabel}>{'       ' + title}</Text>
 
-        <TouchableOpacity>
-          <Text style={styles.saveButton}>{'        '}</Text>
+        <TouchableOpacity onPress={savePressed}>
+          <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
+
+    
       </View>
 
       <View style={styles.searchView}>
@@ -115,7 +126,7 @@ export default function ChooseRelationship(props: any) {
       <ScrollView>
         <View>
           {dataRolodex.map((item, index) => (
-            <RelationshipRow key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+            <RelationshipRow allowMultipleSelects={allowMultipleSelects} key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
           ))}
         </View>
       </ScrollView>
