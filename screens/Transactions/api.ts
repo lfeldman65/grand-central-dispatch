@@ -72,6 +72,7 @@ export function addOrEditOtherTransaction(
     country: country,
   };
 
+  console.log('contacts' + JSON.stringify(contacts));
   console.log('contacts: ' + (contacts === undefined ? 'hello' : 'ddfd'));
   console.log('notes: ' + notes);
   return http.post('deal', {
