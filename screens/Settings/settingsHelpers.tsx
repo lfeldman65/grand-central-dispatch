@@ -1,7 +1,13 @@
-export const bizTypeMenu = {
+export const bizTypeMenuOld = {
   Realtor: 'Realtor',
   Lender: 'Lender',
   Both: 'Both',
+};
+
+export const bizTypeMenu = {
+  Agent: 'Agent',
+  Lender: 'Lender',
+  'Both Agent and Lender': 'Both Agent and Lender',
 };
 
 export const timeZoneMenu = {

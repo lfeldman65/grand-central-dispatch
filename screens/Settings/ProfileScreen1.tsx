@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useEffect, useState, useRef } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -48,7 +48,7 @@ export default function ProfileScreen1(props: any) {
     };
   }, [isFocused]);
 
-  function convertToParam(pretty: string) {
+  function convertToParamOld(pretty: string) {
     if (pretty == 'Both') {
       return 'realtorAndLender';
     }
@@ -61,21 +61,33 @@ export default function ProfileScreen1(props: any) {
     return pretty;
   }
 
+  function convertToParam(pretty: string) {
+    if (pretty == 'Both Agent and Lender') {
+      return 'realtorAndLender';
+    }
+    if (pretty == 'Agent') {
+      return 'realtor';
+    }
+    if (pretty == 'Lender') {
+      return 'lender';
+    }
+    return pretty;
+  }
+
   function initializeFields(email?: string, bizType?: string, timeZone?: string, mobile?: string) {
     //  console.log(timeZonesList);
-
     if (email == null || email == '') {
       setEmail('');
     } else {
       setEmail(email);
     }
     if (bizType == null || bizType == '' || bizType == 'realtorAndLender') {
-      setBizType('Both');
+      setBizType('Both Agent and Lender');
     } else {
       setBizType(bizType);
     }
     if (bizType == 'realtor') {
-      setBizType('Realtor');
+      setBizType('Agent');
     }
     if (bizType == 'lender') {
       setBizType('Lender');
