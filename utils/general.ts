@@ -81,7 +81,7 @@ export async function schedulePACNotifications(day: number, person: string) {
   const schedulingOptions = {
     content: {
       title: "Top O' the Morning to You!",
-      body: 'Time to make your first call to ' + person,
+      body: 'Time to make your first call to ' + person + '!',
       sound: true,
       data: {
         id: 'pac-notification-' + day.toString(),
