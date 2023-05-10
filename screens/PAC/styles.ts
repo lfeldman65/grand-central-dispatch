@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     marginTop: -3,
   },
   phoneRow: {
-    width: 210,
+    width: '70%',
   },
   otherTextDark: {
     color: 'white',
