@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   Dimensions,
   Modal,
-  Linking,
   ScrollView,
 } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
@@ -15,14 +14,18 @@ import PacComplete from './PACCompleteScreen';
 import { getPACDetails } from './api';
 import openMap from 'react-native-open-maps';
 import { styles } from './styles';
-import { isNullOrEmpty, ga4Analytics, handleTextPressed } from '../../utils/general';
+import { isNullOrEmpty, ga4Analytics, handlePhonePressed, handleTextPressed } from '../../utils/general';
 import { AddressProps, ContactDetailDataProps } from './interfaces';
 import { completeAction, postponeAction } from './postponeAndComplete';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
 import globalStyles from '../../globalStyles';
-
+import TrackActivity from '../Goals/TrackActivityScreen';
+import { getGoalData, trackAction } from '../Goals/api';
+import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 let deviceHeight = Dimensions.get('window').height;
+import { GoalDataProps } from '../Goals/interfaces';
+var localGoalID = '0';
 
 export default function PACDetailScreen(props: any) {
   const { route } = props;
@@ -33,6 +36,118 @@ export default function PACDetailScreen(props: any) {
   const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
   const actionSheetRef = useRef<ActionSheet>(null);
+  const [trackActivityVisible, setTrackActivityVisible] = useState(false);
+  const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
+  const [goalID2, setGoalID2] = useState('1');
+  const [goalName2, setGoalName2] = useState('Calls Made');
+  const [subject2, setSubject2] = useState('');
+
+  function trackActivityComplete( // see "savePressed" in TrackActivityScreen
+    guid: string,
+    refGUID: string,
+    gaveRef: boolean,
+    followUp: boolean,
+    goalID: string,
+    subject: string,
+    date: string,
+    askedRef: boolean,
+    note: string,
+    refInPast: boolean
+  ) {
+    localGoalID = goalID;
+
+    setIsLoading(true);
+    trackActivityAPI(
+      guid,
+      goalID,
+      refGUID,
+      gaveRef,
+      followUp,
+      subject,
+      date,
+      askedRef,
+      note,
+      refInPast,
+      trackSuccess,
+      trackFailure
+    );
+    console.log('saveAppointmentComplete');
+  }
+
+  function trackSuccess() {
+    setIsLoading(false);
+    console.log('track success 1');
+    fetchGoals();
+  }
+
+  function trackFailure() {
+    setIsLoading(false);
+    console.log('track failure');
+  }
+
+  function fetchGoals() {
+    setIsLoading(true);
+    getGoalData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setGoalList(res.data);
+          console.log('Notes: ' + res.data[1].goal.title);
+          console.log('CALLS: ' + res.data[0].goal.title);
+          console.log('CALLS: ' + res.data[0].achievedToday);
+          notifyIfWin(localGoalID, res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function notifyIfWin(goalId: string, data: GoalDataProps[]) {
+    console.log('GOALID: ' + goalId);
+    var i = 0;
+    while (i < data.length) {
+      if (data[i].goal.id.toString() == goalId) {
+        testForNotificationTrack(
+          data[i].goal.title,
+          data[i].goal.weeklyTarget,
+          data[i].achievedThisWeek,
+          data[i].achievedToday
+        );
+      }
+      i = i + 1;
+    }
+  }
+
+  function trackActivityAPI(
+    contactId: string,
+    goalId: string,
+    refGUID: string,
+    gaveRef: boolean,
+    followUP: boolean,
+    subject: string,
+    date: string,
+    referral: boolean,
+    note: string,
+    refInPast: boolean,
+    onSuccess: any,
+    onFailure: any
+  ) {
+    trackAction(contactId, goalId, refGUID, gaveRef, followUP, subject, date, referral, note, refInPast)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 'error') {
+          console.error(res.error);
+          onFailure();
+        } else {
+          onSuccess();
+        }
+      })
+      .catch((error) => {
+        onFailure();
+        console.log('complete error' + error);
+      });
+  }
 
   function postponePressed() {
     ga4Analytics('PAC_Details_Postpone', {
@@ -48,11 +163,16 @@ export default function PACDetailScreen(props: any) {
   }
 
   function handleHomePressed() {
+    console.log('Home pressed');
     ga4Analytics('PAC_Home_Call', {
       contentType: 'Details',
       itemId: 'id0410',
     });
-    Linking.openURL(`tel:${data!.homePhone}`);
+    setGoalID2('1');
+    setGoalName2('Calls Made');
+    setSubject2('Mobile Call');
+    handlePhonePressed(data?.homePhone!, () => setTrackActivityVisible(true));
+    // Linking.openURL(`tel:${data!.homePhone}`);
   }
 
   function handleOfficePressed() {
@@ -60,18 +180,21 @@ export default function PACDetailScreen(props: any) {
       contentType: 'Details',
       itemId: 'id0411',
     });
-    Linking.openURL(`tel:${props.data.officePhone}`);
+    setGoalID2('1');
+    setGoalName2('Calls Made');
+    setSubject2('Mobile Call');
+    handlePhonePressed(data?.officePhone!, () => setTrackActivityVisible(true));
   }
 
-  function handlePhonePressed(type: string) {
-    if (type == 'mobile') {
-      Linking.openURL(`tel:${data?.mobile}`);
-    } else if (type == 'office') {
-      Linking.openURL(`tel:${data?.officePhone}`);
-    } else {
-      Linking.openURL(`tel:${data?.homePhone}`);
-    }
-  }
+  // function handlePhonePressed(type: string) {
+  //   if (type == 'mobile') {
+  //     Linking.openURL(`tel:${data?.mobile}`);
+  //   } else if (type == 'office') {
+  //     Linking.openURL(`tel:${data?.officePhone}`);
+  //   } else {
+  //     Linking.openURL(`tel:${data?.homePhone}`);
+  //   }
+  // }
 
   function goToRelDetails() {
     console.log('PAC: ' + data?.id);
@@ -194,7 +317,7 @@ export default function PACDetailScreen(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          console.log(res.data);
+          //   console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -332,19 +455,26 @@ export default function PACDetailScreen(props: any) {
                   key={index}
                   onPress={() => {
                     SheetManager.hide(Sheets.mobileSheet, null).then(() => {
-                      console.log('CALLTYPE1: ' + data?.mobile);
+                      console.log('value: ' + value);
                       if (value == 'Call') {
                         ga4Analytics('PAC_Mobile_Call', {
                           contentType: 'Details',
                           itemId: 'id0408',
                         });
-                        Linking.openURL(`tel:${data?.mobile}`);
+                        setGoalID2('1');
+                        setGoalName2('Calls Made');
+                        setSubject2('Mobile Call');
+                        handlePhonePressed(data?.mobile!, () => setTrackActivityVisible(true));
                       } else {
+                        console.log('TEXT 470');
                         ga4Analytics('PAC_Mobile_Text', {
                           contentType: 'Details',
                           itemId: 'id0409',
                         });
-                        handleTextPressed(data?.mobile!);
+                        setGoalID2('7');
+                        setGoalName2('Other');
+                        setSubject2('Text Message');
+                        handleTextPressed(data?.mobile!, () => setTrackActivityVisible(true));
                       }
                     });
                   }}
@@ -372,6 +502,29 @@ export default function PACDetailScreen(props: any) {
             contactName={contactName()}
             onSave={saveComplete}
             setModalVisible={setModalVisible}
+          />
+        </Modal>
+      )}
+
+      {trackActivityVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={trackActivityVisible}
+          onRequestClose={() => {
+            setTrackActivityVisible(!trackActivityVisible);
+          }}
+        >
+          <TrackActivity
+            title="Track Activity Goal"
+            guid={data?.id!}
+            goalID={goalID2}
+            goalName={goalName2}
+            subjectP={subject2}
+            firstName={data?.firstName}
+            lastName={data?.lastName}
+            onSave={trackActivityComplete}
+            setModalVisible={setTrackActivityVisible}
           />
         </Modal>
       )}

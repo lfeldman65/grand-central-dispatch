@@ -6,13 +6,13 @@ import { storage } from '../../utils/storage';
 import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual, editContact } from './api';
 import { RelDetailsProps, ToDoAndApptProps, RolodexDataProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
-import { isNullOrEmpty } from '../../utils/general';
 import {
   formatDate,
   handleTextPressed,
   handlePhonePressed,
   handleEmailPressed2,
   handleMapPressed2,
+  isNullOrEmpty,
 } from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import IdeasCalls from '../PAC/IdeasCallsScreen';
@@ -335,9 +335,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleHomePressed() {
-    setGoalID2('1');
-    setGoalName2('Calls Made');
-    setSubject2('Mobile Call');
     ga4Analytics('Relationships_Phone_Call', {
       contentType: 'Home',
       itemId: 'id0520',
@@ -353,9 +350,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       contentType: 'Office',
       itemId: 'id0520',
     });
-    setGoalID2('7');
-    setGoalName2('Other');
-    setSubject2('Text Message');
+    setGoalID2('1');
+    setGoalName2('Calls Made');
+    setSubject2('Mobile Call');
     handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
   }
 
@@ -1568,9 +1565,9 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                       SheetManager.hide(Sheets.officeSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
-                          setGoalID2('7');
-                          setGoalName2('Other');
-                          setSubject2('Text Message');
+                          setGoalID2('1');
+                          setGoalName2('Calls Made');
+                          setSubject2('Mobile Call');
                           handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
                         } else {
                           setGoalID2('7');

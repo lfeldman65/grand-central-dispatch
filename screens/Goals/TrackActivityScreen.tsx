@@ -98,6 +98,7 @@ export default function TrackActivityScreen(props: any) {
       title: goalName ?? 'Calls Made',
     };
     setGoal(initialGoal);
+    console.log('track firstname: ' + firstName);
   }, [isFocused]);
 
   useEffect(() => {
