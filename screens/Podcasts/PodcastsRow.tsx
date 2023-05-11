@@ -1,22 +1,14 @@
-import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { PodcastDataProps } from './interfaces';
+import { makeLongTxtPretty } from '../../utils/general';
+
 const logo = require('../Podcasts/images/podcastMini.png');
-//const chevron = require('../../images/chevron_blue_right.png');
 
 interface PodcastsRowProps {
   data: PodcastDataProps;
   onPress(): void;
   lightOrDark: string;
-}
-
-function makeTitlePretty(title: string) {
-  if (title.length < 40) {
-    return title;
-  }
-  return title.substring(0, 40) + '...';
 }
 
 function makeTimePretty(duration: number) {
@@ -57,14 +49,10 @@ export default function PodcastsRow(props: PodcastsRowProps) {
         </View>
         <View style={styles.textBox}>
           <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
-            {makeTitlePretty(props.data.title)}
+            {makeLongTxtPretty(props.data.title, 40)}
           </Text>
           <Text style={styles.timeText}>{makeTimePretty(props.data.duration)}</Text>
         </View>
-
-        {/* <View style={styles.chevronBox}>
-          <Image source={chevron} style={styles.chevron} />
-        </View> */}
       </View>
     </TouchableOpacity>
   );

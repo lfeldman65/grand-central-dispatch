@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { RecentActivityDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
+import { makeLongTxtPretty } from '../../utils/general';
 
 const callImage = require('../Relationships/images/recentCall.png');
 const noteImage = require('../Relationships/images/recentNote.png');
@@ -52,7 +53,9 @@ export default function RecentActivityRow(props: RecentActivityRowProps) {
           <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
             {props.data.ActivityDate}
           </Text>
-          <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{props.data.Notes}</Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+            {makeLongTxtPretty(props.data.Notes, 60)}
+          </Text>
         </View>
         <View style={styles.chevronBox}>
           <Image source={chevron} style={styles.chevron} />
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderColor: 'lightgray',
     borderWidth: 0.5,
-    paddingBottom: 10,
+    paddingBottom: 20,
     height: 'auto',
   },
   rowLight: {
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: 'lightgray',
     borderWidth: 0.5,
-    paddingBottom: 10,
+    paddingBottom: 20,
     height: 'auto',
   },
   imageBox: {

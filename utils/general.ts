@@ -9,6 +9,15 @@ import * as SMS from 'expo-sms';
 export function shouldRunTests() {
   return true;
 }
+
+export function makeLongTxtPretty(longText: string, maxChar: number) {
+  console.log(longText);
+  if (longText.length < maxChar) {
+    return longText;
+  }
+  return longText.substring(0, maxChar) + '...';
+}
+
 export function isNullOrEmpty(value: any) {
   if (value == null) return true;
   if (value == '') return true;
