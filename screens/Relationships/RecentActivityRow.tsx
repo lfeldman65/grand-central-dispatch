@@ -1,20 +1,6 @@
-import { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  Linking,
-  ScrollView,
-  TouchableHighlight,
-} from 'react-native';
-import MenuIcon from '../../components/menuIcon';
-import { useEffect } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { RecentActivityDataProps } from './interfaces';
-import { storage } from '../../utils/storage';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 const callImage = require('../Relationships/images/recentCall.png');
 const noteImage = require('../Relationships/images/recentNote.png');
@@ -39,8 +25,8 @@ function chooseImage(activityType: string) {
 }
 
 function prettyType(uglyType: string) {
-  if (uglyType == 'callMade') return 'Calls';
-  if (uglyType == 'noteWritten') return 'Notes';
+  if (uglyType == 'callMade') return 'Call';
+  if (uglyType == 'noteWritten') return 'Note';
   if (uglyType == 'popByMade') return 'Pop-By';
   if (uglyType == 'referralGiven') return 'Referral';
   if (uglyType == 'otherActivity') return 'Other';

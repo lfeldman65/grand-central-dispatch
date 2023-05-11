@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import { useEffect } from 'react';
 import { VideoSummaryDataProps } from './interfaces';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -16,7 +14,7 @@ function makeTextPretty(name: string, count: number) {
   if (count == 1) {
     return '"' + name + '" has been watched 1 time';
   }
-  return '"' + name + '" has been watched 1 times';
+  return '"' + name + '" has been watched ' + count.toString() + ' times';
 }
 
 export default function VideoHistoryRow(props: VideoHistoryRowProps) {

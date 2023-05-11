@@ -24,12 +24,16 @@ export default function VideoDetailsScreen(props: any) {
       contentType: 'none',
       itemId: 'id0702',
     });
-    navigation.navigate('RelDetails', {
-      contactId: dataVid[0].contactGuid,
-      firstName: dataVid[0].fullName,
-      lastName: '',
-      lightOrDark: lightOrDark,
-    });
+    if (dataVid[0].contactGuid != null) {
+      navigation.navigate('RelDetails', {
+        contactId: dataVid[0].contactGuid,
+        firstName: dataVid[0].fullName,
+        lastName: '',
+        lightOrDark: lightOrDark,
+      });
+    } else {
+      console.log('herebaby');
+    }
   };
 
   useEffect(() => {

@@ -63,6 +63,7 @@ export default function RecentActivityScreenScreen() {
       contactId: dataActivity[index].ContactId,
       firstName: dataActivity[index].Name,
       lastName: '',
+      lightOrDark: lightOrDark,
     });
   };
 

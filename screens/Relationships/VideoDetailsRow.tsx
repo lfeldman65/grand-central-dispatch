@@ -1,10 +1,6 @@
-import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
-import { useEffect } from 'react';
 import { VideoDetailsDataProps } from './interfaces';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { storage } from '../../utils/storage';
+import { useIsFocused } from '@react-navigation/native';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -32,14 +28,16 @@ export default function VideoDetailRows(props: VideoDetailsRowProps) {
       <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <View style={styles.textBox}>
           <Text style={props.lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
-            {props.data.fullName + ' watched this video'}
+            {props.data.fullName ?? 'Anonymous' + ' watched this video'}
           </Text>
           <Text style={styles.dateText}>{prettyDate(props.data.dateViewed)}</Text>
         </View>
 
-        <View style={styles.chevronBox}>
-          <Image source={chevron} style={styles.chevron} />
-        </View>
+        {props.data.fullName != null && (
+          <View style={styles.chevronBox}>
+            <Image source={chevron} style={styles.chevron} />
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
