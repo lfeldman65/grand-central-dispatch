@@ -14,6 +14,11 @@ import { getGoalData, trackAction } from '../Goals/api';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 import { GoalDataProps } from '../Goals/interfaces';
 var localGoalID = '0';
+var localName = '';
+var localID = '';
+var localMobile = '';
+var localHome = '';
+var localOffice = '';
 
 interface PACCallsRowProps {
   key: number;
@@ -188,10 +193,19 @@ export default function PACCallsRow(props: PACCallsRowProps) {
   }
 
   function handleMobilePressed() {
+    localID = props.data.contactId;
+    localName = props.data.contactName;
+    localMobile = props.data.mobilePhone;
+    console.log('number1: ' + localMobile);
+    console.log('name1: ' + localName);
+    console.log('id1: ' + localID);
     SheetManager.show(Sheets.mobileSheet);
   }
 
   function handleHomePressed() {
+    localID = props.data.contactId;
+    localName = props.data.contactName;
+    localHome = props.data.homePhone;
     ga4Analytics('PAC_Home_Call', {
       contentType: 'Calls',
       itemId: 'id0410',
@@ -199,10 +213,13 @@ export default function PACCallsRow(props: PACCallsRowProps) {
     setGoalID2('1');
     setGoalName2('Calls Made');
     setSubject2('Mobile Call');
-    handlePhonePressed(props.data.homePhone!, () => setTrackActivityVisible(true));
+    handlePhonePressed(localHome, () => setTrackActivityVisible(true));
   }
 
   function handleOfficePressed() {
+    localID = props.data.contactId;
+    localName = props.data.contactName;
+    localOffice = props.data.officePhone;
     ga4Analytics('PAC_Office_Call', {
       contentType: 'Calls',
       itemId: 'id0411',
@@ -210,7 +227,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
     setGoalID2('1');
     setGoalName2('Calls Made');
     setSubject2('Mobile Call');
-    handlePhonePressed(props.data.officePhone!, () => setTrackActivityVisible(true));
+    handlePhonePressed(localOffice, () => setTrackActivityVisible(true));
   }
 
   function handleSwipeBegin(rowKey: number) {
@@ -305,7 +322,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
 
           <ActionSheet
             initialOffsetFromBottom={10}
-            onBeforeShow={(data) => console.log('mobile call type sheet')}
+            //   onBeforeShow={(data) => console.log('mobile call type sheet')}
             id={Sheets.mobileSheet}
             ref={actionSheetRef}
             statusBarTranslucent
@@ -334,8 +351,9 @@ export default function PACCallsRow(props: PACCallsRowProps) {
                       key={index}
                       onPress={() => {
                         SheetManager.hide(Sheets.mobileSheet, null).then(() => {
-                          console.log('CALLTYPE: ' + value);
-                          console.log('number: ' + props.data.mobilePhone);
+                          console.log('number: ' + localMobile);
+                          console.log('name: ' + localName);
+                          console.log('ID: ' + localID);
                           if (value == 'Call') {
                             ga4Analytics('PAC_Mobile_Call', {
                               contentType: 'Calls_Tab',
@@ -344,7 +362,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
                             setGoalID2('1');
                             setGoalName2('Calls Made');
                             setSubject2('Mobile Call');
-                            handlePhonePressed(props.data.mobilePhone, () => setTrackActivityVisible(true));
+                            handlePhonePressed(localMobile, () => setTrackActivityVisible(true));
                           } else {
                             ga4Analytics('PAC_Mobile_Text', {
                               contentType: 'Calls_Tab',
@@ -353,7 +371,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
                             setGoalID2('7');
                             setGoalName2('Other');
                             setSubject2('Text Message');
-                            handleTextPressed(props.data.mobilePhone!, () => setTrackActivityVisible(true));
+                            handleTextPressed(localMobile, () => setTrackActivityVisible(true));
                           }
                         });
                       }}
@@ -395,11 +413,11 @@ export default function PACCallsRow(props: PACCallsRowProps) {
             >
               <TrackActivity
                 title="Track Activity Goal"
-                guid={props.data.contactId}
+                guid={localID}
                 goalID={goalID2}
                 goalName={goalName2}
                 subjectP={subject2}
-                firstName={props.data.contactName}
+                firstName={localName}
                 lastName={''}
                 onSave={trackActivityComplete}
                 setModalVisible={setTrackActivityVisible}
