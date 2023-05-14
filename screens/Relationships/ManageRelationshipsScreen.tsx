@@ -443,11 +443,11 @@ export default function ManageRelationshipsScreen() {
         ) : (
           <React.Fragment>
             {tabSelected != 'groups' && (
-              <View style={globalStyles.filterRow}>
-                <TouchableOpacity onPress={filterPressed}>
+              <TouchableOpacity onPress={filterPressed}>
+                <View style={globalStyles.filterRow}>
                   <Text style={globalStyles.filterText}>{isFilterRel ? 'Show Businesses' : 'Show Relationships'}</Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             )}
 
             <View style={styles.rolodex}>

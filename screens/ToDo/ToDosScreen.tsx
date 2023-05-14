@@ -171,11 +171,11 @@ export default function ToDosScreen() {
 
         <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
           <React.Fragment>
-            <View style={globalStyles.filterRow}>
-              <TouchableOpacity onPress={filterPressed}>
+            <TouchableOpacity onPress={filterPressed}>
+              <View style={globalStyles.filterRow}>
                 <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
 
             <ScrollView>
               <View>
