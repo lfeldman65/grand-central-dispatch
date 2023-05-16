@@ -448,10 +448,10 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#1A6295',
-    height: '100%',
+    flex: 1,
   },
   topView: {
-    height: 85,
+    height: 80,
     backgroundColor: '#1A6295',
     flexDirection: 'row',
     borderWidth: 0.5,
@@ -475,14 +475,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: '75%',
     marginLeft: 5,
+    //  marginTop: 6,
     textAlign: 'left',
+    justifyContent: 'center',
   },
   changePasswordText: {
     marginTop: 10,
     color: '#1398F5',
   },
   userText: {
-    marginTop: 10,
     color: 'white',
     fontSize: 14,
   },
