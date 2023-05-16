@@ -6,7 +6,7 @@ import { PlayerStatus, PodcastDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
 import { ga4Analytics } from '../../utils/general';
 
-const backArrow = require('../../images/white_arrow_left.png');
+const backChevron = require('../../images/chevron_white_left.png');
 const logo = require('../Podcasts/images/podcastLarge.png');
 const back = require('../Podcasts/images/audio_back.png');
 const next = require('../Podcasts/images/audio_next.png');
@@ -312,9 +312,15 @@ export default function PodcastPlayer(props: any) {
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <TouchableOpacity onPress={cancelPressed}>
-          <Image source={backArrow} style={styles.backArrow} />
-        </TouchableOpacity>
+        <View style={styles.backView}>
+          <TouchableOpacity onPress={cancelPressed}>
+            <Image source={backChevron} style={styles.backChevron} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={cancelPressed}>
+            <Text style={styles.backText}>Back</Text>
+          </TouchableOpacity>
+        </View>
+
         <Text style={styles.pageTitle}>{getSeasonAndEpisode(podcastItem.title)}</Text>
         <TouchableOpacity>
           <Text style={styles.blankButton}></Text>
@@ -382,20 +388,27 @@ export default function PodcastPlayer(props: any) {
 export const styles = StyleSheet.create({
   container: {
     backgroundColor: '#004F89',
-    width: '100%',
-    height: '100%',
-    alignSelf: 'center',
+    flex: 1,
+  },
+  backView: {
+    flexDirection: 'row',
+  },
+  backText: {
+    color: 'white',
+    marginLeft: 10,
+    marginTop: 20,
+    fontSize: 16,
   },
   topRow: {
     flexDirection: 'row',
-    padding: 10,
+    padding: 1,
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: '10%',
   },
-  backArrow: {
-    width: 17,
-    height: 14,
-    marginLeft: 7,
+  backChevron: {
+    width: 12,
+    height: 19,
+    marginLeft: 10,
     marginTop: 22, // alignment varies by device, so need a better way
   },
   pageTitle: {
@@ -413,7 +426,7 @@ export const styles = StyleSheet.create({
   },
   blankButton: {
     // Helps placement of arrow and title (there's probably a better way to do this)
-    width: 30,
+    width: 70,
   },
   logoImage: {
     marginTop: '5%',
