@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import MenuIcon from '../../components/menuIcon';
-import { useEffect } from 'react';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { AboutUsDataProps } from './interfaces';
 const logo = require('../Podcasts/images/podcastMini.png');
-//const chevron = require('../../images/chevron_blue_right.png');
 
 interface AboutUsRowProps {
   data: AboutUsDataProps;
