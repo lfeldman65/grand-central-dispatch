@@ -130,8 +130,10 @@ export default function LoginScreen() {
   useEffect(() => {
     LogBox.ignoreAllLogs(true);
     if (shouldRunTests()) {
-      setUserName('larryf@buffiniandcompany.com');
-      setPassword('success');
+      //  setUserName('larryf@buffiniandcompany.com');
+      //  setPassword('success');
+      setUserName('coryh@buffiniandcompany.com');
+      setPassword('Buffini1');
     } else {
       populateCredentialsIfRemembered();
     }

@@ -201,7 +201,7 @@ export default function CalendarScreen() {
 }
 const styles = StyleSheet.create({
   calendarView: {
-    height: '40%',
+    height: '50%',
     width: '100%',
   },
   todayText: {

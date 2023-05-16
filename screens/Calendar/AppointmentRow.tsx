@@ -14,10 +14,14 @@ interface ApptRowProps {
 export default function AppointmentRow(props: ApptRowProps) {
   const isFocused = useIsFocused();
 
+  useEffect(() => {
+    console.log('appt start: ' + props.data.startTime);
+  }, [isFocused]);
+
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-        <Text style={props.lightOrDark == 'dark' ? styles.timeDark : styles.timeLight}>
+        <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
           {prettyDate(props.data.startTime)}
         </Text>
 
@@ -25,7 +29,7 @@ export default function AppointmentRow(props: ApptRowProps) {
           <Text style={props.lightOrDark == 'dark' ? styles.appTitleDark : styles.appTitleLight}>
             {props.data.title}
           </Text>
-          <Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.timeDark : styles.timeLight}>
             {new Date(props.data.startTime).toLocaleTimeString('en-us', {
               hour12: true,
               hour: 'numeric',
@@ -39,8 +43,8 @@ export default function AppointmentRow(props: ApptRowProps) {
         )}
 
         {/* <Text>{props.appID}</Text>
-        <Text>{new Date(props.data.startTime).toLocaleTimeString()}</Text>
-        <Text>{props.data.startTime}</Text> */}
+      <Text>{new Date(props.data.startTime).toLocaleTimeString()}</Text>
+      <Text>{props.data.startTime}</Text> */}
       </View>
     </TouchableOpacity>
   );
@@ -86,7 +90,7 @@ export const styles = StyleSheet.create({
   },
   appTitleDark: {
     color: 'white',
-    fontSize: 22,
+    fontSize: 20,
     textAlign: 'left',
     marginTop: 5,
     marginLeft: 10,
@@ -95,7 +99,7 @@ export const styles = StyleSheet.create({
   },
   appTitleLight: {
     color: 'black',
-    fontSize: 22,
+    fontSize: 20,
     textAlign: 'left',
     marginTop: 5,
     marginLeft: 10,
@@ -118,7 +122,7 @@ export const styles = StyleSheet.create({
     marginBottom: 5,
     fontWeight: '500',
   },
-  timeDark: {
+  dateDark: {
     color: 'gray',
     fontSize: 16,
     textAlign: 'left',
@@ -126,11 +130,27 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     fontWeight: '500',
   },
-  timeLight: {
+  dateLight: {
     color: 'gray',
     fontSize: 16,
     textAlign: 'left',
     marginTop: 5,
+    marginLeft: 10,
+    fontWeight: '500',
+  },
+  timeDark: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'left',
+    marginTop: 10,
+    marginLeft: 10,
+    fontWeight: '500',
+  },
+  timeLight: {
+    color: 'black',
+    fontSize: 16,
+    textAlign: 'left',
+    marginTop: 10,
     marginLeft: 10,
     fontWeight: '500',
   },

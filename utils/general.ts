@@ -48,11 +48,12 @@ export function formatDateTime(datetime?: string) {
 
 export function prettyDate(uglyDate: string) {
   // example: 2019-05-22T00:00:00"
+  console.log('ugly: ' + uglyDate);
   if (uglyDate == null) return '';
   if (uglyDate == '') return '';
   var dateOnly = uglyDate.substring(0, 10);
   var dateParts = dateOnly.split('-');
-  var year = dateParts[0].substring(2, 4);
+  var year = dateParts[0].substring(0, 4);
   // example: 05/22/2019
   return dateParts[1] + '/' + dateParts[2] + '/' + year;
 }

@@ -65,19 +65,19 @@ const styles = StyleSheet.create({
   },
   activityTextDark: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 2,
-    marginTop: 14,
+    marginTop: 10,
   },
   activityTextLight: {
     color: 'black',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 2,
-    marginTop: 14,
+    marginTop: 10,
   },
   chevronBox: {
     paddingTop: 10,

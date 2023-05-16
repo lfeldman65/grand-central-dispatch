@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { VideoDetailsDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
+import { prettyDate } from '../../utils/general';
 
 const chevron = require('../../images/chevron_blue_right.png');
 
@@ -12,17 +13,7 @@ interface VideoDetailsRowProps {
 
 export default function VideoDetailRows(props: VideoDetailsRowProps) {
   const isFocused = useIsFocused();
-
-  function prettyDate(uglyDate: string) {
-    console.log(uglyDate);
-    if (uglyDate == null) return ' ';
-    if (uglyDate == '') return ' ';
-    var dateOnly = uglyDate.substring(0, 10);
-    var dateParts = dateOnly.split('-');
-    var year = dateParts[0].substring(2, 4);
-    return dateParts[1] + '/' + dateParts[2] + '/' + year;
-  }
-
+  const newDate = props.data.dateViewed + 'Z';
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
@@ -30,7 +21,14 @@ export default function VideoDetailRows(props: VideoDetailsRowProps) {
           <Text style={props.lightOrDark == 'dark' ? styles.nameTextDark : styles.nameTextLight}>
             {props.data.fullName ?? 'Anonymous' + ' watched this video'}
           </Text>
-          <Text style={styles.dateText}>{prettyDate(props.data.dateViewed)}</Text>
+          <Text style={styles.dateText}>
+            <Text style={styles.dateText}>{prettyDate(props.data.dateViewed) + ' '}</Text>
+            {new Date(newDate).toLocaleTimeString('en-us', {
+              hour12: true,
+              hour: 'numeric',
+              minute: '2-digit',
+            })}
+          </Text>
         </View>
 
         {props.data.fullName != null && (
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
   },
   textBox: {
     flexDirection: 'column',
-    height: 75,
+    height: 85,
     width: '88%',
     marginLeft: 5,
     textAlign: 'left',
@@ -85,9 +83,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   chevronBox: {
-    paddingTop: 30,
     paddingLeft: 10,
     paddingRight: 20,
+    justifyContent: 'center',
   },
   chevron: {
     height: 20,
