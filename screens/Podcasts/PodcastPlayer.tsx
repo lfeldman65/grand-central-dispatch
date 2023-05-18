@@ -286,6 +286,7 @@ export default function PodcastPlayer(props: any) {
       // androidImplementation: 'MediaPlayer',
     };
 
+    Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
     const { sound } = await Audio.Sound.createAsync(source, initialStatus, onPlaybackStatusUpdate);
     setSound(sound);
 
