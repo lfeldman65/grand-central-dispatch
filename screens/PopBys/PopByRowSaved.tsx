@@ -165,7 +165,7 @@ export default function PopByRowSaved(props: PopBysRowProps) {
               Directions
             </Text>
             <Text style={styles.directionsAndCompleteText} onPress={() => handleCompletePressed()}>
-              Complete
+              Track
             </Text>
             <Text style={styles.removeText} onPress={() => handleRemovePressed()}>
               Remove
@@ -176,7 +176,6 @@ export default function PopByRowSaved(props: PopBysRowProps) {
           <Text style={props.lightOrDark == 'dark' ? styles.distanceTextDark : styles.distanceTextLight}>
             {props.data.distance + ' ' + 'miles   '}
           </Text>
-          <Image source={chevron} style={styles.chevron} />
         </View>
         {modalVisible && (
           <Modal

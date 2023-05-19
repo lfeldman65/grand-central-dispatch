@@ -20,7 +20,7 @@ export function getPopBysInWindow(
   lonNW: string,
   task: string
 ): Promise<PopByRadiusDataResponse> {
-  // console.log('type', type);
+  console.log('type', type);
   // console.log('LATSE', latSE);
   // console.log('LONSE', lonSE);
   // console.log('LATNW', latNW);

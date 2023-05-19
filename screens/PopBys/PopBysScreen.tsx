@@ -445,8 +445,16 @@ export default function ManageRelationshipsScreen() {
   }
 
   function saveAllPressed() {
+    var message = 'A';
+    if (popByData.length == 0) {
+      message = 'There are no relationships to save';
+    } else if (popByData.length == 1) {
+      ('Are you sure you want to save this relationship');
+    } else {
+      message = 'Are you sure you want to save these ' + popByData.length + ' relationships?';
+    }
     Alert.alert(
-      'Are you sure you want to save these relationships?',
+      message,
       '',
       [
         {
@@ -961,7 +969,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   mapViewLong: {
-    height: '77%',
+    height: '70%',
     width: '100%',
   },
   map: {

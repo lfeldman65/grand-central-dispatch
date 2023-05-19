@@ -114,7 +114,6 @@ export default function PopByRow(props: PopBysRowProps) {
           <Text style={props.lightOrDark == 'dark' ? styles.distanceTextDark : styles.distanceTextLight}>
             {props.data.distance + ' ' + 'miles   '}
           </Text>
-          <Image source={chevron} style={styles.chevron} />
         </View>
       </View>
     </TouchableOpacity>
