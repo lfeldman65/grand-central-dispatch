@@ -2,7 +2,7 @@ import { Text, View, Image, TouchableOpacity, StyleSheet, Alert, Linking } from 
 import { PopByRadiusDataProps, PopByFavoriteDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { savePop } from './api';
+import { savePop, removePop } from './api';
 import openMap from 'react-native-open-maps';
 import { ga4Analytics } from '../../utils/general';
 
@@ -69,7 +69,7 @@ export default function PopByRow(props: PopBysRowProps) {
     return addressString;
   }
 
-  function handleSavePressed() {
+  function handleSaveRemovePressed() {
     ga4Analytics('PopBy_Save', {
       contentType: popByTab,
       itemId: 'id1110',
@@ -78,6 +78,10 @@ export default function PopByRow(props: PopBysRowProps) {
       savePop(props.data.id);
       setIsFavorite('True');
       Alert.alert(props.data.firstName + ' added to Saved list');
+    } else {
+      removePop(props.data.id);
+      setIsFavorite('False');
+      Alert.alert(props.data.firstName + ' removed from Saved list');
     }
   }
 
@@ -105,8 +109,11 @@ export default function PopByRow(props: PopBysRowProps) {
             <Text style={styles.buttonText} onPress={() => handleDirectionsPressed()}>
               Directions
             </Text>
-            <Text style={isFavorite == 'True' ? styles.savedText : styles.saveText} onPress={() => handleSavePressed()}>
-              {isFavorite == 'True' ? 'Saved' : 'Save'}
+            <Text
+              style={isFavorite == 'True' ? styles.removeText : styles.saveText}
+              onPress={() => handleSaveRemovePressed()}
+            >
+              {isFavorite == 'True' ? 'Remove' : 'Save'}
             </Text>
           </View>
         </View>
