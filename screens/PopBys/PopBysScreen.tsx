@@ -12,11 +12,11 @@ import {
   Modal,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp, DarkTheme } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import PopByRow from './PopByRow';
 import PopByRowSaved from './PopByRowSaved';
-import { getPopByRadiusData, getPopBysInWindow, savePop, removePop, saveOrRemovePopBulk } from './api';
+import { getPopByRadiusData, getPopBysInWindow } from './api';
 import { PopByRadiusDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
@@ -73,6 +73,7 @@ export default function ManageRelationshipsScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
   const [mapRef, updateMapRef] = useState<MapView>();
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [needToZoomMap, setNeedToZoomMap] = useState(true);
   const popByDataRef = useRef(popByData);
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
@@ -278,12 +279,40 @@ export default function ManageRelationshipsScreen() {
 
   useEffect(() => {
     requestPermissions();
-
     return function cleanup() {
       stopWatchPositionAsync();
     };
-    // nearPressed();
   }, []);
+
+  useEffect(() => {
+    console.log(location);
+    if (needToZoomMap && location) {
+      if (mapRef) {
+        mapRef.animateToRegion({
+          latitude: location!.coords.latitude,
+          longitude: location!.coords.longitude,
+          latitudeDelta: 0.15,
+          longitudeDelta: 0.15,
+        });
+        setNeedToZoomMap(false);
+      }
+    }
+  }, [location]);
+
+  function centerMap() {
+    console.log('center map: ' + location);
+    if (location) {
+      if (mapRef) {
+        mapRef.animateToRegion({
+          latitude: location!.coords.latitude,
+          longitude: location!.coords.longitude,
+          latitudeDelta: 0.15,
+          longitudeDelta: 0.15,
+        });
+        setNeedToZoomMap(false);
+      }
+    }
+  }
 
   function matchesRankFilter(ranking: string) {
     if (ranking == 'A+' && showAPlus) return true;
@@ -717,14 +746,13 @@ export default function ManageRelationshipsScreen() {
             </View>
           </View>
 
-          {
-            /*!isLoading &&*/ <View style={getMapHeight()}>
-              <MapView
-                ref={(ref) => updateMapRef(ref!)}
-                showsUserLocation={true}
-                style={styles.map}
-                followsUserLocation={tabSelected == 'Saved' && showRoute}
-                /*
+          <View style={getMapHeight()}>
+            <MapView
+              ref={(ref) => updateMapRef(ref!)}
+              showsUserLocation={true}
+              style={styles.map}
+              followsUserLocation={tabSelected == 'Saved' && showRoute}
+              /*
               initialRegion={{
                 //latitude: -37.112146,
                 //longitude: 144.857483,
@@ -734,31 +762,32 @@ export default function ManageRelationshipsScreen() {
                 latitudeDelta: 0.11,
                 longitudeDelta: 0.06,
               }}*/
-                userInterfaceStyle={lightOrDark == 'dark' ? 'dark' : 'light'}
-                //   onRegionChange={handleRegionChange}
-                onRegionChangeComplete={handleRegionChange}
-              >
-                {popByData.map((person, index) =>
-                  true ? (
-                    <Marker
-                      key={index}
-                      coordinate={{
-                        latitude: parseFloat(person.location.latitude),
-                        longitude: parseFloat(person.location.longitude),
-                      }}
-                      image={getRankPin(person.ranking)}
-                      title={person.firstName + ' ' + person.lastName}
-                      description={
-                        person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'
-                      }
-                    />
-                  ) : (
-                    <View></View>
-                  )
-                )}
-              </MapView>
-            </View>
-          }
+              userInterfaceStyle={lightOrDark == 'dark' ? 'dark' : 'light'}
+              onRegionChangeComplete={handleRegionChange}
+            >
+              {popByData.map((person, index) =>
+                matchesRankFilter(person.ranking) && matchesSearch(person, search) ? (
+                  <Marker
+                    key={index}
+                    coordinate={{
+                      latitude: parseFloat(person.location.latitude),
+                      longitude: parseFloat(person.location.longitude),
+                    }}
+                    image={getRankPin(person.ranking)}
+                    title={person.firstName + ' ' + person.lastName}
+                    description={
+                      person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'
+                    }
+                  />
+                ) : (
+                  <View></View>
+                )
+              )}
+              <TouchableOpacity onPress={centerMap}>
+                <Image source={saveAll} style={styles.centerButton} />
+              </TouchableOpacity>
+            </MapView>
+          </View>
 
           <View style={styles.upAndDownRow}>
             <TouchableOpacity style={styles.upAndDownView} onPress={upPressed}>
@@ -894,7 +923,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoViewDark: {
-    //  backgroundColor: 'black',
     paddingLeft: 10,
     flexDirection: 'row',
     width: '75%',
@@ -902,7 +930,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoViewLight: {
-    //  backgroundColor: 'white',
     paddingLeft: 10,
     flexDirection: 'row',
     width: '75%',
@@ -949,6 +976,12 @@ export const styles = StyleSheet.create({
   actionButtons: {
     width: 40,
     height: 40,
+  },
+  centerButton: {
+    width: 40,
+    height: 40,
+    marginLeft: 20,
+    marginTop: 20,
   },
   upAndDownButtons: {
     width: 25,
