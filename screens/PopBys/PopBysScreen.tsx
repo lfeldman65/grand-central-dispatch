@@ -16,7 +16,7 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import PopByRow from './PopByRow';
 import PopByRowSaved from './PopByRowSaved';
-import { getPopByRadiusData, getPopBysInWindow } from './api';
+import { getPopBysInWindow } from './api';
 import { PopByRadiusDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
@@ -114,13 +114,8 @@ export default function ManageRelationshipsScreen() {
 
   async function calculateAndNotify(loc: Location.LocationObject, data: PopByRadiusDataProps[], notify: boolean) {
     var notifOn = await getNotificationStatus('notifPopBys');
-    if (!notifOn) {
-      console.log('POPBY RETURN');
-      return;
-    }
     var alreadyScheduled = false;
     //console.log('calculateAndNotify: ' + loc.coords.latitude);
-
     var tempArray: PopByRadiusDataProps[] = [];
 
     for (var i = 0; i < data.length; i++) {
@@ -135,16 +130,16 @@ export default function ManageRelationshipsScreen() {
         t.distance = mb.toFixed(1);
         //   console.log('calculating ' + mb.toFixed(1));
         if (
-          mb > 5 &&
+          mb <= 5 &&
           !alreadyScheduled &&
           !data[i].notified &&
-          true && // data[i].ranking == 'A+' &&
+          data[i].ranking == 'A+' &&
           (await enoughTimePassedRel(data[i].id, 30)) &&
           (await enoughTimePassedNotif(60))
         ) {
           t.notified = true;
           alreadyScheduled = true;
-          if (notify) {
+          if (notify && notifOn) {
             scheduleNotifications(
               'popby-notification',
               'Pop-By Opportunity!',
@@ -156,8 +151,14 @@ export default function ManageRelationshipsScreen() {
         tempArray.push(t);
       }
     }
-    //console.log('DATALENGTH: ' + data.length);
-    console.log('update pop by data with new distances');
+    if (tabSelected != 'Saved') {
+      console.log('update pop by data with new distances: ' + showRoute);
+      tempArray.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+    } else {
+      if (showRoute) {
+        tempArray.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+      }
+    }
     setPopByData(tempArray);
   }
 
@@ -330,6 +331,8 @@ export default function ManageRelationshipsScreen() {
     if (isLoading) {
       return;
     }
+    setInfoText('Closest to Farthest');
+    setShowRoute(false);
     const tab = 'Near Me';
     setTabSelected(tab);
     fetchPopBysWindow(tabToParam(tab), 'none', true);
@@ -340,7 +343,10 @@ export default function ManageRelationshipsScreen() {
       contentType: 'none',
       itemId: 'id1102',
     });
+    setInfoText('Closest to Farthest');
+    setShowRoute(false);
     if (isLoading) {
+      return;
     }
     const tab = 'Priority';
     setTabSelected(tab);
@@ -352,7 +358,10 @@ export default function ManageRelationshipsScreen() {
       contentType: 'none',
       itemId: 'id1103',
     });
+    setInfoText('Closest to Farthest');
+    setShowRoute(false);
     if (isLoading) {
+      return;
     }
     const tab = 'Saved';
     setShowRoute(false);
@@ -379,7 +388,7 @@ export default function ManageRelationshipsScreen() {
 
   function toggleRouteButton() {
     if (isLoading) {
-      return;
+      // return;
     }
     if (showRoute) {
       // these seem reversed but they aren't since showRoute isn't toggled til the end of this function.
@@ -395,7 +404,7 @@ export default function ManageRelationshipsScreen() {
         contentType: 'none',
         itemId: 'id1107',
       });
-      fetchPopBysRadius(tabToParam(tabSelected), true);
+      fetchPopBysWindow(tabToParam(tabSelected), 'none', true);
       handleShortestRoute(popByData);
       setInfoText('Minimized Route Distance');
       console.log('SHOWROUTE2: ' + showRoute);
@@ -598,39 +607,13 @@ export default function ManageRelationshipsScreen() {
     return unsaveAll;
   }
 
-  function fetchPopBysRadius(type: string, isMounted: boolean) {
-    console.log('type: ' + type);
-    setIsLoading(true);
-    if (location !== null) {
-      getPopByRadiusData(type, location.coords.latitude.toString(), location.coords.longitude.toString())
-        .then((res) => {
-          if (!isMounted) {
-            return false;
-          }
-          if (res.status == 'error') {
-            console.error(res.error);
-          } else {
-            setPopByData(res.data);
-          }
-          setIsLoading(false);
-          setInfoText('Minimized Route Distance');
-        })
-        .catch((error) => console.error('failure ' + error));
-    }
-  }
-
   async function fetchPopBysWindow(type: string, task: string, isMounted: boolean) {
-    console.log('Me2112: ' + type);
-
     if (southWest == null || northEast == null) {
       console.log('no coordinates');
-
       return;
     }
-
     //don't show spinner if there is already data on screen, it's just too distracting
     if (popByData == null) setIsLoading(true);
-
     getPopBysInWindow(
       type,
       southWest!.latitude.toString(),
@@ -661,7 +644,6 @@ export default function ManageRelationshipsScreen() {
           }
         }
         setIsLoading(false);
-        setInfoText('Closest to farthest');
       })
       .catch((error) => console.error('failure ' + error));
   }
