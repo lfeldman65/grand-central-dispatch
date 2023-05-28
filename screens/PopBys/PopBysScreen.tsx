@@ -765,10 +765,10 @@ export default function ManageRelationshipsScreen() {
                   <View></View>
                 )
               )}
-              <TouchableOpacity onPress={centerMap}>
-                <Image source={saveAll} style={styles.centerButton} />
-              </TouchableOpacity>
             </MapView>
+            <TouchableOpacity onPress={centerMap} style={styles.bottomView}>
+              <Image source={saveAll} style={styles.centerButton} />
+            </TouchableOpacity>
           </View>
 
           <View style={styles.upAndDownRow}>
@@ -962,8 +962,7 @@ export const styles = StyleSheet.create({
   centerButton: {
     width: 40,
     height: 40,
-    marginLeft: 20,
-    marginTop: 20,
+    right: 20,
   },
   upAndDownButtons: {
     width: 25,
@@ -988,7 +987,17 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   map: {
+    flex: 1,
     width: '100%',
     height: '100%',
+  },
+  bottomView: {
+    flex: 1,
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 10,
+    alignSelf: 'flex-end',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
   },
 });
