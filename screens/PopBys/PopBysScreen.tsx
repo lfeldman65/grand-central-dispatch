@@ -43,6 +43,7 @@ const closeButton = require('../../images/button_close_white.png');
 const saveAll = require('./images/saveAll.png');
 const unsaveAll = require('./images/removeAll.png');
 const routeCircle = require('./images/routeCircle.png');
+const centerMapImg = require('./images/mapCentering.png');
 const routeX = require('./images/routeX.png');
 const pinAPlus = require('./images/mapPinAPlus.png');
 const pinA = require('./images/mapPinA.png');
@@ -767,7 +768,7 @@ export default function ManageRelationshipsScreen() {
               )}
             </MapView>
             <TouchableOpacity onPress={centerMap} style={styles.bottomView}>
-              <Image source={saveAll} style={styles.centerButton} />
+              <Image source={centerMapImg} style={styles.centerButton} />
             </TouchableOpacity>
           </View>
 
