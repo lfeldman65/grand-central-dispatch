@@ -1401,7 +1401,25 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                         setGoalID2('1');
                         setGoalName2('Calls Made');
                         setSubject2('Mobile Call');
-                        handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
+                        if (value == 'Mobile') {
+                          if (dataDetails?.mobile == '') {
+                            Alert.alert('Please enter a Mobile number');
+                          } else {
+                            handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
+                          }
+                        } else if (value == 'Home') {
+                          if (dataDetails?.homePhone == '') {
+                            Alert.alert('Please enter a Home number');
+                          } else {
+                            handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
+                          }
+                        } else {
+                          if (dataDetails?.officePhone == '') {
+                            Alert.alert('Please enter an Office number');
+                          } else {
+                            handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
+                          }
+                        }
                       });
                     }}
                     style={globalStyles.listItemCell}
