@@ -24,7 +24,6 @@ export default function TrackActivityScreen(props: any) {
   const [refType, setRefType] = useState('1');
   const [date, setDate] = useState(new Date());
   const [subject, setSubject] = useState(subjectP);
-  const [askedReferral, setAskedReferral] = useState(true);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
   const [modalRefVisible, setModalRefVisible] = useState(false);
@@ -156,7 +155,7 @@ export default function TrackActivityScreen(props: any) {
       goal?.id.toString(),
       subject,
       date.toISOString(),
-      askedReferral,
+      true, // asked for referral deprecated, but set to true just in case
       notes,
       refInPast
     );
@@ -325,22 +324,6 @@ export default function TrackActivityScreen(props: any) {
 
       <DateTimePickerModal isVisible={showDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
 
-      <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-        size={25}
-        textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-        fillColor="#37C0FF"
-        unfillColor="#004F89"
-        iconStyle={{ borderColor: 'white' }}
-        text="I asked for a referral"
-        isChecked={askedReferral}
-        textContainerStyle={{ marginLeft: 10 }}
-        style={styles.checkBox}
-        onPress={(isChecked: boolean) => {
-          console.log(isChecked);
-          setAskedReferral(!askedReferral);
-        }}
-      />
-
       <Text style={styles.fieldTitle}>Notes</Text>
       <View style={styles.mainContent}>
         <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
@@ -501,7 +484,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 40,
+    marginTop: 50,
   },
   closeX: {
     width: 15,
