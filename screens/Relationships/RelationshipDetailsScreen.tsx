@@ -69,8 +69,8 @@ const ideasImg = require('../Relationships/images/relIdeas.png');
 
 var phoneArray: string[] = [];
 var phoneLabels: string[] = [];
-
 var localGoalID = '0';
+var rowFontSize = 9;
 
 interface RelDetailsLocalProps {
   data: RelDetailsProps;
@@ -1887,22 +1887,22 @@ const styles = StyleSheet.create({
   topButtonTextDark: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 7,
+    fontSize: rowFontSize,
   },
   topButtonTextLight: {
     color: '#016497',
     textAlign: 'center',
-    fontSize: 7,
+    fontSize: rowFontSize,
   },
   bottomButtonTextDark: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 7,
+    fontSize: rowFontSize,
   },
   bottomButtonTextLight: {
     color: '#013273',
     textAlign: 'center',
-    fontSize: 7,
+    fontSize: rowFontSize,
   },
   namesLight: {
     color: 'black',

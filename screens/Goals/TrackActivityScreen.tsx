@@ -142,7 +142,11 @@ export default function TrackActivityScreen(props: any) {
       itemId: 'id0308',
     });
     if (relationship?.id == null) {
-      Alert.alert('Please Choose a Relationship');
+      Alert.alert('Please choose a Relationship');
+      return;
+    }
+    if (subject == '') {
+      Alert.alert('Please enter a Subject');
       return;
     }
     setModalVisible(false);
