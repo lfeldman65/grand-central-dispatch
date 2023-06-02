@@ -34,6 +34,10 @@ export default function AddRelationshipScreen(props: any) {
       Alert.alert('Please enter a Company Name');
       return;
     }
+    if (referralChecked && referral == null) {
+      Alert.alert('Please enter a Referral');
+      return;
+    }
     console.log(company);
     addNewContact(
       firstName,
