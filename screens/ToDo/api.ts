@@ -116,9 +116,9 @@ export function editToDo(
 }
 
 export function getRolodexData(type: string): Promise<RolodexDataResponse> {
-  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=250`);
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=50000`);
 } // back tick (`) only necessary for string interpolation
 
 export function getRolodexSearch(searchParam: string): Promise<RolodexDataResponse> {
-  return http.get(`contacts?batchSize=50&lastItem=0&sortType=alpha&search=${searchParam}`);
+  return http.get(`contacts?batchSize=50000&lastItem=0&sortType=alpha&search=${searchParam}`);
 } // back tick (`) only necessary for string interpolation

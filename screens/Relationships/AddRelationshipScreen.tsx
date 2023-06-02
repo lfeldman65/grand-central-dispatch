@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Alert, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Modal } from 'react-native';
-const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { useIsFocused } from '@react-navigation/native';
 import { addNewContact } from './api';
 import SelRefScreen from './SelectRelationshipScreen';
 import { RolodexDataProps } from './interfaces';
-import { testForNotificationPre, testForNotificationTrack } from '../Goals/handleWinNotifications';
+import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 import { getGoalData } from '../Goals/api';
 import { GoalDataProps } from '../Goals/interfaces';
 
@@ -21,12 +19,6 @@ export default function AddRelationshipScreen(props: any) {
   const [company, setCompany] = useState('');
   const [referral, setReferral] = useState<RolodexDataProps>();
   const [referralModalVisible, setReferralModalVisible] = useState(false);
-
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    //  populateCredentialsIfRemembered();
-  }, [isFocused]);
 
   function referralPressed() {
     console.log('referral pressed');
@@ -47,9 +39,9 @@ export default function AddRelationshipScreen(props: any) {
       firstName,
       lastName,
       bizChecked ? 'Biz' : 'Rel',
-      company,
-      referral == null ? '' : referral.firstName,
-      referral == null ? '' : referral.id
+      bizChecked ? company : '',
+      referralChecked ? referral?.firstName : '',
+      referralChecked ? referral?.id : ''
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -108,7 +100,7 @@ export default function AddRelationshipScreen(props: any) {
     <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={closeButton} style={styles.closeX} />
+          <Text style={styles.saveButton}>Cancel</Text>
         </TouchableOpacity>
 
         <Text style={styles.nameLabel}>{title}</Text>
@@ -245,9 +237,9 @@ const styles = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    padding: 10,
     justifyContent: 'space-between',
-    marginTop: 40,
+    marginTop: 60,
+    marginBottom: 20,
   },
   closeX: {
     width: 15,
