@@ -59,6 +59,7 @@ export const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 0.5,
     paddingBottom: 10,
+    height: 80,
   },
   rowLight: {
     flexDirection: 'row',
@@ -67,6 +68,7 @@ export const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 0.5,
     paddingBottom: 10,
+    height: 80,
   },
   rankingCircle: {
     height: 30,
@@ -127,10 +129,43 @@ export const styles = StyleSheet.create({
     height: '80%',
   },
   rolodex: {
-    height: '80%',
+    height: '72%',
   },
   bottom: {
     height: '20%',
     backgroundColor: 'red',
+  },
+  itemDark: {
+    flexDirection: 'row',
+    backgroundColor: 'black',
+    height: 80,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 5,
+  },
+  itemLight: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    height: 80,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'white',
+    borderRadius: 5,
+  },
+  header: {
+    fontSize: 24,
+    backgroundColor: '#F0F0F0',
+  },
+  title: {
+    fontSize: 24,
+  },
+  sectionTitle: { height: 30 },
+  buttonsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
