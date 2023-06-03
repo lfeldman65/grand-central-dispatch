@@ -390,6 +390,13 @@ export default function AddToDoScreen(props: any) {
     setModalVisible(false);
   }
 
+  function isDataValid() {
+    if (toDoTitle == '') {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
@@ -398,9 +405,8 @@ export default function AddToDoScreen(props: any) {
         </TouchableOpacity>
 
         <Text style={styles.nameLabel}>{title}</Text>
-
         <TouchableOpacity onPress={savePressed}>
-          <Text style={styles.saveButton}>Save</Text>
+          <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
       </View>
 
@@ -1031,7 +1037,7 @@ export default function AddToDoScreen(props: any) {
           </View>
         </View>
 
-        <Text style={styles.nameTitle}>Attendees</Text>
+        <Text style={styles.nameTitle}>Relationships</Text>
         {attendees.map((item, index) => (
           <View style={styles.mainContent}>
             <View style={styles.attendeeView}>
@@ -1159,6 +1165,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginRight: '10%',
+    opacity: 1.0,
+  },
+  saveButtonDim: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginRight: '10%',
+    opacity: 0.4,
   },
   inputView: {
     backgroundColor: '#002341',
