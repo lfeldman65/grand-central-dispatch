@@ -459,7 +459,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     setGoalID2('3');
     setGoalName2('Pop-By Made');
     setSubject2('Pop-By');
-    handleMapPressed2(completeAddress(), () => setTrackActivityVisible(true));
+    if (completeAddress().length > 0) {
+      handleMapPressed2(completeAddress(), () => setTrackActivityVisible(true));
+    } else {
+      Alert.alert('Please enter an address');
+    }
     //  handleDirectionsPressed();
   }
 
@@ -734,27 +738,32 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     setGoalID2('3');
     setGoalName2('Pop-By Made');
     setSubject2('Pop-By');
-    handleMapPressed2(completeAddress(), () => setTrackActivityVisible(true));
+    if (completeAddress().length > 0) {
+      handleMapPressed2(completeAddress(), () => setTrackActivityVisible(true));
+    } else {
+      Alert.alert('Please enter an address');
+    }
     //  openMap({ query: completeAddress() });
   }
 
   function completeAddress() {
     var addressString = '';
-    if (dataDetails?.address.street != null) {
+    if (dataDetails?.address.street != null && dataDetails?.address.street != '') {
       addressString = dataDetails?.address.street;
     }
-    if (dataDetails?.address.street2 != null) {
+    if (dataDetails?.address.street2 != null && dataDetails?.address.street2 != '') {
       addressString = addressString + ' ' + dataDetails?.address.street2;
     }
-    if (dataDetails?.address.city != null) {
+    if (dataDetails?.address.city != null && dataDetails?.address.city != '') {
       addressString = addressString + ' ' + dataDetails?.address.city;
     }
-    if (dataDetails?.address.state != null) {
+    if (dataDetails?.address.state != null && dataDetails?.address.state != '') {
       addressString = addressString + ' ' + dataDetails?.address.state;
     }
-    if (dataDetails?.address.zip != null) {
+    if (dataDetails?.address.zip != null && dataDetails?.address.zip != '') {
       addressString = addressString + ' ' + dataDetails?.address.zip;
     }
+    console.log('address length: ' + addressString.length);
     return addressString;
   }
 
@@ -1011,7 +1020,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </TouchableOpacity>
         )}
 
-        {!isNullOrEmpty(dataDetails?.address.street) && (
+        {completeAddress().length > 0 && (
           <View style={styles.topAndBottomRows}>
             <Text style={styles.subTitle}>Location</Text>
             <TouchableOpacity style={styles.pairRows} onPress={() => handleDirectionsPressed()}>
