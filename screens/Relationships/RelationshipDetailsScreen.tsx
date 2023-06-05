@@ -330,6 +330,20 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     }, 2000); // wait for dialog to close
   }
 
+  function numberOfPhoneNumbers() {
+    var count = 0;
+    if (dataDetails?.mobile! != '') {
+      count++;
+    }
+    if (dataDetails?.homePhone! != '') {
+      count++;
+    }
+    if (dataDetails?.officePhone! != '') {
+      count++;
+    }
+    return count;
+  }
+
   function handleMobilePressed() {
     SheetManager.show(Sheets.mobileSheet);
   }
@@ -358,6 +372,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleCallPressed() {
     console.log('call pressed');
+    console.log('number of phone: ' + numberOfPhoneNumbers());
     SheetManager.show(Sheets.callSheet);
   }
 
