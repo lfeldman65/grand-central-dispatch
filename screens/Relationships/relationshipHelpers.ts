@@ -9,12 +9,6 @@ export const vidMenu = {
   'Use Video Camera': 'Use Video Camera',
 };
 
-export const callMenu = {
-  Mobile: 'Mobile',
-  Home: 'Home',
-  Office: 'Office',
-};
-
 export const mobileTypeMenu = {
   Call: 'Call',
   Message: 'Message',

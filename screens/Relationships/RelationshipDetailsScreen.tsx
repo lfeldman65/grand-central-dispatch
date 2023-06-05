@@ -21,15 +21,7 @@ import IdeasPop from '../PAC/IdeasPopScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { GoalDataProps } from '../Goals/interfaces';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
-import {
-  ideasMenu,
-  vidMenu,
-  callMenu,
-  mobileTypeMenu,
-  homeTypeMenu,
-  officeTypeMenu,
-  Sheets,
-} from './relationshipHelpers';
+import { ideasMenu, vidMenu, mobileTypeMenu, homeTypeMenu, officeTypeMenu, Sheets } from './relationshipHelpers';
 import { getGoalData, trackAction } from '../Goals/api';
 import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
 import * as SMS from 'expo-sms';
@@ -330,20 +322,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     }, 2000); // wait for dialog to close
   }
 
-  function numberOfPhoneNumbers() {
-    var count = 0;
-    if (dataDetails?.mobile! != '') {
-      count++;
-    }
-    if (dataDetails?.homePhone! != '') {
-      count++;
-    }
-    if (dataDetails?.officePhone! != '') {
-      count++;
-    }
-    return count;
-  }
-
   function handleMobilePressed() {
     SheetManager.show(Sheets.mobileSheet);
   }
@@ -372,8 +350,28 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleCallPressed() {
     console.log('call pressed');
-    console.log('number of phone: ' + numberOfPhoneNumbers());
-    SheetManager.show(Sheets.callSheet);
+    if (filterPhoneNumbers().length == 0) {
+      Alert.alert('Please enter at least one phone number');
+    } else if (filterPhoneNumbers().length == 1) {
+      if (filterPhoneNumbers().includes('Mobile')) {
+        setGoalID2('1');
+        setGoalName2('Calls Made');
+        setSubject2('Mobile Call');
+        handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
+      } else if (filterPhoneNumbers().includes('Home')) {
+        setGoalID2('1');
+        setGoalName2('Calls Made');
+        setSubject2('Mobile Call');
+        handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
+      } else {
+        setGoalID2('1');
+        setGoalName2('Calls Made');
+        setSubject2('Mobile Call');
+        handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
+      }
+    } else {
+      SheetManager.show(Sheets.callSheet);
+    }
   }
 
   function handleWebsitePressed() {
@@ -393,23 +391,20 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     }
   }
 
-  function makePhoneArray() {
+  function filterPhoneNumbers() {
     phoneArray = [];
-    phoneLabels = [];
     if (dataDetails?.mobile != null && dataDetails?.mobile.length > 6) {
-      phoneArray.push(dataDetails?.mobile);
-      phoneLabels.push('Mobile');
+      console.log('added mobile phone');
+      phoneArray.push('Mobile');
     }
     if (dataDetails?.homePhone != null && dataDetails?.homePhone.length > 6) {
-      phoneArray.push(dataDetails?.homePhone);
-      phoneLabels.push('Home');
+      phoneArray.push('Home');
     }
     if (dataDetails?.officePhone != null && dataDetails?.officePhone.length > 6) {
-      phoneArray.push(dataDetails?.officePhone);
-      phoneLabels.push('Office');
+      phoneArray.push('Office');
     }
-    console.log('PHONEARRAY: ' + phoneArray);
-    console.log('PHONELABELS: ' + phoneLabels);
+    console.log('phone array size: ' + phoneArray.length);
+    return phoneArray;
   }
 
   // Top Row
@@ -797,7 +792,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           setTheRank(res.data.ranking);
           setIsQual(res.data.qualified);
           setIsFavorite(res.data.address.isFavorite);
-          console.log('dataDetails:' + res.data);
+          //   console.log('dataDetails:' + res.data);
         }
         setIsLoading(false);
       })
@@ -1413,10 +1408,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
               style={styles.scrollview}
             >
               <View>
-                {Object.entries(callMenu).map(([index, value]) => (
+                {filterPhoneNumbers().map((value) => (
                   <TouchableOpacity
-                    key={index}
+                    key={value}
                     onPress={() => {
+                      console.log(value);
                       SheetManager.hide(Sheets.callSheet, null).then(() => {
                         ga4Analytics('Relationships_Call_Top', {
                           contentType: value,
@@ -1435,7 +1431,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                           if (dataDetails?.homePhone == '') {
                             Alert.alert('Please enter a Home number');
                           } else {
-                            handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
+                            handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
                           }
                         } else {
                           if (dataDetails?.officePhone == '') {
@@ -1448,7 +1444,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                     }}
                     style={globalStyles.listItemCell}
                   >
-                    <Text style={globalStyles.listItem}>{index}</Text>
+                    <Text style={globalStyles.listItem}>{value}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
