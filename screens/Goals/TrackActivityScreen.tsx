@@ -145,7 +145,7 @@ export default function TrackActivityScreen(props: any) {
       Alert.alert('Please choose a Relationship');
       return;
     }
-    if (subject == '') {
+    if (subject == null || subject == '') {
       Alert.alert('Please enter a Subject');
       return;
     }
