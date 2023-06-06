@@ -685,6 +685,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       setShowPersonal(!showPersonal);
     }
     if (sectionIndex == 1) {
+      fetchRelDetails(true);
       setShowActivity(!showActivity);
     }
     if (sectionIndex == 2) {

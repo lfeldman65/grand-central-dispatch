@@ -60,13 +60,13 @@ export default function ManageRelationshipsScreen() {
   const [isConnected, setIsConnected] = useState(false);
 
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
-  const lettersArray = letters.split('');
+  const indexCharArray = letters.split('');
 
   const ranking = 'ZABC';
   const rankingArray = ranking.split('');
 
   /*
-const data: Data[] = lettersArray.map((letter) => {
+const data: Data[] = indexCharArray.map((letter) => {
   const phoneNumbers = [...Array(300)].map(
     (e) => letter + ~~Math.round(Math.random() * (999999 - 100000) + 100000)
   );
@@ -94,26 +94,46 @@ const data: Data[] = lettersArray.map((letter) => {
 
   function getSectionDataAZ(): DataAZ[] {
     console.log('In az mode');
-    var indexArray = lettersArray;
+    var indexArray = indexCharArray;
     console.log(azRolodex.length);
     var azData = azRolodex.filter((e) => e.contactTypeID == showFilterTitle());
     console.log(azData.length);
-
-    const data: DataAZ[] = indexArray.map((letter) => {
+    const data: DataAZ[] = indexArray.map((indexChar) => {
       const contacts = azData.map((e) => {
         if (showFilterTitle() == 'Rel') {
           if (localDisplay == 'First Last') {
-            return e.firstName.substring(0, 1) == letter ? e : null;
+            if (e.firstName.substring(0, 1) == indexChar) {
+              return e;
+            }
+            if (indexChar == '#') {
+              if (!isFirstLetterAlpha(e.firstName)) {
+                return e;
+              }
+              return null;
+            }
+            return null;
           }
-          return e.lastName.substring(0, 1) == letter ? e : null;
+          if (e.lastName.substring(0, 1) == indexChar) {
+            return e;
+          }
+          if (indexChar == '#') {
+            if (!isFirstLetterAlpha(e.lastName)) {
+              return e;
+            }
+            return null;
+          }
+          return null;
         } else {
-          return e.employerName.substring(0, 1) == letter ? e : null;
+          if (e.employerName.substring(0, 1) == indexChar) {
+            return e;
+          }
+          return null;
         }
       });
       // console.log("length before " + contacts.length);
       var contacts2 = contacts.filter((e) => e != null);
       //console.log("length after " + contacts2.length);
-      const sectionData: DataAZ = { title: letter, data: contacts2 };
+      const sectionData: DataAZ = { title: indexChar, data: contacts2 };
       return sectionData;
     });
     return data;
@@ -142,16 +162,25 @@ const data: Data[] = lettersArray.map((letter) => {
 
   function getSectionDataGroups(): DataGroups[] {
     console.log('In group mode');
-    var indexArray = lettersArray;
+    var indexArray = indexCharArray;
     var azData = dataGroups;
-    const data: DataGroups[] = indexArray.map((letter) => {
+    const data: DataGroups[] = indexArray.map((indexChar) => {
       const contacts = azData.map((e) => {
-        return e.groupName.substring(0, 1) == letter ? e : null;
+        if (e.groupName.substring(0, 1) == indexChar) {
+          return e;
+        }
+        if (indexChar == '#') {
+          if (!isFirstLetterAlpha(e.groupName)) {
+            return e;
+          }
+          return null;
+        }
+        return null;
       });
       // console.log("length before " + contacts.length);
       var contacts2 = contacts.filter((e) => e != null);
       //console.log("length after " + contacts2.length);
-      const sectionData: DataAZ = { title: letter, data: contacts2 };
+      const sectionData: DataAZ = { title: indexChar, data: contacts2 };
       return sectionData;
     });
     return data;
@@ -199,7 +228,7 @@ const data: Data[] = lettersArray.map((letter) => {
 
   const listRefAZ = React.useRef<SectionList>(null);
   const _onPressLetterAZ = (letter: string) => {
-    var indexArray = lettersArray;
+    var indexArray = indexCharArray;
     if (listRefAZ.current) {
       const letterIndex = indexArray.indexOf(letter);
       listRefAZ.current.scrollToLocation({
@@ -226,7 +255,7 @@ const data: Data[] = lettersArray.map((letter) => {
 
   const listRefGroups = React.useRef<SectionList>(null);
   const _onPressLetterGroups = (letter: string) => {
-    var indexArray = lettersArray;
+    var indexArray = indexCharArray;
     if (listRefGroups.current) {
       const letterIndex = indexArray.indexOf(letter);
       listRefGroups.current.scrollToLocation({
@@ -633,9 +662,9 @@ const data: Data[] = lettersArray.map((letter) => {
 
             <View style={styles.buttonsContainer}>
               {tabSelected == 'a-z'
-                ? lettersArray.map((letter) => <Button title={letter} onPress={() => _onPressLetterAZ(letter)} />)
+                ? indexCharArray.map((letter) => <Button title={letter} onPress={() => _onPressLetterAZ(letter)} />)
                 : tabSelected == 'groups'
-                ? lettersArray.map((letter) => <Button title={letter} onPress={() => _onPressLetterGroups(letter)} />)
+                ? indexCharArray.map((letter) => <Button title={letter} onPress={() => _onPressLetterGroups(letter)} />)
                 : rankingArray.map((letter) => (
                     <Button title={letter == 'Z' ? 'A+' : letter} onPress={() => _onPressLetterRanking(letter)} />
                   ))}

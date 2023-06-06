@@ -46,7 +46,7 @@ export function displayName(first: string, last: string, type: string, employer:
 export function isFirstLetterAlpha(someWord: string) {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const lettersArray = letters.split('');
-  console.log('someName: ' + someWord);
+  //console.log('someName: ' + someWord);
   var isAlpha = false;
   lettersArray.map((letter) => {
     if (someWord.substring(0, 1).toUpperCase() == letter) {
