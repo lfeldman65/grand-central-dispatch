@@ -4,6 +4,7 @@ import { RolodexDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { storage } from '../../utils/storage';
 import { useIsFocused } from '@react-navigation/native';
+import { displayName } from './relationshipHelpers';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -39,16 +40,6 @@ export default function RankingRow(props: AtoZRowProps) {
     };
   }, [isFocused]);
 
-  function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
-    if (type == 'Rel') {
-      if (displayOrder == 'First Last') {
-        return first + ' ' + last;
-      }
-      return last + ', ' + first;
-    }
-    return employer + ' (' + first + ')';
-  }
-
   async function getDisplayAZ(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -66,28 +57,15 @@ export default function RankingRow(props: AtoZRowProps) {
       {props.data.contactTypeID == relFromAbove && (
         <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
           <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
-          {relFromAbove == 'Rel' && (
-            <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
-              {displayName(
-                props.data.firstName,
-                props.data.lastName,
-                props.data.contactTypeID,
-                props.data.employerName,
-                true
-              )}
-            </Text>
-          )}
-          {relFromAbove == 'Biz' && (
-            <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
-              {displayName(
-                props.data.firstName,
-                props.data.lastName,
-                props.data.contactTypeID,
-                props.data.employerName,
-                true
-              )}
-            </Text>
-          )}
+          <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
+            {displayName(
+              props.data.firstName,
+              props.data.lastName,
+              props.data.contactTypeID,
+              props.data.employerName,
+              displayOrder
+            )}
+          </Text>
         </View>
       )}
     </TouchableOpacity>

@@ -32,3 +32,26 @@ export const Sheets = {
   homeSheet: 'home_sheet_id',
   officeSheet: 'office_sheet_id',
 };
+
+export function displayName(first: string, last: string, type: string, employer: string, displayOrder: string) {
+  if (type == 'Rel') {
+    if (displayOrder == 'First Last') {
+      return first + ' ' + last;
+    }
+    return last + ', ' + first;
+  }
+  return employer + ' (' + first + ')';
+}
+
+export function isFirstLetterAlpha(someWord: string) {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const lettersArray = letters.split('');
+  console.log('someName: ' + someWord);
+  var isAlpha = false;
+  lettersArray.map((letter) => {
+    if (someWord.substring(0, 1).toUpperCase() == letter) {
+      isAlpha = true;
+    }
+  });
+  return isAlpha;
+}

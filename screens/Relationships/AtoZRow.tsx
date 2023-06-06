@@ -1,9 +1,10 @@
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { RolodexDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { storage } from '../../utils/storage';
 import { styles } from './styles';
+import { displayName } from './relationshipHelpers';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -39,16 +40,6 @@ export default function AtoZRow(props: AtoZRowProps) {
     return rankD;
   }
 
-  function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
-    if (type == 'Rel') {
-      if (displayOrder == 'First Last') {
-        return first + ' ' + last;
-      }
-      return last + ', ' + first;
-    }
-    return employer + ' (' + first + ')';
-  }
-
   async function getDisplayAZ(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -72,7 +63,7 @@ export default function AtoZRow(props: AtoZRowProps) {
               props.data.lastName,
               props.data.contactTypeID,
               props.data.employerName,
-              true
+              displayOrder
             )}
           </Text>
         </View>
