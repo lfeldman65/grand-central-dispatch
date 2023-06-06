@@ -133,7 +133,7 @@ export default function EditAppointmentScreen(props: any) {
   }
 
   function hideStartTimePicker() {
-    setShowEndDate(false);
+    setShowStartTime(false);
   }
 
   function hideEndDatePicker() {
