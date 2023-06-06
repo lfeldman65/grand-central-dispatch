@@ -10,7 +10,6 @@ import {
   Image,
   ActivityIndicator,
   Alert,
-  StyleSheet,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
@@ -30,7 +29,7 @@ import { storage } from '../../utils/storage';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 import NetInfo from '@react-native-community/netinfo';
 import sectionListGetItemLayout from 'react-native-section-list-get-item-layout';
-//import { isFirstLetterAlpha } from './relationshipHelpers';
+import { isFirstLetterAlpha } from './relationshipHelpers';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');

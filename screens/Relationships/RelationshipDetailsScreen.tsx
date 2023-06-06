@@ -21,7 +21,7 @@ import IdeasPop from '../PAC/IdeasPopScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { GoalDataProps } from '../Goals/interfaces';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
-import { ideasMenu, vidMenu, mobileTypeMenu, homeTypeMenu, officeTypeMenu, Sheets } from './relationshipHelpers';
+import { ideasMenu, vidMenu, mobileTypeMenu, homeTypeMenu, officeTypeMenu, relSheets } from './relationshipHelpers';
 import { getGoalData, trackAction } from '../Goals/api';
 import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
 import * as SMS from 'expo-sms';
@@ -323,7 +323,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function handleMobilePressed() {
-    SheetManager.show(Sheets.mobileSheet);
+    SheetManager.show(relSheets.mobileSheet);
   }
 
   function handleHomePressed() {
@@ -370,7 +370,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
       }
     } else {
-      SheetManager.show(Sheets.callSheet);
+      SheetManager.show(relSheets.callSheet);
     }
   }
 
@@ -442,7 +442,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       );
       storage.setItem('videoTutorialWatched', 'True');
     }
-    SheetManager.show(Sheets.vidSheet);
+    SheetManager.show(relSheets.vidSheet);
   }
 
   function handleEmailPressed() {
@@ -529,7 +529,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function handleIdeasPressed() {
     console.log('ideas pressed');
-    SheetManager.show(Sheets.ideaSheet);
+    SheetManager.show(relSheets.ideaSheet);
   }
 
   // End of bottom row
@@ -1385,7 +1385,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <ActionSheet
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('call top row sheet')}
-          id={Sheets.callSheet}
+          id={relSheets.callSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1413,7 +1413,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                     key={value}
                     onPress={() => {
                       console.log(value);
-                      SheetManager.hide(Sheets.callSheet, null).then(() => {
+                      SheetManager.hide(relSheets.callSheet, null).then(() => {
                         ga4Analytics('Relationships_Call_Top', {
                           contentType: value,
                           itemId: 'id0510',
@@ -1455,7 +1455,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <ActionSheet
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('mobile call type sheet')}
-          id={Sheets.mobileSheet}
+          id={relSheets.mobileSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1482,7 +1482,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      SheetManager.hide(Sheets.mobileSheet, null).then(() => {
+                      SheetManager.hide(relSheets.mobileSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
                           ga4Analytics('Relationships_Phone_Call', {
@@ -1518,7 +1518,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <ActionSheet
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('home call type sheet')}
-          id={Sheets.homeSheet}
+          id={relSheets.homeSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1545,7 +1545,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      SheetManager.hide(Sheets.homeSheet, null).then(() => {
+                      SheetManager.hide(relSheets.homeSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
                           setGoalID2('1');
@@ -1573,7 +1573,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <ActionSheet
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('work call sheet')}
-          id={Sheets.officeSheet}
+          id={relSheets.officeSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1600,7 +1600,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      SheetManager.hide(Sheets.officeSheet, null).then(() => {
+                      SheetManager.hide(relSheets.officeSheet, null).then(() => {
                         console.log('CALLTYPE: ' + value);
                         if (value == 'Call') {
                           setGoalID2('1');
@@ -1628,7 +1628,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <ActionSheet
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('idea sheet')}
-          id={Sheets.ideaSheet}
+          id={relSheets.ideaSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1656,7 +1656,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                     key={index}
                     onPress={() => {
                       console.log(value);
-                      SheetManager.hide(Sheets.ideaSheet, null).then(() => {
+                      SheetManager.hide(relSheets.ideaSheet, null).then(() => {
                         ga4Analytics('Relationships_Ideas_Bottom', {
                           contentType: value,
                           itemId: 'id0519',
@@ -1683,7 +1683,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <ActionSheet
           initialOffsetFromBottom={10}
           onBeforeShow={(data) => console.log('vid sheet')}
-          id={Sheets.vidSheet}
+          id={relSheets.vidSheet}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
@@ -1710,7 +1710,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                      SheetManager.hide(Sheets.vidSheet, null);
+                      SheetManager.hide(relSheets.vidSheet, null);
                       setVidSource(value);
                       const timer = setInterval(() => {
                         clearInterval(timer);

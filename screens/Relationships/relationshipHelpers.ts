@@ -24,7 +24,7 @@ export const officeTypeMenu = {
   Message: 'Message',
 };
 
-export const Sheets = {
+export const relSheets = {
   callSheet: 'call_sheet_id',
   ideaSheet: 'idea_sheet_id',
   vidSheet: 'vid_sheet_id',
