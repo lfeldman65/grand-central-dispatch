@@ -128,9 +128,6 @@ export const styles = StyleSheet.create({
   centerSection: {
     height: '80%',
   },
-  rolodex: {
-    height: '72%',
-  },
   bottom: {
     height: '20%',
     backgroundColor: 'red',
@@ -167,5 +164,14 @@ export const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  rolodexAZ: {
+    height: '72%',
+  },
+  rolodexRanking: {
+    height: '77%',
+  },
+  rolodexGroups: {
+    height: '77%',
   },
 });

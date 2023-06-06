@@ -1,8 +1,19 @@
 import { useState } from 'react';
 import * as FileSystem from 'expo-file-system';
-import { Text, View, TouchableOpacity, Modal, Image, ActivityIndicator, Alert } from 'react-native';
+import {
+  Button,
+  SectionList,
+  Text,
+  View,
+  TouchableOpacity,
+  Modal,
+  Image,
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+} from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import AddRelScreen from './AddRelationshipScreen';
 import AtoZRow from './AtoZRow';
@@ -13,16 +24,22 @@ import { GroupsDataProps, RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
-import { AlphabetList, IData } from 'react-native-section-alphabet-list';
 import { ga4Analytics } from '../../utils/general';
 import { styles } from './styles';
 import { storage } from '../../utils/storage';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 import NetInfo from '@react-native-community/netinfo';
+import sectionListGetItemLayout from 'react-native-section-list-get-item-layout';
+//import { isFirstLetterAlpha } from './relationshipHelpers';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 const cache_prefix = 'cache_relationship_';
+const rankAPlus = require('../Relationships/images/rankAPlus.png');
+const rankA = require('../Relationships/images/rankA.png');
+const rankB = require('../Relationships/images/rankB.png');
+const rankC = require('../Relationships/images/rankC.png');
+const rankD = require('../Relationships/images/rankD.png');
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 var localDisplay = 'First Last';
@@ -33,8 +50,8 @@ export default function ManageRelationshipsScreen() {
   const isFocused = useIsFocused();
   const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]); // A-Z
-  const [rankingRolodex, setRankingRolodex] = useState<RolodexDataProps[]>([]); // Ranking tabs
+  const [azRolodex, setAZRolodex] = useState<RolodexDataProps[]>([]);
+  const [rankingRolodex, setRankingRolodex] = useState<RolodexDataProps[]>([]);
   const [dataGroups, setDataGroups] = useState<GroupsDataProps[]>([]);
   const [isLoadingForRolodex, setIsLoadingForRolodex] = useState(true);
   const [isLoadingForRanking, setIsLoadingForRanking] = useState(true);
@@ -42,6 +59,130 @@ export default function ManageRelationshipsScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
+  const lettersArray = letters.split('');
+
+  const ranking = 'ZABC';
+  const rankingArray = ranking.split('');
+
+  /*
+const data: Data[] = lettersArray.map((letter) => {
+  const phoneNumbers = [...Array(300)].map(
+    (e) => letter + ~~Math.round(Math.random() * (999999 - 100000) + 100000)
+  );
+  const sectionData: Data = { title: letter, data: phoneNumbers };
+  return sectionData;
+});*/
+
+  type DataAZ = {
+    title: string;
+    data: (RolodexDataProps | null)[];
+  };
+
+  type DataRanking = {
+    title: string;
+    data: (RolodexDataProps | null)[];
+  };
+
+  type DataGroups = {
+    title: string;
+    data: (GroupsDataProps | null)[];
+  };
+
+  //A -> Adrian, Alex, Anderson
+  //B -> Beatricia, Betty
+
+  function getSectionDataAZ(): DataAZ[] {
+    console.log('In az mode');
+    var indexArray = lettersArray;
+    console.log(azRolodex.length);
+    var azData = azRolodex.filter((e) => e.contactTypeID == showFilterTitle());
+    console.log(azData.length);
+
+    const data: DataAZ[] = indexArray.map((letter) => {
+      const contacts = azData.map((e) => {
+        if (showFilterTitle() == 'Rel') {
+          if (localDisplay == 'First Last') {
+            return e.firstName.substring(0, 1) == letter ? e : null;
+          }
+          return e.lastName.substring(0, 1) == letter ? e : null;
+        } else {
+          return e.employerName.substring(0, 1) == letter ? e : null;
+        }
+      });
+      // console.log("length before " + contacts.length);
+      var contacts2 = contacts.filter((e) => e != null);
+      //console.log("length after " + contacts2.length);
+      const sectionData: DataAZ = { title: letter, data: contacts2 };
+      return sectionData;
+    });
+    return data;
+  }
+
+  function getSectionDataRanking(): DataRanking[] {
+    console.log('In ranking mode');
+    var indexArray = rankingArray;
+    //var rankData = rankingRolodex;
+    var rankData = rankingRolodex.filter((e) => e.contactTypeID == showFilterTitle());
+
+    console.log(rankData.length);
+    const data: DataRanking[] = indexArray.map((letter) => {
+      const contacts = rankData.map((e) => {
+        if (letter == 'Z') letter = 'A+';
+        return e.ranking == letter ? e : null;
+      });
+      // console.log("length before " + contacts.length);
+      var contacts2 = contacts.filter((e) => e != null);
+      //console.log("length after " + contacts2.length);
+      const sectionData: DataRanking = { title: letter, data: contacts2 };
+      return sectionData;
+    });
+    return data;
+  }
+
+  function getSectionDataGroups(): DataGroups[] {
+    console.log('In group mode');
+    var indexArray = lettersArray;
+    var azData = dataGroups;
+    const data: DataGroups[] = indexArray.map((letter) => {
+      const contacts = azData.map((e) => {
+        return e.groupName.substring(0, 1) == letter ? e : null;
+      });
+      // console.log("length before " + contacts.length);
+      var contacts2 = contacts.filter((e) => e != null);
+      //console.log("length after " + contacts2.length);
+      const sectionData: DataAZ = { title: letter, data: contacts2 };
+      return sectionData;
+    });
+    return data;
+  }
+
+  const ItemAZ = ({ item }: { item: RolodexDataProps }) => (
+    <AtoZRow
+      relFromAbove={showFilterTitle()}
+      data={item}
+      onPress={() => handleRowPress(azRolodex.findIndex((e) => e.id == item.id))}
+      lightOrDark={lightOrDark}
+    />
+  );
+
+  const ItemRanking = ({ item }: { item: RolodexDataProps }) => (
+    <RankingRow
+      relFromAbove={showFilterTitle()}
+      data={item}
+      onPress={() => handleRowPress(rankingRolodex.findIndex((e) => e.id == item.id))}
+      lightOrDark={lightOrDark}
+    />
+  );
+
+  const ItemGroups = ({ item }: { item: GroupsDataProps }) => (
+    <GroupsRow
+      data={item}
+      onPress={() => handleRowPress(dataGroups.findIndex((e) => e.id == item.id))}
+      lightOrDark={lightOrDark}
+    />
+  );
 
   const handleRowPress = (index: number) => {
     if (isConnected) {
@@ -56,6 +197,56 @@ export default function ManageRelationshipsScreen() {
       }
     }
   };
+
+  const listRefAZ = React.useRef<SectionList>(null);
+  const _onPressLetterAZ = (letter: string) => {
+    var indexArray = lettersArray;
+    if (listRefAZ.current) {
+      const letterIndex = indexArray.indexOf(letter);
+      listRefAZ.current.scrollToLocation({
+        sectionIndex: letterIndex,
+        itemIndex: 0,
+        animated: false, // <----------------- you can change to true to see the effect
+      });
+    }
+  };
+
+  const listRefRanking = React.useRef<SectionList>(null);
+  const _onPressLetterRanking = (letter: string) => {
+    var indexArray = rankingArray;
+    if (letter == 'A+') letter = 'Z';
+    if (listRefRanking.current) {
+      const letterIndex = indexArray.indexOf(letter);
+      listRefRanking.current.scrollToLocation({
+        sectionIndex: letterIndex,
+        itemIndex: 0,
+        animated: false, // <----------------- you can change to true to see the effect
+      });
+    }
+  };
+
+  const listRefGroups = React.useRef<SectionList>(null);
+  const _onPressLetterGroups = (letter: string) => {
+    var indexArray = lettersArray;
+    if (listRefGroups.current) {
+      const letterIndex = indexArray.indexOf(letter);
+      listRefGroups.current.scrollToLocation({
+        sectionIndex: letterIndex,
+        itemIndex: 0,
+        animated: false, // <----------------- you can change to true to see the effect
+      });
+    }
+  };
+
+  const _getItemLayout = sectionListGetItemLayout({
+    // The height of the row with rowData at the given sectionIndex and rowIndex
+    getItemHeight: (rowData, sectionIndex, rowIndex) => (sectionIndex === 0 ? 80 : 80),
+
+    // These three properties are optional
+    getSeparatorHeight: () => 0, // The height of your separators
+    getSectionHeaderHeight: () => 30, // The height of your section headers
+    getSectionFooterHeight: () => 0, // The height of your section footers
+  });
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -74,18 +265,18 @@ export default function ManageRelationshipsScreen() {
     var mobile = '';
     var home = '';
     var work = '';
-    console.log(dataRolodex[index].firstName);
+    console.log(azRolodex[index].firstName);
 
-    if (dataRolodex[index].mobile != '') {
-      mobile = 'mobile: ' + dataRolodex[index].mobile;
+    if (azRolodex[index].mobile != '') {
+      mobile = 'mobile: ' + azRolodex[index].mobile;
       message = message + mobile + '\n';
     }
-    if (dataRolodex[index].homePhone != '') {
-      home = 'home: ' + dataRolodex[index].homePhone;
+    if (azRolodex[index].homePhone != '') {
+      home = 'home: ' + azRolodex[index].homePhone;
       message = message + home + '\n';
     }
-    if (dataRolodex[index].officePhone != '') {
-      work = 'office: ' + dataRolodex[index].officePhone;
+    if (azRolodex[index].officePhone != '') {
+      work = 'office: ' + azRolodex[index].officePhone;
       message = message + work + '\n';
     }
     if (message != '') {
@@ -136,9 +327,9 @@ export default function ManageRelationshipsScreen() {
       });
     } else if (tabSelected == 'a-z') {
       navigation.navigate('RelDetails', {
-        contactId: dataRolodex[index].id,
-        firstName: dataRolodex[index].firstName,
-        lastName: dataRolodex[index].lastName,
+        contactId: azRolodex[index].id,
+        firstName: azRolodex[index].firstName,
+        lastName: azRolodex[index].lastName,
         lightOrDark: lightOrDark,
       });
     } else if (tabSelected == 'ranking') {
@@ -149,23 +340,6 @@ export default function ManageRelationshipsScreen() {
         lightOrDark: lightOrDark,
       });
     }
-  }
-
-  function getIndex() {
-    if (tabSelected == 'a-z')
-      return dataRolodex.map((e) => {
-        if (localDisplay == 'First Last') return { value: e.firstName, key: e.id };
-        else return { value: e.lastName, key: e.id };
-      });
-    if (tabSelected == 'ranking')
-      return rankingRolodex.map((e) => {
-        return { value: e.ranking, key: e.id };
-      });
-    else if (tabSelected == 'groups')
-      //console.log('groups ' + dataGroups.length)
-      return dataGroups.map((e) => {
-        return { value: e.groupName, key: e.id };
-      });
   }
 
   // useEffect(() => {}, []);
@@ -313,7 +487,7 @@ export default function ManageRelationshipsScreen() {
       //console.log('readData: ' + readData);
       const rawData = JSON.parse(readData);
       if (param == 'a-z') {
-        setDataRolodex(rawData);
+        setAZRolodex(rawData);
         setIsLoadingForRolodex(false);
       } else if (param == 'ranking') {
         setRankingRolodex(rawData);
@@ -333,10 +507,18 @@ export default function ManageRelationshipsScreen() {
   }
 
   function isDataEmpty(param: TabType) {
-    if (param == 'a-z' && dataRolodex.length == 0) return true;
+    if (param == 'a-z' && azRolodex.length == 0) return true;
     if (param == 'ranking' && rankingRolodex.length == 0) return true;
     if (param == 'groups' && dataGroups.length == 0) return true;
     return false;
+  }
+
+  function chooseImage(rank: string) {
+    if (rank == 'A+') return rankAPlus;
+    if (rank == 'A') return rankA;
+    if (rank == 'B') return rankB;
+    if (rank == 'C') return rankC;
+    return rankD;
   }
 
   function fetchData(param: TabType, makeAPICall: boolean) {
@@ -363,7 +545,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           const filteredRolodex = res.data.filter((d) => typeof d.contactTypeID !== 'undefined');
-          param == 'a-z' ? setDataRolodex(filteredRolodex) : setRankingRolodex(filteredRolodex);
+          param == 'a-z' ? setAZRolodex(filteredRolodex) : setRankingRolodex(filteredRolodex);
           saveDataToFile(param, filteredRolodex);
         }
         setIsLoadingForTab(param, false);
@@ -409,7 +591,7 @@ export default function ManageRelationshipsScreen() {
   }
 
   function setIsLoadingForTab(param: TabType, value: boolean) {
-    if (param == 'a-z') setIsLoadingForRolodex(value && dataRolodex.length == 0);
+    if (param == 'a-z') setIsLoadingForRolodex(value && azRolodex.length == 0);
     if (param == 'ranking') setIsLoadingForRanking(value && rankingRolodex.length == 0);
     if (param == 'groups') setIsLoadingForGroups(value && dataGroups.length == 0);
   }
@@ -445,66 +627,71 @@ export default function ManageRelationshipsScreen() {
             {tabSelected != 'groups' && (
               <TouchableOpacity onPress={filterPressed}>
                 <View style={globalStyles.filterRow}>
-                  <Text style={globalStyles.filterText}>{isFilterRel ? 'Show Businesses' : 'Show Relationships'}</Text>
+                  <Text style={globalStyles.filterText}>{isFilterRel ? 'Relationships' : 'Businesses'}</Text>
                 </View>
               </TouchableOpacity>
             )}
 
-            <View style={styles.rolodex}>
-              {true && (
-                <AlphabetList
-                  data={getIndex()!}
-                  extraData={
-                    tabSelected == 'a-z' ? dataRolodex : tabSelected == 'ranking' ? rankingRolodex : dataGroups
-                  }
-                  indexLetterContainerStyle={{
-                    width: 20,
-                  }}
-                  letterListContainerStyle={{
-                    width: 40,
-                    alignItems: 'flex-start',
-                  }}
-                  indexLetterStyle={{
-                    color: '#1398f5',
-                    fontSize: 14,
-                    height: 60,
-                  }}
-                  indexContainerStyle={{
-                    width: 20,
-                  }}
-                  renderCustomItem={(item) =>
-                    tabSelected == 'a-z' && dataRolodex.some((e) => e.id == item.key) ? (
-                      <AtoZRow
-                        relFromAbove={showFilterTitle()}
-                        data={dataRolodex.find((e) => e.id == item.key)!}
-                        onPress={() => handleRowPress(dataRolodex.findIndex((e) => e.id == item.key))}
-                        lightOrDark={lightOrDark}
-                      />
-                    ) : tabSelected == 'ranking' && rankingRolodex.some((e) => e.id == item.key) ? (
-                      <RankingRow
-                        relFromAbove={showFilterTitle()}
-                        data={rankingRolodex.find((e) => e.id == item.key)!}
-                        onPress={() => handleRowPress(rankingRolodex.findIndex((e) => e.id == item.key))}
-                        lightOrDark={lightOrDark}
-                      />
-                    ) : tabSelected == 'groups' && dataGroups.some((e) => e.id == item.key) ? (
-                      <GroupsRow
-                        data={dataGroups.find((e) => e.id == item.key)!}
-                        onPress={() => handleRowPress(dataGroups.findIndex((e) => e.id == item.key))}
-                        lightOrDark={lightOrDark}
-                      />
-                    ) : (
-                      <View></View>
-                    )
-                  }
-                  renderCustomSectionHeader={(section) => (
-                    <View style={styles.sectionHeaderContainer}>
-                      <Text style={styles.sectionHeaderLabel}>{section.title}</Text>
+            <View style={styles.buttonsContainer}>
+              {tabSelected == 'a-z'
+                ? lettersArray.map((letter) => <Button title={letter} onPress={() => _onPressLetterAZ(letter)} />)
+                : tabSelected == 'groups'
+                ? lettersArray.map((letter) => <Button title={letter} onPress={() => _onPressLetterGroups(letter)} />)
+                : rankingArray.map((letter) => (
+                    <Button title={letter == 'Z' ? 'A+' : letter} onPress={() => _onPressLetterRanking(letter)} />
+                  ))}
+            </View>
+
+            {tabSelected == 'a-z' && (
+              <View style={styles.rolodexAZ}>
+                <SectionList
+                  ref={listRefAZ}
+                  sections={getSectionDataAZ()}
+                  keyExtractor={(_, index) => index.toString()}
+                  renderItem={({ item }) => <ItemAZ item={item} />}
+                  renderSectionHeader={({ section: { title } }) => (
+                    <View style={styles.sectionTitle}>
+                      <Text style={styles.header}>{title}</Text>
                     </View>
                   )}
+                  getItemLayout={_getItemLayout}
                 />
-              )}
-            </View>
+              </View>
+            )}
+
+            {tabSelected == 'ranking' && (
+              <View style={styles.rolodexRanking}>
+                <SectionList
+                  ref={listRefRanking}
+                  sections={getSectionDataRanking()}
+                  keyExtractor={(_, index) => index.toString()}
+                  renderItem={({ item }) => <ItemRanking item={item} />}
+                  renderSectionHeader={({ section: { title } }) => (
+                    <View style={styles.sectionTitle}>
+                      <Text style={styles.header}>{title}</Text>
+                    </View>
+                  )}
+                  getItemLayout={_getItemLayout}
+                />
+              </View>
+            )}
+
+            {tabSelected == 'groups' && (
+              <View style={styles.rolodexGroups}>
+                <SectionList
+                  ref={listRefGroups}
+                  sections={getSectionDataGroups()}
+                  keyExtractor={(_, index) => index.toString()}
+                  renderItem={({ item }) => <ItemGroups item={item} />}
+                  renderSectionHeader={({ section: { title } }) => (
+                    <View style={styles.sectionTitle}>
+                      <Text style={styles.header}>{title}</Text>
+                    </View>
+                  )}
+                  getItemLayout={_getItemLayout}
+                />
+              </View>
+            )}
 
             <TouchableOpacity style={globalStyles.bottomContainer} onPress={() => handleAddRelPressed()}>
               <View style={globalStyles.addButton}>
