@@ -204,6 +204,7 @@ export default function AddAppointmentScreen(props: any) {
 
   useEffect(() => {
     getCurrentDay();
+    setEndDate(new Date(startDate.getTime() + 60 * 60 * 1000));
   }, [isFocused]);
 
   useEffect(() => {
