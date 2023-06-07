@@ -59,20 +59,15 @@ export default function ManageRelationshipsScreen() {
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
 
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#';
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'; // branch
   const indexCharArray = letters.split('');
 
   const ranking = 'ZABC';
   const rankingArray = ranking.split('');
 
-  /*
-const data: Data[] = indexCharArray.map((letter) => {
-  const phoneNumbers = [...Array(300)].map(
-    (e) => letter + ~~Math.round(Math.random() * (999999 - 100000) + 100000)
-  );
-  const sectionData: Data = { title: letter, data: phoneNumbers };
-  return sectionData;
-});*/
+  var sectionDataAZ: DataAZ[] = [];
+  var sectionDataRanking: DataRanking[] = [];
+  var sectionDataGroups: DataGroups[] = [];
 
   type DataAZ = {
     title: string;
@@ -136,7 +131,9 @@ const data: Data[] = indexCharArray.map((letter) => {
       const sectionData: DataAZ = { title: indexChar, data: contacts2 };
       return sectionData;
     });
-    return data;
+    //filter out those that have empty children
+    sectionDataAZ = data.filter((e) => e.data.length > 0);
+    return sectionDataAZ;
   }
 
   function getSectionDataRanking(): DataRanking[] {
@@ -157,7 +154,10 @@ const data: Data[] = indexCharArray.map((letter) => {
       const sectionData: DataRanking = { title: letter, data: contacts2 };
       return sectionData;
     });
-    return data;
+    //filter out those that have empty children
+    sectionDataRanking = data.filter((e) => e.data.length > 0);
+
+    return sectionDataRanking;
   }
 
   function getSectionDataGroups(): DataGroups[] {
@@ -180,10 +180,15 @@ const data: Data[] = indexCharArray.map((letter) => {
       // console.log("length before " + contacts.length);
       var contacts2 = contacts.filter((e) => e != null);
       //console.log("length after " + contacts2.length);
-      const sectionData: DataAZ = { title: indexChar, data: contacts2 };
+      const sectionData: DataGroups = { title: indexChar, data: contacts2 };
       return sectionData;
     });
-    return data;
+
+    //filter out those that have empty children
+    sectionDataGroups = data.filter((e) => e.data.length > 0);
+
+    return sectionDataGroups;
+    //return data;
   }
 
   const ItemAZ = ({ item }: { item: RolodexDataProps }) => (
@@ -228,41 +233,44 @@ const data: Data[] = indexCharArray.map((letter) => {
 
   const listRefAZ = React.useRef<SectionList>(null);
   const _onPressLetterAZ = (letter: string) => {
-    var indexArray = indexCharArray;
     if (listRefAZ.current) {
-      const letterIndex = indexArray.indexOf(letter);
-      listRefAZ.current.scrollToLocation({
-        sectionIndex: letterIndex,
-        itemIndex: 0,
-        animated: false, // <----------------- you can change to true to see the effect
-      });
+      var index = sectionDataAZ.findIndex((e) => e.title == letter);
+      if (index != -1) {
+        listRefAZ.current.scrollToLocation({
+          sectionIndex: index,
+          itemIndex: 0,
+          animated: false,
+        });
+      }
     }
   };
 
   const listRefRanking = React.useRef<SectionList>(null);
   const _onPressLetterRanking = (letter: string) => {
-    var indexArray = rankingArray;
     if (letter == 'A+') letter = 'Z';
     if (listRefRanking.current) {
-      const letterIndex = indexArray.indexOf(letter);
-      listRefRanking.current.scrollToLocation({
-        sectionIndex: letterIndex,
-        itemIndex: 0,
-        animated: false, // <----------------- you can change to true to see the effect
-      });
+      var index = sectionDataRanking.findIndex((e) => e.title == letter);
+      if (index != -1) {
+        listRefRanking.current.scrollToLocation({
+          sectionIndex: index,
+          itemIndex: 0,
+          animated: false,
+        });
+      }
     }
   };
 
   const listRefGroups = React.useRef<SectionList>(null);
   const _onPressLetterGroups = (letter: string) => {
-    var indexArray = indexCharArray;
     if (listRefGroups.current) {
-      const letterIndex = indexArray.indexOf(letter);
-      listRefGroups.current.scrollToLocation({
-        sectionIndex: letterIndex,
-        itemIndex: 0,
-        animated: false, // <----------------- you can change to true to see the effect
-      });
+      var index = sectionDataGroups.findIndex((e) => e.title == letter);
+      if (index != -1) {
+        listRefGroups.current.scrollToLocation({
+          sectionIndex: index,
+          itemIndex: 0,
+          animated: false,
+        });
+      }
     }
   };
 
