@@ -9,7 +9,6 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import { ga4Analytics } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-
 const closeButton = require('../../images/button_close_white.png');
 const refMenuChoice1 = 'Client gave me referral';
 const refMenuChoice2 = 'Client was referred to me';
@@ -23,6 +22,7 @@ export default function TrackActivityScreen(props: any) {
   const [goal, setGoal] = useState<GoalDataConciseProps>();
   const [refType, setRefType] = useState('1');
   const [date, setDate] = useState(new Date());
+  const [showStartTime, setShowStartTime] = useState(false);
   const [subject, setSubject] = useState(subjectP);
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalGoalVisible, setModalGoalVisible] = useState(false);
@@ -134,6 +134,22 @@ export default function TrackActivityScreen(props: any) {
 
   function showDatePicker() {
     setShowDate(true);
+  }
+
+  const showStartTimeMode = (currentMode: any) => {
+    console.log(currentMode);
+    setShowStartTime(true);
+  };
+
+  const handleConfirmStartTime = (selectedDate: any) => {
+    const currentDate = selectedDate;
+    console.log(currentDate);
+    setDate(currentDate);
+    setShowStartTime(false);
+  };
+
+  function hideStartTimePicker() {
+    setShowStartTime(false);
   }
 
   function savePressed() {
@@ -315,18 +331,30 @@ export default function TrackActivityScreen(props: any) {
           </View>
         </View>
       </TouchableOpacity>
-
-      {showDate && (
-        <TouchableOpacity
-          onPress={() => {
-            setShowDate(false);
-          }}
-        >
-          <Text style={styles.saveButton}>Close</Text>
-        </TouchableOpacity>
-      )}
-
       <DateTimePickerModal isVisible={showDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
+
+      <Text style={styles.fieldTitle}>Time</Text>
+      <TouchableOpacity onPress={showStartTimeMode}>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <Text style={styles.textInput}>
+              {date.toLocaleTimeString('en-us', {
+                hour12: true,
+                hour: 'numeric',
+                minute: '2-digit',
+              })}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <DateTimePickerModal
+        isVisible={showStartTime}
+        date={date}
+        mode="time"
+        onConfirm={handleConfirmStartTime}
+        onCancel={hideStartTimePicker}
+      />
 
       <Text style={styles.fieldTitle}>Notes</Text>
       <View style={styles.mainContent}>
