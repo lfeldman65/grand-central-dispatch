@@ -11,7 +11,7 @@ import { postponeAction, completeAction } from './postponeAndComplete';
 import { handleTextPressed, ga4Analytics } from '../../utils/general';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
+import { mobileTypeMenu, relSheets } from '../Relationships/relationshipHelpers';
 
 interface PACRowProps {
   key: number;
@@ -75,7 +75,7 @@ export default function PACPopRow(props: PACRowProps) {
 
   function handleMobilePressed() {
     console.log('mobile pressed here');
-    SheetManager.show(Sheets.mobileSheet);
+    SheetManager.show(relSheets.mobileSheet);
   }
 
   function handleHomePressed() {

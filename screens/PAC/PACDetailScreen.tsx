@@ -18,7 +18,7 @@ import { isNullOrEmpty, ga4Analytics, handlePhonePressed, handleTextPressed } fr
 import { AddressProps, ContactDetailDataProps } from './interfaces';
 import { completeAction, postponeAction } from './postponeAndComplete';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
+import { mobileTypeMenu, relSheets } from '../Relationships/relationshipHelpers';
 import globalStyles from '../../globalStyles';
 import TrackActivity from '../Goals/TrackActivityScreen';
 import { getGoalData, trackAction } from '../Goals/api';
@@ -159,7 +159,7 @@ export default function PACDetailScreen(props: any) {
 
   function handleMobilePressed() {
     console.log('mobile pressed here');
-    SheetManager.show(Sheets.mobileSheet);
+    SheetManager.show(relSheets.mobileSheet);
   }
 
   function handleHomePressed() {
@@ -427,7 +427,7 @@ export default function PACDetailScreen(props: any) {
       <ActionSheet
         initialOffsetFromBottom={10}
         onBeforeShow={(data) => console.log('mobile call type sheet')}
-        id={Sheets.mobileSheet}
+        id={relSheets.mobileSheet}
         ref={actionSheetRef}
         statusBarTranslucent
         bounceOnOpen={true}
@@ -454,7 +454,7 @@ export default function PACDetailScreen(props: any) {
                 <TouchableOpacity
                   key={index}
                   onPress={() => {
-                    SheetManager.hide(Sheets.mobileSheet, null).then(() => {
+                    SheetManager.hide(relSheets.mobileSheet, null).then(() => {
                       console.log('value: ' + value);
                       if (value == 'Call') {
                         ga4Analytics('PAC_Mobile_Call', {

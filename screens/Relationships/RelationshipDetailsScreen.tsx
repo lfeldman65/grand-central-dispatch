@@ -1,4 +1,15 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal, Linking, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+  Modal,
+  Linking,
+  TextInput,
+  ActivityIndicator,
+} from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
 import globalStyles from '../../globalStyles';

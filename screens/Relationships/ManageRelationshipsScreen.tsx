@@ -343,6 +343,55 @@ export default function ManageRelationshipsScreen() {
     }
   }
 
+  function showInfoWithoutInternet2(index: number) {
+    var dataArray = azRolodex;
+    if (tabSelected == 'ranking') {
+      dataArray = rankingRolodex;
+    }
+    var message = '';
+    var mobile = '';
+    var home = '';
+    var work = '';
+    var address = '';
+    if (dataArray[index].mobile != '' && dataArray[index].mobile != null) {
+      mobile = 'Mobile: ' + dataArray[index].mobile;
+      message = message + mobile + '\n';
+    }
+    if (dataArray[index].homePhone != '') {
+      home = 'Home: ' + dataArray[index].homePhone;
+      message = message + home + '\n';
+    }
+    if (dataArray[index].officePhone != '') {
+      work = 'Office: ' + dataArray[index].officePhone;
+      message = message + work + '\n';
+    }
+    if (dataArray[index].address.street != '' && dataArray[index].address.street != null) {
+      address = 'Address: ' + dataArray[index].address.street;
+      message = message + '\n' + address + ' ';
+    }
+    if (dataArray[index].address.street2 != '' && dataArray[index].address.street2 != null) {
+      address = dataArray[index].address.street2;
+      message = message + address + ' ';
+    }
+    if (dataArray[index].address.city != '' && dataArray[index].address.city != null) {
+      address = dataArray[index].address.city;
+      message = message + address + ', ';
+    }
+    if (dataArray[index].address.state != '' && dataArray[index].address.state != null) {
+      address = dataArray[index].address.state;
+      message = message + address + ' ';
+    }
+    if (dataArray[index].address.zip != '' && dataArray[index].address.zip != null) {
+      address = dataArray[index].address.zip;
+      message = message + address;
+    }
+    if (message != '') {
+      Alert.alert(message);
+    } else {
+      Alert.alert('No phone number or address');
+    }
+  }
+
   function handleNavigation(index: number) {
     ga4Analytics('Relationships_Row', {
       contentType: prettyTabName(tabSelected),

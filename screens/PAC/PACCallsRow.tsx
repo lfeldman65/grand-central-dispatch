@@ -5,7 +5,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { PACDataProps } from './interfaces';
 import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
-import { mobileTypeMenu, Sheets } from '../Relationships/relationshipHelpers';
+import { relSheets, mobileTypeMenu } from '../Relationships/relationshipHelpers';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import { ga4Analytics, handlePhonePressed, handleTextPressed } from '../../utils/general';
@@ -199,7 +199,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
     console.log('number1: ' + localMobile);
     console.log('name1: ' + localName);
     console.log('id1: ' + localID);
-    SheetManager.show(Sheets.mobileSheet);
+    SheetManager.show(relSheets.mobileSheet);
   }
 
   function handleHomePressed() {
@@ -323,7 +323,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
           <ActionSheet
             initialOffsetFromBottom={10}
             //   onBeforeShow={(data) => console.log('mobile call type sheet')}
-            id={Sheets.mobileSheet}
+            id={relSheets.mobileSheet}
             ref={actionSheetRef}
             statusBarTranslucent
             bounceOnOpen={true}
@@ -350,7 +350,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        SheetManager.hide(Sheets.mobileSheet, null).then(() => {
+                        SheetManager.hide(relSheets.mobileSheet, null).then(() => {
                           console.log('number: ' + localMobile);
                           console.log('name: ' + localName);
                           console.log('ID: ' + localID);

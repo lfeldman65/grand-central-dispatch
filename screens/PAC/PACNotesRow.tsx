@@ -1,8 +1,7 @@
 import { Text, View, TouchableOpacity, Modal } from 'react-native';
 import { styles } from './styles';
 import { PACDataProps } from './interfaces';
-import { useState, useEffect } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import { useState } from 'react';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { postponeAction, completeAction } from './postponeAndComplete';
 import PacComplete from './PACCompleteScreen';
