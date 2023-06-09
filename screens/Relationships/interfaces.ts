@@ -10,6 +10,15 @@ export interface RolodexDataProps {
   mobile: string;
   homePhone: string;
   officePhone: string;
+  address: RolodexAddressProps;
+}
+
+export interface RolodexAddressProps {
+  street: string;
+  street2: string;
+  city: string;
+  state: string;
+  zip: string;
 }
 
 export interface RolodexDataResponse {

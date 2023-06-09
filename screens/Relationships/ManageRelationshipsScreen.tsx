@@ -221,10 +221,8 @@ export default function ManageRelationshipsScreen() {
     if (isConnected) {
       handleNavigation(index);
     } else {
-      if (tabSelected == 'a-z') {
-        showAZWithoutInternet(index);
-      } else if (tabSelected == 'ranking') {
-        showRankingWithoutInternet(index);
+      if (tabSelected != 'groups') {
+        showInfoWithoutInternet(index);
       } else {
         Alert.alert('Please connect to the internet');
       }
@@ -296,55 +294,52 @@ export default function ManageRelationshipsScreen() {
     };
   }, []);
 
-  function showAZWithoutInternet(index: number) {
+  function showInfoWithoutInternet(index: number) {
+    var dataArray = azRolodex;
+    if (tabSelected == 'ranking') {
+      dataArray = rankingRolodex;
+    }
     var message = '';
     var mobile = '';
     var home = '';
     var work = '';
-    console.log(azRolodex[index].firstName);
-
-    if (azRolodex[index].mobile != '') {
-      mobile = 'mobile: ' + azRolodex[index].mobile;
+    var address = '';
+    if (dataArray[index].mobile != '' && dataArray[index].mobile != null) {
+      mobile = 'Mobile: ' + dataArray[index].mobile;
       message = message + mobile + '\n';
     }
-    if (azRolodex[index].homePhone != '') {
-      home = 'home: ' + azRolodex[index].homePhone;
+    if (dataArray[index].homePhone != '') {
+      home = 'Home: ' + dataArray[index].homePhone;
       message = message + home + '\n';
     }
-    if (azRolodex[index].officePhone != '') {
-      work = 'office: ' + azRolodex[index].officePhone;
+    if (dataArray[index].officePhone != '') {
+      work = 'Office: ' + dataArray[index].officePhone;
       message = message + work + '\n';
+    }
+    if (dataArray[index].address.street != '' && dataArray[index].address.street != null) {
+      address = dataArray[index].address.street;
+      message = message + '\n' + address + '\n';
+    }
+    if (dataArray[index].address.street2 != '' && dataArray[index].address.street2 != null) {
+      address = dataArray[index].address.street2;
+      message = message + address + '\n';
+    }
+    if (dataArray[index].address.city != '' && dataArray[index].address.city != null) {
+      address = dataArray[index].address.city;
+      message = message + address + ', ';
+    }
+    if (dataArray[index].address.state != '' && dataArray[index].address.state != null) {
+      address = dataArray[index].address.state;
+      message = message + address + ' ';
+    }
+    if (dataArray[index].address.zip != '' && dataArray[index].address.zip != null) {
+      address = dataArray[index].address.zip;
+      message = message + address;
     }
     if (message != '') {
       Alert.alert(message);
     } else {
-      Alert.alert('Sorry, there is no information to display');
-    }
-  }
-
-  function showRankingWithoutInternet(index: number) {
-    var message = '';
-    var mobile = '';
-    var home = '';
-    var work = '';
-    console.log(rankingRolodex[index].firstName);
-
-    if (rankingRolodex[index].mobile != '') {
-      mobile = 'mobile: ' + rankingRolodex[index].mobile;
-      message = message + mobile + '\n';
-    }
-    if (rankingRolodex[index].homePhone != '') {
-      home = 'home: ' + rankingRolodex[index].homePhone;
-      message = message + home + '\n';
-    }
-    if (rankingRolodex[index].officePhone != '') {
-      work = 'office: ' + rankingRolodex[index].officePhone;
-      message = message + work + '\n';
-    }
-    if (message != '') {
-      Alert.alert(message);
-    } else {
-      Alert.alert('Sorry, there is no information to display');
+      Alert.alert('No phone number or address');
     }
   }
 
