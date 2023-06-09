@@ -135,14 +135,16 @@ export default function CalendarScreen() {
       <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
         <View style={styles.calendarView}>
-          <CalendarPicker
-            todayBackgroundColor="#02ABF7"
-            todayTextStyle={styles.todayText}
-            selectedDayColor="gray"
-            selectedDayTextColor="white"
-            textStyle={lightOrDark == 'dark' ? styles.calendarTextDark : styles.calendarTextLight}
-            onDateChange={onDateChange}
-          />
+          {lightOrDark != '' && (
+            <CalendarPicker
+              todayBackgroundColor="#02ABF7"
+              todayTextStyle={styles.todayText}
+              selectedDayColor="gray"
+              selectedDayTextColor="white"
+              textStyle={lightOrDark == 'dark' ? styles.calendarTextDark : styles.calendarTextLight}
+              onDateChange={onDateChange}
+            />
+          )}
         </View>
 
         {isLoading ? (
