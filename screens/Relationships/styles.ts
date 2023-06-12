@@ -164,6 +164,9 @@ export const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 5,
   },
   rolodexAZ: {
     height: '72%',

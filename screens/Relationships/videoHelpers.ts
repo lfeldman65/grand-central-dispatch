@@ -14,6 +14,7 @@ function prettyVideoType(hasBB: boolean) {
 export async function handleVideoFromAlbum(
   vidTitle: string,
   relationship: RelDetailsProps | undefined | null,
+  cancelCallback?: () => void,
   cb?: () => void
 ) {
   if (typeof cb !== 'undefined') {
@@ -35,12 +36,20 @@ export async function handleVideoFromAlbum(
 
   if (!result.cancelled) {
     composeSMS(vidTitle, relationship, result, cb);
+  } else {
+    if (typeof cancelCallback !== 'undefined') {
+      const timer2 = setInterval(() => {
+        clearInterval(timer2);
+        cancelCallback();
+      }, 500);
+    }
   }
 }
 
 export async function handleVideoFromCamera(
   vidTitle: string,
   relationship: RelDetailsProps | undefined | null,
+  cancelCallback?: () => void,
   cb?: () => void
 ) {
   console.log('handle video from camera with bb: ' + relationship?.hasBombBombPermission);
@@ -70,6 +79,13 @@ export async function handleVideoFromCamera(
   if (!result.cancelled) {
     saveImage(result.uri);
     composeSMS(vidTitle, relationship, result, cb);
+  } else {
+    if (typeof cancelCallback !== 'undefined') {
+      const timer2 = setInterval(() => {
+        clearInterval(timer2);
+        cancelCallback();
+      }, 500);
+    }
   }
 }
 
@@ -162,7 +178,7 @@ export async function handleTextVideoBBPressed(number: string, url: string, cb?:
     clearInterval(timer);
     console.log('ISAVAILABLE: ' + isAvailable);
     if (isAvailable) {
-      await SMS.sendSMSAsync([number ?? ''], 'Here is the video ' + url);
+      await SMS.sendSMSAsync([number ?? ''], url);
       if (typeof cb !== 'undefined') {
         console.log('callback bb Pressed');
         const timer2 = setInterval(() => {

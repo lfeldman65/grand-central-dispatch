@@ -71,7 +71,6 @@ const apptImg = require('../Relationships/images/relAppt.png');
 const ideasImg = require('../Relationships/images/relIdeas.png');
 
 var phoneArray: string[] = [];
-var phoneLabels: string[] = [];
 var localGoalID = '0';
 var rowFontSize = 9;
 
@@ -325,10 +324,27 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       setGoalID2('7');
       setGoalName2('Other');
       setSubject2('Text Video');
+      setIsLoading(true);
       if (vidSource == 'Use Video Album') {
-        handleVideoFromAlbum(vidTitle, dataDetails, () => setTrackActivityVisible(true));
+        handleVideoFromAlbum(
+          vidTitle,
+          dataDetails,
+          () => setIsLoading(false),
+          () => {
+            setTrackActivityVisible(true);
+            setIsLoading(false);
+          }
+        );
       } else {
-        handleVideoFromCamera(vidTitle, dataDetails, () => setTrackActivityVisible(true));
+        handleVideoFromCamera(
+          vidTitle,
+          dataDetails,
+          () => setIsLoading(false),
+          () => {
+            setTrackActivityVisible(true);
+            setIsLoading(false);
+          }
+        );
       }
     }, 2000); // wait for dialog to close
   }
@@ -978,6 +994,12 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <Text></Text>
+
+        {isLoading == true && (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color="#AAA" />
+          </View>
+        )}
 
         <Text style={styles.subTitle}>Pop-By</Text>
         <View style={styles.topAndBottomRows}>
@@ -1732,12 +1754,30 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
                           setGoalID2('7');
                           setGoalName2('Other');
                           setSubject2('Text Video');
+                          setIsLoading(true);
                           if (value == 'Use Video Album') {
-                            handleVideoFromAlbum('none', dataDetails, () => setTrackActivityVisible(true));
+                            handleVideoFromAlbum(
+                              'none',
+                              dataDetails,
+                              () => setIsLoading(false),
+                              () => {
+                                setTrackActivityVisible(true);
+                                setIsLoading(false);
+                              }
+                            );
                           } else {
-                            handleVideoFromCamera('none', dataDetails, () => setTrackActivityVisible(true));
+                            handleVideoFromCamera(
+                              'none',
+                              dataDetails,
+                              () => setIsLoading(false),
+                              () => {
+                                setTrackActivityVisible(true);
+                                setIsLoading(false);
+                              }
+                            );
                           }
                         }
+                        //setIsLoading(false);
                       }, 250);
                     }}
                     style={globalStyles.listItemCell}
