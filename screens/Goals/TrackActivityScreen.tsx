@@ -218,7 +218,7 @@ export default function TrackActivityScreen(props: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
           <Text style={styles.cancelButton}>Cancel</Text>
@@ -230,252 +230,254 @@ export default function TrackActivityScreen(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.fieldTitle}>Relationship</Text>
-      <TouchableOpacity onPress={handleRelPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
-              {relationship == null ? '' : relationship.firstName + ' ' + relationship.lastName}
-            </TextInput>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <Text style={styles.fieldTitle}>Activity</Text>
-      <TouchableOpacity onPress={handleGoalPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <TextInput
-              onPressIn={handleGoalPressed}
-              editable={false}
-              placeholder="+ Add"
-              placeholderTextColor="#AFB9C2"
-              style={styles.nameLabel}
-            >
-              {formatTitle(goal?.title!)}
-            </TextInput>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      {goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>Referral Type</Text>}
-      {goal?.title.includes('Referral') && (
-        <TouchableOpacity onPress={referralTypePressed}>
+      <ScrollView>
+        <Text style={styles.fieldTitle}>Relationship</Text>
+        <TouchableOpacity onPress={handleRelPressed}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
               <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
-                {convertToText(refType)}
+                {relationship == null ? '' : relationship.firstName + ' ' + relationship.lastName}
               </TextInput>
             </View>
           </View>
         </TouchableOpacity>
-      )}
 
-      {goal?.title.includes('Referral') && (
-        <Text style={styles.fieldTitle}>{refType == '2' ? 'Referrer:' : 'Referral:'}</Text>
-      )}
-      {goal?.title.includes('Referral') && (
-        <TouchableOpacity onPress={addReferralPressed}>
+        <Text style={styles.fieldTitle}>Activity</Text>
+        <TouchableOpacity onPress={handleGoalPressed}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
-              <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
-                {referral == null ? '' : referral.firstName + ' ' + referral.lastName}
+              <TextInput
+                onPressIn={handleGoalPressed}
+                editable={false}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                style={styles.nameLabel}
+              >
+                {formatTitle(goal?.title!)}
               </TextInput>
             </View>
           </View>
         </TouchableOpacity>
-      )}
 
-      {modalRefVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalRefVisible}
-          onRequestClose={() => {
-            setModalRefVisible(!modalRefVisible);
-          }}
-        >
-          <ChooseRelationship
-            title="Choose Relationship"
-            setModalRelVisible={setModalRefVisible}
-            setSelectedRel={setReferral}
-            lightOrDark={lightOrDark}
+        {goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>Referral Type</Text>}
+        {goal?.title.includes('Referral') && (
+          <TouchableOpacity onPress={referralTypePressed}>
+            <View style={styles.mainContent}>
+              <View style={styles.inputView}>
+                <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+                  {convertToText(refType)}
+                </TextInput>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+
+        {goal?.title.includes('Referral') && (
+          <Text style={styles.fieldTitle}>{refType == '2' ? 'Referrer:' : 'Referral:'}</Text>
+        )}
+        {goal?.title.includes('Referral') && (
+          <TouchableOpacity onPress={addReferralPressed}>
+            <View style={styles.mainContent}>
+              <View style={styles.inputView}>
+                <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+                  {referral == null ? '' : referral.firstName + ' ' + referral.lastName}
+                </TextInput>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
+
+        {modalRefVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalRefVisible}
+            onRequestClose={() => {
+              setModalRefVisible(!modalRefVisible);
+            }}
+          >
+            <ChooseRelationship
+              title="Choose Relationship"
+              setModalRelVisible={setModalRefVisible}
+              setSelectedRel={setReferral}
+              lightOrDark={lightOrDark}
+            />
+          </Modal>
+        )}
+
+        {!goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>Subject</Text>}
+        {!goal?.title.includes('Referral') && (
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                textAlign="left"
+                onChangeText={(text) => setSubject(text)}
+                defaultValue={subject}
+              />
+            </View>
+          </View>
+        )}
+
+        {goal?.title.includes('Referral') && (
+          <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+            size={25}
+            textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+            fillColor="#37C0FF"
+            unfillColor="#004F89"
+            iconStyle={{ borderColor: 'white' }}
+            text="This referral occured in the past"
+            textContainerStyle={{ marginLeft: 10 }}
+            style={styles.checkBox}
+            onPress={(isChecked: boolean) => {
+              console.log(isChecked);
+              setRefInPast(!refInPast);
+            }}
           />
-        </Modal>
-      )}
+        )}
 
-      {!goal?.title.includes('Referral') && <Text style={styles.fieldTitle}>Subject</Text>}
-      {!goal?.title.includes('Referral') && (
+        <Text style={styles.fieldTitle}>Date</Text>
+        <TouchableOpacity onPress={showDatePicker}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {date.toLocaleDateString('en-us', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  //  hour: 'numeric',
+                  //  minute: 'numeric',
+                })}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <DateTimePickerModal isVisible={showDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
+
+        <Text style={styles.fieldTitle}>Time</Text>
+        <TouchableOpacity onPress={showStartTimeMode}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {date.toLocaleTimeString('en-us', {
+                  hour12: true,
+                  hour: 'numeric',
+                  minute: '2-digit',
+                })}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <DateTimePickerModal
+          isVisible={showStartTime}
+          date={date}
+          mode="time"
+          onConfirm={handleConfirmStartTime}
+          onCancel={hideStartTimePicker}
+        />
+
+        <Text style={styles.fieldTitle}>Notes</Text>
         <View style={styles.mainContent}>
-          <View style={styles.inputView}>
+          <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
             <TextInput
-              style={styles.textInput}
-              placeholder="+ Add"
+              onPressIn={handleNotesFocus}
+              ref={notesInputRef}
+              multiline={true}
+              numberOfLines={5}
+              style={globalStyles.notesInput}
+              placeholder="Type Here"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
-              onChangeText={(text) => setSubject(text)}
-              defaultValue={subject}
+              value={notes}
+              onChangeText={(text) => setNotes(text)}
             />
-          </View>
+          </TouchableOpacity>
         </View>
-      )}
 
-      {goal?.title.includes('Referral') && (
-        <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-          size={25}
-          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-          fillColor="#37C0FF"
-          unfillColor="#004F89"
-          iconStyle={{ borderColor: 'white' }}
-          text="This referral occured in the past"
-          textContainerStyle={{ marginLeft: 10 }}
-          style={styles.checkBox}
-          onPress={(isChecked: boolean) => {
-            console.log(isChecked);
-            setRefInPast(!refInPast);
-          }}
-        />
-      )}
-
-      <Text style={styles.fieldTitle}>Date</Text>
-      <TouchableOpacity onPress={showDatePicker}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>
-              {date.toLocaleDateString('en-us', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                //  hour: 'numeric',
-                //  minute: 'numeric',
-              })}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-      <DateTimePickerModal isVisible={showDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
-
-      <Text style={styles.fieldTitle}>Time</Text>
-      <TouchableOpacity onPress={showStartTimeMode}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>
-              {date.toLocaleTimeString('en-us', {
-                hour12: true,
-                hour: 'numeric',
-                minute: '2-digit',
-              })}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <DateTimePickerModal
-        isVisible={showStartTime}
-        date={date}
-        mode="time"
-        onConfirm={handleConfirmStartTime}
-        onCancel={hideStartTimePicker}
-      />
-
-      <Text style={styles.fieldTitle}>Notes</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
-          <TextInput
-            onPressIn={handleNotesFocus}
-            ref={notesInputRef}
-            multiline={true}
-            numberOfLines={5}
-            style={globalStyles.notesInput}
-            placeholder="Type Here"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            value={notes}
-            onChangeText={(text) => setNotes(text)}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {modalRelVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalRelVisible}
-          onRequestClose={() => {
-            setModalRelVisible(!modalRelVisible);
-          }}
-        >
-          <ChooseRelationship
-            title="Choose Relationship"
-            setModalRelVisible={setModalRelVisible}
-            setSelectedRel={setRelationship}
-            lightOrDark={lightOrDark}
-          />
-        </Modal>
-      )}
-      <ActionSheet
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('action sheet')}
-        id={Sheets.filterSheet}
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={true}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.3}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
+        {modalRelVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalRelVisible}
+            onRequestClose={() => {
+              setModalRelVisible(!modalRelVisible);
             }}
-            style={styles.scrollview}
           >
-            <View>
-              {Object.entries(filters).map(([index, value]) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    SheetManager.hide(Sheets.filterSheet, null);
-                    setRefType(convertToString(value));
-                    // fetchData();
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{index}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
-      {modalGoalVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalGoalVisible}
-          onRequestClose={() => {
-            setModalGoalVisible(!modalGoalVisible);
-          }}
+            <ChooseRelationship
+              title="Choose Relationship"
+              setModalRelVisible={setModalRelVisible}
+              setSelectedRel={setRelationship}
+              lightOrDark={lightOrDark}
+            />
+          </Modal>
+        )}
+        <ActionSheet
+          initialOffsetFromBottom={10}
+          onBeforeShow={(data) => console.log('action sheet')}
+          id={Sheets.filterSheet}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          bottomOffset={40}
+          defaultOverlayOpacity={0.3}
         >
-          <ChooseGoal
-            title="Choose Activity"
-            setModalGoalVisible={setModalGoalVisible}
-            setSelectedGoal={setGoal}
-            showSelectOne={false}
-            lightOrDark={lightOrDark}
-          />
-        </Modal>
-      )}
-      <View style={styles.bottom}></View>
-    </ScrollView>
+          <View
+            style={{
+              paddingHorizontal: 12,
+            }}
+          >
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.scrollview}
+            >
+              <View>
+                {Object.entries(filters).map(([index, value]) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      SheetManager.hide(Sheets.filterSheet, null);
+                      setRefType(convertToString(value));
+                      // fetchData();
+                    }}
+                    style={globalStyles.listItemCell}
+                  >
+                    <Text style={globalStyles.listItem}>{index}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </ActionSheet>
+        {modalGoalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalGoalVisible}
+            onRequestClose={() => {
+              setModalGoalVisible(!modalGoalVisible);
+            }}
+          >
+            <ChooseGoal
+              title="Choose Activity"
+              setModalGoalVisible={setModalGoalVisible}
+              setSelectedGoal={setGoal}
+              showSelectOne={false}
+              lightOrDark={lightOrDark}
+            />
+          </Modal>
+        )}
+        <View style={styles.bottom}></View>
+      </ScrollView>
+    </View>
   );
 }
 
