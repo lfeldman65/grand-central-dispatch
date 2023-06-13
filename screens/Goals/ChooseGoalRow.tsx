@@ -13,11 +13,14 @@ export default function ChooseGoalRow(props: GoalProps) {
   const isFocused = useIsFocused();
 
   function formatTitle(ugly: string) {
+    if (ugly == 'Calls Made') {
+      return 'Call Made';
+    }
     if (ugly == 'Referrals Given') {
-      return 'Referrals Tracked';
+      return 'Referral Tracked';
     }
     if (ugly == 'Notes Made') {
-      return 'Notes Written';
+      return 'Note Written';
     }
     return ugly;
   }

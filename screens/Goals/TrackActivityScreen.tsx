@@ -9,7 +9,6 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import { ga4Analytics } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-const closeButton = require('../../images/button_close_white.png');
 const refMenuChoice1 = 'Client gave me referral';
 const refMenuChoice2 = 'Client was referred to me';
 const refMenuChoice3 = 'I gave client a referral';
@@ -94,7 +93,7 @@ export default function TrackActivityScreen(props: any) {
   useEffect(() => {
     var initialGoal: GoalDataConciseProps = {
       id: goalID ?? 1,
-      title: goalName ?? 'Calls Made',
+      title: goalName ?? 'Call Made',
     };
     setGoal(initialGoal);
     console.log('track firstname: ' + firstName);
@@ -161,8 +160,12 @@ export default function TrackActivityScreen(props: any) {
       Alert.alert('Please choose a Relationship');
       return;
     }
-    if (subject == null || subject == '') {
+    if (!goal?.title.includes('Referral') && (subject == null || subject == '')) {
       Alert.alert('Please enter a Subject');
+      return;
+    }
+    if (goal?.title.includes('Referral') && referral == null) {
+      Alert.alert('Please choose a Referral');
       return;
     }
     setModalVisible(false);
@@ -192,14 +195,33 @@ export default function TrackActivityScreen(props: any) {
     if (!goal?.title.includes('Referral') && (subject == null || subject == '')) {
       return false;
     }
+    if (goal?.title.includes('Referral') && referral == null) {
+      return false;
+    }
     return true;
+  }
+
+  function formatTitle(ugly: string) {
+    if (goal == null) {
+      return 'Call Made';
+    }
+    if (ugly == 'Calls Made') {
+      return 'Call Made';
+    }
+    if (ugly == 'Referrals Given') {
+      return 'Referral Tracked';
+    }
+    if (ugly == 'Notes Made') {
+      return 'Note Written';
+    }
+    return ugly;
   }
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={closeButton} style={styles.closeX} />
+          <Text style={styles.cancelButton}>Cancel</Text>
         </TouchableOpacity>
 
         <Text style={styles.pageTitle}>{title}</Text>
@@ -230,7 +252,7 @@ export default function TrackActivityScreen(props: any) {
               placeholderTextColor="#AFB9C2"
               style={styles.nameLabel}
             >
-              {goal == null ? 'Calls Made' : goal.title}
+              {formatTitle(goal?.title!)}
             </TextInput>
           </View>
         </View>
@@ -444,7 +466,7 @@ export default function TrackActivityScreen(props: any) {
           }}
         >
           <ChooseGoal
-            title="Choose Goal"
+            title="Choose Activity"
             setModalGoalVisible={setModalGoalVisible}
             setSelectedGoal={setGoal}
             showSelectOne={false}
@@ -518,12 +540,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 50,
   },
-  closeX: {
-    width: 15,
-    height: 15,
-    marginLeft: '10%',
-    marginTop: 5,
-  },
   fieldTitle: {
     color: 'white',
     marginLeft: 20,
@@ -539,6 +555,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     marginBottom: 15,
+  },
+  cancelButton: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'left',
+    paddingLeft: '3%',
   },
   saveButton: {
     color: 'white',

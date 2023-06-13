@@ -240,6 +240,7 @@ export default function GoalsScreen() {
           console.error(res.error);
         } else {
           setGoalList(res.data);
+          console.log(res.data);
           if (afterTrack) {
             console.log('localGoalID: ' + localGoalID);
             notifyIfWin(localGoalID, res.data);
@@ -458,7 +459,7 @@ export default function GoalsScreen() {
             >
               <TrackActivity
                 lightOrDark={lightOrDark}
-                title="Track Activity Goal"
+                title="Track Activity"
                 onSave={saveComplete}
                 setModalVisible={setTrackModalVisible}
               />

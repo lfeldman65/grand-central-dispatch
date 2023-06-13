@@ -120,6 +120,22 @@ export default function EditToDoScreen(props: any) {
     setAttendees(newAttendees);
   }
 
+  function formatActivity(ugly: string) {
+    if (goal == null || goal.title == 'None') {
+      return 'Select One (Optional)';
+    }
+    if (ugly == 'Calls Made') {
+      return 'Call Made';
+    }
+    if (ugly == 'Referrals Given') {
+      return 'Referral Tracked';
+    }
+    if (ugly == 'Notes Made') {
+      return 'Note Written';
+    }
+    return ugly;
+  }
+
   function savePressed() {
     console.log('toDoID: ' + todoID);
     console.log('attendeeFromParent: ' + attendeeFromParent);
@@ -147,7 +163,7 @@ export default function EditToDoScreen(props: any) {
     <ScrollView style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={closeButton} style={styles.closeX} />
+          <Text style={styles.cancelButton}>Cancel</Text>
         </TouchableOpacity>
         <Text style={styles.nameLabel}>{titleFromParent}</Text>
         <TouchableOpacity onPress={savePressed}>
@@ -179,7 +195,7 @@ export default function EditToDoScreen(props: any) {
               placeholderTextColor="#AFB9C2"
               style={styles.nameLabel}
             >
-              {goal?.id == 0 ? 'Select One (Optional)' : goal?.title}
+              {formatActivity(goal?.title!)}
             </TextInput>
           </View>
         </View>
@@ -304,7 +320,7 @@ export default function EditToDoScreen(props: any) {
           }}
         >
           <ChooseGoal
-            title="Choose Goal"
+            title="Choose Activity"
             showSelectOne={true}
             setModalGoalVisible={setModalGoalVisible}
             setSelectedGoal={setGoal}
@@ -335,7 +351,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 50,
+    marginBottom: 20,
   },
   textInput: {
     fontSize: 18,
@@ -356,6 +373,12 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginRight: '10%',
+  },
+  cancelButton: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginLeft: '3%',
   },
   inputView: {
     backgroundColor: '#002341',
