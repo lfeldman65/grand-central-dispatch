@@ -13,15 +13,15 @@ const blankButton = require('../../images/blankSearch.png'); // Preserves horizo
 type TabType = 'Search Existing' | 'Add New';
 
 export default function SelectReferralScreen(props: any) {
-  const { setModalVisible, title, setReferral, lightOrDark } = props;
+  const { setModalRelVisible, title, setSelectedRel, lightOrDark } = props;
   const [tabSelected, setTabSelected] = useState<TabType>('Search Existing');
   const isFocused = useIsFocused();
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRowPress = (index: number) => {
-    setReferral(dataRolodex[index]);
-    setModalVisible(false);
+    setSelectedRel(dataRolodex[index]);
+    setModalRelVisible(false);
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function SelectReferralScreen(props: any) {
   }
 
   function cancelPressed() {
-    setModalVisible(false);
+    setModalRelVisible(false);
   }
 
   function searchPressed() {
@@ -123,7 +123,7 @@ export default function SelectReferralScreen(props: any) {
             )}
             {tabSelected == 'Add New' && (
               <View>
-                <AddNewRef setReferral={props.setReferral} setModalVisible={props.setModalVisible}></AddNewRef>
+                <AddNewRef setSelectedRel={setSelectedRel} setModalVisible={setModalRelVisible}></AddNewRef>
               </View>
             )}
           </ScrollView>

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, Dimensions } from 'react-native';
 const closeButton = require('../../images/button_close_white.png');
 import { useIsFocused } from '@react-navigation/native';
 import { addNewContact } from './api';
@@ -8,19 +8,19 @@ import { AddContactDataProps, AddContactDataResponse, RolodexDataProps } from '.
 let deviceWidth = Dimensions.get('window').width;
 
 export default function AddNewReferral(props: any) {
-  const { setModalVisible, setReferral } = props;
+  const { setModalVisible, setSelectedRel } = props;
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [contact, setContact] = useState<AddContactDataResponse>();
-  //const [referralLocal, setReferralLocal] = useState<RolodexDataProps>();
-  //  const [referralModalVisible, setReferralModalVisible] = useState(false);
+  //const [referralLocal, setSelectedRelLocal] = useState<RolodexDataProps>();
+  //  const [referralModalVisible, setSelectedRelModalVisible] = useState(false);
 
   const isFocused = useIsFocused();
 
   function savePressed() {
     //   analytics.event(new Event('Login', 'Login Button', 'Pressed', 0));
-    if (firstName == ' ' && lastName == ' ') {
-      console.error('Please enter a First Name and/or Last Name');
+    if (firstName == '' && lastName == '') {
+      Alert.alert('Please enter a First Name and/or Last Name');
       return;
     }
     addNewContact(
@@ -46,7 +46,7 @@ export default function AddNewReferral(props: any) {
             qualified: false,
           };
 
-          setReferral(dp);
+          setSelectedRel(dp);
           setModalVisible(false);
         }
         //   setIsLoading(false);

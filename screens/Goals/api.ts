@@ -1,5 +1,6 @@
 import { http } from '../../utils/http';
 import { TrackDataResponse, GoalDataResponse, GoalDataConciseResponse, RolodexDataResponse } from './interfaces';
+import { isNullOrEmpty } from '../../utils/general';
 
 export function getGoalData(): Promise<GoalDataResponse> {
   return http.get('activityGoalsWins');
@@ -21,6 +22,19 @@ export function trackAction(
   notes: string,
   referralInPast: boolean
 ): Promise<TrackDataResponse> {
+  var body = {
+    goalId: goalId,
+    sourceGUID: guid,
+    contactGUID: contactGUID,
+    userGaveReferral: userGaveReferral,
+    followUp: followUp,
+    subject: isNullOrEmpty(subject) ? 'test' : subject,
+    date: date,
+    referral: referral,
+    notes: notes,
+    referralInPast: referralInPast,
+  };
+  console.log('body: ' + JSON.stringify(body));
   return http.post(`activityGoalsTrack/${guid}`, {
     body: {
       goalId: goalId,
@@ -28,7 +42,7 @@ export function trackAction(
       contactGUID: contactGUID,
       userGaveReferral: userGaveReferral,
       followUp: followUp,
-      subject: subject,
+      subject: isNullOrEmpty(subject) ? 'test' : subject,
       date: date,
       referral: referral,
       notes: notes,

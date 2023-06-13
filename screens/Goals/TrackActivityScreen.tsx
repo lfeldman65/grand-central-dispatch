@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import ChooseRelationship from '../Goals/ChooseRelationship';
+//import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseGoal from '../Goals/ChooseGoalScreen';
 import { RolodexDataProps, GoalDataConciseProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -12,6 +12,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 const refMenuChoice1 = 'Client gave me referral';
 const refMenuChoice2 = 'Client was referred to me';
 const refMenuChoice3 = 'I gave client a referral';
+import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 
 export default function TrackActivityScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName, goalID, goalName, subjectP, lightOrDark } = props;
@@ -296,6 +297,13 @@ export default function TrackActivityScreen(props: any) {
               setModalRefVisible(!modalRefVisible);
             }}
           >
+            {/* <ChooseRelationship
+              title="Choose Relationship"
+              setModalRelVisible={setModalRelVisible}
+              setSelectedRel={setRelationship}
+              lightOrDark={lightOrDark}
+            /> */}
+
             <ChooseRelationship
               title="Choose Relationship"
               setModalRelVisible={setModalRefVisible}
