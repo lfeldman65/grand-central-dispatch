@@ -156,4 +156,11 @@ export default StyleSheet.create({
     color: 'white',
     height: '40%',
   },
+
+  cancelButton: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginLeft: '3%',
+  },
 });

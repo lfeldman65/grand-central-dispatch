@@ -4,6 +4,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { getGoalDataConcise } from './api';
 import { GoalDataConciseProps } from './interfaces';
 import GoalRow from './ChooseGoalRow';
+import globalStyles from '../../globalStyles';
 
 const blankButton = require('../../images/blankSearch.png');
 
@@ -67,7 +68,7 @@ export default function ChooseGoalScreen(props: any) {
     <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Text style={styles.cancelButton}>{'Cancel'}</Text>
+          <Text style={globalStyles.cancelButton}>{'Cancel'}</Text>
         </TouchableOpacity>
         <Text style={styles.nameLabel}>{title}</Text>
         <TouchableOpacity>
@@ -104,11 +105,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     marginLeft: 30,
-  },
-  cancelButton: {
-    color: 'white',
-    fontSize: 18,
-    textAlign: 'center',
-    marginLeft: '3%',
   },
 });

@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet, Image } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import { getRolodexData } from './api';
 import { RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import AtoZRow from './AtoZRow';
 import AddNewRef from './AddNewReferral';
 
-const backArrow = require('../../images/white_arrow_left.png');
-const searchGlass = require('../../images/whiteSearch.png');
-const searchBlank = require('../../images/blankSearch.png'); // Preserves horizontal alignment of title bar
+const magGlass = require('../../images/whiteSearch.png');
+const blankButton = require('../../images/blankSearch.png'); // Preserves horizontal alignment of title bar
 
 type TabType = 'Search Existing' | 'Add New';
 
 export default function SelectReferralScreen(props: any) {
   const { setModalVisible, title, setReferral, lightOrDark } = props;
   const [tabSelected, setTabSelected] = useState<TabType>('Search Existing');
-  const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,7 +51,7 @@ export default function SelectReferralScreen(props: any) {
 
   function fetchRolodexPressed(type: string, isMounted: boolean = true) {
     setIsLoading(true);
-    getRolodexData(type)
+    getRolodexData(type, '500')
       .then((res) => {
         if (!isMounted) {
           return;
@@ -80,11 +78,11 @@ export default function SelectReferralScreen(props: any) {
     <View style={styles2.container}>
       <View style={styles2.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={backArrow} style={styles2.backArrow} />
+          <Text style={globalStyles.cancelButton}>Cancel</Text>
         </TouchableOpacity>
         <Text style={styles2.nameLabel}>{title}</Text>
         <TouchableOpacity onPress={searchPressed}>
-          <Image source={tabSelected == 'Search Existing' ? searchGlass : searchBlank} style={styles2.searchGlass} />
+          <Image source={blankButton} style={styles2.blankButton} />
         </TouchableOpacity>
       </View>
 
@@ -143,9 +141,9 @@ const styles2 = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    paddingBottom: 10,
     justifyContent: 'space-between',
-    marginTop: 40,
+    marginTop: 50,
+    marginBottom: 10,
   },
   closeButtonView: {
     marginTop: 10,
@@ -158,10 +156,8 @@ const styles2 = StyleSheet.create({
     marginLeft: 7,
     marginTop: 2,
   },
-  searchGlass: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
+  blankButton: {
+    width: 80,
   },
   nameLabel: {
     color: 'white',

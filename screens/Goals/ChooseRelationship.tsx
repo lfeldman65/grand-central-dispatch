@@ -20,10 +20,9 @@ export default function ChooseRelationship(props: any) {
     console.log(dataRolodex[index].firstName);
 
     if (!allowMultipleSelects) {
-        setSelectedRel(dataRolodex[index]);
-        setModalRelVisible(false);
+      setSelectedRel(dataRolodex[index]);
+      setModalRelVisible(false);
     }
-    
   };
 
   function savePressed() {
@@ -102,8 +101,6 @@ export default function ChooseRelationship(props: any) {
         <TouchableOpacity onPress={savePressed}>
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
-
-    
       </View>
 
       <View style={styles.searchView}>
@@ -126,7 +123,13 @@ export default function ChooseRelationship(props: any) {
       <ScrollView>
         <View>
           {dataRolodex.map((item, index) => (
-            <RelationshipRow allowMultipleSelects={allowMultipleSelects} key={index} data={item} lightOrDark={lightOrDark} onPress={() => handleRowPress(index)} />
+            <RelationshipRow
+              allowMultipleSelects={allowMultipleSelects}
+              key={index}
+              data={item}
+              lightOrDark={lightOrDark}
+              onPress={() => handleRowPress(index)}
+            />
           ))}
         </View>
       </ScrollView>

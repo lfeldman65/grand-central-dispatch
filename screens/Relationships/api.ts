@@ -18,9 +18,9 @@ import {
   VideoNotificatonDataResponse,
 } from './interfaces';
 
-export function getRolodexData(type: string): Promise<RolodexDataResponse> {
-  console.log('api type:' + type);
-  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=50000`);
+export function getRolodexData(type: string, batch: string): Promise<RolodexDataResponse> {
+  console.log('api batch:' + type);
+  return http.get(`contacts?sortType=${type}&lastItem=0&batchSize=${batch}`);
 } // back tick (`) only necessary for string interpolation
 
 export function getToDos(guid: string): Promise<ToDoAndApptResponse> {

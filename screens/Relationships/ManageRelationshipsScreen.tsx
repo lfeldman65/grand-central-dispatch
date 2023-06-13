@@ -616,7 +616,7 @@ export default function ManageRelationshipsScreen() {
 
   async function fetchRolodex(param: TabType, isMounted: boolean) {
     var type = param == 'a-z' ? 'alpha' : param == 'ranking' ? 'ranking' : '';
-    getRolodexData(type)
+    getRolodexData(type, '50000')
       .then((res) => {
         if (!isMounted) {
           return;

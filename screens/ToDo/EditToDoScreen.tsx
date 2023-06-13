@@ -163,7 +163,7 @@ export default function EditToDoScreen(props: any) {
     <ScrollView style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Text style={styles.cancelButton}>Cancel</Text>
+          <Text style={globalStyles.cancelButton}>Cancel</Text>
         </TouchableOpacity>
         <Text style={styles.nameLabel}>{titleFromParent}</Text>
         <TouchableOpacity onPress={savePressed}>
@@ -373,12 +373,6 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginRight: '10%',
-  },
-  cancelButton: {
-    color: 'white',
-    fontSize: 18,
-    textAlign: 'center',
-    marginLeft: '3%',
   },
   inputView: {
     backgroundColor: '#002341',

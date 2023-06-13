@@ -219,7 +219,7 @@ export default function AddRelationshipScreen(props: any) {
             }}
           >
             <SelRefScreen
-              title={'Select Referral'}
+              title={'Choose Relationship'}
               setReferral={setReferral}
               setModalVisible={setReferralModalVisible}
               lightOrDark={lightOrDark}
