@@ -57,7 +57,6 @@ export default function AddNewReferral(props: any) {
   return (
     <View style={styles.container}>
       <View style={styles.nameSection}>
-        <Text></Text>
         <Text style={styles.nameTitle}>First Name</Text>
 
         <View style={styles.mainContent}>
@@ -89,11 +88,13 @@ export default function AddNewReferral(props: any) {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.bottomContainer} onPress={() => savePressed()}>
-        <View style={styles.saveButton}>
-          <Text style={styles.saveText}>{'Save'}</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.bottomContainer}>
+        <TouchableOpacity onPress={() => savePressed()}>
+          <View style={styles.saveButton}>
+            <Text style={styles.saveText}>{'Save'}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -108,6 +109,7 @@ const styles = StyleSheet.create({
   },
   nameSection: {
     height: '80%', // android (80% is the best i can do and it's still off) ios: 195%
+    marginTop: '5%',
   },
   nameTitle: {
     color: 'white',
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
     width: 300,
   },
   bottomContainer: {
-    height: 64,
+    marginTop: '58%',
   },
   saveButton: {
     marginTop: 5,
