@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-//import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseGoal from '../Goals/ChooseGoalScreen';
 import { RolodexDataProps, GoalDataConciseProps } from './interfaces';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -297,13 +296,6 @@ export default function TrackActivityScreen(props: any) {
               setModalRefVisible(!modalRefVisible);
             }}
           >
-            {/* <ChooseRelationship
-              title="Choose Relationship"
-              setModalRelVisible={setModalRelVisible}
-              setSelectedRel={setRelationship}
-              lightOrDark={lightOrDark}
-            /> */}
-
             <ChooseRelationship
               title="Choose Relationship"
               setModalRelVisible={setModalRefVisible}

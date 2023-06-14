@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Alert, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Modal } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { addNewContact } from './api';
-import SelRefScreen from './SelectRelationshipScreen';
+import ChooseRelationship from './SelectRelationshipScreen';
 import { RolodexDataProps } from './interfaces';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 import { getGoalData } from '../Goals/api';
@@ -18,11 +18,11 @@ export default function AddRelationshipScreen(props: any) {
   const [lastName, setLastName] = useState('');
   const [company, setCompany] = useState('');
   const [referral, setReferral] = useState<RolodexDataProps>();
-  const [referralModalVisible, setReferralModalVisible] = useState(false);
+  const [modalRelVisible, setModalRelVisible] = useState(false);
 
   function referralPressed() {
     console.log('referral pressed');
-    setReferralModalVisible(true);
+    setModalRelVisible(true);
   }
 
   function savePressed() {
@@ -209,19 +209,19 @@ export default function AddRelationshipScreen(props: any) {
           </View>
         )}
 
-        {referralModalVisible && (
+        {modalRelVisible && (
           <Modal
             animationType="slide"
             transparent={true}
-            visible={referralModalVisible}
+            visible={modalRelVisible}
             onRequestClose={() => {
-              setReferralModalVisible(!referralModalVisible);
+              setModalRelVisible(!modalRelVisible);
             }}
           >
-            <SelRefScreen
+            <ChooseRelationship
               title={'Choose Relationship'}
-              setReferral={setReferral}
-              setModalVisible={setReferralModalVisible}
+              setModalRelVisible={setModalRelVisible}
+              setSelectedRel={setReferral}
               lightOrDark={lightOrDark}
             />
           </Modal>
