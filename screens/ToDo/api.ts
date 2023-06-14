@@ -120,5 +120,5 @@ export function getRolodexData(type: string): Promise<RolodexDataResponse> {
 } // back tick (`) only necessary for string interpolation
 
 export function getRolodexSearch(searchParam: string): Promise<RolodexDataResponse> {
-  return http.get(`contacts?batchSize=50000&lastItem=0&sortType=alpha&search=${searchParam}`);
+  return http.get(`contacts?batchSize=100&lastItem=0&sortType=alpha&search=${searchParam}`);
 } // back tick (`) only necessary for string interpolation

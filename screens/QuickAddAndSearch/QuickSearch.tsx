@@ -13,9 +13,9 @@ import { useNavigation } from '@react-navigation/native';
 import { getRolodexSearch } from '../ToDo/api';
 import { RolodexDataProps } from '../Relationships/interfaces';
 import AtoZRow from '../Relationships/AtoZRow';
+import globalStyles from '../../globalStyles';
 
 const closeButton = require('../../images/button_close_white.png');
-const backArrow = require('../../images/white_arrow_left.png');
 const searchGlass = require('../../images/whiteSearch.png');
 const searchBlank = require('../../images/blankSearch.png'); // Preserves horizontal alignment of title bar
 
@@ -39,9 +39,7 @@ export default function QuickSearch(props: any) {
 
   useEffect(() => {
     console.log('search: ' + search);
-    if (search != '') {
-      fetchRolodexSearch(search);
-    }
+    fetchRolodexSearch(search);
   }, [search]);
 
   function clearSearchPressed() {
@@ -64,7 +62,7 @@ export default function QuickSearch(props: any) {
           console.error(res.error);
         } else {
           setDataRolodex(res.data);
-          //  console.log(res.data);
+          console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -75,11 +73,11 @@ export default function QuickSearch(props: any) {
     <View style={styles2.container}>
       <View style={styles2.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={backArrow} style={styles2.backArrow} />
+          <Text style={globalStyles.cancelButton}>Cancel</Text>
         </TouchableOpacity>
         <Text style={styles2.nameLabel}>{title}</Text>
         <TouchableOpacity onPress={searchPressed}>
-          <Image source={searchBlank} style={styles2.searchGlass} />
+          <Image source={searchBlank} style={styles2.blankButton} />
         </TouchableOpacity>
       </View>
       <View style={styles2.searchView}>
@@ -109,7 +107,7 @@ export default function QuickSearch(props: any) {
             <View>
               {dataRolodex.map((item, index) => (
                 <AtoZRow
-                  relFromAbove={'Rel'}
+                  relFromAbove={item.contactTypeID}
                   key={index}
                   data={item}
                   lightOrDark={lightOrDark}
@@ -132,13 +130,8 @@ const styles2 = StyleSheet.create({
   },
   topRow: {
     flexDirection: 'row',
-    paddingBottom: 10,
     justifyContent: 'space-between',
-    marginTop: 40,
-  },
-  closeButtonView: {
-    marginTop: 10,
-    marginLeft: 10,
+    marginTop: 50,
     marginBottom: 10,
   },
   searchGlass: {
@@ -173,16 +166,13 @@ const styles2 = StyleSheet.create({
     marginLeft: -20,
     marginTop: 8,
   },
-  backArrow: {
-    width: 18,
-    height: 18,
-    marginLeft: 10,
-    marginTop: 1,
-  },
   closeX: {
     width: 15,
     height: 15,
     marginRight: -10,
     marginTop: 12,
+  },
+  blankButton: {
+    width: 100,
   },
 });

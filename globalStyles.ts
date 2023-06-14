@@ -41,12 +41,6 @@ export default StyleSheet.create({
     borderWidth: 2,
   },
 
-  // Helps placement of title and chevron
-
-  blankButton: {
-    marginLeft: '10%',
-  },
-
   // filters for To-Do's, Rolodex, etc
 
   filterRow: {
@@ -157,10 +151,46 @@ export default StyleSheet.create({
     height: '40%',
   },
 
+  // Cancel
+
   cancelButton: {
     color: 'white',
     fontSize: 18,
     textAlign: 'center',
-    marginLeft: '3%',
+    marginLeft: '4%',
+  },
+
+  // Search Field
+  searchView: {
+    backgroundColor: '#1a6295',
+    height: 40,
+    justifyContent: 'space-evenly',
+    paddingLeft: 10,
+    borderColor: 'white',
+    borderWidth: 0.5,
+    flexDirection: 'row',
+    marginTop: 1,
+    marginBottom: 1,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    height: 40,
+  },
+  searchTextInput: {
+    fontSize: 16,
+    color: 'white',
+    width: 300,
+  },
+  magGlass: {
+    width: 20,
+    height: 20,
+    marginTop: 9,
+  },
+  closeX: {
+    width: 15,
+    height: 15,
+    marginTop: 12,
   },
 });

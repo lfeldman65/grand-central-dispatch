@@ -684,10 +684,10 @@ export default function ManageRelationshipsScreen() {
             </Text>
           </View>
 
-          <View style={styles.searchView}>
-            <Image source={searchGlass} style={styles.magGlass} />
+          <View style={globalStyles.searchView}>
+            <Image source={searchGlass} style={globalStyles.magGlass} />
             <TextInput
-              style={styles.searchTextInput}
+              style={globalStyles.searchTextInput}
               placeholder="Search By Name or Address"
               placeholderTextColor="white"
               textAlign="left"
@@ -695,7 +695,7 @@ export default function ManageRelationshipsScreen() {
               onChangeText={(text) => setSearch(text)}
             />
             <TouchableOpacity onPress={clearSearchPressed}>
-              <Image source={closeButton} style={styles.closeX} />
+              <Image source={closeButton} style={globalStyles.closeX} />
             </TouchableOpacity>
           </View>
 
@@ -767,9 +767,11 @@ export default function ManageRelationshipsScreen() {
                 )
               )}
             </MapView>
-            <TouchableOpacity onPress={centerMap} style={styles.bottomView}>
-              <Image source={centerMapImg} style={styles.centerButton} />
-            </TouchableOpacity>
+            {mapHeight != 'short' && (
+              <TouchableOpacity onPress={centerMap} style={styles.bottomView}>
+                <Image source={centerMapImg} style={styles.centerButton} />
+              </TouchableOpacity>
+            )}
           </View>
 
           <View style={styles.upAndDownRow}>
@@ -862,38 +864,6 @@ export default function ManageRelationshipsScreen() {
 }
 
 export const styles = StyleSheet.create({
-  searchView: {
-    backgroundColor: '#1a6295',
-    height: 40,
-    justifyContent: 'space-evenly',
-    paddingLeft: 10,
-    borderColor: 'white',
-    borderWidth: 0.5,
-    flexDirection: 'row',
-    marginTop: 1,
-    marginBottom: 1,
-  },
-  searchRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: '100%',
-    height: 40,
-  },
-  searchTextInput: {
-    fontSize: 16,
-    color: 'white',
-    width: 300,
-  },
-  magGlass: {
-    width: 20,
-    height: 20,
-    marginTop: 9,
-  },
-  closeX: {
-    width: 15,
-    height: 15,
-    marginTop: 12,
-  },
   upAndDownRow: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',

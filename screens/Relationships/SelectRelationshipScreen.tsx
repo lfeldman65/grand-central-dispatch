@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, ActivityIndicator, StyleSheet, Image } from 'react-native';
+import {
+  TextInput,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { getRolodexData } from './api';
 import { RolodexDataProps } from './interfaces';
@@ -7,17 +16,19 @@ import globalStyles from '../../globalStyles';
 import AtoZRow from './AtoZRow';
 import AddNewRef from './AddNewReferral';
 
-const magGlass = require('../../images/whiteSearch.png');
+const searchGlass = require('../../images/whiteSearch.png');
 const blankButton = require('../../images/blankSearch.png'); // Preserves horizontal alignment of title bar
+const closeButton = require('../../images/button_close_white.png');
 
-type TabType = 'Search Existing' | 'Add New';
+type TabType = 'Relationships' | 'Add New';
 
 export default function SelectReferralScreen(props: any) {
   const { setModalRelVisible, title, setSelectedRel, lightOrDark } = props;
-  const [tabSelected, setTabSelected] = useState<TabType>('Search Existing');
+  const [tabSelected, setTabSelected] = useState<TabType>('Relationships');
   const isFocused = useIsFocused();
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState('');
 
   const handleRowPress = (index: number) => {
     setSelectedRel(dataRolodex[index]);
@@ -25,14 +36,14 @@ export default function SelectReferralScreen(props: any) {
   };
 
   useEffect(() => {
-    if (tabSelected == 'Search Existing') {
+    if (tabSelected == 'Relationships') {
       fetchRolodexPressed('alpha');
     }
   }, [isFocused]);
 
   function existingPressed() {
     //  analytics.event(new Event('PAC', 'Calls Tab'));
-    setTabSelected('Search Existing');
+    setTabSelected('Relationships');
     fetchRolodexPressed('alpha');
   }
 
@@ -74,6 +85,68 @@ export default function SelectReferralScreen(props: any) {
     };
   }, [isFocused]);
 
+  function clearSearchPressed() {
+    setSearch('');
+  }
+
+  function matchesSearch(person: RolodexDataProps, search?: string) {
+    if (search == null || search == '') {
+      return true;
+    }
+    var searchLower = search.toLowerCase();
+    if (searchLower == '') {
+      return true;
+    }
+    if (person.firstName != null && person.firstName.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (person.lastName != null && person.lastName.toLowerCase().includes(searchLower)) {
+      return true;
+    }
+    if (
+      person.address != null &&
+      person.address.street != null &&
+      person.address.street.toLowerCase().includes(searchLower)
+    ) {
+      return true;
+    }
+    if (
+      person.address != null &&
+      person.address.street2 != null &&
+      person.address.street2.toLowerCase().includes(searchLower)
+    ) {
+      return true;
+    }
+    if (
+      person.address != null &&
+      person.address.city != null &&
+      person.address.city.toLowerCase().includes(searchLower)
+    ) {
+      return true;
+    }
+    if (
+      person.address != null &&
+      person.address.state != null &&
+      person.address.state.toLowerCase().includes(searchLower)
+    ) {
+      return true;
+    }
+    if (
+      person.address != null &&
+      person.address.zip != null &&
+      person.address.zip.toLowerCase().includes(searchLower)
+    ) {
+      return true;
+    }
+    if (person.firstName != null && person.lastName != null) {
+      var firstLast = person.firstName.toLowerCase() + ' ' + person.lastName.toLowerCase();
+      if (firstLast.toLowerCase().includes(searchLower)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   return (
     <View style={styles2.container}>
       <View style={styles2.topRow}>
@@ -88,10 +161,10 @@ export default function SelectReferralScreen(props: any) {
 
       <View style={globalStyles.tabButtonRow}>
         <Text
-          style={tabSelected == 'Search Existing' ? globalStyles.selected : globalStyles.unselected}
+          style={tabSelected == 'Relationships' ? globalStyles.selected : globalStyles.unselected}
           onPress={existingPressed}
         >
-          Search Existing
+          Relationships
         </Text>
         <Text
           style={tabSelected == 'Add New' ? globalStyles.selected : globalStyles.unselected}
@@ -101,6 +174,23 @@ export default function SelectReferralScreen(props: any) {
         </Text>
       </View>
 
+      {tabSelected == 'Relationships' && (
+        <View style={globalStyles.searchView}>
+          <Image source={searchGlass} style={globalStyles.magGlass} />
+          <TextInput
+            style={globalStyles.searchTextInput}
+            placeholder="Search By Name or Address"
+            placeholderTextColor="white"
+            textAlign="left"
+            defaultValue={search}
+            onChangeText={(text) => setSearch(text)}
+          />
+          <TouchableOpacity onPress={clearSearchPressed}>
+            <Image source={closeButton} style={globalStyles.closeX} />
+          </TouchableOpacity>
+        </View>
+      )}
+
       {isLoading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#AAA" />
@@ -108,17 +198,20 @@ export default function SelectReferralScreen(props: any) {
       ) : (
         <React.Fragment>
           <ScrollView>
-            {tabSelected == 'Search Existing' && (
+            {tabSelected == 'Relationships' && (
               <View>
-                {dataRolodex.map((item, index) => (
-                  <AtoZRow
-                    relFromAbove={'Rel'}
-                    key={index}
-                    data={item}
-                    lightOrDark={lightOrDark}
-                    onPress={() => handleRowPress(index)}
-                  />
-                ))}
+                {dataRolodex.map(
+                  (item, index) =>
+                    matchesSearch(item, search) && (
+                      <AtoZRow
+                        relFromAbove={'Rel'}
+                        key={index}
+                        data={item}
+                        lightOrDark={lightOrDark}
+                        onPress={() => handleRowPress(index)}
+                      />
+                    )
+                )}
               </View>
             )}
             {tabSelected == 'Add New' && (

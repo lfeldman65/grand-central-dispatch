@@ -32,9 +32,7 @@ export default function PopCompleteScreen(props: any) {
         <TouchableOpacity onPress={CancelPressed}>
           <Image source={closeButton} style={styles.closeX} />
         </TouchableOpacity>
-
         <Text style={styles.nameLabel}>{contactName}</Text>
-
         <TouchableOpacity onPress={SavePressed}>
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>

@@ -91,10 +91,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#004F89',
   },
-  blankButton: {
-    // Helps placement of arrow and title (there's probably a better way to do this)
-    width: 100,
-  },
   topRow: {
     flexDirection: 'row',
     padding: 10,
@@ -104,6 +100,8 @@ const styles = StyleSheet.create({
   nameLabel: {
     color: 'white',
     fontSize: 18,
-    marginLeft: 30,
+  },
+  blankButton: {
+    width: 80,
   },
 });
