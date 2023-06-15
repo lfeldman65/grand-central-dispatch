@@ -19,7 +19,7 @@ const noTrophy = require('../Goals/images/noTrophy.png');
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
-var localGoalID = '0';
+var goalIDForReferralType = '0'; // given or received
 
 export default function GoalsScreen() {
   const navigation = useNavigation<any>();
@@ -240,10 +240,10 @@ export default function GoalsScreen() {
           console.error(res.error);
         } else {
           setGoalList(res.data);
-          console.log(res.data);
+          //  console.log(res.data);
           if (afterTrack) {
-            console.log('localGoalID: ' + localGoalID);
-            notifyIfWin(localGoalID, res.data);
+            console.log('goalid: ' + goalIDForReferralType);
+            notifyIfWin(goalIDForReferralType, res.data);
           }
         }
         setIsLoading(false);
@@ -282,9 +282,15 @@ export default function GoalsScreen() {
     date: string,
     askedRef: boolean,
     note: string,
-    referralInPast: boolean
+    referralInPast: boolean,
+    flag: string
   ) {
     setIsLoading(true);
+    goalIDForReferralType = flag;
+    console.log('goalIDForReferralType: ' + goalIDForReferralType);
+    console.log('flag: ' + flag);
+    console.log('userGave: ' + userGaveReferral);
+
     trackActivityAPI(
       guid,
       goalId,
@@ -315,10 +321,6 @@ export default function GoalsScreen() {
     onSuccess: any,
     onFailure: any
   ) {
-    localGoalID = goalId;
-    // console.log('CONTACTID: ' + contactId);
-    // console.log('GOALID: ' + goalId);
-
     trackAction(
       contactId,
       goalId,
@@ -371,7 +373,7 @@ export default function GoalsScreen() {
         </View>
       ),
     });
-  }, [navigation, localGoalID, goalList]);
+  }, [navigation, goalList]);
 
   useEffect(() => {
     let isMounted = true;

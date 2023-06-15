@@ -323,7 +323,7 @@ export default function PACPopRow(props: PACRowProps) {
           <ActionSheet
             initialOffsetFromBottom={10}
             onBeforeShow={(data) => console.log('mobile call type sheet')}
-            id={Sheets.mobileSheet}
+            id={relSheets.mobileSheet}
             ref={actionSheetRef}
             statusBarTranslucent
             bounceOnOpen={true}
@@ -350,7 +350,7 @@ export default function PACPopRow(props: PACRowProps) {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        SheetManager.hide(Sheets.mobileSheet, null).then(() => {
+                        SheetManager.hide(relSheets.mobileSheet, null).then(() => {
                           console.log('CALLTYPE1: ' + props.data.mobilePhone);
                           if (value == 'Call') {
                             ga4Analytics('PAC_Mobile_Call', {

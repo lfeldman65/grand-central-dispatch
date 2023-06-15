@@ -132,11 +132,16 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     date: string,
     askedRef: boolean,
     note: string,
-    refInPast: boolean
+    refInPast: boolean,
+    flag: string
   ) {
-    localGoalID = goalID;
-
     setIsLoading(true);
+    localGoalID = flag;
+
+    console.log('goalIDForReferralType: ' + localGoalID);
+    console.log('flag: ' + flag);
+    console.log('userGave: ' + gaveRef);
+
     trackActivityAPI(
       guid,
       goalID,

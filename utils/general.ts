@@ -109,13 +109,13 @@ export async function schedulePACNotifications(day: number, person: string) {
     },
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
-  console.log('pac notification ' + identifier);
+  //  console.log('pac notification ' + identifier);
   await storage.setItem('pac-notification-' + day.toString(), identifier);
   return identifier;
 }
 
 export async function scheduleToDoNotifications(day: number, count: string) {
-  console.log('shedule ToDo Notifs');
+  //  console.log('shedule ToDo Notifs');
   var message = '';
   if (count == '0') {
     message = "You're all caught up for today! Tap here to see other To-Do's";

@@ -63,7 +63,6 @@ export default function TrackActivityScreen(props: any) {
     console.log('rel: ' + relationship?.firstName);
     console.log('ref: ' + referral?.firstName);
     var newRel = relationship?.firstName ?? 'Client';
-    var newRef = referral?.firstName ?? '';
 
     if (refType == '1') {
       return newRel + ' gave me a referral ';
@@ -151,6 +150,16 @@ export default function TrackActivityScreen(props: any) {
     setShowStartTime(false);
   }
 
+  function goalIDForReferralType() {
+    if (goal?.id == 5) {
+      if (refType != '3') {
+        return '6'; // received
+      }
+      return '5'; // given
+    }
+    return goal?.id!;
+  }
+
   function savePressed() {
     ga4Analytics('Goals_Track_Save', {
       contentType: 'none',
@@ -169,7 +178,6 @@ export default function TrackActivityScreen(props: any) {
       return;
     }
     setModalVisible(false);
-    console.log('GOALID: ' + goal?.id);
     onSave(
       relationship?.id,
       referral?.id,
@@ -180,7 +188,8 @@ export default function TrackActivityScreen(props: any) {
       date.toISOString(),
       true, // asked for referral deprecated, but set to true just in case
       notes,
-      refInPast
+      refInPast,
+      goalIDForReferralType()
     );
   }
 
