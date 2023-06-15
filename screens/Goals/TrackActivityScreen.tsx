@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import ChooseGoal from '../Goals/ChooseGoalScreen';
@@ -244,7 +244,13 @@ export default function TrackActivityScreen(props: any) {
         <TouchableOpacity onPress={handleRelPressed}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
-              <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+              <TextInput
+                onPressIn={handleRelPressed}
+                editable={false}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                style={styles.nameLabel}
+              >
                 {relationship == null ? '' : relationship.firstName + ' ' + relationship.lastName}
               </TextInput>
             </View>
@@ -273,7 +279,13 @@ export default function TrackActivityScreen(props: any) {
           <TouchableOpacity onPress={referralTypePressed}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
-                <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+                <TextInput
+                  onPressIn={referralTypePressed}
+                  editable={false}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  style={styles.nameLabel}
+                >
                   {convertToText(refType)}
                 </TextInput>
               </View>
@@ -288,7 +300,13 @@ export default function TrackActivityScreen(props: any) {
           <TouchableOpacity onPress={addReferralPressed}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
-                <TextInput editable={false} placeholder="+ Add" placeholderTextColor="#AFB9C2" style={styles.nameLabel}>
+                <TextInput
+                  onPressIn={addReferralPressed}
+                  editable={false}
+                  placeholder="+ Add"
+                  placeholderTextColor="#AFB9C2"
+                  style={styles.nameLabel}
+                >
                   {referral == null ? '' : referral.firstName + ' ' + referral.lastName}
                 </TextInput>
               </View>
