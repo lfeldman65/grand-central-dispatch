@@ -60,18 +60,29 @@ export default function TrackActivityScreen(props: any) {
   }
 
   function convertToText(refType: string) {
-    console.log('rel: ' + relationship?.firstName);
-    console.log('ref: ' + referral?.firstName);
-    var newRel = relationship?.firstName ?? 'Client';
-
+    var relName = 'Client';
+    if (relationship != null && relationship?.firstName != '') {
+      relName = relationship?.firstName!;
+    } else if (relationship != null && relationship?.lastName != '') {
+      relName = relationship?.lastName;
+    }
+    var refName = 'Referrer';
+    if (referral != null && referral?.firstName != '') {
+      refName = referral?.firstName!;
+    } else if (referral != null && referral?.lastName != '') {
+      refName = referral?.lastName;
+    }
     if (refType == '1') {
-      return newRel + ' gave me a referral ';
+      return relName + ' gave me a referral ';
     }
     if (refType == '2') {
-      return newRel + ' was referred to me';
+      if (refName == 'Referrer') {
+        return relName + ' was referred to me';
+      }
+      return relName + ' was referred to me by ' + refName;
     }
     if (refType == '3') {
-      return 'I gave ' + relationship?.firstName + ' a referral';
+      return 'I gave ' + relName + ' a referral named ' + refName;
     }
   }
 
