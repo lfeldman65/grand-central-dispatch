@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { getRolodexData } from './api';
+import { getRolodexSearch } from '../Goals/api';
 import { RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import AtoZRow from './AtoZRow';
@@ -40,6 +41,15 @@ export default function SelectReferralScreen(props: any) {
       fetchRolodexPressed('alpha');
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    console.log('search: ' + search);
+    if (search != '') {
+      fetchRolodexSearch(search);
+    } else {
+      fetchRolodexPressed('alpha', true);
+    }
+  }, [search]);
 
   function existingPressed() {
     //  analytics.event(new Event('PAC', 'Calls Tab'));
@@ -87,6 +97,21 @@ export default function SelectReferralScreen(props: any) {
 
   function clearSearchPressed() {
     setSearch('');
+  }
+
+  function fetchRolodexSearch(type: string) {
+    setIsLoading(true);
+    getRolodexSearch(type)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setDataRolodex(res.data);
+          //  console.log(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
   }
 
   function matchesSearch(person: RolodexDataProps, search?: string) {
@@ -200,18 +225,15 @@ export default function SelectReferralScreen(props: any) {
           <ScrollView>
             {tabSelected == 'Relationships' && (
               <View>
-                {dataRolodex.map(
-                  (item, index) =>
-                    matchesSearch(item, search) && (
-                      <AtoZRow
-                        relFromAbove={'Rel'}
-                        key={index}
-                        data={item}
-                        lightOrDark={lightOrDark}
-                        onPress={() => handleRowPress(index)}
-                      />
-                    )
-                )}
+                {dataRolodex.map((item, index) => (
+                  <AtoZRow
+                    relFromAbove={'Rel'}
+                    key={index}
+                    data={item}
+                    lightOrDark={lightOrDark}
+                    onPress={() => handleRowPress(index)}
+                  />
+                ))}
               </View>
             )}
             {tabSelected == 'Add New' && (

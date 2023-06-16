@@ -6,7 +6,7 @@ import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, styles } from './transactionHelpers';
-import ChooseRelationship from '../Goals/ChooseRelationship';
+import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 import ChooseLeadSource from './ChooseLeadSource';
 
 export default function AddOrEditRealtorTx1(props: any) {
@@ -399,7 +399,6 @@ export default function AddOrEditRealtorTx1(props: any) {
             setModalRelVisible={setModalBuyerVisible}
             setSelectedRel={setBuyer}
             lightOrDark={lightOrDark}
-            allowMultipleSelects={false}
           />
         </Modal>
       )}
@@ -457,6 +456,7 @@ export default function AddOrEditRealtorTx1(props: any) {
             title="Choose Relationship"
             setModalRelVisible={setModalSellerVisible}
             setSelectedRel={setSeller}
+            lightOrDark={lightOrDark}
           />
         </Modal>
       )}

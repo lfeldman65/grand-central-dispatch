@@ -6,8 +6,8 @@ import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, purchaseLoanTypeMenu, styles } from './transactionHelpers';
-import ChooseRelationship from '../Goals/ChooseRelationship';
 import ChooseLeadSource from './ChooseBorrowerLeadSource';
+import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 
 export default function AddOrEditLenderTx1(props: any) {
   const { route } = props;
