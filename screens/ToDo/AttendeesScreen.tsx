@@ -71,7 +71,7 @@ export default function AttendeeScreen(props: any) {
 
   function fetchRolodexPressed(type: string) {
     setIsLoading(true);
-    getRolodexData(type)
+    getRolodexData(type, '200')
       .then((res) => {
         if (res.status == 'error') {
           console.error(res.error);

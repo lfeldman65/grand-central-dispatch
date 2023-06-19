@@ -7,7 +7,7 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, styles } from './transactionHelpers';
 import ChooseOtherTxType from './ChooseOtherTxType';
-import ChooseRelationship from '../Goals/ChooseRelationship';
+import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -101,9 +101,9 @@ export default function AddOrEditOtherTx1(props: any) {
     }
   }
 
-  function handleSelectedWhoInvolved(selected: RolodexDataProps[]) {
+  function handleSelectedWhoInvolved(selected: RolodexDataProps) {
     var toBeRemoved = new Array();
-    const combined = [...whoInvolved, ...selected];
+    const combined = [...whoInvolved, ...[selected]];
     combined.forEach((item, index) => {
       // remove duplicates
       console.log('in loop');
@@ -346,7 +346,7 @@ export default function AddOrEditOtherTx1(props: any) {
             setModalRelVisible={setModalRelVisible}
             setSelectedRel={handleSelectedWhoInvolved}
             lightOrDark={lightOrDark}
-            allowMultipleSelects={true}
+            // allowMultipleSelects={true}
           />
 
           {/* <ChooseWho
