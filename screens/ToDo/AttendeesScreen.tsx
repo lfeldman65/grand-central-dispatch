@@ -13,6 +13,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { getRolodexData, getRolodexSearch } from './api';
 import { RolodexDataProps } from './interfaces';
 import AttendeeRow from './AttendeeRow';
+import globalStyles from '../../globalStyles';
 
 const closeButton = require('../../images/button_close_white.png');
 const backArrow = require('../../images/white_arrow_left.png');
@@ -88,10 +89,10 @@ export default function AttendeeScreen(props: any) {
     <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={backArrow} style={styles.backArrow} />
+          <Text style={globalStyles.cancelButton}>Back</Text>
         </TouchableOpacity>
 
-        <Text style={styles.nameLabel}>{'       ' + title}</Text>
+        <Text style={styles.nameLabel}>{title}</Text>
 
         <TouchableOpacity onPress={savePressed}>
           <Text style={styles.saveButton}>Save</Text>

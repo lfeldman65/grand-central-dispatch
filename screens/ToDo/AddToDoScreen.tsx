@@ -401,7 +401,7 @@ export default function AddToDoScreen(props: any) {
     <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={closeButton} style={styles.closeX} />
+          <Text style={globalStyles.cancelButton}>Back</Text>
         </TouchableOpacity>
 
         <Text style={styles.nameLabel}>{title}</Text>
@@ -1085,7 +1085,7 @@ export default function AddToDoScreen(props: any) {
             }}
           >
             <Attendees
-              title="Attendees"
+              title="Relationships"
               setModalAttendeesVisible={setModalAttendeesVisible}
               setSelectedAttendees={handleSelectedAttendees}
               lightOrDark={lightOrDark}
@@ -1138,6 +1138,7 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'space-between',
     marginTop: 40,
+    marginBottom: 20,
   },
   untilRow: {
     flexDirection: 'row',

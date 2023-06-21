@@ -254,7 +254,7 @@ export default function EditToDoScreen(props: any) {
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>Attendees</Text>
+      <Text style={styles.nameTitle}>Relationships</Text>
 
       {attendeeFromParent?.map((item: any, index: number) => (
         <View style={styles.mainContent}>
@@ -303,7 +303,7 @@ export default function EditToDoScreen(props: any) {
           }}
         >
           <Attendees
-            title="Attendees"
+            title="Relationships"
             setModalAttendeesVisible={setModalAttendeesVisible}
             setSelectedAttendees={handleSelectedAttendees}
             lightOrDark={lightOrDark}

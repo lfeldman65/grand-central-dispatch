@@ -213,7 +213,7 @@ export default function ToDoDetails(props: any) {
           <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{data?.notes!}</Text>
         )}
 
-        {!isNullOrEmpty(data?.attendees) && <Text style={styles.sectionHeader}>Attendees</Text>}
+        {!isNullOrEmpty(data?.attendees) && <Text style={styles.sectionHeader}>Relationships</Text>}
 
         {!isNullOrEmpty(data?.attendees) &&
           data?.attendees.map((item, index) => (
@@ -314,14 +314,14 @@ const styles = StyleSheet.create({
     color: 'white',
     marginLeft: 15,
     marginTop: 10,
-    marginBottom: 5,
+    marginBottom: 10,
     fontWeight: '500',
   },
   headerLight: {
     fontSize: 18,
     color: 'black',
     marginLeft: 15,
-    marginTop: 5,
+    marginTop: 10,
     marginBottom: 10,
     fontWeight: '500',
   },

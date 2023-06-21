@@ -188,7 +188,7 @@ export default function EditAppointmentScreen(props: any) {
     <ScrollView style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={CancelPressed}>
-          <Image source={closeButton} style={styles.closeX} />
+          <Text style={globalStyles.cancelButton}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.nameLabel}>{title}</Text>
         <TouchableOpacity onPress={savePressed}>
@@ -315,7 +315,7 @@ export default function EditAppointmentScreen(props: any) {
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>Attendees</Text>
+      <Text style={styles.nameTitle}>Relationships</Text>
       {attendeeFromParent?.map((item: any, index: number) => (
         <View style={styles.mainContent}>
           <View style={styles.attendeeView}>
@@ -363,7 +363,7 @@ export default function EditAppointmentScreen(props: any) {
           }}
         >
           <Attendees
-            title="Attendees"
+            title="Relationships"
             setModalAttendeesVisible={setModalAttendeesVisible}
             setSelectedAttendees={handleSelectedAttendees}
           />
@@ -382,7 +382,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     justifyContent: 'space-between',
-    marginTop: '12%',
+    marginTop: 50,
+    marginBottom: 20,
   },
   mainContent: {
     alignItems: 'center',

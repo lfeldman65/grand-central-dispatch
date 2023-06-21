@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Modal, Button, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Modal, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getAppointmentDetails } from './api';
@@ -173,7 +173,7 @@ export default function AppointmentDetails(props: any) {
           <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{apptData?.notes!}</Text>
         )}
 
-        {!isNullOrEmpty(apptData?.attendees) && <Text style={styles.sectionHeader}>Attendees</Text>}
+        {!isNullOrEmpty(apptData?.attendees) && <Text style={styles.sectionHeader}>Relationships</Text>}
 
         {!isNullOrEmpty(apptData?.attendees) &&
           apptData?.attendees.map((item, index) => (

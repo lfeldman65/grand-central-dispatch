@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Modal, Alert, ScrollView } from 'react-native';
-const closeButton = require('../../images/button_close_white.png');
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { addNewAppointment } from './api';
@@ -30,6 +29,7 @@ import {
   apptEndTimeLabel,
 } from '../Calendar/calendarHelpers';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+const closeButton = require('../../images/button_close_white.png');
 
 export default function AddAppointmentScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName } = props;
@@ -464,7 +464,7 @@ export default function AddAppointmentScreen(props: any) {
     <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Image source={closeButton} style={styles.closeX} />
+          <Text style={globalStyles.cancelButton}>Back</Text>
         </TouchableOpacity>
 
         <Text style={styles.nameLabel}>{title}</Text>
@@ -1288,6 +1288,7 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'space-between',
     marginTop: 40,
+    marginBottom: 20,
   },
   untilRow: {
     flexDirection: 'row',

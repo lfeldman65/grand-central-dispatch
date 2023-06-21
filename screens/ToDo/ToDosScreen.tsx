@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, ActivityIndicator, Modal } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect, useRef } from 'react';
 import { getToDoData } from './api';
 import { ToDoDataProps } from './interfaces';
