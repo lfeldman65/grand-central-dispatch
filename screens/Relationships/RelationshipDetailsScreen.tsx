@@ -1194,7 +1194,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         <TouchableOpacity onPress={() => handleSectionTap(2)}>
           {showSection2() && (
             <Text style={styles.sectionText}>
-              {showToDos ? 'Hide To-Dos and Appointments' : 'Show To-Dos and Appointments'}
+              {showToDos ? 'Hide To Dos and Appointments' : 'Show To Dos and Appointments'}
             </Text>
           )}
         </TouchableOpacity>
@@ -1387,7 +1387,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </TouchableOpacity>
           {
             <Text style={lightOrDark == 'dark' ? styles.bottomButtonTextDark : styles.bottomButtonTextLight}>
-              To-Do
+              To Do
             </Text>
           }
         </View>
@@ -1827,7 +1827,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           }}
         >
           <AddToDo
-            title="New To-Do"
+            title="New To Do"
             guid={dataDetails?.id}
             firstName={dataDetails?.firstName}
             lastName={dataDetails?.lastName}
