@@ -69,7 +69,7 @@ export default function AppointmentDetails(props: any) {
   function deletePressed() {
     console.log('delete pressed');
     Alert.alert(
-      'Are you sure you want to delete this To-Do?',
+      'Are you sure you want to delete this To Do?',
       '',
       [
         {

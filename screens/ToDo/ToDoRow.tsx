@@ -100,7 +100,7 @@ export default function ToDoRow(props: ToDoRowProps) {
     // setModalVisible(true);
     console.log('delete pressed');
     Alert.alert(
-      'Are you sure you want to delete this To-Do?',
+      'Are you sure you want to delete this To Do?',
       '',
       [
         {
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     height: 75,
     backgroundColor: 'white',
-    width: '70%',
+    width: '65%',
     marginLeft: 5,
     textAlign: 'left',
   },

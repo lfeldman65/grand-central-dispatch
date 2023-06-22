@@ -113,7 +113,7 @@ export const ToDoStackNavigator = () => {
         name="toDoScreen"
         component={ToDoScreen}
         options={{
-          title: 'To-Do',
+          title: 'To Dos',
           headerTintColor: 'white',
           headerStyle: {
             backgroundColor: '#1A6295',

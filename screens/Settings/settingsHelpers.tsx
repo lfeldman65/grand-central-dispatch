@@ -40,7 +40,7 @@ export const lightOrDarkRows = ['automatic', 'light', 'dark'];
 
 export const notificationRowsWithVid = [
   'Calls',
-  'To-Do',
+  'To Dos',
   'Win The Day and Win the Week',
   'Pop-Bys',
   'Import Relationships',
@@ -49,7 +49,7 @@ export const notificationRowsWithVid = [
 
 export const notificationRowsNoVid = [
   'Calls',
-  'To-Do',
+  'To Dos',
   'Win The Day and Win the Week',
   'Pop-Bys',
   'Import Relationships',

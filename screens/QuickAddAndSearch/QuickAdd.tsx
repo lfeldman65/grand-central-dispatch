@@ -70,7 +70,7 @@ export default function QuickAdd(props: any) {
 
       <TouchableOpacity style={styles.buttonContainer} onPress={() => buttonPressed(1)}>
         <View style={styles.buttonView}>
-          <Text style={styles.buttonText}>{'Add To-Do'}</Text>
+          <Text style={styles.buttonText}>{'Add To Do'}</Text>
         </View>
       </TouchableOpacity>
 

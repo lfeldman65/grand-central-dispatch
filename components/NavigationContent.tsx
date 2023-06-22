@@ -222,7 +222,7 @@ function CustomDrawerContent(props: any) {
         <TouchableOpacity onPress={() => pressed('To-Do')}>
           <View style={styles.menuItem}>
             <Image source={todoIcon} style={styles.menuIcon} />
-            <Text style={styles.menuItemText}>To Do</Text>
+            <Text style={styles.menuItemText}>To Dos</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => pressed('CalendarScreen')}>

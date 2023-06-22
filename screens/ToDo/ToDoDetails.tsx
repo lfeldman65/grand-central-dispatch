@@ -55,7 +55,7 @@ export default function ToDoDetails(props: any) {
       itemId: 'id1207',
     });
     Alert.alert(
-      'Are you sure you want to delete this To-Do?',
+      'Are you sure you want to delete this To Do?',
       '',
       [
         {

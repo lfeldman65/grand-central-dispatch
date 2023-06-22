@@ -521,7 +521,7 @@ export default function DashboardScreen() {
             >
               <Image source={todoImage} style={styles.logo} />
             </TouchableOpacity>
-            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>To-Do's</Text>}
+            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>To Dos</Text>}
           </View>
 
           <View style={styles.pair}>

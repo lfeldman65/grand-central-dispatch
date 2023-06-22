@@ -199,7 +199,7 @@ export default function ToDosScreen() {
 
             <TouchableOpacity style={styles.bottomContainer} onPress={() => addNewToDoPressed()}>
               <View style={styles.ideasButton}>
-                <Text style={styles.ideasText}>{'Add New To-Do'}</Text>
+                <Text style={styles.ideasText}>{'Add New To Do'}</Text>
               </View>
             </TouchableOpacity>
 
@@ -213,7 +213,7 @@ export default function ToDosScreen() {
                 }}
               >
                 <AddToDo
-                  title={'New To-Do'}
+                  title={'New To Do'}
                   lightOrDark={lightOrDark}
                   onSave={saveComplete}
                   setModalVisible={setModalVisible}
