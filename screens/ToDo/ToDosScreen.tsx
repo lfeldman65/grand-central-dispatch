@@ -199,7 +199,7 @@ export default function ToDosScreen() {
 
             <TouchableOpacity style={styles.bottomContainer} onPress={() => addNewToDoPressed()}>
               <View style={styles.ideasButton}>
-                <Text style={styles.ideasText}>{'Add New To Do'}</Text>
+                <Text style={styles.ideasText}>{'Add To Do'}</Text>
               </View>
             </TouchableOpacity>
 

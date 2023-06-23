@@ -47,7 +47,7 @@ export default function ChooseGoalScreen(props: any) {
             console.log('show: ' + showSelectOne);
             var initialGoal: GoalDataConciseProps = {
               id: 0,
-              title: 'Select One (Optional)',
+              title: 'Select (Optional)',
             };
             res.data.unshift(initialGoal);
             if (res.data.length >= 6) {

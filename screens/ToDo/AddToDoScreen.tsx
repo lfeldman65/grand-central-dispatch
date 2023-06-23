@@ -129,7 +129,7 @@ export default function AddToDoScreen(props: any) {
     getCurrentDay(isMounted);
     var initialGoal: GoalDataConciseProps = {
       id: 0,
-      title: 'Select One (Optional)',
+      title: 'Select (Optional)',
     };
     setGoal(initialGoal);
     return () => {
@@ -436,7 +436,7 @@ export default function AddToDoScreen(props: any) {
                 placeholderTextColor="#AFB9C2"
                 style={styles.nameLabel}
               >
-                {goal?.id == 0 ? 'Select One (Optional)' : goal?.title}
+                {goal?.id == 0 ? 'Select (Optional)' : goal?.title}
               </TextInput>
             </View>
           </View>
@@ -1104,7 +1104,7 @@ export default function AddToDoScreen(props: any) {
             }}
           >
             <ChooseGoal
-              title="Choose Goal"
+              title="Choose Activity"
               showSelectOne={true}
               setModalGoalVisible={setModalGoalVisible}
               setSelectedGoal={setGoal}

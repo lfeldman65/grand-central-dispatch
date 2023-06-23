@@ -122,7 +122,7 @@ export default function EditToDoScreen(props: any) {
 
   function formatActivity(ugly: string) {
     if (goal == null || goal.title == 'None') {
-      return 'Select One (Optional)';
+      return 'Select (Optional)';
     }
     if (ugly == 'Calls Made') {
       return 'Call Made';
