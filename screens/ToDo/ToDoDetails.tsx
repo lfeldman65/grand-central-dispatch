@@ -182,18 +182,17 @@ export default function ToDoDetails(props: any) {
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       <View style={lightOrDark == 'dark' ? styles.topContainerDark : styles.topContainerLight}>
         <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>{data?.title}</Text>
-        {goalIDToTitle(data?.activityTypeId!) != 'None' && (
-          <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>
-            {goalIDToTitle(data?.activityTypeId!)}
-          </Text>
-        )}
         <View style={styles.dividingLine}></View>
-
         <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
           {'Due: ' + prettyDate(data?.dueDate!)}
         </Text>
-
         {data?.priority == 'True' && <Text style={styles.priorityText}>{'High Priority'}</Text>}
+        {goalIDToTitle(data?.activityTypeId!) != 'None' && <Text style={styles.sectionHeader}>Activity</Text>}
+        {goalIDToTitle(data?.activityTypeId!) != 'None' && (
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+            {goalIDToTitle(data?.activityTypeId!)}
+          </Text>
+        )}
 
         {!isNullOrEmpty(data?.location) && (
           <View style={styles.directionsRow}>
@@ -225,9 +224,11 @@ export default function ToDoDetails(props: any) {
 
       <View style={lightOrDark == 'dark' ? styles.bottomContainerDark : styles.bottomContainerLight}>
         <Text style={styles.campaignText}>{data?.isCampaign ? 'This To-Do is part of a marketing campaign' : ''}</Text>
-        <TouchableOpacity onPress={markComplete}>
-          <Text style={styles.completeText}>{data?.isCampaign ? 'Close' : 'Complete'}</Text>
-        </TouchableOpacity>
+        {data?.completedDate == null && (
+          <TouchableOpacity onPress={markComplete}>
+            <Text style={styles.completeText}>{data?.isCampaign ? 'Close' : 'Complete'}</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity onPress={deletePressed}>
           <Text style={styles.deleteText}>Delete</Text>
         </TouchableOpacity>
@@ -264,11 +265,11 @@ export default function ToDoDetails(props: any) {
 
 const styles = StyleSheet.create({
   topContainerDark: {
-    height: '82%',
+    height: '75%',
     backgroundColor: 'black',
   },
   topContainerLight: {
-    height: '82%',
+    height: '75%',
     backgroundColor: 'white',
   },
   campaignText: {
@@ -285,7 +286,7 @@ const styles = StyleSheet.create({
   dividingLine: {
     backgroundColor: 'lightgray',
     height: 1,
-    marginTop: 10,
+    marginTop: 5,
     marginBottom: 10,
   },
   referralAndSpouseText: {
@@ -312,16 +313,16 @@ const styles = StyleSheet.create({
   headerDark: {
     fontSize: 18,
     color: 'white',
-    marginLeft: 15,
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 10,
+    alignSelf: 'center',
     fontWeight: '500',
   },
   headerLight: {
     fontSize: 18,
     color: 'black',
     marginLeft: 15,
-    marginTop: 10,
+    marginTop: 15,
     marginBottom: 10,
     fontWeight: '500',
   },
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
     color: 'green',
     textAlign: 'center',
     fontSize: 20,
-    marginBottom: 20,
+    marginBottom: 40,
   },
   directionsText: {
     color: '#1398F5',

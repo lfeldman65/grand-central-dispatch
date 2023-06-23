@@ -24,18 +24,22 @@ export default function ToDoRow(props: ToDoRowProps) {
   var _swipeableRow: Swipeable;
 
   const renderLeftActions = () => {
-    return (
-      <View style={styles.leftSwipeItem}>
-        <TouchableOpacity
-          style={styles.swipeButtonTouch}
-          onPress={() => {
-            deletePressed();
-          }}
-        >
-          <Text style={styles.leftButton}>Delete</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    if (false) {
+      return null;
+    } else {
+      return (
+        <View style={styles.leftSwipeItem}>
+          <TouchableOpacity
+            style={styles.swipeButtonTouch}
+            onPress={() => {
+              deletePressed();
+            }}
+          >
+            <Text style={styles.leftButton}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
   };
 
   function handleSwipeBegin(rowKey: number) {
@@ -54,18 +58,22 @@ export default function ToDoRow(props: ToDoRowProps) {
   }
 
   const renderRightActions = () => {
-    return (
-      <View style={styles.rightSwipeItem}>
-        <TouchableOpacity
-          style={styles.swipeButtonTouch}
-          onPress={() => {
-            completePressed();
-          }}
-        >
-          <Text style={styles.leftButton}>Complete</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    if (props.data.completedDate != null) {
+      return null;
+    } else {
+      return (
+        <View style={styles.rightSwipeItem}>
+          <TouchableOpacity
+            style={styles.swipeButtonTouch}
+            onPress={() => {
+              completePressed();
+            }}
+          >
+            <Text style={styles.leftButton}>Complete</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
   };
 
   async function completePressed() {

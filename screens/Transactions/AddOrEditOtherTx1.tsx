@@ -312,7 +312,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Who's Involved*</Text>
+      <Text style={styles.nameTitle}>Relationships*</Text>
 
       {whoInvolved.map((item, index) => (
         <View style={styles.mainContent}>

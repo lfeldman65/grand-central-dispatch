@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Modal, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
@@ -139,6 +139,10 @@ export default function EditToDoScreen(props: any) {
   function savePressed() {
     console.log('toDoID: ' + todoID);
     console.log('attendeeFromParent: ' + attendeeFromParent);
+    if (newTitle == '') {
+      Alert.alert('Please enter a Title');
+      return;
+    }
     editToDo(todoID, newTitle, goal?.id!, newDate.toISOString(), priority, newLocation, newNotes, attendeeFromParent)
       .then((res) => {
         if (res.status == 'error') {
@@ -159,15 +163,22 @@ export default function EditToDoScreen(props: any) {
     }
   }
 
+  function isDataValid() {
+    if (newTitle == '') {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
           <Text style={globalStyles.cancelButton}>Cancel</Text>
         </TouchableOpacity>
-        <Text style={styles.nameLabel}>{titleFromParent}</Text>
+        <Text style={styles.nameLabel}>Edit To Do</Text>
         <TouchableOpacity onPress={savePressed}>
-          <Text style={styles.saveButton}>Save</Text>
+          <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
       </View>
       <Text style={styles.nameTitle}>Title</Text>
@@ -373,6 +384,14 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginRight: '10%',
+    opacity: 1.0,
+  },
+  saveButtonDim: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginRight: '10%',
+    opacity: 0.4,
   },
   inputView: {
     backgroundColor: '#002341',
