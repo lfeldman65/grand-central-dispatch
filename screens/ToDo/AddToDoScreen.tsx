@@ -171,6 +171,7 @@ export default function AddToDoScreen(props: any) {
   function handleAttendeesPressed() {
     console.log('attendees pressed');
     setModalAttendeesVisible(!modalAttendeesVisible);
+    //console.log(JSON.stringify(attendees));
   }
 
   function handleGoalPressed() {
@@ -1088,6 +1089,7 @@ export default function AddToDoScreen(props: any) {
               title="Relationships"
               setModalAttendeesVisible={setModalAttendeesVisible}
               setSelectedAttendees={handleSelectedAttendees}
+              attendees={attendees}
               lightOrDark={lightOrDark}
             />
           </Modal>

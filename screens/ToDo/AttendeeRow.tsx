@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'rea
 import { RolodexDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { useState } from 'react';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -10,6 +11,7 @@ const rankC = require('../Relationships/images/rankC.png');
 const rankD = require('../Relationships/images/rankD.png');
 
 interface AtoZRowProps {
+  // branch
   data: RolodexDataProps;
   onPress(): void;
   relFromAbove: string;
@@ -35,8 +37,15 @@ export default function AttendeeRow(props: AtoZRowProps) {
   // const { lightOrDark } = props;
   const isFocused = useIsFocused();
 
+  const [isSelected, setIsSelected] = useState(props.data.selected);
+
+  function rowPressed() {
+    props.data.selected = !props.data.selected;
+    setIsSelected(!isSelected);
+  }
+
   return (
-    <TouchableOpacity onPress={props.onPress}>
+    <TouchableOpacity onPress={rowPressed}>
       <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
         <Image source={chooseImage(props.data.ranking)} style={styles.rankingCircle} />
         <Text style={props.lightOrDark == 'dark' ? styles.personNameDark : styles.personNameLight}>
@@ -56,10 +65,13 @@ export default function AttendeeRow(props: AtoZRowProps) {
             unfillColor="white"
             iconStyle={{ borderColor: 'gray' }}
             text=""
+            isChecked={props.data.selected}
+            disableBuiltInState={true}
             textContainerStyle={{ marginLeft: 10 }}
             onPress={(isChecked: boolean) => {
               console.log(isChecked);
-              props.data.selected = isChecked;
+              rowPressed();
+              //props.data.selected = isChecked;
             }}
           />
         </View>

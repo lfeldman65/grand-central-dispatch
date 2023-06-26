@@ -20,15 +20,11 @@ const backArrow = require('../../images/white_arrow_left.png');
 const searchGlass = require('../../images/whiteSearch.png');
 
 export default function AttendeeScreen(props: any) {
-  const { title, setModalAttendeesVisible, setSelectedAttendees, lightOrDark } = props;
+  const { title, setModalAttendeesVisible, setSelectedAttendees, lightOrDark, attendees } = props;
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
   const [search, setSearch] = useState('');
-
-  const handleRowPress = (index: number) => {
-    console.log('row pressed');
-  };
 
   function clearSearchPressed() {
     setSearch('');
@@ -52,8 +48,22 @@ export default function AttendeeScreen(props: any) {
   }, [search]);
 
   useEffect(() => {
+    //console.log("hello")
+    //console.log(JSON.stringify(attendees))
     fetchRolodexPressed('alpha');
   }, [isFocused]);
+
+  /* maybe someday we may need this
+  function checkIfDataIsPartOfAttendees(data: RolodexDataProps[] ) {
+    data.forEach((item, index) => {
+      attendees.forEach((item2, index2) => {
+        
+        if (item.id == item2.id) {
+          item.selected = true;
+        }
+      });
+  });
+  }*/
 
   function fetchRolodexSearch(type: string) {
     setIsLoading(true);
@@ -62,7 +72,9 @@ export default function AttendeeScreen(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
+          //checkIfDataIsPartOfAttendees(res.data)
           setDataRolodex(res.data);
+          //console.log(JSON.stringify(attendees));
           //  console.log(res.data);
         }
         setIsLoading(false);
@@ -77,7 +89,9 @@ export default function AttendeeScreen(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
+          //checkIfDataIsPartOfAttendees(res.data)
           setDataRolodex(res.data);
+
           //  console.log(res.data);
         }
         setIsLoading(false);
@@ -124,13 +138,7 @@ export default function AttendeeScreen(props: any) {
         <ScrollView>
           <View>
             {dataRolodex.map((item, index) => (
-              <AttendeeRow
-                relFromAbove={search}
-                lightOrDark={lightOrDark}
-                key={index}
-                data={item}
-                onPress={() => handleRowPress(index)}
-              />
+              <AttendeeRow relFromAbove={search} lightOrDark={lightOrDark} key={index} data={item} />
             ))}
           </View>
         </ScrollView>
