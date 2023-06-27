@@ -15,7 +15,7 @@ export default function AppointmentRow(props: ApptRowProps) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log('appt start: ' + props.data.startTime);
+    // console.log('appt start: ' + props.data.startTime);
   }, [isFocused]);
 
   return (

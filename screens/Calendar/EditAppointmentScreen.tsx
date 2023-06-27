@@ -52,6 +52,8 @@ export default function EditAppointmentScreen(props: any) {
 
   function savePressed() {
     console.log('apptID: ' + apptID);
+    console.log('start: ' + startDate.toISOString());
+    console.log('start: ' + endDate.toISOString());
     editAppointment(
       apptID,
       newTitle,
@@ -185,7 +187,7 @@ export default function EditAppointmentScreen(props: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={CancelPressed}>
           <Text style={globalStyles.cancelButton}>Back</Text>
@@ -195,182 +197,184 @@ export default function EditAppointmentScreen(props: any) {
           <Text style={styles.saveButton}>Save</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.nameTitle}>Title</Text>
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setNewTitle(text)}
-            defaultValue={titleFromParent}
-          />
-        </View>
-      </View>
-
-      <Text style={styles.nameTitle}>{apptStartDateLabel}</Text>
-      <TouchableOpacity onPress={showStartDateMode}>
+      <ScrollView>
+        <Text style={styles.nameTitle}>Title</Text>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput}>
-              {startDate.toLocaleDateString('en-us', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setNewTitle(text)}
+              defaultValue={titleFromParent}
+            />
           </View>
         </View>
-      </TouchableOpacity>
 
-      <DateTimePickerModal
-        isVisible={showStartDate}
-        date={startDate}
-        mode="date"
-        onConfirm={handleConfirmStartDate}
-        onCancel={hideStartDatePicker}
-      />
-
-      <Text style={styles.nameTitle}>{apptStartTimeLabel}</Text>
-      <TouchableOpacity onPress={showStartTimeMode}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>
-              {startDate.toLocaleTimeString('en-us', {
-                hour12: true,
-                hour: 'numeric',
-                minute: '2-digit',
-              })}
-            </Text>
+        <Text style={styles.nameTitle}>{apptStartDateLabel}</Text>
+        <TouchableOpacity onPress={showStartDateMode}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {startDate.toLocaleDateString('en-us', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-
-      <DateTimePickerModal
-        isVisible={showStartTime}
-        date={startDate}
-        mode="time"
-        onConfirm={handleConfirmStartTime}
-        onCancel={hideStartTimePicker}
-      />
-
-      <Text style={styles.nameTitle}>{apptEndDateLabel}</Text>
-      <TouchableOpacity onPress={showEndDateMode}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>
-              {endDate.toLocaleDateString('en-us', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-              })}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <DateTimePickerModal
-        isVisible={showEndDate}
-        date={endDate}
-        mode="date"
-        onConfirm={handleConfirmEndDate}
-        onCancel={hideEndDatePicker}
-      />
-
-      <Text style={styles.nameTitle}>{apptEndTimeLabel}</Text>
-      <TouchableOpacity onPress={showEndTimeMode}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>
-              {endDate.toLocaleTimeString('en-us', {
-                hour12: true,
-                hour: 'numeric',
-                minute: '2-digit',
-              })}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      <DateTimePickerModal
-        isVisible={showEndTime}
-        date={endDate}
-        mode="time"
-        onConfirm={handleConfirmEndTime}
-        onCancel={hideEndTimePicker}
-      />
-
-      <Text style={styles.nameTitle}>Location</Text>
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setNewLocation(text)}
-            defaultValue={locationFromParent}
-          />
-        </View>
-      </View>
-
-      <Text style={styles.nameTitle}>Relationships</Text>
-      {attendeeFromParent?.map((item: any, index: number) => (
-        <View style={styles.mainContent}>
-          <View style={styles.attendeeView}>
-            <Text style={styles.attendeeInput}>{item.name}</Text>
-            <TouchableOpacity key={index} onPress={() => deleteAttendee(index)}>
-              <Image source={closeButton} style={styles.deleteAttendeeX} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      ))}
-
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <Text style={styles.addAttendee} onPress={handleAttendeesPressed}>
-            + Add
-          </Text>
-        </View>
-      </View>
-
-      <Text style={styles.nameTitle}>Notes</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
-          <TextInput
-            onPressIn={handleNotesFocus}
-            ref={notesInputRef}
-            multiline={true}
-            numberOfLines={5}
-            style={globalStyles.notesInput}
-            placeholder="Type Here"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            value={newNotes}
-            onChangeText={(text) => setNewNotes(text)}
-          />
         </TouchableOpacity>
-      </View>
 
-      {modalAttendeesVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalAttendeesVisible}
-          onRequestClose={() => {
-            setModalAttendeesVisible(!modalAttendeesVisible);
-          }}
-        >
-          <Attendees
-            title="Relationships"
-            setModalAttendeesVisible={setModalAttendeesVisible}
-            setSelectedAttendees={handleSelectedAttendees}
-          />
-        </Modal>
-      )}
-      <View style={styles.footer}></View>
-    </ScrollView>
+        <DateTimePickerModal
+          isVisible={showStartDate}
+          date={startDate}
+          mode="date"
+          onConfirm={handleConfirmStartDate}
+          onCancel={hideStartDatePicker}
+        />
+
+        <Text style={styles.nameTitle}>{apptStartTimeLabel}</Text>
+        <TouchableOpacity onPress={showStartTimeMode}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {startDate.toLocaleTimeString('en-us', {
+                  hour12: true,
+                  hour: 'numeric',
+                  minute: '2-digit',
+                })}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <DateTimePickerModal
+          isVisible={showStartTime}
+          date={startDate}
+          mode="time"
+          onConfirm={handleConfirmStartTime}
+          onCancel={hideStartTimePicker}
+        />
+
+        <Text style={styles.nameTitle}>{apptEndDateLabel}</Text>
+        <TouchableOpacity onPress={showEndDateMode}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {endDate.toLocaleDateString('en-us', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <DateTimePickerModal
+          isVisible={showEndDate}
+          date={endDate}
+          mode="date"
+          onConfirm={handleConfirmEndDate}
+          onCancel={hideEndDatePicker}
+        />
+
+        <Text style={styles.nameTitle}>{apptEndTimeLabel}</Text>
+        <TouchableOpacity onPress={showEndTimeMode}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {endDate.toLocaleTimeString('en-us', {
+                  hour12: true,
+                  hour: 'numeric',
+                  minute: '2-digit',
+                })}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <DateTimePickerModal
+          isVisible={showEndTime}
+          date={endDate}
+          mode="time"
+          onConfirm={handleConfirmEndTime}
+          onCancel={hideEndTimePicker}
+        />
+
+        <Text style={styles.nameTitle}>Location</Text>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setNewLocation(text)}
+              defaultValue={locationFromParent}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>Relationships</Text>
+        {attendeeFromParent?.map((item: any, index: number) => (
+          <View style={styles.mainContent}>
+            <View style={styles.attendeeView}>
+              <Text style={styles.attendeeInput}>{item.name}</Text>
+              <TouchableOpacity key={index} onPress={() => deleteAttendee(index)}>
+                <Image source={closeButton} style={styles.deleteAttendeeX} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <Text style={styles.addAttendee} onPress={handleAttendeesPressed}>
+              + Add
+            </Text>
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>Notes</Text>
+        <View style={styles.mainContent}>
+          <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
+            <TextInput
+              onPressIn={handleNotesFocus}
+              ref={notesInputRef}
+              multiline={true}
+              numberOfLines={5}
+              style={globalStyles.notesInput}
+              placeholder="Type Here"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              value={newNotes}
+              onChangeText={(text) => setNewNotes(text)}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {modalAttendeesVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalAttendeesVisible}
+            onRequestClose={() => {
+              setModalAttendeesVisible(!modalAttendeesVisible);
+            }}
+          >
+            <Attendees
+              title="Relationships"
+              setModalAttendeesVisible={setModalAttendeesVisible}
+              setSelectedAttendees={handleSelectedAttendees}
+            />
+          </Modal>
+        )}
+        <View style={styles.footer}></View>
+      </ScrollView>
+    </View>
   );
 }
 export const styles = StyleSheet.create({

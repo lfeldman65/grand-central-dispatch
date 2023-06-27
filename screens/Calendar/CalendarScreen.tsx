@@ -69,6 +69,7 @@ export default function CalendarScreen() {
     console.log('MONTH2112: ' + month);
     console.log('YEAR: ' + year);
     fetchAppointments('00', month, year, isMounted); // day = '00' returns every day in month and year
+    console.log(lightOrDark);
     return () => {
       isMounted = false;
     };
@@ -177,6 +178,7 @@ export default function CalendarScreen() {
               selectedDayTextColor="white"
               textStyle={lightOrDark == 'dark' ? styles.calendarTextDark : styles.calendarTextLight}
               onDateChange={onDateChange}
+              showDayStragglers={true}
             />
           )}
         </View>
@@ -299,7 +301,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   calendarViewRegular: {
-    height: '50%',
+    height: '45%',
     width: '100%',
   },
   calendarViewGone: {
