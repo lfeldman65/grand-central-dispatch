@@ -62,7 +62,7 @@ export default function ManageRelationshipsScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const [popByData, setPopByData] = useState<PopByRadiusDataProps[]>([]);
-  const [infoText, setInfoText] = useState('Closest to farthest');
+  const [infoText, setInfoText] = useState('Closest to Farthest');
   const [showAPlus, setShowAPlus] = useState(true);
   const [showA, setShowA] = useState(true);
   const [showB, setShowB] = useState(true);
@@ -775,7 +775,7 @@ export default function ManageRelationshipsScreen() {
           </View>
 
           <View style={styles.upAndDownRow}>
-            <TouchableOpacity style={styles.upAndDownView} onPress={upPressed}>
+            <TouchableOpacity style={styles.chevronView} onPress={upPressed}>
               <View>
                 <Image source={chevronUp} style={getUpArrowStyle()} />
               </View>
@@ -783,7 +783,7 @@ export default function ManageRelationshipsScreen() {
             <View style={lightOrDark == 'dark' ? styles.infoViewDark : styles.infoViewLight}>
               <Text style={lightOrDark == 'dark' ? styles.infoTextDark : styles.infoTextLight}>{infoText}</Text>
             </View>
-            <TouchableOpacity style={styles.upAndDownView} onPress={downPressed}>
+            <TouchableOpacity style={styles.chevronView} onPress={downPressed}>
               <View>
                 <Image source={chevronDown} style={getDownArrowStyle()} />
               </View>
@@ -869,8 +869,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     width: '100%',
     height: 40,
+    borderColor: 'gray',
+    borderWidth: 0.25,
   },
-  upAndDownView: {
+  chevronView: {
     width: '10%',
     justifyContent: 'center',
     alignItems: 'center',

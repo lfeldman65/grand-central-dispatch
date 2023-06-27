@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ActivityIndicator, Image } from 'react-native';
 import { Moment } from 'moment';
-import CalendarPicker, { DateChangedCallback } from 'react-native-calendar-picker';
+import CalendarPicker from 'react-native-calendar-picker';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -16,18 +16,21 @@ import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 
+const chevronUp = require('../../images/chevron_blue_up.png');
+const chevronDown = require('../../images/chevron_blue_down.png');
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
+type MapLength = 'gone' | 'regular';
 
 export default function CalendarScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const [isFilterRel, setIsFilterRel] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [data, setData] = useState<AppointmentDataProps[]>([]);
   const [startDate, setStartDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
+  const [calendarHeight, setCalendarHeight] = useState<MapLength>('regular');
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
   const handleRowPress = (index: number) => {
@@ -130,12 +133,43 @@ export default function CalendarScreen() {
     fetchAppointments(day, month, year, true);
   }
 
+  function upPressed() {
+    if (calendarHeight == 'regular') {
+      setCalendarHeight('gone');
+    }
+  }
+
+  function downPressed() {
+    if (calendarHeight == 'gone') {
+      setCalendarHeight('regular');
+    }
+  }
+
+  function getUpArrowStyle() {
+    if (calendarHeight == 'gone') return styles.upAndDownButtonsDim;
+    return styles.upAndDownButtons;
+  }
+
+  function getDownArrowStyle() {
+    if (calendarHeight == 'regular') return styles.upAndDownButtonsDim;
+    return styles.upAndDownButtons;
+  }
+
+  function getcalendarHeight() {
+    if (calendarHeight == 'gone') {
+      return styles.calendarViewGone;
+    }
+    if (calendarHeight == 'regular') {
+      return styles.calendarViewRegular;
+    }
+  }
+
   return (
     <>
       <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
       <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-        <View style={styles.calendarView}>
-          {lightOrDark != '' && (
+        <View style={getcalendarHeight()}>
+          {lightOrDark != '' && calendarHeight == 'regular' && (
             <CalendarPicker
               todayBackgroundColor="#02ABF7"
               todayTextStyle={styles.todayText}
@@ -153,6 +187,21 @@ export default function CalendarScreen() {
           </View>
         ) : (
           <React.Fragment>
+            <View style={styles.upAndDownRow}>
+              <TouchableOpacity style={styles.chevronView} onPress={upPressed}>
+                <View>
+                  <Image source={chevronUp} style={getUpArrowStyle()} />
+                </View>
+              </TouchableOpacity>
+              <View style={lightOrDark == 'dark' ? styles.infoViewDark : styles.infoViewLight}>
+                <Text style={lightOrDark == 'dark' ? styles.infoTextDark : styles.infoTextLight}>Appointments</Text>
+              </View>
+              <TouchableOpacity style={styles.chevronView} onPress={downPressed}>
+                <View>
+                  <Image source={chevronDown} style={getDownArrowStyle()} />
+                </View>
+              </TouchableOpacity>
+            </View>
             <ScrollView>
               <View>
                 {data.map((item, index) => (
@@ -202,8 +251,59 @@ export default function CalendarScreen() {
   );
 }
 const styles = StyleSheet.create({
-  calendarView: {
+  upAndDownRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 0.25,
+  },
+  chevronView: {
+    width: '10%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  upAndDownButtons: {
+    width: 25,
+    height: 15,
+    opacity: 1.0,
+  },
+  upAndDownButtonsDim: {
+    width: 25,
+    height: 15,
+    opacity: 0.4,
+  },
+  infoViewDark: {
+    paddingLeft: 10,
+    flexDirection: 'row',
+    width: '75%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  infoViewLight: {
+    paddingLeft: 10,
+    flexDirection: 'row',
+    width: '75%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  infoTextDark: {
+    color: 'white',
+    paddingTop: 4,
+    fontSize: 16,
+  },
+  infoTextLight: {
+    color: 'black',
+    paddingTop: 4,
+    fontSize: 16,
+  },
+  calendarViewRegular: {
     height: '50%',
+    width: '100%',
+  },
+  calendarViewGone: {
+    height: '0%',
     width: '100%',
   },
   todayText: {
