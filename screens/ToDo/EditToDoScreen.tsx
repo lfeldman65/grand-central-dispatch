@@ -171,176 +171,178 @@ export default function EditToDoScreen(props: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.topRow}>
         <TouchableOpacity onPress={cancelPressed}>
-          <Text style={globalStyles.cancelButton}>Cancel</Text>
+          <Text style={globalStyles.cancelButton}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.nameLabel}>Edit To Do</Text>
         <TouchableOpacity onPress={savePressed}>
           <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.nameTitle}>Title</Text>
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setNewTitle(text)}
-            defaultValue={titleFromParent}
-          />
-        </View>
-      </View>
-
-      <Text style={styles.nameTitle}>Activity</Text>
-      <TouchableOpacity onPress={handleGoalPressed}>
+      <ScrollView>
+        <Text style={styles.nameTitle}>Title</Text>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <TextInput
-              onPressIn={handleGoalPressed}
-              editable={false}
+              style={styles.textInput}
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
-              style={styles.nameLabel}
-            >
-              {formatActivity(goal?.title!)}
-            </TextInput>
+              textAlign="left"
+              onChangeText={(text) => setNewTitle(text)}
+              defaultValue={titleFromParent}
+            />
           </View>
         </View>
-      </TouchableOpacity>
 
-      <Text style={styles.nameTitle}>Date</Text>
-      <TouchableOpacity onPress={showDateTopMode}>
+        <Text style={styles.nameTitle}>Activity</Text>
+        <TouchableOpacity onPress={handleGoalPressed}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <TextInput
+                onPressIn={handleGoalPressed}
+                editable={false}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                style={styles.nameLabel}
+              >
+                {formatActivity(goal?.title!)}
+              </TextInput>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <Text style={styles.nameTitle}>Date</Text>
+        <TouchableOpacity onPress={showDateTopMode}>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <Text style={styles.textInput}>
+                {newDate.toLocaleDateString('en-us', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  //   hour: 'numeric',
+                })}
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <DateTimePickerModal
+          isVisible={showTopDate}
+          mode="date"
+          date={newDate}
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+
+        <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+          size={25}
+          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+          fillColor="#37C0FF"
+          unfillColor="#004F89"
+          iconStyle={{ borderColor: 'white' }}
+          text="High Priority"
+          textContainerStyle={{ marginLeft: 10 }}
+          style={styles.checkBox}
+          isChecked={priorityFromParent == 'True' ? true : false}
+          onPress={(isChecked: boolean) => {
+            setPriority(isChecked ? 'True' : 'False');
+          }}
+        />
+
+        <Text style={styles.nameTitle}>Location</Text>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
-            <Text style={styles.textInput}>
-              {newDate.toLocaleDateString('en-us', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                //   hour: 'numeric',
-              })}
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setNewLocation(text)}
+              defaultValue={locationFromParent}
+            />
+          </View>
+        </View>
+
+        <Text style={styles.nameTitle}>Relationships</Text>
+
+        {attendeeFromParent?.map((item: any, index: number) => (
+          <View style={styles.mainContent}>
+            <View style={styles.attendeeView}>
+              <Text style={styles.attendeeInput}>{item.name}</Text>
+              <TouchableOpacity key={index} onPress={() => deleteAttendee(index)}>
+                <Image source={closeButton} style={styles.deleteAttendeeX} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <Text style={styles.addAttendee} onPress={handleAttendeesPressed}>
+              + Add
             </Text>
           </View>
         </View>
-      </TouchableOpacity>
 
-      <DateTimePickerModal
-        isVisible={showTopDate}
-        mode="date"
-        date={newDate}
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
-
-      <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-        size={25}
-        textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-        fillColor="#37C0FF"
-        unfillColor="#004F89"
-        iconStyle={{ borderColor: 'white' }}
-        text="High Priority"
-        textContainerStyle={{ marginLeft: 10 }}
-        style={styles.checkBox}
-        isChecked={priorityFromParent == 'True' ? true : false}
-        onPress={(isChecked: boolean) => {
-          setPriority(isChecked ? 'True' : 'False');
-        }}
-      />
-
-      <Text style={styles.nameTitle}>Location</Text>
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setNewLocation(text)}
-            defaultValue={locationFromParent}
-          />
-        </View>
-      </View>
-
-      <Text style={styles.nameTitle}>Relationships</Text>
-
-      {attendeeFromParent?.map((item: any, index: number) => (
+        <Text style={styles.nameTitle}>Notes</Text>
         <View style={styles.mainContent}>
-          <View style={styles.attendeeView}>
-            <Text style={styles.attendeeInput}>{item.name}</Text>
-            <TouchableOpacity key={index} onPress={() => deleteAttendee(index)}>
-              <Image source={closeButton} style={styles.deleteAttendeeX} />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
+            <TextInput
+              onPressIn={handleNotesFocus}
+              ref={notesInputRef}
+              multiline={true}
+              numberOfLines={5}
+              style={globalStyles.notesInput}
+              placeholder="Type Here"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              value={newNotes}
+              onChangeText={(text) => setNewNotes(text)}
+            />
+          </TouchableOpacity>
         </View>
-      ))}
 
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <Text style={styles.addAttendee} onPress={handleAttendeesPressed}>
-            + Add
-          </Text>
-        </View>
-      </View>
-
-      <Text style={styles.nameTitle}>Notes</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
-          <TextInput
-            onPressIn={handleNotesFocus}
-            ref={notesInputRef}
-            multiline={true}
-            numberOfLines={5}
-            style={globalStyles.notesInput}
-            placeholder="Type Here"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            value={newNotes}
-            onChangeText={(text) => setNewNotes(text)}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {modalAttendeesVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalAttendeesVisible}
-          onRequestClose={() => {
-            setModalAttendeesVisible(!modalAttendeesVisible);
-          }}
-        >
-          <Attendees
-            title="Relationships"
-            setModalAttendeesVisible={setModalAttendeesVisible}
-            setSelectedAttendees={handleSelectedAttendees}
-            lightOrDark={lightOrDark}
-          />
-        </Modal>
-      )}
-      {modalGoalVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalGoalVisible}
-          onRequestClose={() => {
-            setModalGoalVisible(!modalGoalVisible);
-          }}
-        >
-          <ChooseGoal
-            title="Choose Activity"
-            showSelectOne={true}
-            setModalGoalVisible={setModalGoalVisible}
-            setSelectedGoal={setGoal}
-            lightOrDark={lightOrDark}
-          />
-        </Modal>
-      )}
-      <View style={styles.footer}></View>
-    </ScrollView>
+        {modalAttendeesVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalAttendeesVisible}
+            onRequestClose={() => {
+              setModalAttendeesVisible(!modalAttendeesVisible);
+            }}
+          >
+            <Attendees
+              title="Relationships"
+              setModalAttendeesVisible={setModalAttendeesVisible}
+              setSelectedAttendees={handleSelectedAttendees}
+              lightOrDark={lightOrDark}
+            />
+          </Modal>
+        )}
+        {modalGoalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalGoalVisible}
+            onRequestClose={() => {
+              setModalGoalVisible(!modalGoalVisible);
+            }}
+          >
+            <ChooseGoal
+              title="Choose Activity"
+              showSelectOne={true}
+              setModalGoalVisible={setModalGoalVisible}
+              setSelectedGoal={setGoal}
+              lightOrDark={lightOrDark}
+            />
+          </Modal>
+        )}
+        <View style={styles.footer}></View>
+      </ScrollView>
+    </View>
   );
 }
 export const styles = StyleSheet.create({

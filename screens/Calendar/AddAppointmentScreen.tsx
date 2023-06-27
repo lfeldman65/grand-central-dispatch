@@ -1241,7 +1241,7 @@ export default function AddAppointmentScreen(props: any) {
             }}
           >
             <Attendees
-              title="Attendees"
+              title="Relationships"
               setModalAttendeesVisible={setModalAttendeesVisible}
               setSelectedAttendees={handleSelectedAttendees}
             />

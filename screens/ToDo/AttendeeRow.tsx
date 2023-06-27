@@ -11,9 +11,7 @@ const rankC = require('../Relationships/images/rankC.png');
 const rankD = require('../Relationships/images/rankD.png');
 
 interface AtoZRowProps {
-  // branch
   data: RolodexDataProps;
-  onPress(): void;
   relFromAbove: string;
   lightOrDark: string;
 }

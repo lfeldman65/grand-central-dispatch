@@ -404,13 +404,11 @@ export default function AddToDoScreen(props: any) {
         <TouchableOpacity onPress={cancelPressed}>
           <Text style={globalStyles.cancelButton}>Back</Text>
         </TouchableOpacity>
-
         <Text style={styles.nameLabel}>{title}</Text>
         <TouchableOpacity onPress={savePressed}>
           <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
       </View>
-
       <ScrollView>
         <Text style={styles.nameTitle}>Title</Text>
         <View style={styles.mainContent}>
@@ -1086,7 +1084,7 @@ export default function AddToDoScreen(props: any) {
             }}
           >
             <Attendees
-              title="Relationships"
+              title="Select Relationships"
               setModalAttendeesVisible={setModalAttendeesVisible}
               setSelectedAttendees={handleSelectedAttendees}
               attendees={attendees}

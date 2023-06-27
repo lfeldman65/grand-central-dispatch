@@ -517,8 +517,8 @@ export default function EditRelationshipScreen(props: any) {
         >
           <AddRel
             title={'Select Relationship'}
-            setReferral={setSpouseFromModal}
-            setModalVisible={setModalSpouseVisible}
+            setSelectedRel={setSpouseFromModal}
+            setModalRelVisible={setModalSpouseVisible}
           />
         </Modal>
       )}
@@ -623,8 +623,8 @@ export default function EditRelationshipScreen(props: any) {
         >
           <AddRel
             title={'Select Relationship'}
-            setReferral={setReferredFromModal}
-            setModalVisible={setModalRelVisible}
+            setSelectedRel={setReferredFromModal}
+            setModalRelVisible={setModalRelVisible}
           />
         </Modal>
       )}
