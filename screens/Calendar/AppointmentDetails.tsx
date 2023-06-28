@@ -122,7 +122,7 @@ export default function AppointmentDetails(props: any) {
 
   function saveComplete() {
     console.log('save complete');
-    //  fetchData();
+    fetchData(true);
   }
 
   return (
