@@ -134,6 +134,12 @@ export default function ToDoDetails(props: any) {
     for (var i = 0; i < goalList.length; i++) {
       if (goalList[i].id == id) {
         console.log('i=: ' + i);
+        if (goalList[i].title == 'Calls Made') {
+          return 'Call Made';
+        }
+        if (goalList[i].title == 'Notes Made') {
+          return 'Note Written';
+        }
         return goalList[i].title;
       }
     }

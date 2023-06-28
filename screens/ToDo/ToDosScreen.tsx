@@ -13,9 +13,13 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import { getGoalData } from '../Goals/api';
+import { GoalDataProps } from '../Goals/interfaces';
+import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
+var localGoalID = '0';
 
 export default function ToDosScreen() {
   const filters = {
@@ -35,6 +39,7 @@ export default function ToDosScreen() {
   const [lightOrDark, setLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
+  const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
 
   const actionSheetRef = useRef<ActionSheet>(null);
 
@@ -149,10 +154,45 @@ export default function ToDosScreen() {
           console.error(res.error);
         } else {
           setdataActivity(res.data);
+          fetchGoals();
         }
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
+  }
+
+  function fetchGoals() {
+    setIsLoading(true);
+    getGoalData()
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setGoalList(res.data);
+          console.log('Notes: ' + res.data[1].goal.title);
+          console.log('CALLS: ' + res.data[0].goal.title);
+          console.log('CALLS: ' + res.data[0].achievedToday);
+          notifyIfWin(localGoalID, res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function notifyIfWin(goalId: string, data: GoalDataProps[]) {
+    console.log('GOALID: ' + goalId);
+    var i = 0;
+    while (i < data.length) {
+      if (data[i].goal.id.toString() == goalId) {
+        testForNotificationTrack(
+          data[i].goal.title,
+          data[i].goal.weeklyTarget,
+          data[i].achievedThisWeek,
+          data[i].achievedToday
+        );
+      }
+      i = i + 1;
+    }
   }
 
   if (isLoading) {

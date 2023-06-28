@@ -74,6 +74,22 @@ export default function AddToDoScreen(props: any) {
     orderMenu: 'filter_sheet_order',
   };
 
+  function formatActivity(ugly: string) {
+    if (goal == null || goal.title == 'None') {
+      return 'Select (Optional)';
+    }
+    if (ugly == 'Calls Made') {
+      return 'Call Made';
+    }
+    if (ugly == 'Referrals Given') {
+      return 'Referral Tracked';
+    }
+    if (ugly == 'Notes Made') {
+      return 'Note Written';
+    }
+    return ugly;
+  }
+
   const handleConfirmTop = (selectedDate: any) => {
     const currentDate = selectedDate;
     //todo dates don't need time information, we will set time to 0:00 for local timezone
@@ -435,7 +451,7 @@ export default function AddToDoScreen(props: any) {
                 placeholderTextColor="#AFB9C2"
                 style={styles.nameLabel}
               >
-                {goal?.id == 0 ? 'Select (Optional)' : goal?.title}
+                {formatActivity(goal?.title!)}
               </TextInput>
             </View>
           </View>
