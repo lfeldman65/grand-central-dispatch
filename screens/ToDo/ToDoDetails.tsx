@@ -11,13 +11,16 @@ import * as React from 'react';
 import EditToDo from './EditToDoScreen';
 import { getGoalDataConcise } from '../Goals/api';
 import { GoalDataConciseProps } from '../Goals/interfaces';
+import { testForNotificationTrack } from '../Goals/handleWinNotifications';
+import { GoalDataProps } from '../Goals/interfaces';
+import { getGoalData } from '../Goals/api';
 
 export default function ToDoDetails(props: any) {
   const navigation = useNavigation();
   const { route } = props;
   const { toDoID, lightOrDark } = route.params;
   const isFocused = useIsFocused();
-  const [data, setdata] = useState<ToDoDetailsDataProps>();
+  const [detailData, setDetailData] = useState<ToDoDetailsDataProps>();
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [goalList, setGoalList] = useState<GoalDataConciseProps[]>([]);
@@ -90,20 +93,21 @@ export default function ToDoDetails(props: any) {
 
   function handleDirectionsPressed() {
     console.log('directions pressed');
-    openMap({ query: data?.location });
+    openMap({ query: detailData?.location });
   }
 
   function handleAttendeePressed(attendeeID: string) {
     console.log('attendee pressed: ' + attendeeID);
     navigation.navigate('RelDetails', {
-      contactId: data?.attendees[0].id,
-      firstName: data?.attendees[0].name,
+      contactId: detailData?.attendees[0].id,
+      firstName: detailData?.attendees[0].name,
       lastName: '',
       lightOrDark: lightOrDark,
     });
   }
 
   function saveComplete() {
+    // After Edit/Save
     console.log('save complete');
     fetchData(true);
   }
@@ -125,14 +129,14 @@ export default function ToDoDetails(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function goalIDToTitle(id: number) {
-    if (id == null || id == 0) {
+  function goalIDToTitle() {
+    console.log('goalID: ' + detailData?.activityTypeId!);
+    if (detailData?.activityTypeId! == null || detailData?.activityTypeId! == 0) {
       return 'None';
     }
-    console.log('id: ' + id);
     console.log('goallistlength: ' + goalList.length);
     for (var i = 0; i < goalList.length; i++) {
-      if (goalList[i].id == id) {
+      if (goalList[i].id == detailData?.activityTypeId!) {
         console.log('i=: ' + i);
         if (goalList[i].title == 'Calls Made') {
           return 'Call Made';
@@ -155,7 +159,7 @@ export default function ToDoDetails(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          setdata(res.data);
+          setDetailData(res.data);
         }
         setIsLoading(false);
       })
@@ -167,7 +171,7 @@ export default function ToDoDetails(props: any) {
       contentType: 'none',
       itemId: 'id1206',
     });
-    if (data?.isCampaign) {
+    if (detailData?.isCampaign) {
       navigation.goBack();
       return;
     }
@@ -177,30 +181,61 @@ export default function ToDoDetails(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          navigation.goBack();
+          fetchGoals(true);
         }
         setIsLoading(false);
       })
       .catch((error) => console.error('failure ' + error));
   }
 
+  function fetchGoals(isMounted: boolean) {
+    setIsLoading(true);
+    getGoalData()
+      .then((res) => {
+        if (!isMounted) {
+          return;
+        }
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          notifyIfWin(res.data);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function notifyIfWin(data: GoalDataProps[]) {
+    var i = 0;
+    while (i < data.length) {
+      if (data[i].goal.id == detailData?.activityTypeId!) {
+        testForNotificationTrack(
+          data[i].goal.title,
+          data[i].goal.weeklyTarget,
+          data[i].achievedThisWeek,
+          data[i].achievedToday
+        );
+      }
+      i = i + 1;
+    }
+    navigation.goBack();
+  }
+
   return (
     <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
       <View style={lightOrDark == 'dark' ? styles.topContainerDark : styles.topContainerLight}>
-        <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>{data?.title}</Text>
+        <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>{detailData?.title}</Text>
         <View style={styles.dividingLine}></View>
         <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-          {'Due: ' + prettyDate(data?.dueDate!)}
+          {'Due: ' + prettyDate(detailData?.dueDate!)}
         </Text>
-        {data?.priority == 'True' && <Text style={styles.priorityText}>{'High Priority'}</Text>}
-        {goalIDToTitle(data?.activityTypeId!) != 'None' && <Text style={styles.sectionHeader}>Activity</Text>}
-        {goalIDToTitle(data?.activityTypeId!) != 'None' && (
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-            {goalIDToTitle(data?.activityTypeId!)}
-          </Text>
+        {detailData?.priority == 'True' && <Text style={styles.priorityText}>{'High Priority'}</Text>}
+        {goalIDToTitle() != 'None' && <Text style={styles.sectionHeader}>Activity</Text>}
+        {goalIDToTitle() != 'None' && (
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{goalIDToTitle()}</Text>
         )}
 
-        {!isNullOrEmpty(data?.location) && (
+        {!isNullOrEmpty(detailData?.location) && (
           <View style={styles.directionsRow}>
             <Text style={styles.sectionHeader}>Location</Text>
             <TouchableOpacity onPress={() => handleDirectionsPressed()}>
@@ -209,19 +244,19 @@ export default function ToDoDetails(props: any) {
           </View>
         )}
 
-        {!isNullOrEmpty(data?.location) && (
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{data?.location!}</Text>
+        {!isNullOrEmpty(detailData?.location) && (
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{detailData?.location!}</Text>
         )}
 
-        {!isNullOrEmpty(data?.notes) && <Text style={styles.sectionHeader}>Notes</Text>}
-        {!isNullOrEmpty(data?.notes) && (
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{data?.notes!}</Text>
+        {!isNullOrEmpty(detailData?.notes) && <Text style={styles.sectionHeader}>Notes</Text>}
+        {!isNullOrEmpty(detailData?.notes) && (
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{detailData?.notes!}</Text>
         )}
 
-        {!isNullOrEmpty(data?.attendees) && <Text style={styles.sectionHeader}>Relationships</Text>}
+        {!isNullOrEmpty(detailData?.attendees) && <Text style={styles.sectionHeader}>Relationships</Text>}
 
-        {!isNullOrEmpty(data?.attendees) &&
-          data?.attendees.map((item, index) => (
+        {!isNullOrEmpty(detailData?.attendees) &&
+          detailData?.attendees.map((item, index) => (
             <TouchableOpacity key={index} onPress={() => handleAttendeePressed(item.id)}>
               <Text style={styles.link}>{item.name}</Text>
             </TouchableOpacity>
@@ -229,10 +264,12 @@ export default function ToDoDetails(props: any) {
       </View>
 
       <View style={lightOrDark == 'dark' ? styles.bottomContainerDark : styles.bottomContainerLight}>
-        <Text style={styles.campaignText}>{data?.isCampaign ? 'This To-Do is part of a marketing campaign' : ''}</Text>
-        {data?.completedDate == null && (
+        <Text style={styles.campaignText}>
+          {detailData?.isCampaign ? 'This To-Do is part of a marketing campaign' : ''}
+        </Text>
+        {detailData?.completedDate == null && (
           <TouchableOpacity onPress={markComplete}>
-            <Text style={styles.completeText}>{data?.isCampaign ? 'Close' : 'Complete'}</Text>
+            <Text style={styles.completeText}>{detailData?.isCampaign ? 'Close' : 'Complete'}</Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity onPress={deletePressed}>
@@ -250,15 +287,15 @@ export default function ToDoDetails(props: any) {
         >
           <EditToDo
             title={'Edit To-Do'}
-            todoID={data?.id}
-            activityTypeId={data?.activityTypeId}
-            activityTypeTitle={goalIDToTitle(data?.activityTypeId!)}
-            titleFromParent={data?.title}
-            dateFromParent={data?.dueDate}
-            priorityFromParent={data?.priority}
-            locationFromParent={data?.location}
-            attendeeFromParent={data?.attendees ?? []}
-            notesFromParent={data?.notes}
+            todoID={detailData?.id}
+            activityTypeId={detailData?.activityTypeId}
+            activityTypeTitle={goalIDToTitle()}
+            titleFromParent={detailData?.title}
+            dateFromParent={detailData?.dueDate}
+            priorityFromParent={detailData?.priority}
+            locationFromParent={detailData?.location}
+            attendeeFromParent={detailData?.attendees ?? []}
+            notesFromParent={detailData?.notes}
             onSave={saveComplete}
             setModalVisible={setModalVisible}
             lightOrDark={lightOrDark}
