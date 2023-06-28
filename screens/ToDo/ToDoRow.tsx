@@ -4,8 +4,11 @@ import * as React from 'react';
 import { prettyDate } from '../../utils/general';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteToDo, markCompleteToDo } from './api';
-import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getGoalDataConcise, getGoalData } from '../Goals/api';
+import { GoalDataConciseProps, GoalDataProps } from '../Goals/interfaces';
+import { testForNotificationTrack } from '../Goals/handleWinNotifications';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 const bullsEye = require('../ToDo/images/campaign.png');
 
@@ -22,6 +25,8 @@ export default function ToDoRow(props: ToDoRowProps) {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
   var _swipeableRow: Swipeable;
+  const [goalList, setGoalList] = useState<GoalDataConciseProps[]>([]);
+  const isFocused = useIsFocused();
 
   const renderLeftActions = () => {
     if (false) {
@@ -41,6 +46,10 @@ export default function ToDoRow(props: ToDoRowProps) {
       );
     }
   };
+
+  useEffect(() => {
+    fetchGoalsConcise(true);
+  }, [isFocused]);
 
   function handleSwipeBegin(rowKey: number) {
     console.log('handle swipe');
@@ -76,13 +85,39 @@ export default function ToDoRow(props: ToDoRowProps) {
     }
   };
 
+  function notifyIfWin(data: GoalDataProps[]) {
+    var i = 0;
+    while (i < data.length) {
+      if (data[i].goal.id == props.data.activityTypeId) {
+        testForNotificationTrack(
+          data[i].goal.title,
+          data[i].goal.weeklyTarget,
+          data[i].achievedThisWeek,
+          data[i].achievedToday
+        );
+      }
+      i = i + 1;
+    }
+  }
+
+  function fetchGoalsConcise(isMounted: boolean) {
+    console.log('fetch goals');
+    getGoalDataConcise()
+      .then((res) => {
+        if (!isMounted) {
+          return;
+        }
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          setGoalList(res.data);
+        }
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
   async function completePressed() {
-    console.log('completePressed');
-    console.log(props.data.id);
-    // ga4Analytics('To_Do_Complete_Or_Close', {
-    //   contentType: 'none',
-    //   itemId: 'id1206',
-    // });
+    console.log('completePressed: ' + props.data.activityTypeId);
     if (props.data?.isCampaign!) {
       navigation.goBack();
       return;
@@ -94,6 +129,24 @@ export default function ToDoRow(props: ToDoRowProps) {
           console.error(res.error);
         } else {
           props.refresh();
+          fetchGoals(true);
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
+  function fetchGoals(isMounted: boolean) {
+    setIsLoading(true);
+    getGoalData()
+      .then((res) => {
+        if (!isMounted) {
+          return;
+        }
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          notifyIfWin(res.data);
         }
         setIsLoading(false);
       })
@@ -105,7 +158,6 @@ export default function ToDoRow(props: ToDoRowProps) {
     //   contentType: 'Calls',
     //   itemId: 'id0416',
     // });
-    // setModalVisible(true);
     console.log('delete pressed');
     Alert.alert(
       'Are you sure you want to delete this To Do?',

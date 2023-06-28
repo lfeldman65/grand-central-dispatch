@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Modal, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { useEffect } from 'react';
 import { getToDoDetails, markCompleteToDo, deleteToDo } from './api';
 import { ToDoDetailsDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
@@ -9,11 +8,9 @@ import { prettyDate, isNullOrEmpty, ga4Analytics } from '../../utils/general';
 import openMap from 'react-native-open-maps';
 import * as React from 'react';
 import EditToDo from './EditToDoScreen';
-import { getGoalDataConcise } from '../Goals/api';
-import { GoalDataConciseProps } from '../Goals/interfaces';
+import { getGoalDataConcise, getGoalData } from '../Goals/api';
+import { GoalDataConciseProps, GoalDataProps } from '../Goals/interfaces';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
-import { GoalDataProps } from '../Goals/interfaces';
-import { getGoalData } from '../Goals/api';
 
 export default function ToDoDetails(props: any) {
   const navigation = useNavigation();
@@ -28,7 +25,7 @@ export default function ToDoDetails(props: any) {
   useEffect(() => {
     let isMounted = true;
     fetchData(isMounted);
-    fetchGoalList(true);
+    fetchGoalsConcise(true);
     return () => {
       isMounted = false;
     };
@@ -76,7 +73,6 @@ export default function ToDoDetails(props: any) {
   }
 
   function deletePressedContinue() {
-    console.log('delete pressed');
     setIsLoading(true);
     deleteToDo(toDoID)
       .then((res) => {
@@ -112,7 +108,7 @@ export default function ToDoDetails(props: any) {
     fetchData(true);
   }
 
-  function fetchGoalList(isMounted: boolean) {
+  function fetchGoalsConcise(isMounted: boolean) {
     console.log('fetch goals');
     getGoalDataConcise()
       .then((res) => {
@@ -122,7 +118,6 @@ export default function ToDoDetails(props: any) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          console.log(res.data);
           setGoalList(res.data);
         }
       })

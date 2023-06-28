@@ -16,6 +16,7 @@ export interface ToDoDataProps {
   priority: string;
   completedDate: string;
   isCampaign: boolean;
+  activityTypeId: number;
   swipeRef: Swipeable | null;
 }
 
