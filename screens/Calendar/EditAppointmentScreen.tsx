@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Modal, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useIsFocused } from '@react-navigation/native';
 import { RolodexDataProps } from '../Relationships/interfaces';
@@ -51,9 +51,15 @@ export default function EditAppointmentScreen(props: any) {
   }
 
   function savePressed() {
-    console.log('apptID: ' + apptID);
-    console.log('start: ' + startDate.toISOString());
-    console.log('start: ' + endDate.toISOString());
+    if (newTitle == '') {
+      Alert.alert('Please enter a Title');
+      return;
+    }
+    if (startDate > endDate) {
+      Alert.alert('The Start Date and Time must be before the End Date and Time');
+      return false;
+    }
+
     editAppointment(
       apptID,
       newTitle,
@@ -186,6 +192,16 @@ export default function EditAppointmentScreen(props: any) {
     setAttendees(attendeeFromParent);
   }
 
+  function isDataValid() {
+    if (newTitle == '') {
+      return false;
+    }
+    if (startDate > endDate) {
+      return false;
+    }
+    return true;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
@@ -194,7 +210,7 @@ export default function EditAppointmentScreen(props: any) {
         </TouchableOpacity>
         <Text style={styles.nameLabel}>{title}</Text>
         <TouchableOpacity onPress={savePressed}>
-          <Text style={styles.saveButton}>Save</Text>
+          <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
       </View>
       <ScrollView>
@@ -410,6 +426,14 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginRight: '10%',
+    opacity: 1.0,
+  },
+  saveButtonDim: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginRight: '10%',
+    opacity: 0.4,
   },
   nameTitle: {
     color: 'white',

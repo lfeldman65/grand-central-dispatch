@@ -301,10 +301,6 @@ export default function AddAppointmentScreen(props: any) {
   }
 
   function savePressed() {
-    if (title == '') {
-      Alert.alert('Please enter a title');
-      return;
-    }
     //  analytics.event(new Event('Relationships', 'Save Button', 'Pressed', 0));
     console.log(startDate.toDateString());
     console.log(
@@ -322,6 +318,10 @@ export default function AddAppointmentScreen(props: any) {
     if (apptTitle == '') {
       Alert.alert('Please enter a Title');
       return;
+    }
+    if (startDate > endDate) {
+      Alert.alert('The Start Date and Time must be before the End Date and Time');
+      return false;
     }
 
     var newAttendees = new Array();
@@ -455,6 +455,9 @@ export default function AddAppointmentScreen(props: any) {
 
   function isDataValid() {
     if (apptTitle == '') {
+      return false;
+    }
+    if (startDate > endDate) {
       return false;
     }
     return true;
