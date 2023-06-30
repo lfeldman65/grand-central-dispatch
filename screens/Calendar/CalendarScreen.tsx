@@ -61,6 +61,7 @@ export default function CalendarScreen() {
   }, [navigation, lightOrDark]);
 
   useEffect(() => {
+    setLightOrDark('');
     let isMounted = true;
     var day = getDayNumber(startDate.toString());
     var month = getMonthNumber(startDate.toString());
