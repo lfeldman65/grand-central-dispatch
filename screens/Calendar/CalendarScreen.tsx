@@ -135,6 +135,10 @@ export default function CalendarScreen() {
     fetchAppointments(day, month, year, true);
   }
 
+  function handleMonthChange() {
+    console.log('next or previous pressed');
+  }
+
   function upPressed() {
     if (calendarHeight == 'regular') {
       setCalendarHeight('gone');
@@ -179,7 +183,8 @@ export default function CalendarScreen() {
               selectedDayTextColor="white"
               textStyle={lightOrDark == 'dark' ? styles.calendarTextDark : styles.calendarTextLight}
               onDateChange={onDateChange}
-              showDayStragglers={true}
+              onMonthChange={handleMonthChange}
+              //   showDayStragglers={true}
             />
           )}
         </View>
