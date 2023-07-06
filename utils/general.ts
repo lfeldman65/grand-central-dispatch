@@ -15,7 +15,7 @@ export function makeLongTxtPretty(longText: string, maxChar: number) {
   if (longText.length < maxChar) {
     return longText;
   }
-  return longText.substring(0, maxChar) + '...';
+  return longText.substring(0, maxChar) + ' . . .';
 }
 
 export function isNullOrEmpty(value: any) {

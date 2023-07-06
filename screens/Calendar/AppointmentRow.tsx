@@ -2,7 +2,7 @@ import { Text, View, Image, TouchableOpacity, StyleSheet, Alert, Linking, AppSta
 import { AppointmentDataProps } from './interfaces';
 import { useState, useEffect } from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { prettyDate, prettyTime } from '../../utils/general';
+import { prettyDate, makeLongTxtPretty } from '../../utils/general';
 
 interface ApptRowProps {
   data: AppointmentDataProps;
@@ -39,7 +39,9 @@ export default function AppointmentRow(props: ApptRowProps) {
         </View>
 
         {props.data.notes != '' && (
-          <Text style={props.lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>{props.data.notes}</Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>
+            {makeLongTxtPretty(props.data.notes, 40)}
+          </Text>
         )}
 
         {/* <Text>{props.appID}</Text>
@@ -112,7 +114,6 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 5,
-    fontWeight: '500',
   },
   notesLight: {
     color: 'black',
@@ -120,7 +121,6 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
     marginLeft: 10,
     marginBottom: 5,
-    fontWeight: '500',
   },
   dateDark: {
     color: 'gray',

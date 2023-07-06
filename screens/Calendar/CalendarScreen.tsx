@@ -62,6 +62,7 @@ export default function CalendarScreen() {
 
   useEffect(() => {
     setLightOrDark('');
+    console.log('lightOrDark:' + lightOrDark);
     let isMounted = true;
     var day = getDayNumber(startDate.toString());
     var month = getMonthNumber(startDate.toString());
@@ -70,7 +71,6 @@ export default function CalendarScreen() {
     console.log('MONTH2112: ' + month);
     console.log('YEAR: ' + year);
     fetchAppointments('00', month, year, isMounted); // day = '00' returns every day in month and year
-    console.log(lightOrDark);
     return () => {
       isMounted = false;
     };
@@ -135,8 +135,13 @@ export default function CalendarScreen() {
     fetchAppointments(day, month, year, true);
   }
 
-  function handleMonthChange() {
-    console.log('next or previous pressed');
+  function handleMonthChange(date: Moment) {
+    console.log('next or previous pressed: ' + date);
+    let month = getMonthNumber(date.toString());
+    let year = getYear(date.toString());
+    let day = getDayNumber(date.toString());
+    console.log(month + ' ' + day + ' ' + year);
+    fetchAppointments('00', month, year, true);
   }
 
   function upPressed() {
@@ -184,6 +189,10 @@ export default function CalendarScreen() {
               textStyle={lightOrDark == 'dark' ? styles.calendarTextDark : styles.calendarTextLight}
               onDateChange={onDateChange}
               onMonthChange={handleMonthChange}
+              nextTitleStyle={styles.nextButton}
+              previousTitleStyle={styles.nextButton}
+              monthTitleStyle={styles.monthText}
+              yearTitleStyle={styles.yearText}
               //   showDayStragglers={true}
             />
           )}
@@ -307,7 +316,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   calendarViewRegular: {
-    height: '45%',
+    height: '47%',
     width: '100%',
   },
   calendarViewGone: {
@@ -316,6 +325,16 @@ const styles = StyleSheet.create({
   },
   todayText: {
     color: 'white',
+  },
+  monthText: {
+    marginLeft: -20,
+    marginTop: 7,
+  },
+  yearText: {
+    marginTop: 7,
+  },
+  nextButton: {
+    marginTop: 7,
   },
   calendarTextDark: {
     color: 'white',
