@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Alert, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Dimensions, Modal } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { addNewContact } from './api';

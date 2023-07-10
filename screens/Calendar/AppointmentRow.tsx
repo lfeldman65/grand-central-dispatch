@@ -1,7 +1,5 @@
-import { Text, View, Image, TouchableOpacity, StyleSheet, Alert, Linking, AppState } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { AppointmentDataProps } from './interfaces';
-import { useState, useEffect } from 'react';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { prettyDate, makeLongTxtPretty } from '../../utils/general';
 
 interface ApptRowProps {
@@ -11,13 +9,10 @@ interface ApptRowProps {
   lightOrDark: string;
 }
 
+let deviceWidth = Dimensions.get('window').width;
+console.log('width: ' + deviceWidth);
+
 export default function AppointmentRow(props: ApptRowProps) {
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    // console.log('appt start: ' + props.data.startTime);
-  }, [isFocused]);
-
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
@@ -52,7 +47,9 @@ export default function AppointmentRow(props: ApptRowProps) {
             })}
           </Text>
         </View>
-        {props.data.notes != '' && <Text style={styles.notesText}>{makeLongTxtPretty(props.data.notes, 40)}</Text>}
+        {props.data.notes != '' && (
+          <Text style={styles.notesText}>{makeLongTxtPretty(props.data.notes, 0.08 * deviceWidth)}</Text>
+        )}
       </View>
     </TouchableOpacity>
   );
