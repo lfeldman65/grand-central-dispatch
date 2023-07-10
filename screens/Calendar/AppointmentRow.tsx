@@ -21,15 +21,17 @@ export default function AppointmentRow(props: ApptRowProps) {
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
-        <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
-          {prettyDate(props.data.startTime)}
-        </Text>
-
-        <View style={styles.titleAndTimeRow}>
+        <View style={styles.titleRow}>
           <Text style={props.lightOrDark == 'dark' ? styles.appTitleDark : styles.appTitleLight}>
             {props.data.title}
           </Text>
-          <Text style={props.lightOrDark == 'dark' ? styles.timeDark : styles.timeLight}>
+        </View>
+
+        <View style={styles.startView}>
+          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
+            {'Start: ' + prettyDate(props.data.startTime)}
+          </Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
             {new Date(props.data.startTime).toLocaleTimeString('en-us', {
               hour12: true,
               hour: 'numeric',
@@ -38,15 +40,19 @@ export default function AppointmentRow(props: ApptRowProps) {
           </Text>
         </View>
 
-        {props.data.notes != '' && (
-          <Text style={props.lightOrDark == 'dark' ? styles.notesDark : styles.notesLight}>
-            {makeLongTxtPretty(props.data.notes, 40)}
+        <View style={styles.startView}>
+          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
+            {'End: ' + prettyDate(props.data.endTime)}
           </Text>
-        )}
-
-        {/* <Text>{props.appID}</Text>
-      <Text>{new Date(props.data.startTime).toLocaleTimeString()}</Text>
-      <Text>{props.data.startTime}</Text> */}
+          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
+            {new Date(props.data.endTime).toLocaleTimeString('en-us', {
+              hour12: true,
+              hour: 'numeric',
+              minute: '2-digit',
+            })}
+          </Text>
+        </View>
+        {props.data.notes != '' && <Text style={styles.notesText}>{makeLongTxtPretty(props.data.notes, 40)}</Text>}
       </View>
     </TouchableOpacity>
   );
@@ -67,28 +73,10 @@ export const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderWidth: 0.5,
   },
-  titleAndTimeRow: {
+  titleRow: {
     display: 'flex',
     flexDirection: 'row',
     padding: 1,
-    justifyContent: 'space-between',
-    marginRight: 20,
-  },
-  textBoxDark: {
-    flexDirection: 'column',
-    height: 80,
-    backgroundColor: 'black',
-    width: '55%',
-    marginLeft: 5,
-    textAlign: 'left',
-  },
-  textBoxLight: {
-    flexDirection: 'column',
-    height: 80,
-    backgroundColor: 'white',
-    width: '55%',
-    marginLeft: 5,
-    textAlign: 'left',
   },
   appTitleDark: {
     color: 'white',
@@ -96,7 +84,7 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
     marginTop: 5,
     marginLeft: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     fontWeight: '500',
   },
   appTitleLight: {
@@ -105,66 +93,34 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
     marginTop: 5,
     marginLeft: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     fontWeight: '500',
   },
-  notesDark: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'left',
-    marginLeft: 10,
-    marginBottom: 5,
+  startView: {
+    flexDirection: 'row',
   },
-  notesLight: {
-    color: 'black',
+  notesText: {
+    color: 'gray',
     fontSize: 16,
     textAlign: 'left',
+    marginTop: 10,
     marginLeft: 10,
     marginBottom: 5,
   },
   dateDark: {
-    color: 'gray',
-    fontSize: 16,
-    textAlign: 'left',
-    marginTop: 5,
-    marginLeft: 10,
-    fontWeight: '500',
-  },
-  dateLight: {
-    color: 'gray',
-    fontSize: 16,
-    textAlign: 'left',
-    marginTop: 5,
-    marginLeft: 10,
-    fontWeight: '500',
-  },
-  timeDark: {
     color: 'white',
     fontSize: 16,
     textAlign: 'left',
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 10,
-    fontWeight: '500',
+    marginBottom: 5,
   },
-  timeLight: {
+  dateLight: {
     color: 'black',
     fontSize: 16,
     textAlign: 'left',
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 10,
-    fontWeight: '500',
-  },
-  chevronBox: {
-    flexDirection: 'row',
-    paddingTop: 30,
-    paddingBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 15,
-    width: '30%',
-  },
-  chevron: {
-    height: 20,
-    width: 12,
-    marginTop: 15,
+    marginBottom: 5,
   },
 });
