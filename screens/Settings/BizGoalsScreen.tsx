@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button, TextInput, Alert } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import React from 'react';
@@ -72,6 +72,9 @@ export default function BizGoalsScreen1(props: any) {
     aveComm?: string,
     commType?: string
   ) {
+    console.log('aveComm:' + aveComm);
+    console.log('commmtype:' + commType);
+
     if (desSal == null || desSal == '') {
       setNetIncome('');
       setNetIncomeBU('');
@@ -115,6 +118,8 @@ export default function BizGoalsScreen1(props: any) {
       setAveCommissionBU('');
     } else {
       if (commType == 'dollar') {
+        console.log('please be here.');
+
         setAveCommission(removeTrailingDecimal(aveComm!));
         setAveCommissionBU(removeTrailingDecimal(aveComm!));
       } else {
@@ -226,7 +231,7 @@ export default function BizGoalsScreen1(props: any) {
           if (!isMounted) {
             return;
           }
-          console.log(res.data);
+          console.log('type2222: ' + res.data.commissionType);
           initializeFields(
             res.data.desiredSalary,
             res.data.taxRate,
@@ -244,93 +249,112 @@ export default function BizGoalsScreen1(props: any) {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topView}></View>
-      <Text style={styles.nameTitle}>
-        How much money would you like to take home in the next 12 months? This is your net income.
-      </Text>
+      <Text style={styles.nameTitle}>12 month net income goal</Text>
       <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setNetIncome(removeTrailingDecimal(text))}
-            defaultValue={removeTrailingDecimal(netIncome)}
-            keyboardType="number-pad"
-          />
+        <View style={styles.dollarAndPercentRow}>
+          <View style={styles.dollarView}>
+            <Text style={styles.dollarText}>$</Text>
+          </View>
+          <View style={styles.dollarAndPercentView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setNetIncome(removeTrailingDecimal(text))}
+              defaultValue={removeTrailingDecimal(netIncome)}
+              keyboardType="number-pad"
+            />
+          </View>
+          <View style={styles.percentView}></View>
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>What is your tax rate? An estimate is OK.</Text>
+      <Text style={styles.nameTitle}>Tax rate</Text>
       <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setTaxRatePercent(text)}
-            defaultValue={taxRatePercent}
-            keyboardType="number-pad"
-          />
+        <View style={styles.dollarAndPercentRow}>
+          <View style={styles.numberAndPercentView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setTaxRatePercent(text)}
+              defaultValue={taxRatePercent}
+              keyboardType="number-pad"
+            />
+          </View>
+          <View style={styles.justPercentView}>
+            <Text style={styles.percentText}>%</Text>
+          </View>
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>
-        Approximately how much are your annual business expenses? A ballpark figure is fine. It doesn't have to be
-        exact.
-      </Text>
+      <Text style={styles.nameTitle}>12 month business expenses</Text>
       <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setAnnualExpenses(removeTrailingDecimal(text))}
-            defaultValue={removeTrailingDecimal(annualExpenses)}
-            keyboardType="number-pad"
-          />
+        <View style={styles.dollarAndPercentRow}>
+          <View style={styles.dollarView}>
+            <Text style={styles.dollarText}>$</Text>
+          </View>
+          <View style={styles.dollarAndPercentView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setAnnualExpenses(removeTrailingDecimal(text))}
+              defaultValue={removeTrailingDecimal(annualExpenses)}
+              keyboardType="number-pad"
+            />
+          </View>
+          <View style={styles.percentView}></View>
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>
-        What is your agent/broker split? What percent of your commission do you keep vs. what goes to the brokerage?
-      </Text>
+      <Text style={styles.nameTitle}>My portion of agent/broker split </Text>
       <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setAgentBrokerSplit(text)}
-            defaultValue={agentBrokerSplit}
-            keyboardType="number-pad"
-          />
+        <View style={styles.dollarAndPercentRow}>
+          <View style={styles.numberAndPercentView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setAgentBrokerSplit(text)}
+              defaultValue={agentBrokerSplit}
+              keyboardType="number-pad"
+            />
+          </View>
+          <View style={styles.justPercentView}>
+            <Text style={styles.percentText}>%</Text>
+          </View>
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>
-        What is the average sales price/loan amount of the transactions you closed in the last 12 months?
-      </Text>
+      <Text style={styles.nameTitle}>Average transaction amount last 12 months </Text>
       <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setAveAmount(text)}
-            defaultValue={aveAmount}
-            keyboardType="number-pad"
-          />
+        <View style={styles.dollarAndPercentRow}>
+          <View style={styles.dollarView}>
+            <Text style={styles.dollarText}>$</Text>
+          </View>
+          <View style={styles.dollarAndPercentView}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="+ Add"
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setAveAmount(text)}
+              defaultValue={aveAmount}
+              keyboardType="number-pad"
+            />
+          </View>
+          <View style={styles.percentView}></View>
         </View>
       </View>
 
-      <Text style={styles.nameTitle}>What is the average commission you receive for each transactions?</Text>
+      <Text style={styles.nameTitle}>Average transaction commission last 12 months</Text>
       <View style={styles.mainContent}>
-        <View style={styles.aveCommRow}>
+        <View style={styles.dollarAndPercentRow}>
           <View style={styles.dollarView}>
             <Text
               onPress={dollarPressed}
@@ -339,7 +363,7 @@ export default function BizGoalsScreen1(props: any) {
               $
             </Text>
           </View>
-          <View style={styles.aveCommInputView}>
+          <View style={styles.dollarAndPercentView}>
             <TextInput
               style={styles.textInput}
               placeholder="+ Add"
@@ -396,14 +420,14 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: 18,
     color: '#FFFFFF',
-    //  width: 300,
   },
   nameTitle: {
     color: 'white',
     marginLeft: 20,
     fontWeight: '500',
-    marginBottom: 20,
+    marginBottom: 15,
     textAlign: 'left',
+    fontSize: 15,
   },
   inputView: {
     backgroundColor: '#002341',
@@ -436,39 +460,64 @@ const styles = StyleSheet.create({
   dollarView: {
     backgroundColor: '#002341',
     height: 50,
-    width: '5%',
+    width: '8%',
   },
   percentView: {
     backgroundColor: '#002341',
     height: 50,
     width: '8%',
-    // paddingRight: 10,
   },
   dollarText: {
     fontSize: 20,
     color: '#02ABF7',
-    marginTop: 12,
+    marginTop: 10,
     paddingLeft: 10,
     opacity: 1.0,
   },
   dollarTextDim: {
     fontSize: 20,
     color: '#02ABF7',
-    marginTop: 12,
+    marginTop: 10,
     paddingLeft: 10,
     opacity: 0.4,
   },
   percentText: {
     fontSize: 20,
     color: '#02ABF7',
-    marginTop: 12,
+    marginTop: 10,
     opacity: 1.0,
     paddingRight: 10,
   },
   percentTextDim: {
     fontSize: 20,
     color: '#02ABF7',
-    marginTop: 12,
+    marginTop: 10,
     opacity: 0.4,
+  },
+  dollarAndPercentRow: {
+    flexDirection: 'row',
+  },
+  dollarAndPercentView: {
+    backgroundColor: '#002341',
+    width: '75%',
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    paddingLeft: 5,
+    fontSize: 29,
+  },
+  numberAndPercentView: {
+    backgroundColor: '#002341',
+    width: '84%',
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    paddingLeft: 10,
+    fontSize: 29,
+  },
+  justPercentView: {
+    backgroundColor: '#002341',
+    height: 50,
+    width: '7%',
   },
 });

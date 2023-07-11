@@ -23,11 +23,11 @@ export const reminderUnitBeforeMenu = {
 };
 
 export const reminderTimeBeforeMenu = {
+  '1': '1',
+  '5': '5',
   '10': '10',
   '20': '20',
   '30': '30',
-  '40': '40',
-  '50': '50',
   '60': '60',
 };
 

@@ -72,7 +72,7 @@ export function removeTrailingDecimal(value: string) {
   if (value == null || value == '') {
     return '';
   }
-  console.log('value: ' + value);
+  //  console.log('value: ' + value);
   if (value.includes('.')) {
     let pieces = value.split('.');
     return pieces[0];
