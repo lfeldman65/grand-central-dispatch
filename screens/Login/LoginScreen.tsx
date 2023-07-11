@@ -28,7 +28,7 @@ export default function LoginScreen() {
       contentType: 'none',
       itemId: 'id0003',
     });
-    Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
+    Linking.openURL('https://auth.buffiniandcompany.com/password');
   }
 
   async function populateCredentialsIfRemembered() {

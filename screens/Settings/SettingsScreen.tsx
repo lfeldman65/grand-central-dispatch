@@ -56,7 +56,7 @@ export default function SettingsScreen() {
       contentType: 'none',
       itemId: 'id1515',
     });
-    Linking.openURL('https://signin.buffiniandcompany.com/ForgotPassword?aid=27');
+    Linking.openURL('https://auth.buffiniandcompany.com/password');
   }
 
   function profilePressed() {

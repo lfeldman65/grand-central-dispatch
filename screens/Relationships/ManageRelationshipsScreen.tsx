@@ -593,14 +593,6 @@ export default function ManageRelationshipsScreen() {
     return false;
   }
 
-  function chooseImage(rank: string) {
-    if (rank == 'A+') return rankAPlus;
-    if (rank == 'A') return rankA;
-    if (rank == 'B') return rankB;
-    if (rank == 'C') return rankC;
-    return rankD;
-  }
-
   function fetchData(param: TabType, makeAPICall: boolean) {
     console.log('fetchData:' + param);
     setIsLoadingForTab(param, true);

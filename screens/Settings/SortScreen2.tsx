@@ -3,11 +3,12 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, TextInput 
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import React from 'react';
-import { getRolodexData } from './api';
 import SortScreenRow from './SortScreenRow';
 import { RolodexImportDataProps } from './interfaces';
 import { changeRankAndQual } from '../Relationships/api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
+import { getRolodexSearch } from '../ToDo/api';
+import { ScreenContainer } from 'react-native-screens';
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
 
@@ -47,6 +48,11 @@ export default function SortScreen2(props: any) {
   };
 
   useEffect(() => {
+    console.log('search: ' + search);
+    fetchRolodexSearch(search);
+  }, [search]);
+
+  useEffect(() => {
     navigation.setOptions({
       title: 'Sort Your Relationships',
       headerRight: () => (
@@ -56,14 +62,6 @@ export default function SortScreen2(props: any) {
       ),
     });
   }, [navigation, search, dataRolodex]);
-
-  useEffect(() => {
-    let isMounted = true;
-    fetchRolodex('a-z', isMounted);
-    return () => {
-      isMounted = false;
-    };
-  }, [isFocused]);
 
   function clearSearchPressed() {
     console.log('clear search');
@@ -97,24 +95,15 @@ export default function SortScreen2(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function fetchRolodex(type: string, isMounted: boolean) {
+  function fetchRolodexSearch(type: string) {
     setIsLoading(true);
-    getRolodexData(type)
+    getRolodexSearch(type)
       .then((res) => {
-        if (!isMounted) {
-          return;
-        }
         if (res.status == 'error') {
           console.error(res.error);
         } else {
           setDataRolodex(res.data);
-          for (var i = 0; i < res.data.length; i++) {
-            if (res.data[i].qualified) {
-              res.data[i].qualified = true;
-            } else {
-              res.data[i].qualified = false;
-            }
-          }
+          //   console.log(res.data);
         }
         setIsLoading(false);
       })
@@ -124,7 +113,7 @@ export default function SortScreen2(props: any) {
   return (
     <>
       <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.searchView}>
           <Image source={searchGlass} style={styles.magGlass} />
           <TextInput
@@ -139,7 +128,7 @@ export default function SortScreen2(props: any) {
             <Image source={closeButton} style={styles.closeX} />
           </TouchableOpacity>
         </View>
-        <View>
+        <ScrollView>
           {dataRolodex.map((item, index) => (
             <SortScreenRow
               relFromAbove={item.firstName}
@@ -151,8 +140,8 @@ export default function SortScreen2(props: any) {
               onRankChange={(rank) => handleRankPress(index, rank)}
             />
           ))}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </>
   );
 }

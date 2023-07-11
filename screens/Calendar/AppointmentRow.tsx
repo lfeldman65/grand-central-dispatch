@@ -24,31 +24,25 @@ export default function AppointmentRow(props: ApptRowProps) {
 
         <View style={styles.startView}>
           <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
-            {'Start: ' + prettyDate(props.data.startTime)}
-          </Text>
-          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
-            {new Date(props.data.startTime).toLocaleTimeString('en-us', {
-              hour12: true,
-              hour: 'numeric',
-              minute: '2-digit',
-            })}
-          </Text>
-        </View>
-
-        <View style={styles.startView}>
-          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
-            {'End: ' + prettyDate(props.data.endTime)}
-          </Text>
-          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
-            {new Date(props.data.endTime).toLocaleTimeString('en-us', {
-              hour12: true,
-              hour: 'numeric',
-              minute: '2-digit',
-            })}
+            {prettyDate(props.data.startTime) +
+              ' ' +
+              new Date(props.data.startTime).toLocaleTimeString('en-us', {
+                hour12: true,
+                hour: 'numeric',
+                minute: '2-digit',
+              }) +
+              ' - ' +
+              prettyDate(props.data.endTime) +
+              ' ' +
+              new Date(props.data.endTime).toLocaleTimeString('en-us', {
+                hour12: true,
+                hour: 'numeric',
+                minute: '2-digit',
+              })}
           </Text>
         </View>
         {props.data.notes != '' && (
-          <Text style={styles.notesText}>{makeLongTxtPretty(props.data.notes, 0.08 * deviceWidth)}</Text>
+          <Text style={styles.notesText}>{makeLongTxtPretty(props.data.notes, 0.1 * deviceWidth)}</Text>
         )}
       </View>
     </TouchableOpacity>
@@ -100,9 +94,9 @@ export const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 16,
     textAlign: 'left',
-    marginTop: 10,
+    marginTop: 5,
     marginLeft: 10,
-    marginBottom: 5,
+    marginBottom: 10,
   },
   dateDark: {
     color: 'white',
@@ -110,7 +104,7 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
     marginTop: 5,
     marginLeft: 10,
-    marginBottom: 5,
+    marginBottom: 10,
   },
   dateLight: {
     color: 'black',
@@ -118,6 +112,6 @@ export const styles = StyleSheet.create({
     textAlign: 'left',
     marginTop: 5,
     marginLeft: 10,
-    marginBottom: 5,
+    marginBottom: 10,
   },
 });

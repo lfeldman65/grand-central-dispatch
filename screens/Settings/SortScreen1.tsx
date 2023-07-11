@@ -40,9 +40,9 @@ export default function SortScreen1(props: any) {
   return (
     <View style={styles.container}>
       <View style={styles.topView}>
-        <Text style={styles.fieldText}>
-          Last Step. Referral Maker will help you sort your relationships by allowing you to rank each one of your
-          contacts. Rate your contacts based on how likely they are to refer you as an agent.
+        <Text style={styles.topText}>
+          Referral Maker will help you focus on the right relationships if you rank each one based on how likely they
+          are to refer you as an agent.
         </Text>
       </View>
       <View style={styles.dividingLine}></View>
@@ -98,11 +98,18 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   topView: {
-    height: '15%',
     flexDirection: 'column',
     borderWidth: 0.5,
     borderTopColor: 'white',
     borderBottomColor: '#1A6295',
+  },
+  topText: {
+    marginTop: 10,
+    marginBottom: 10,
+    color: 'white',
+    fontSize: 16,
+    marginLeft: 15,
+    marginRight: 15,
   },
   rankBox: {
     height: '50%',
@@ -123,17 +130,12 @@ const styles = StyleSheet.create({
     marginTop: '3%',
     marginBottom: 10,
   },
-  fieldText: {
-    marginTop: 20,
-    color: 'white',
-    fontSize: 16,
-    marginLeft: 15,
-  },
   fieldText2: {
-    marginTop: 10,
+    marginTop: 5,
     color: 'white',
     fontSize: 16,
     marginLeft: 15,
+    marginRight: 15,
     width: '80%',
   },
   fieldText3: {
