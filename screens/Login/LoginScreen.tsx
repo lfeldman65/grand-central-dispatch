@@ -226,7 +226,7 @@ export default function LoginScreen() {
 
       <TouchableOpacity onPress={handleLoginPressess}>
         <View style={{ alignItems: 'center' }}>
-          <Text style={styles.loginText}>Login</Text>
+          <Text style={styles.loginText}>Log in</Text>
         </View>
       </TouchableOpacity>
 
