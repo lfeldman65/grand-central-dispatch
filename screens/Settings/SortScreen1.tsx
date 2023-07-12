@@ -48,36 +48,35 @@ export default function SortScreen1(props: any) {
       <View style={styles.dividingLine}></View>
       <View style={styles.rankBox}>
         <View style={styles.rankRow}>
-          <Image source={rankAPlus} style={styles.logoImage} />
+          <Image source={rankAPlus} style={styles.rankImage} />
           <Text style={styles.fieldText2}>People who have sent you multiple referrals.</Text>
         </View>
         <View style={styles.dividingLine}></View>
         <View style={styles.rankRow}>
-          <Image source={rankA} style={styles.logoImage} />
+          <Image source={rankA} style={styles.rankImage} />
           <Text style={styles.fieldText2}>
             People who have sent you a referral in the past or are most likely to refer you.
           </Text>
         </View>
         <View style={styles.dividingLine}></View>
         <View style={styles.rankRow}>
-          <Image source={rankB} style={styles.logoImage} />
+          <Image source={rankB} style={styles.rankImage} />
           <Text style={styles.fieldText2}>People who would refer you, if asked and shown how.</Text>
         </View>
         <View style={styles.dividingLine}></View>
         <View style={styles.rankRow}>
-          <Image source={rankC} style={styles.logoImage} />
+          <Image source={rankC} style={styles.rankImage} />
           <Text style={styles.fieldText2}>People who might refer you in the future.</Text>
         </View>
         <View style={styles.dividingLine}></View>
         <View style={styles.rankRow}>
-          <Image source={rankD} style={styles.logoImage} />
+          <Image source={rankD} style={styles.rankImage} />
           <Text style={styles.fieldText2}>People who you do not wish to market your services to.</Text>
         </View>
         <View style={styles.dividingLine}></View>
         <Text style={styles.fieldText3}>Qualified</Text>
-
         <View style={styles.rankRow}>
-          <Image source={qual} style={styles.logoImage} />
+          <Image source={qual} style={styles.qaulImage} />
           <Text style={styles.fieldText2}>I asked if I was the Realtor they would use or refer and they said yes!</Text>
         </View>
       </View>
@@ -122,11 +121,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
     height: 1,
   },
-  logoImage: {
+  rankImage: {
     height: 30,
     width: 30,
     marginLeft: 15,
     marginTop: 25,
+    marginBottom: 10,
+  },
+  qaulImage: {
+    height: 30,
+    width: 30,
+    marginLeft: 15,
+    marginTop: 15,
     marginBottom: 10,
   },
   fieldText2: {

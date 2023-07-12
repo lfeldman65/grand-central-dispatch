@@ -8,7 +8,6 @@ import { RolodexImportDataProps } from './interfaces';
 import { changeRankAndQual } from '../Relationships/api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { getRolodexSearch } from '../ToDo/api';
-import { ScreenContainer } from 'react-native-screens';
 const searchGlass = require('../../images/whiteSearch.png');
 const closeButton = require('../../images/button_close_white.png');
 
