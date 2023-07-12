@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   View,
@@ -9,7 +9,7 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getRolodexSearch } from '../ToDo/api';
 import { RolodexDataProps } from '../Relationships/interfaces';
 import AtoZRow from '../Relationships/AtoZRow';
@@ -25,6 +25,8 @@ export default function QuickSearch(props: any) {
   const [dataRolodex, setDataRolodex] = useState<RolodexDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [search, setSearch] = useState('');
+  const isFocused = useIsFocused();
+  const searchInputRef = useRef<TextInput>(null);
 
   const handleRowPress = (index: number) => {
     console.log('Index:' + index);
@@ -39,8 +41,14 @@ export default function QuickSearch(props: any) {
 
   useEffect(() => {
     console.log('search: ' + search);
-    fetchRolodexSearch(search);
+    if (search != '') {
+      fetchRolodexSearch(search);
+    }
   }, [search]);
+
+  useEffect(() => {
+    handleSearchFocus();
+  }, [isFocused]);
 
   function clearSearchPressed() {
     setSearch('');
@@ -52,6 +60,14 @@ export default function QuickSearch(props: any) {
 
   function searchPressed() {
     console.log('search pressed');
+  }
+
+  function handleSearchFocus() {
+    console.log('SEARCH: ' + searchInputRef.current);
+    if (searchInputRef != null && searchInputRef.current != null) {
+      console.log('here');
+      searchInputRef.current.focus();
+    }
   }
 
   function fetchRolodexSearch(type: string) {
@@ -82,9 +98,10 @@ export default function QuickSearch(props: any) {
       </View>
       <View style={styles2.searchView}>
         <Image source={searchGlass} style={styles2.magGlass} />
-
         <TextInput
           style={styles2.textInput}
+          ref={searchInputRef}
+          onPressIn={handleSearchFocus}
           placeholder="Search By Name or Address"
           placeholderTextColor="#AFB9C2"
           textAlign="left"

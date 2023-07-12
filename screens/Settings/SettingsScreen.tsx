@@ -250,9 +250,9 @@ export default function SettingsScreen() {
       <DarkOrLightScreen setLightOrDarkLabel={setLightOrDarkLabel} setLightOrDark={setLightOrDark}></DarkOrLightScreen>
       <View style={styles.container}>
         <View style={styles.topView}>
-          <View style={styles.imageBox}>
+          {/* <View style={styles.imageBox}>
             <Image source={person} style={styles.personImage} />
-          </View>
+          </View> */}
           <View style={styles.userNameView}>
             <Text style={styles.userText}>{profileData != null ? profileData.email : ''}</Text>
             <Text onPress={changePasswordPressed} style={styles.changePasswordText}>
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
   userNameView: {
     flexDirection: 'column',
     width: '75%',
-    marginLeft: 5,
+    marginLeft: 15, // make 5 if image to the left
     //  marginTop: 6,
     textAlign: 'left',
     justifyContent: 'center',
