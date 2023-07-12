@@ -286,6 +286,7 @@ export default function ProfileScreen2(props: any) {
           />
         </View>
       </View>
+      <View style={styles.bottom}></View>
     </ScrollView>
   );
 }
@@ -358,5 +359,8 @@ const styles = StyleSheet.create({
   saveText: {
     color: 'white',
     fontSize: 18,
+  },
+  bottom: {
+    height: 300, // leave room for keyboard
   },
 });

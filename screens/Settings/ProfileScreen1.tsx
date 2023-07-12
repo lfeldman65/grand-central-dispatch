@@ -292,6 +292,7 @@ export default function ProfileScreen1(props: any) {
           />
         </View>
       </View>
+      <View style={styles.bottom}></View>
     </ScrollView>
   );
 }
@@ -364,5 +365,8 @@ const styles = StyleSheet.create({
   filterView: {
     width: '100%',
     padding: 12,
+  },
+  bottom: {
+    height: 300, // leave room for keyboard
   },
 });
