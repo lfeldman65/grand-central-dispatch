@@ -155,7 +155,7 @@ export default function SettingsScreen() {
       contentType: 'none',
       itemId: 'id1512',
     });
-    Linking.openURL('https://www.buffiniandcompany.com/privacy-policy.aspx');
+    Linking.openURL('https://www.buffiniandcompany.com/company/privacy-policy.aspx?v=1');
   }
 
   function termsPressed() {
