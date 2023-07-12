@@ -82,6 +82,7 @@ export function removeTrailingDecimal(value: string) {
 
 export function removeLeadingDecimal(value: string) {
   // i.e. 3129.27 -> 27
+  console.log('remove leading: ' + value);
   if (value == null || value == '') {
     return '0';
   }

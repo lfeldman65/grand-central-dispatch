@@ -118,16 +118,12 @@ export default function BizGoalsScreen1(props: any) {
       setAveCommissionBU('');
     } else {
       if (commType == 'dollar') {
-        console.log('please be here.');
-
         setAveCommission(removeTrailingDecimal(aveComm!));
         setAveCommissionBU(removeTrailingDecimal(aveComm!));
       } else {
         setAveCommission(removeLeadingDecimal(aveComm!));
         setAveCommissionBU(removeLeadingDecimal(aveComm!));
       }
-      setAveCommission(removeTrailingDecimal(aveComm));
-      setAveCommissionBU(removeTrailingDecimal(aveComm));
     }
   }
 
@@ -231,6 +227,7 @@ export default function BizGoalsScreen1(props: any) {
           if (!isMounted) {
             return;
           }
+          console.log('ave tx comm: ' + res.data.averageSaleCommission);
           console.log('type2222: ' + res.data.commissionType);
           initializeFields(
             res.data.desiredSalary,
