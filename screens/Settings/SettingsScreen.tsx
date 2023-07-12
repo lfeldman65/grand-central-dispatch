@@ -416,7 +416,7 @@ export default function SettingsScreen() {
         <View style={styles.bottomView}>
           <TouchableOpacity style={styles.bottomContainer} onPress={signOutPressed}>
             <View style={styles.signOutButton}>
-              <Text style={styles.signOutText}>{'Sign Out'}</Text>
+              <Text style={styles.signOutText}>{'Log out'}</Text>
             </View>
           </TouchableOpacity>
           <Text style={styles.versionText}>{'Version ' + Constants.manifest?.version} </Text>
@@ -520,6 +520,8 @@ const styles = StyleSheet.create({
   bottomContainer: {
     backgroundColor: '#1A6295',
     height: 50,
+    width: 100,
+    alignSelf: 'center',
   },
   versionText: {
     marginTop: 8,
