@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Animated } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import Collapsible from 'react-native-collapsible';
@@ -30,6 +30,13 @@ function CustomDrawerContent(props: any) {
   });
   const [hasBombBomb, setHasBombBomb] = useState(false);
   const [businessType, setBusinessType] = useState('unknown');
+
+  useEffect(() => {
+    navigation.addListener('state', () => {
+      console.log('state change!!!!!!!--------------------');
+      setExpanded({ relationships: false, transactions: false });
+    });
+  }, []);
 
   async function handleRelMenuExpand() {
     var hasBombBombString = await storage.getItem('hasBombBomb');
