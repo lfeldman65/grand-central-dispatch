@@ -737,11 +737,15 @@ export default function EditRelationshipScreen(props: any) {
         onChangeText={(text) => setInterests(text)}
         defaultValue={interests}
       />
+      <View style={styles.footer}></View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  footer: {
+    height: 300,
+  },
   saveButton: {
     padding: 5,
   },

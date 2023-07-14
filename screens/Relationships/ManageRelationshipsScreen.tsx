@@ -97,29 +97,29 @@ export default function ManageRelationshipsScreen() {
       const contacts = azData.map((e) => {
         if (showFilterTitle() == 'Rel') {
           if (localDisplay == 'First Last') {
-            if (e.firstName.substring(0, 1) == indexChar) {
+            if (e.firstName.substring(0, 1).toUpperCase() == indexChar) {
               return e;
             }
             if (indexChar == '#') {
-              if (!isFirstLetterAlpha(e.firstName)) {
+              if (!isFirstLetterAlpha(e.firstName.toUpperCase())) {
                 return e;
               }
               return null;
             }
             return null;
           }
-          if (e.lastName.substring(0, 1) == indexChar) {
+          if (e.lastName.substring(0, 1).toUpperCase() == indexChar) {
             return e;
           }
           if (indexChar == '#') {
-            if (!isFirstLetterAlpha(e.lastName)) {
+            if (!isFirstLetterAlpha(e.lastName.toUpperCase())) {
               return e;
             }
             return null;
           }
           return null;
         } else {
-          if (e.employerName.substring(0, 1) == indexChar) {
+          if (e.employerName.substring(0, 1).toUpperCase() == indexChar) {
             return e;
           }
           return null;
