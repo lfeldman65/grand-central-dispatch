@@ -82,8 +82,9 @@ interface RelDetailsLocalProps {
 }
 export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const { route } = props;
-  const { contactId, firstName, lastName, lightOrDark } = route.params;
+  const { contactId, firstName, lastName, lightOrDark, goToEdit } = route.params;
   const navigation = useNavigation();
+  const [shouldGoToEdit, setShouldGoToEdit] = useState(goToEdit ?? false);
   const [theRank, setTheRank] = useState('D');
   const [isQual, setIsQual] = useState('False');
   const [dataDetails, setDataDetails] = useState<RelDetailsProps>();
@@ -247,7 +248,19 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     quickUpdateRankQual();
   }
 
-  function editPressed() {
+  function editPressed(data: RelDetailsProps | undefined) {
+    ga4Analytics('Relationships_Edit', {
+      contentType: 'none',
+      itemId: 'id0508',
+    });
+    if (data == null) return;
+    navigation.navigate('EditRelationshipScreen', {
+      data: data,
+      lightOrDark: lightOrDark,
+    });
+  }
+
+  function editPressed2() {
     ga4Analytics('Relationships_Edit', {
       contentType: 'none',
       itemId: 'id0508',
@@ -262,7 +275,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity style={styles.editAndBackText} onPress={editPressed}>
+        <TouchableOpacity style={styles.editAndBackText} onPress={editPressed2}>
           <Text style={styles.editAndBackText}>Edit</Text>
         </TouchableOpacity>
       ),
@@ -277,7 +290,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   useEffect(() => {
     let isMounted = true;
-    fetchRelDetails(isMounted);
+    fetchRelDetails(isMounted, shouldGoToEdit);
     console.log('is focused');
     return () => {
       isMounted = false;
@@ -717,7 +730,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       setShowPersonal(!showPersonal);
     }
     if (sectionIndex == 1) {
-      fetchRelDetails(true);
+      fetchRelDetails(true, false);
       setShowActivity(!showActivity);
     }
     if (sectionIndex == 2) {
@@ -810,7 +823,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     return addressString;
   }
 
-  function fetchRelDetails(isMounted: boolean) {
+  function fetchRelDetails(isMounted: boolean, toEdit: boolean) {
     setIsLoading(true);
     getRelDetails(contactId)
       .then((res) => {
@@ -825,6 +838,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           setTheRank(res.data.ranking);
           setIsQual(res.data.qualified);
           setIsFavorite(res.data.address.isFavorite);
+          if (toEdit) {
+            setShouldGoToEdit(false);
+            editPressed(res.data);
+            //setTimeout(() => {  editPressed(res.data);console.log("edit pressed!"); }, 2000);
+          }
           //   console.log('dataDetails:' + res.data);
         }
         setIsLoading(false);
