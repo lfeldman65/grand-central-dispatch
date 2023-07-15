@@ -7,12 +7,14 @@ import { RolodexDataProps } from './interfaces';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 import { getGoalData } from '../Goals/api';
 import { GoalDataProps } from '../Goals/interfaces';
+import { useNavigation } from '@react-navigation/native';
 
 let deviceWidth = Dimensions.get('window').width;
 
 export default function AddRelationshipScreen(props: any) {
   const { setModalVisible, title, onSave, lightOrDark } = props;
   const [bizChecked, setBizCheck] = useState(false);
+  const navigation = useNavigation();
   const [referralChecked, setReferralChecked] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -54,7 +56,7 @@ export default function AddRelationshipScreen(props: any) {
         } else {
           //  console.log(res);
           setModalVisible(false);
-          afterSave();
+          afterSave(res.data[0].id);
         }
         //   setIsLoading(false);
       })
@@ -64,13 +66,23 @@ export default function AddRelationshipScreen(props: any) {
     setModalVisible(false);
   }
 
-  function afterSave() {
+  function goToEditRel(newGuid: string) {
+    navigation.navigate('RelDetails', {
+      contactId: newGuid,
+      firstName: firstName,
+      lastName: lastName,
+      lightOrDark: lightOrDark,
+      goToEdit: true,
+    });
+  }
+
+  function afterSave(newGuid: string) {
     console.log('aftersave');
-    fetchGoals();
+    fetchGoals(newGuid);
     onSave();
   }
 
-  function fetchGoals() {
+  function fetchGoals(newGuid: string) {
     getGoalData()
       .then((res) => {
         if (res.status == 'error') {
@@ -78,6 +90,7 @@ export default function AddRelationshipScreen(props: any) {
         } else {
           console.log('fetchgoals');
           notifyIfWin(4, res.data);
+          goToEditRel(newGuid);
         }
       })
       .catch((error) => console.error('failure ' + error));
