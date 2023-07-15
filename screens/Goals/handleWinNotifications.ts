@@ -54,6 +54,9 @@ export async function testForNotificationTrack(
   if (goalName == 'Pop-By Made') {
     newGoalName = 'Pop-Bys Made';
   }
+  if (goalName == 'New Contacts') {
+    newGoalName = 'New Relationships';
+  }
   console.log('TEST DAILY TITLE: ' + goalName);
   console.log('TEST DAILY GOAL: ' + dailyGoal);
   console.log('TEST WEEKLY GOAL: ' + weeklyGoal);

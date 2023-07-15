@@ -22,7 +22,9 @@ async function fetchPACInfo() {
         console.error(res.error);
       } else {
         for (var i = 2; i < 7; i++) {
-          await schedulePACNotifications(i, res.data[0].contactName);
+          if (res.data[0].contactName != null && res.data[0].contactName != '') {
+            await schedulePACNotifications(i, res.data[0].contactName);
+          }
         }
       }
     })

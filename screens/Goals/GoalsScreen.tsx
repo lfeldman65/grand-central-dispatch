@@ -242,7 +242,7 @@ export default function GoalsScreen() {
           setGoalList(res.data);
           //  console.log(res.data);
           if (afterTrack) {
-            console.log('goalid: ' + goalIDForReferralType);
+            console.log('goalid track: ' + goalIDForReferralType);
             notifyIfWin(goalIDForReferralType, res.data);
           }
         }
@@ -269,10 +269,10 @@ export default function GoalsScreen() {
 
   function saveAddRelComplete() {
     console.log('SAVEADDRELCOMPLETE');
-    fetchGoals(true, true);
+    fetchGoals(true, false);
   }
 
-  function saveComplete(
+  function saveTrackComplete(
     guid: string,
     contactGUID: string,
     userGaveReferral: boolean,
@@ -462,7 +462,7 @@ export default function GoalsScreen() {
               <TrackActivity
                 lightOrDark={lightOrDark}
                 title="Track Activity"
-                onSave={saveComplete}
+                onSave={saveTrackComplete}
                 setModalVisible={setTrackModalVisible}
               />
             </Modal>

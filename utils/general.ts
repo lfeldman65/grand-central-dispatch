@@ -90,7 +90,7 @@ export async function schedulePACNotifications(day: number, person: string) {
   // console.log('shedule PAC Notifs');
   const schedulingOptions = {
     content: {
-      title: "Top O' the Morning to You!",
+      title: "Top O' the Morning to You PAC Test 2!",
       body: 'Time to make your first call to ' + person + '!',
       sound: true,
       data: {
@@ -102,7 +102,7 @@ export async function schedulePACNotifications(day: number, person: string) {
     trigger: {
       hour: 9,
       minute: 0,
-      //  second: 0,
+      second: 0,
       weekday: day,
       repeats: true,
       //  repeat: 'week',
@@ -126,7 +126,7 @@ export async function scheduleToDoNotifications(day: number, count: string) {
   }
   const schedulingOptions = {
     content: {
-      title: "Top O' the Morning to You!",
+      title: "Top O' the Morning to You To-Do Test 2!",
       body: message,
       sound: true,
       data: {
@@ -138,7 +138,7 @@ export async function scheduleToDoNotifications(day: number, count: string) {
     trigger: {
       hour: 9,
       minute: 15,
-      //  second: 0,
+      second: 0,
       weekday: day,
       repeats: true,
       //  repeat: 'week',
