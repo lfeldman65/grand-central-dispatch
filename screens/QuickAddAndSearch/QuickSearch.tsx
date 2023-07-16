@@ -13,7 +13,7 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getRolodexSearch } from '../ToDo/api';
 import { RolodexDataProps } from '../Relationships/interfaces';
 import AtoZRow from '../Relationships/AtoZRow';
-import globalStyles from '../../globalStyles';
+import globalStyles from '../../globalStyles'; // test.
 
 const closeButton = require('../../images/button_close_white.png');
 const searchGlass = require('../../images/whiteSearch.png');
