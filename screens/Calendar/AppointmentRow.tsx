@@ -41,9 +41,9 @@ export default function AppointmentRow(props: ApptRowProps) {
               })}
           </Text>
         </View>
-        {props.data.notes != '' && (
+        {/* {props.data.notes != '' && (
           <Text style={styles.notesText}>{makeLongTxtPretty(props.data.notes, 0.1 * deviceWidth)}</Text>
-        )}
+        )} */}
       </View>
     </TouchableOpacity>
   );
