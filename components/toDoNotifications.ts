@@ -6,8 +6,8 @@ import { storage } from '../utils/storage';
 export async function handleToDoNotifications() {
   for (var i = 2; i < 7; i++) {
     var identifier = await storage.getItem('todo-notification-' + i);
-    // console.log('received from storage ' + identifier);
-    if (identifier != null) cancelScheduledNotificationAsync(identifier);
+    console.log('received from storage ' + identifier);
+    if (identifier != null) await cancelScheduledNotificationAsync(identifier);
   }
   if (await hasToDoNotifications()) {
     fetchToDoInfo();

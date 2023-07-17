@@ -8,7 +8,7 @@ export async function handlePACNotifications() {
   for (var i = 2; i < 7; i++) {
     var identifier = await storage.getItem('pac-notification-' + i.toString());
     console.log('received from storage ' + identifier);
-    if (identifier != null) cancelScheduledNotificationAsync(identifier);
+    if (identifier != null) await cancelScheduledNotificationAsync(identifier);
   }
   if (await hasPACNotifications()) {
     fetchPACInfo();

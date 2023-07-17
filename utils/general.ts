@@ -102,14 +102,14 @@ export async function schedulePACNotifications(day: number, person: string) {
     trigger: {
       hour: 9,
       minute: 0,
-      second: 0,
+      //   second: 0,
       weekday: day,
       repeats: true,
       //  repeat: 'week',
     },
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
-  //  console.log('pac notification ' + identifier);
+  console.log('pac notification ' + identifier);
   await storage.setItem('pac-notification-' + day.toString(), identifier);
   return identifier;
 }
@@ -138,14 +138,14 @@ export async function scheduleToDoNotifications(day: number, count: string) {
     trigger: {
       hour: 9,
       minute: 15,
-      second: 0,
+      //  second: 0,
       weekday: day,
       repeats: true,
       //  repeat: 'week',
     },
   };
   var identifier = await Notifications.scheduleNotificationAsync(schedulingOptions);
-  // console.log('todo notification ' + JSON.stringify(identifier));
+  console.log('todo notification ' + JSON.stringify(identifier));
   await storage.setItem('todo-notification-' + day.toString(), identifier);
   return identifier;
 }
