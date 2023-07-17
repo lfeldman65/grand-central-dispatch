@@ -90,7 +90,7 @@ export async function schedulePACNotifications(day: number, person: string) {
   // console.log('shedule PAC Notifs');
   const schedulingOptions = {
     content: {
-      title: "Top O' the Morning to You PAC Test 2!",
+      title: "Top O' the Morning to You!",
       body: 'Time to make your first call to ' + person + '!',
       sound: true,
       data: {
@@ -118,15 +118,15 @@ export async function scheduleToDoNotifications(day: number, count: string) {
   //  console.log('shedule ToDo Notifs');
   var message = '';
   if (count == '0') {
-    message = "You're all caught up for today! Tap here to see other To-Do's";
+    message = "You're all caught up for today! Tap here to see other To Dos";
   } else if (count == '1') {
-    message = 'You have 1 To-Do Today!';
+    message = 'You have 1 To Do Today!';
   } else {
-    message = 'You have ' + count.toString() + " To-Do's today!";
+    message = 'You have ' + count.toString() + ' To Dos today!';
   }
   const schedulingOptions = {
     content: {
-      title: "Top O' the Morning to You To-Do Test 2!",
+      title: "Top O' the Morning to You!",
       body: message,
       sound: true,
       data: {
