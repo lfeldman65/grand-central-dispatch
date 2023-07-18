@@ -226,17 +226,17 @@ export default function DashboardScreen() {
   }, [notificationPermissions]);
 
   function runTests() {
-    // goalTests();
-    // pacTestComplete(); // only one pac test at a time
+    //  goalTests();
+    //  pacTestComplete(); // only one pac test at a time
     // pacTestPostpone();
     // testAddRelationship();
-    // testAddRelationshipToGroup();
-    // testRemoveRelationshipFromGroup();
-    // testAddTransaction();
-    // testAddToDo();
-    // testDeleteToDo();
-    // testAddAppointment();
-    //  testDeleteAppointment();
+    //testAddRelationshipToGroup();
+    //testRemoveRelationshipFromGroup();
+    //  testAddTransaction();
+    //  testAddToDo(); //
+    //  testDeleteToDo(); // fail
+    //testAddAppointment();
+    //testDeleteAppointment();
     return;
   }
 

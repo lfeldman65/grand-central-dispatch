@@ -1,6 +1,7 @@
 import { addNewToDo, getToDoData, deleteToDo } from './api';
 
 const title = 'ToDoTestTitle';
+const goalID = 1;
 const dueDate = '2023-03-18T00:00:00';
 const priority = 'True';
 const location = 'ToDoTestLocation';
@@ -39,6 +40,7 @@ function addToDoAPI() {
   var newAttendees = new Array();
   addNewToDo(
     title,
+    goalID,
     dueDate,
     priority,
     location,
