@@ -18,7 +18,7 @@ export default function AppointmentRow(props: ApptRowProps) {
     if (prettyDate(props.data.startTime) == prettyDate(props.data.endTime)) {
       dateTimeRow =
         prettyDate(props.data.startTime) +
-        ' ' +
+        ': ' +
         new Date(props.data.startTime).toLocaleTimeString('en-us', {
           hour12: true,
           hour: 'numeric',
@@ -33,7 +33,7 @@ export default function AppointmentRow(props: ApptRowProps) {
     } else {
       dateTimeRow =
         prettyDate(props.data.startTime) +
-        ' ' +
+        ': ' +
         new Date(props.data.startTime).toLocaleTimeString('en-us', {
           hour12: true,
           hour: 'numeric',
@@ -41,7 +41,7 @@ export default function AppointmentRow(props: ApptRowProps) {
         }) +
         ' - ' +
         prettyDate(props.data.endTime) +
-        ' ' +
+        ': ' +
         new Date(props.data.endTime).toLocaleTimeString('en-us', {
           hour12: true,
           hour: 'numeric',
