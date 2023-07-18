@@ -13,6 +13,44 @@ let deviceWidth = Dimensions.get('window').width;
 console.log('width: ' + deviceWidth);
 
 export default function AppointmentRow(props: ApptRowProps) {
+  function makeDateTimeRow() {
+    var dateTimeRow = '';
+    if (prettyDate(props.data.startTime) == prettyDate(props.data.endTime)) {
+      dateTimeRow =
+        prettyDate(props.data.startTime) +
+        ' ' +
+        new Date(props.data.startTime).toLocaleTimeString('en-us', {
+          hour12: true,
+          hour: 'numeric',
+          minute: '2-digit',
+        }) +
+        ' - ' +
+        new Date(props.data.endTime).toLocaleTimeString('en-us', {
+          hour12: true,
+          hour: 'numeric',
+          minute: '2-digit',
+        });
+    } else {
+      dateTimeRow =
+        prettyDate(props.data.startTime) +
+        ' ' +
+        new Date(props.data.startTime).toLocaleTimeString('en-us', {
+          hour12: true,
+          hour: 'numeric',
+          minute: '2-digit',
+        }) +
+        ' - ' +
+        prettyDate(props.data.endTime) +
+        ' ' +
+        new Date(props.data.endTime).toLocaleTimeString('en-us', {
+          hour12: true,
+          hour: 'numeric',
+          minute: '2-digit',
+        });
+    }
+    return dateTimeRow;
+  }
+
   return (
     <TouchableOpacity onPress={props.onPress}>
       <View style={props.lightOrDark == 'dark' ? styles.rowDark : styles.rowLight}>
@@ -23,23 +61,7 @@ export default function AppointmentRow(props: ApptRowProps) {
         </View>
 
         <View style={styles.startView}>
-          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>
-            {prettyDate(props.data.startTime) +
-              ' ' +
-              new Date(props.data.startTime).toLocaleTimeString('en-us', {
-                hour12: true,
-                hour: 'numeric',
-                minute: '2-digit',
-              }) +
-              ' - ' +
-              prettyDate(props.data.endTime) +
-              ' ' +
-              new Date(props.data.endTime).toLocaleTimeString('en-us', {
-                hour12: true,
-                hour: 'numeric',
-                minute: '2-digit',
-              })}
-          </Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.dateDark : styles.dateLight}>{makeDateTimeRow()}</Text>
         </View>
         {/* {props.data.notes != '' && (
           <Text style={styles.notesText}>{makeLongTxtPretty(props.data.notes, 0.1 * deviceWidth)}</Text>
