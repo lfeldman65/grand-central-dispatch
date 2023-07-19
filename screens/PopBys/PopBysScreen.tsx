@@ -30,7 +30,6 @@ import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 
-const LOCATION_TASK_NAME = 'background-location-task';
 var northEast: LatLng | null = null;
 var southWest: LatLng | null = null;
 
@@ -87,8 +86,8 @@ export default function ManageRelationshipsScreen() {
       nearPressed();
       locationCallBack = await Location.watchPositionAsync(
         {
-          distanceInterval: 800, //approx 0.5 miles
-          timeInterval: 60000, // must wait 60 seconds before receiving updates
+          distanceInterval: 400, //approx 0.25 miles
+          timeInterval: 30000, // must wait 30 seconds before receiving updates
         },
         (newLocation) => {
           console.log('new location ' + newLocation.coords.latitude);
@@ -116,7 +115,7 @@ export default function ManageRelationshipsScreen() {
   async function calculateAndNotify(loc: Location.LocationObject, data: PopByRadiusDataProps[], notify: boolean) {
     var notifOn = await getNotificationStatus('notifPopBys');
     var alreadyScheduled = false;
-    //console.log('calculateAndNotify: ' + loc.coords.latitude);
+    console.log('calculateAndNotify: ' + loc.coords.latitude);
     var tempArray: PopByRadiusDataProps[] = [];
 
     for (var i = 0; i < data.length; i++) {
@@ -129,15 +128,16 @@ export default function ManageRelationshipsScreen() {
         var mb = milesBetween(lon, lat, loc.coords.longitude, loc.coords.latitude);
 
         t.distance = mb.toFixed(1);
-        //   console.log('calculating ' + mb.toFixed(1));
+        console.log('calculating ' + mb.toFixed(1));
+        console.log('already scheduled ' + alreadyScheduled);
         if (
           mb <= 5 &&
           !alreadyScheduled &&
           !data[i].notified &&
-          data[i].ranking == 'A+' &&
-          (await enoughTimePassedRel(data[i].id, 30)) &&
-          (await enoughTimePassedNotif(60))
+          passesRankTest(data[i].ranking) &&
+          (await enoughTimePassedRel(data[i].id, 30))
         ) {
+          console.log('can I get here?');
           t.notified = true;
           alreadyScheduled = true;
           if (notify && notifOn) {
@@ -163,30 +163,27 @@ export default function ManageRelationshipsScreen() {
     setPopByData(tempArray);
   }
 
+  function passesRankTest(rank: string) {
+    if (rank == 'A+') return true;
+    if (rank == 'A') return true;
+    //   if (rank == 'B') return true;
+    //   if (rank == 'C') return true;
+    return false;
+  }
+
   async function enoughTimePassedRel(guid: string, daysBetween: number) {
     // same relationship must have at least x days between notifications
+    console.log('enough time passed rel');
     var now = Date.now();
     const lastNotifForRel = await storage.getItem(guid + 'pop');
-    if (guid == '44a5777d-8867-49ba-b7b3-02018dde8138') {
-      //   console.log('LASTNOTIF PENTANGELLI: ' + lastNotifForRel);
-    }
     if (lastNotifForRel == null) {
-      if (guid == '44a5777d-8867-49ba-b7b3-02018dde8138') {
-        console.log('SAVE PENTAGELLI FIRST TIME: ' + lastNotifForRel);
-      }
       storage.setItem(guid + 'pop', now.toString());
       return true;
     }
     const msecBetween = daysBetween * 24 * 3600 * 1000;
+    //   const msecBetween = 60 * 1000;
     const nextNotif = parseFloat(lastNotifForRel) + msecBetween;
-    if (guid == '44a5777d-8867-49ba-b7b3-02018dde8138') {
-      //  console.log('NEXTNOTIF: ' + nextNotif.toString());
-      //  console.log('NOW2: ' + now);
-    }
     if (now > nextNotif) {
-      if (guid == '44a5777d-8867-49ba-b7b3-02018dde8138') {
-        //  console.log('SAVE PENTAGELLI SECOND TIME: ' + now);
-      }
       storage.setItem(guid + 'pop', now.toString());
       return true;
     }
@@ -195,6 +192,7 @@ export default function ManageRelationshipsScreen() {
 
   async function enoughTimePassedNotif(secondsBetween: number) {
     // Must have at least y seconds between successive notifications
+    console.log('enough time passed notif');
     var now = Date.now();
     const lastNotif = await storage.getItem('lastPopNotification');
     if (lastNotif == null) {
@@ -202,7 +200,7 @@ export default function ManageRelationshipsScreen() {
       return true;
     }
     const nextNotif = parseFloat(lastNotif) + secondsBetween * 1000;
-    //  console.log('LASTNOTIF:' + parseFloat(lastNotif));
+    console.log('LASTNOTIF:' + parseFloat(lastNotif));
     if (now > nextNotif) {
       storage.setItem('lastPopNotification', now.toString());
       return true;
@@ -293,8 +291,8 @@ export default function ManageRelationshipsScreen() {
         mapRef.animateToRegion({
           latitude: location!.coords.latitude,
           longitude: location!.coords.longitude,
-          latitudeDelta: 0.15,
-          longitudeDelta: 0.15,
+          latitudeDelta: 0.25,
+          longitudeDelta: 0.25,
         });
         setNeedToZoomMap(false);
       }
@@ -308,8 +306,8 @@ export default function ManageRelationshipsScreen() {
         mapRef.animateToRegion({
           latitude: location!.coords.latitude,
           longitude: location!.coords.longitude,
-          latitudeDelta: 0.15,
-          longitudeDelta: 0.15,
+          latitudeDelta: 0.25,
+          longitudeDelta: 0.25,
         });
         setNeedToZoomMap(false);
       }
@@ -734,7 +732,7 @@ export default function ManageRelationshipsScreen() {
               ref={(ref) => updateMapRef(ref!)}
               showsUserLocation={true}
               style={styles.map}
-              followsUserLocation={tabSelected == 'Saved' && showRoute}
+              followsUserLocation={false} // {tabSelected == 'Saved' && showRoute} // preQA always false?
               /*
               initialRegion={{
                 //latitude: -37.112146,
