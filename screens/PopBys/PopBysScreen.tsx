@@ -29,6 +29,7 @@ import { scheduleNotifications, getNotificationStatus } from '../../utils/genera
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import { stylesPop } from './stylesPop';
 
 var northEast: LatLng | null = null;
 var southWest: LatLng | null = null;
@@ -230,13 +231,13 @@ export default function ManageRelationshipsScreen() {
 
   function getMapHeight() {
     if (mapHeight == 'short') {
-      return styles.mapViewShort;
+      return stylesPop.mapViewShort;
     }
     if (mapHeight == 'medium') {
-      return styles.mapViewMedium;
+      return stylesPop.mapViewMedium;
     }
     if (mapHeight == 'long') {
-      return styles.mapViewLong;
+      return stylesPop.mapViewLong;
     }
   }
 
@@ -590,13 +591,13 @@ export default function ManageRelationshipsScreen() {
   }
 
   function getUpArrowStyle() {
-    if (mapHeight == 'short') return styles.upAndDownButtonsDim;
-    return styles.upAndDownButtons;
+    if (mapHeight == 'short') return stylesPop.upAndDownButtonsDim;
+    return stylesPop.upAndDownButtons;
   }
 
   function getDownArrowStyle() {
-    if (mapHeight == 'long') return styles.upAndDownButtonsDim;
-    return styles.upAndDownButtons;
+    if (mapHeight == 'long') return stylesPop.upAndDownButtonsDim;
+    return stylesPop.upAndDownButtons;
   }
 
   function getSavedButton() {
@@ -697,32 +698,32 @@ export default function ManageRelationshipsScreen() {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.actionAndFilterButtonView}>
-            <View style={styles.actionButtonView}>
+          <View style={stylesPop.actionAndFilterButtonView}>
+            <View style={stylesPop.actionButtonView}>
               {tabSelected == 'Saved' && (
                 <TouchableOpacity onPress={toggleRouteButton}>
-                  <Image source={getRouteButton()} style={styles.actionButtons} />
+                  <Image source={getRouteButton()} style={stylesPop.actionButtons} />
                 </TouchableOpacity>
               )}
             </View>
-            <View style={styles.filterView}>
+            <View style={stylesPop.filterView}>
               <TouchableOpacity onPress={tapAPlusFilter}>
-                <Image source={pinAPlus} style={showAPlus ? styles.pinFilterShow : styles.pinFilterDim} />
+                <Image source={pinAPlus} style={showAPlus ? stylesPop.pinFilterShow : stylesPop.pinFilterDim} />
               </TouchableOpacity>
               <TouchableOpacity onPress={tapAFilter}>
-                <Image source={pinA} style={showA ? styles.pinFilterShow : styles.pinFilterDim} />
+                <Image source={pinA} style={showA ? stylesPop.pinFilterShow : stylesPop.pinFilterDim} />
               </TouchableOpacity>
               <TouchableOpacity onPress={tapBFilter}>
-                <Image source={pinB} style={showB ? styles.pinFilterShow : styles.pinFilterDim} />
+                <Image source={pinB} style={showB ? stylesPop.pinFilterShow : stylesPop.pinFilterDim} />
               </TouchableOpacity>
               <TouchableOpacity onPress={tapCFilter}>
-                <Image source={pinC} style={showC ? styles.pinFilterShow : styles.pinFilterDim} />
+                <Image source={pinC} style={showC ? stylesPop.pinFilterShow : stylesPop.pinFilterDim} />
               </TouchableOpacity>
             </View>
 
-            <View style={styles.actionButtonView}>
+            <View style={stylesPop.actionButtonView}>
               <TouchableOpacity onPress={saveOrUnsavePressed}>
-                <Image source={getSavedButton()} style={styles.actionButtons} />
+                <Image source={getSavedButton()} style={stylesPop.actionButtons} />
               </TouchableOpacity>
             </View>
           </View>
@@ -731,7 +732,7 @@ export default function ManageRelationshipsScreen() {
             <MapView
               ref={(ref) => updateMapRef(ref!)}
               showsUserLocation={true}
-              style={styles.map}
+              style={stylesPop.map}
               followsUserLocation={false} // {tabSelected == 'Saved' && showRoute} // preQA always false?
               /*
               initialRegion={{
@@ -755,7 +756,7 @@ export default function ManageRelationshipsScreen() {
                       longitude: parseFloat(person.location.longitude),
                     }}
                     image={getRankPin(person.ranking)}
-                    style={styles.pinFilterShow}
+                    style={stylesPop.pinFilterShow}
                     title={person.firstName + ' ' + person.lastName}
                     description={
                       person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'
@@ -767,22 +768,22 @@ export default function ManageRelationshipsScreen() {
               )}
             </MapView>
             {mapHeight != 'short' && (
-              <TouchableOpacity onPress={centerMap} style={styles.bottomView}>
-                <Image source={centerMapImg} style={styles.centerButton} />
+              <TouchableOpacity onPress={centerMap} style={stylesPop.bottomView}>
+                <Image source={centerMapImg} style={stylesPop.centerButton} />
               </TouchableOpacity>
             )}
           </View>
 
-          <View style={styles.upAndDownRow}>
-            <TouchableOpacity style={styles.chevronView} onPress={upPressed}>
+          <View style={stylesPop.upAndDownRow}>
+            <TouchableOpacity style={stylesPop.chevronView} onPress={upPressed}>
               <View>
                 <Image source={chevronUp} style={getUpArrowStyle()} />
               </View>
             </TouchableOpacity>
-            <View style={lightOrDark == 'dark' ? styles.infoViewDark : styles.infoViewLight}>
-              <Text style={lightOrDark == 'dark' ? styles.infoTextDark : styles.infoTextLight}>{infoText}</Text>
+            <View style={stylesPop.infoView}>
+              <Text style={lightOrDark == 'dark' ? stylesPop.infoTextDark : stylesPop.infoTextLight}>{infoText}</Text>
             </View>
-            <TouchableOpacity style={styles.chevronView} onPress={downPressed}>
+            <TouchableOpacity style={stylesPop.chevronView} onPress={downPressed}>
               <View>
                 <Image source={chevronDown} style={getDownArrowStyle()} />
               </View>
@@ -861,115 +862,3 @@ export default function ManageRelationshipsScreen() {
     );
   }
 }
-
-export const styles = StyleSheet.create({
-  upAndDownRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 0.25,
-  },
-  chevronView: {
-    width: '10%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  infoViewDark: {
-    paddingLeft: 10,
-    flexDirection: 'row',
-    width: '75%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  infoViewLight: {
-    paddingLeft: 10,
-    flexDirection: 'row',
-    width: '75%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  infoTextDark: {
-    color: 'white',
-    paddingTop: 4,
-    fontSize: 16,
-  },
-  infoTextLight: {
-    color: 'black',
-    paddingTop: 4,
-    fontSize: 16,
-  },
-  actionAndFilterButtonView: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  filterView: {
-    height: 60,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingTop: 8,
-    width: '50%',
-  },
-  pinFilterShow: {
-    width: 30,
-    height: 43,
-    opacity: 1.0,
-  },
-  pinFilterDim: {
-    width: 30,
-    height: 43,
-    opacity: 0.4,
-  },
-  actionButtonView: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    width: '20%',
-    paddingTop: 8,
-  },
-  actionButtons: {
-    width: 40,
-    height: 40,
-  },
-  centerButton: {
-    width: 40,
-    height: 40,
-    right: 20,
-  },
-  upAndDownButtons: {
-    width: 25,
-    height: 15,
-    opacity: 1.0,
-  },
-  upAndDownButtonsDim: {
-    width: 25,
-    height: 15,
-    opacity: 0.4,
-  },
-  mapViewShort: {
-    height: '0%',
-    width: '100%',
-  },
-  mapViewMedium: {
-    height: '50%',
-    width: '100%',
-  },
-  mapViewLong: {
-    height: '70%',
-    width: '100%',
-  },
-  map: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
-  bottomView: {
-    flex: 1,
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 10,
-    alignSelf: 'flex-end',
-    justifyContent: 'space-between',
-    backgroundColor: 'transparent',
-  },
-});

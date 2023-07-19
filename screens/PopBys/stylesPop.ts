@@ -140,14 +140,7 @@ export const stylesPop = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  infoViewDark: {
-    paddingLeft: 10,
-    flexDirection: 'row',
-    width: '75%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  infoViewLight: {
+  infoView: {
     paddingLeft: 10,
     flexDirection: 'row',
     width: '75%',
