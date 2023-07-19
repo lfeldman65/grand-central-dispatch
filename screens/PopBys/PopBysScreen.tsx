@@ -755,6 +755,7 @@ export default function ManageRelationshipsScreen() {
                       longitude: parseFloat(person.location.longitude),
                     }}
                     image={getRankPin(person.ranking)}
+                    style={styles.pinFilterShow}
                     title={person.firstName + ' ' + person.lastName}
                     description={
                       person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'
