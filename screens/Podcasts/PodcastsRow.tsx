@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { PodcastDataProps } from './interfaces';
 import { makeLongTxtPretty } from '../../utils/general';
@@ -9,6 +9,20 @@ interface PodcastsRowProps {
   data: PodcastDataProps;
   onPress(): void;
   lightOrDark: string;
+}
+
+function getLine1(title: string) {
+  var titleParts = title.split(':');
+  return titleParts[0] + ':' + titleParts[1];
+}
+
+function getLine2(title: string) {
+  let deviceWidth = Dimensions.get('window').width;
+  console.log(deviceWidth);
+  var titleParts = title.split(':');
+  var charLimit = -0.66 * deviceWidth + 60;
+  console.log(charLimit);
+  return makeLongTxtPretty(titleParts[2].trim(), 80);
 }
 
 function makeTimePretty(duration: number) {
@@ -49,7 +63,10 @@ export default function PodcastsRow(props: PodcastsRowProps) {
         </View>
         <View style={styles.textBox}>
           <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
-            {makeLongTxtPretty(props.data.title, 40)}
+            {getLine1(props.data.title)}
+          </Text>
+          <Text style={props.lightOrDark == 'dark' ? styles.title2TextDark : styles.title2TextLight}>
+            {getLine2(props.data.title)}
           </Text>
           <Text style={styles.timeText}>{makeTimePretty(props.data.duration)}</Text>
         </View>
@@ -65,7 +82,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderColor: 'lightgray',
     borderWidth: 0.25,
-    height: 60,
+    height: 120,
+    justifyContent: 'center',
   },
   rowLight: {
     flexDirection: 'row',
@@ -73,13 +91,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: 'lightgray',
     borderWidth: 0.25,
-    height: 60,
+    height: 120,
+    justifyContent: 'center',
   },
   imageBox: {
     alignItems: 'center',
-    paddingTop: 10,
     marginLeft: 7,
     marginRight: 7,
+    justifyContent: 'center',
   },
   logoImage: {
     height: 30,
@@ -94,7 +113,7 @@ const styles = StyleSheet.create({
   },
   titleTextDark: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'left',
     marginLeft: 10,
     marginTop: 5,
@@ -102,11 +121,25 @@ const styles = StyleSheet.create({
   },
   titleTextLight: {
     color: 'black',
-    fontSize: 16,
+    fontSize: 14,
     textAlign: 'left',
     marginLeft: 10,
     marginTop: 5,
     fontWeight: '500',
+  },
+  title2TextDark: {
+    color: 'white',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginTop: 5,
+  },
+  title2TextLight: {
+    color: 'black',
+    fontSize: 14,
+    textAlign: 'left',
+    marginLeft: 10,
+    marginTop: 5,
   },
   timeText: {
     color: 'gray',
