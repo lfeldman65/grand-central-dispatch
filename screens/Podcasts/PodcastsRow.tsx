@@ -62,13 +62,15 @@ export default function PodcastsRow(props: PodcastsRowProps) {
           <Image source={logo} style={styles.logoImage} />
         </View>
         <View style={styles.textBox}>
-          <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
-            {getLine1(props.data.title)}
-          </Text>
+          <View style={styles.line1}>
+            <Text style={props.lightOrDark == 'dark' ? styles.titleTextDark : styles.titleTextLight}>
+              {getLine1(props.data.title)}
+            </Text>
+            <Text style={styles.timeText}>{makeTimePretty(props.data.duration)}</Text>
+          </View>
           <Text style={props.lightOrDark == 'dark' ? styles.title2TextDark : styles.title2TextLight}>
             {getLine2(props.data.title)}
           </Text>
-          <Text style={styles.timeText}>{makeTimePretty(props.data.duration)}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -104,9 +106,12 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
   },
+  line1: {
+    flexDirection: 'row',
+  },
   textBox: {
+    marginTop: 10,
     flexDirection: 'column',
-    height: 75,
     width: '85%',
     marginLeft: 5,
     textAlign: 'left',
@@ -145,9 +150,9 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 14,
     textAlign: 'left',
-    marginLeft: 10,
+    marginLeft: 20,
     marginBottom: 5,
-    marginTop: 3,
+    marginTop: 5,
   },
   chevronBox: {
     paddingTop: 1,

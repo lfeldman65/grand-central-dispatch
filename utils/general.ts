@@ -7,7 +7,7 @@ import * as Analytics from 'expo-firebase-analytics';
 import * as SMS from 'expo-sms';
 
 export function shouldRunTests() {
-  return false;
+  return true;
 }
 
 export function makeLongTxtPretty(longText: string, maxChar: number) {
