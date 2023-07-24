@@ -18,10 +18,10 @@ function getLine1(title: string) {
 
 function getLine2(title: string) {
   let deviceWidth = Dimensions.get('window').width;
-  console.log(deviceWidth);
+  //  console.log(deviceWidth);
   var titleParts = title.split(':');
   var charLimit = -0.66 * deviceWidth + 60;
-  console.log(charLimit);
+  //  console.log(charLimit);
   return makeLongTxtPretty(titleParts[2].trim(), 80);
 }
 

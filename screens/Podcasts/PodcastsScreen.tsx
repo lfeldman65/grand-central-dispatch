@@ -13,6 +13,8 @@ import { getSeasonAndEpisode } from './PodcastPlayer';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import { useContext } from 'react';
+import AppContext from './../../components/AppContext';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
@@ -27,11 +29,14 @@ export default function PodcastsScreen() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
+  const myContext = useContext(AppContext);
+
   const handleRowPress = (index: number) => {
     ga4Analytics('Podcast_Row', {
       contentType: getSeasonAndEpisode(data[index].title),
       itemId: 'id1401',
     });
+    myContext.setPodcastId(-1);
     setSelectedIndex(index);
     setModalPlayerVisible(!modalPlayerVisible);
   };
@@ -85,6 +90,22 @@ export default function PodcastsScreen() {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
+          //console.log(res.data)
+
+          if (myContext.podcastId != -1) {
+            //there is an audio already playing
+            for (var i = 0; i < res.data.length; i++) {
+              if (myContext.podcastId == res.data[i].id) {
+                const timer2 = setInterval(() => {
+                  clearInterval(timer2);
+                  setSelectedIndex(i);
+                  setModalPlayerVisible(!modalPlayerVisible);
+                }, 500);
+
+                break;
+              }
+            }
+          }
           setData(res.data);
         }
         setIsLoading(false);

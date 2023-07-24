@@ -5,6 +5,8 @@ import { Audio } from 'expo-av';
 import { PlayerStatus, PodcastDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
 import { ga4Analytics } from '../../utils/general';
+import { useContext } from 'react';
+import AppContext from './../../components/AppContext';
 
 const backChevron = require('../../images/chevron_white_left.png');
 const logo = require('../Podcasts/images/podcastLarge.png');
@@ -30,12 +32,16 @@ export function getSeasonAndEpisode(longTitle: string) {
 export default function PodcastPlayer(props: any) {
   const { setModalPlayerVisible, dataList, selectedIndex } = props;
   const [podcastItem, setPodcastItem] = useState<PodcastDataProps>(dataList[selectedIndex]);
-  const [currentIndex, setCurrentIndex] = useState(selectedIndex);
-  const [sound, setSound] = useState<Audio.Sound>();
+  const [currentPodcastIndex, setCurrentPodcastIndex] = useState(selectedIndex);
+  //const [currentIndex, setCurrentIndex] = useState(selectedIndex);
+  //const [sound, setSound] = useState<Audio.Sound>();
   const [isLoading, setIsLoading] = useState(true);
   const [isSeeking, setIsSeeking] = useState(false);
   const [shouldPlayAtEndOfSeek, setShouldPlayAtEndOfSeek] = useState(false);
 
+  const myContext = useContext(AppContext);
+
+  /*
   const [playerStatus, setPlayerStatus] = useState<PlayerStatus>({
     playbackInstancePosition: null,
     playbackInstanceDuration: null,
@@ -45,16 +51,17 @@ export default function PodcastPlayer(props: any) {
     muted: false,
     //isLoading: true,
     //isSeeking: false
-  });
+  });*/
+
   const isFocused = useIsFocused();
 
   function getSeekSliderPosition() {
     if (
-      sound != null &&
-      playerStatus.playbackInstancePosition != null &&
-      playerStatus.playbackInstanceDuration != null
+      myContext.sound != null &&
+      myContext.playerStatus.playbackInstancePosition != null &&
+      myContext.playerStatus.playbackInstanceDuration != null
     ) {
-      var pos = playerStatus.playbackInstancePosition / playerStatus.playbackInstanceDuration;
+      var pos = myContext.playerStatus.playbackInstancePosition / myContext.playerStatus.playbackInstanceDuration;
 
       //console.log(pos);
       return pos;
@@ -84,28 +91,28 @@ export default function PodcastPlayer(props: any) {
 
   function getTimeStamp() {
     if (
-      sound != null &&
-      playerStatus.playbackInstancePosition != null &&
-      playerStatus.playbackInstanceDuration != null
+      myContext.sound != null &&
+      myContext.playerStatus.playbackInstancePosition != null &&
+      myContext.playerStatus.playbackInstanceDuration != null
     ) {
-      return `${getMMSSFromMillis(playerStatus.playbackInstancePosition)}`;
+      return `${getMMSSFromMillis(myContext.playerStatus.playbackInstancePosition)}`;
     }
     return '';
   }
 
   function onVolumeSliderValueChange(value: any) {
-    if (sound != null) {
-      sound.setVolumeAsync(value);
+    if (myContext.sound != null) {
+      myContext.sound.setVolumeAsync(value);
     }
   }
 
   function getDurationTimeStamp() {
     if (
-      sound != null &&
-      playerStatus.playbackInstancePosition != null &&
-      playerStatus.playbackInstanceDuration != null
+      myContext.sound != null &&
+      myContext.playerStatus.playbackInstancePosition != null &&
+      myContext.playerStatus.playbackInstanceDuration != null
     ) {
-      return `${getMMSSFromMillis(playerStatus.playbackInstanceDuration)}`;
+      return `${getMMSSFromMillis(myContext.playerStatus.playbackInstanceDuration)}`;
     }
     return '';
   }
@@ -113,7 +120,7 @@ export default function PodcastPlayer(props: any) {
   function onPlaybackStatusUpdate(status: any) {
     if (status.isLoaded) {
       //console.log("volume " + status.volume);
-      setPlayerStatus({
+      myContext.setPlayerStatus({
         playbackInstancePosition: status.positionMillis,
         playbackInstanceDuration: status.durationMillis,
         shouldPlay: false,
@@ -136,87 +143,87 @@ export default function PodcastPlayer(props: any) {
   }
 
   async function backPressed() {
-    console.log('back pressed current index: ' + currentIndex);
+    console.log('back pressed current index: ' + currentPodcastIndex);
     ga4Analytics('Podcast_Player_Previous', {
       contentType: 'none',
       itemId: 'id1402',
     });
-    if (playerStatus.isBuffering) {
+    if (myContext.playerStatus.isBuffering) {
       return;
     }
-    if (currentIndex < dataList.length - 1) {
+    if (currentPodcastIndex < dataList.length - 1) {
       setIsLoading(true);
-      if (sound != null) {
-        sound.setOnPlaybackStatusUpdate(null);
-        setPlayerStatus({
+      if (myContext.sound != null) {
+        myContext.sound.setOnPlaybackStatusUpdate(null);
+        myContext.setPlayerStatus({
           playbackInstancePosition: null,
           playbackInstanceDuration: null,
           shouldPlay: true,
           isPlaying: false,
           isBuffering: true,
-          muted: playerStatus.muted,
-          volume: playerStatus.volume,
+          muted: myContext.playerStatus.muted,
+          volume: myContext.playerStatus.volume,
         });
-        await sound.unloadAsync();
+        await myContext.sound.unloadAsync();
       }
-      setPodcastItem(dataList[currentIndex + 1]);
-      setCurrentIndex(currentIndex + 1);
+      setPodcastItem(dataList[currentPodcastIndex + 1]);
+      setCurrentPodcastIndex(currentPodcastIndex + 1);
       playSound();
     }
   }
 
   async function nextPressed() {
-    console.log('next pressed current index: ' + currentIndex);
+    console.log('next pressed current index: ' + currentPodcastIndex);
     ga4Analytics('Podcast_Player_Next', {
       contentType: 'none',
       itemId: 'id1403',
     });
-    if (playerStatus.isBuffering) {
+    if (myContext.playerStatus.isBuffering) {
       return;
     }
-    if (currentIndex > 0) {
+    if (currentPodcastIndex > 0) {
       setIsLoading(true);
-      if (sound != null) {
-        sound.setOnPlaybackStatusUpdate(null);
-        setPlayerStatus({
+      if (myContext.sound != null) {
+        myContext.sound.setOnPlaybackStatusUpdate(null);
+        myContext.setPlayerStatus({
           playbackInstancePosition: null,
           playbackInstanceDuration: null,
           shouldPlay: true,
           isPlaying: false,
           isBuffering: true,
-          muted: playerStatus.muted,
-          volume: playerStatus.volume,
+          muted: myContext.playerStatus.muted,
+          volume: myContext.playerStatus.volume,
         });
-        await sound.unloadAsync();
+        await myContext.sound.unloadAsync();
       }
-      setPodcastItem(dataList[currentIndex - 1]);
-      setCurrentIndex(currentIndex - 1);
+      setPodcastItem(dataList[currentPodcastIndex - 1]);
+      setCurrentPodcastIndex(currentPodcastIndex - 1);
       playSound();
     }
   }
 
   function onSeekSliderValueChange(value: number) {
-    if (sound != null && !isSeeking) {
+    if (myContext.sound != null && !isSeeking) {
       setIsSeeking(true);
-      setShouldPlayAtEndOfSeek(playerStatus.isPlaying!);
-      sound.setOnPlaybackStatusUpdate(null);
-      sound.pauseAsync();
+      setShouldPlayAtEndOfSeek(myContext.playerStatus.isPlaying!);
+      myContext.sound.setOnPlaybackStatusUpdate(null);
+      myContext.sound.pauseAsync();
     }
-    setPlayerStatus({
-      playbackInstancePosition: value * playerStatus.playbackInstanceDuration,
-      playbackInstanceDuration: playerStatus.playbackInstanceDuration,
-      shouldPlay: playerStatus.shouldPlay,
-      isPlaying: playerStatus.isPlaying,
-      isBuffering: playerStatus.isBuffering,
-      muted: playerStatus.muted,
-      volume: playerStatus.volume,
+    myContext.setPlayerStatus({
+      playbackInstancePosition: value * myContext.playerStatus.playbackInstanceDuration,
+      playbackInstanceDuration: myContext.playerStatus.playbackInstanceDuration,
+      shouldPlay: myContext.playerStatus.shouldPlay,
+      isPlaying: myContext.playerStatus.isPlaying,
+      isBuffering: myContext.playerStatus.isBuffering,
+      muted: myContext.playerStatus.muted,
+      volume: myContext.playerStatus.volume,
     });
 
     //playerStatus.playbackInstancePosition = value * playerStatus.playbackInstanceDuration;
   }
 
   async function onVolumeSliderSlidingComplete(value: number) {
-    if (sound != null) {
+    if (myContext.sound != null) {
       ga4Analytics('Podcast_Player_Volume', {
         contentType: 'none',
         itemId: 'id1407',
@@ -225,27 +232,27 @@ export default function PodcastPlayer(props: any) {
   }
 
   async function onSeekSliderSlidingComplete(value: number) {
-    if (sound != null) {
+    if (myContext.sound != null) {
       ga4Analytics('Podcast_Player_Scrubber', {
         contentType: 'none',
         itemId: 'id1406',
       });
       setIsSeeking(false);
-      const seekPosition = value * playerStatus.playbackInstanceDuration;
-      sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+      const seekPosition = value * myContext.playerStatus.playbackInstanceDuration;
+      myContext.sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
       if (shouldPlayAtEndOfSeek) {
-        await sound.playFromPositionAsync(seekPosition);
+        await myContext.sound.playFromPositionAsync(seekPosition);
       } else {
-        await sound.setPositionAsync(seekPosition);
+        await myContext.sound.setPositionAsync(seekPosition);
       }
     }
   }
 
   function playPauseButton() {
-    if (playerStatus.isBuffering) {
+    if (myContext.playerStatus.isBuffering) {
       return blank;
     }
-    if (playerStatus.isPlaying) {
+    if (myContext.playerStatus.isPlaying) {
       return pause;
     }
     return play;
@@ -253,8 +260,8 @@ export default function PodcastPlayer(props: any) {
 
   async function playPausePressed() {
     console.log('play/pause pressed');
-    if (!playerStatus.isBuffering) {
-      if (playerStatus.isPlaying) {
+    if (!myContext.playerStatus.isBuffering) {
+      if (myContext.playerStatus.isPlaying) {
         ga4Analytics('Podcast_Player_Pause', {
           contentType: 'none',
           itemId: 'id1404',
@@ -266,10 +273,12 @@ export default function PodcastPlayer(props: any) {
         });
       }
     }
-    if (playerStatus.isBuffering) {
+    if (myContext.playerStatus.isBuffering) {
       return;
     }
-    if (sound != null) (await playerStatus.isPlaying) ? sound.pauseAsync() : sound.playAsync();
+
+    if (myContext.sound != null)
+      (await myContext.playerStatus.isPlaying) ? myContext.sound.pauseAsync() : myContext.sound.playAsync();
   }
 
   async function playSound() {
@@ -279,44 +288,47 @@ export default function PodcastPlayer(props: any) {
       shouldPlay: true,
       //rate: this.state.rate,
       //shouldCorrectPitch: this.state.shouldCorrectPitch,
-      volume: playerStatus.volume ?? 1,
+      volume: myContext.playerStatus.volume ?? 1,
       //isMuted: playerStatus.muted,
       //isLooping: this.state.loopingType === LOOPING_TYPE_ONE
       // // UNCOMMENT THIS TO TEST THE OLD androidImplementation:
       // androidImplementation: 'MediaPlayer',
     };
 
+    myContext.sound?.setOnPlaybackStatusUpdate(null);
+    await myContext.sound?.unloadAsync();
+
     Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
     const { sound } = await Audio.Sound.createAsync(source, initialStatus, onPlaybackStatusUpdate);
-    setSound(sound);
+    myContext.setSound(sound);
 
     // console.log('Playing Sound');
     setIsLoading(false);
+
     await sound.playAsync();
+    myContext.setPodcastId(podcastItem.id);
   }
 
   useEffect(() => {
-    playSound();
+    if (myContext.podcastId == -1) playSound();
   }, []);
 
+  /*
   useEffect(() => {
-    return sound
+    return myContext.sound
       ? () => {
           console.log('Unloading Sound');
-          sound.setOnPlaybackStatusUpdate(null);
+          myContext.sound?.setOnPlaybackStatusUpdate(null);
           //unload for now - we will want it to continue playing later
-          sound.unloadAsync();
+          myContext.sound?.unloadAsync();
         }
       : undefined;
-  }, [sound]);
+  }, [myContext.sound]);*/
 
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
         <View style={styles.backView}>
-          <TouchableOpacity onPress={cancelPressed}>
-            <Image source={backChevron} style={styles.backChevron} />
-          </TouchableOpacity>
           <TouchableOpacity onPress={cancelPressed}>
             <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
@@ -346,14 +358,14 @@ export default function PodcastPlayer(props: any) {
 
       <View style={styles.timeContainer}>
         <Text style={styles.startTime}>{getTimeStamp()}</Text>
-        <Text style={styles.buffering}>{playerStatus.isBuffering ? 'Loading...' : ''}</Text>
+        <Text style={styles.buffering}>{myContext.playerStatus.isBuffering ? 'Loading...' : ''}</Text>
         <Text style={styles.duration}>{getDurationTimeStamp()}</Text>
       </View>
 
       <View style={styles.controlsView}>
         <TouchableOpacity onPress={backPressed}>
           <Image
-            source={currentIndex == dataList.length - 1 || playerStatus.isBuffering ? blank : back}
+            source={currentPodcastIndex == dataList.length - 1 || myContext.playerStatus.isBuffering ? blank : back}
             style={styles.controlsImage}
           />
         </TouchableOpacity>
@@ -363,7 +375,10 @@ export default function PodcastPlayer(props: any) {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={nextPressed}>
-          <Image source={currentIndex == 0 || playerStatus.isBuffering ? blank : next} style={styles.controlsImage} />
+          <Image
+            source={currentPodcastIndex == 0 || myContext.playerStatus.isBuffering ? blank : next}
+            style={styles.controlsImage}
+          />
         </TouchableOpacity>
       </View>
 
@@ -376,7 +391,7 @@ export default function PodcastPlayer(props: any) {
           maximumTrackTintColor="#ffffff"
           thumbTintColor="#00ee44"
           disabled={isLoading}
-          value={playerStatus.volume ?? 0}
+          value={myContext.playerStatus.volume ?? 0}
           onValueChange={onVolumeSliderValueChange}
           onSlidingComplete={onVolumeSliderSlidingComplete}
         />
@@ -393,6 +408,7 @@ export const styles = StyleSheet.create({
   },
   backView: {
     flexDirection: 'row',
+    marginLeft: 10,
   },
   backText: {
     color: 'white',

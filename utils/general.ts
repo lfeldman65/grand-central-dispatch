@@ -11,7 +11,7 @@ export function shouldRunTests() {
 }
 
 export function makeLongTxtPretty(longText: string, maxChar: number) {
-  console.log(longText);
+  // console.log(longText);
   if (longText.length < maxChar) {
     return longText;
   }
