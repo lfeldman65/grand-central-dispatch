@@ -154,7 +154,7 @@ export function editContact(
       qualified: qual,
       firstName: first,
       lastName: last,
-      referral: 'True',
+      referral: 'False',
       mobile: mobile,
       homePhone: homePhone,
       officePhone: officePhone,
