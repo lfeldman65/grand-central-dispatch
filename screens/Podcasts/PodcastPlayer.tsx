@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Audio } from 'expo-av';
-import { PlayerStatus, PodcastDataProps } from './interfaces';
+import { PodcastDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
 import { ga4Analytics } from '../../utils/general';
 import { useContext } from 'react';
@@ -37,6 +37,7 @@ export default function PodcastPlayer(props: any) {
   //const [sound, setSound] = useState<Audio.Sound>();
   const [isLoading, setIsLoading] = useState(true);
   const [isSeeking, setIsSeeking] = useState(false);
+  const [isVolumeSeeking, setIsVolumeSeeking] = useState(false);
   const [shouldPlayAtEndOfSeek, setShouldPlayAtEndOfSeek] = useState(false);
 
   const myContext = useContext(AppContext);
@@ -100,8 +101,12 @@ export default function PodcastPlayer(props: any) {
     return '';
   }
 
-  function onVolumeSliderValueChange(value: any) {
+  async function onVolumeSliderValueChange(value: any) {
     if (myContext.sound != null) {
+      if (myContext.sound != null && !isVolumeSeeking) {
+        setIsVolumeSeeking(true);
+        myContext.sound.setOnPlaybackStatusUpdate(null);
+      }
       myContext.sound.setVolumeAsync(value);
     }
   }
@@ -120,6 +125,7 @@ export default function PodcastPlayer(props: any) {
   function onPlaybackStatusUpdate(status: any) {
     if (status.isLoaded) {
       //console.log("volume " + status.volume);
+
       myContext.setPlayerStatus({
         playbackInstancePosition: status.positionMillis,
         playbackInstanceDuration: status.durationMillis,
@@ -229,6 +235,9 @@ export default function PodcastPlayer(props: any) {
         itemId: 'id1407',
       });
     }
+
+    setIsVolumeSeeking(false);
+    myContext.sound?.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
   }
 
   async function onSeekSliderSlidingComplete(value: number) {
@@ -311,6 +320,9 @@ export default function PodcastPlayer(props: any) {
 
   useEffect(() => {
     if (myContext.podcastId == -1) playSound();
+    else {
+      setIsLoading(false);
+    }
   }, []);
 
   /*

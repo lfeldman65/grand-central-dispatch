@@ -37,6 +37,16 @@ export default function PodcastsScreen() {
       itemId: 'id1401',
     });
     myContext.setPodcastId(-1);
+    myContext.setPlayerStatus({
+      playbackInstancePosition: null,
+      playbackInstanceDuration: null,
+      shouldPlay: true,
+      isPlaying: false,
+      isBuffering: true,
+      muted: false,
+      //isLoading: true,
+      //isSeeking: false
+    });
     setSelectedIndex(index);
     setModalPlayerVisible(!modalPlayerVisible);
   };
