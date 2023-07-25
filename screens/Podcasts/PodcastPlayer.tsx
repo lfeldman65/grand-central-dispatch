@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { Audio } from 'expo-av';
-import { PodcastDataProps } from './interfaces';
+import { PlayerStatus, PodcastDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
 import { ga4Analytics } from '../../utils/general';
 import { useContext } from 'react';
@@ -33,6 +33,8 @@ export default function PodcastPlayer(props: any) {
   const { setModalPlayerVisible, dataList, selectedIndex } = props;
   const [podcastItem, setPodcastItem] = useState<PodcastDataProps>(dataList[selectedIndex]);
   const [currentPodcastIndex, setCurrentPodcastIndex] = useState(selectedIndex);
+  const [currentPosition, setCurrentPosition] = useState(0.0);
+
   //const [currentIndex, setCurrentIndex] = useState(selectedIndex);
   //const [sound, setSound] = useState<Audio.Sound>();
   const [isLoading, setIsLoading] = useState(true);
@@ -96,7 +98,8 @@ export default function PodcastPlayer(props: any) {
       myContext.playerStatus.playbackInstancePosition != null &&
       myContext.playerStatus.playbackInstanceDuration != null
     ) {
-      return `${getMMSSFromMillis(myContext.playerStatus.playbackInstancePosition)}`;
+      //console.log(myContext.playerStatus.playbackInstancePosition);
+      return `${getMMSSFromMillis(currentPosition)}`;
     }
     return '';
   }
@@ -126,6 +129,7 @@ export default function PodcastPlayer(props: any) {
     if (status.isLoaded) {
       //console.log("volume " + status.volume);
 
+      setCurrentPosition(status.positionMillis);
       myContext.setPlayerStatus({
         playbackInstancePosition: status.positionMillis,
         playbackInstanceDuration: status.durationMillis,
@@ -215,6 +219,10 @@ export default function PodcastPlayer(props: any) {
       myContext.sound.setOnPlaybackStatusUpdate(null);
       myContext.sound.pauseAsync();
     }
+
+    if (myContext.playerStatus.playbackInstanceDuration != null)
+      setCurrentPosition(value * myContext.playerStatus.playbackInstanceDuration);
+    /*
     myContext.setPlayerStatus({
       playbackInstancePosition: value * myContext.playerStatus.playbackInstanceDuration,
       playbackInstanceDuration: myContext.playerStatus.playbackInstanceDuration,
@@ -223,7 +231,7 @@ export default function PodcastPlayer(props: any) {
       isBuffering: myContext.playerStatus.isBuffering,
       muted: myContext.playerStatus.muted,
       volume: myContext.playerStatus.volume,
-    });
+    });*/
 
     //playerStatus.playbackInstancePosition = value * playerStatus.playbackInstanceDuration;
   }
@@ -249,6 +257,17 @@ export default function PodcastPlayer(props: any) {
       setIsSeeking(false);
       const seekPosition = value * myContext.playerStatus.playbackInstanceDuration;
       myContext.sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+
+      myContext.setPlayerStatus({
+        playbackInstancePosition: value * myContext.playerStatus.playbackInstanceDuration,
+        playbackInstanceDuration: myContext.playerStatus.playbackInstanceDuration,
+        shouldPlay: myContext.playerStatus.shouldPlay,
+        isPlaying: myContext.playerStatus.isPlaying,
+        isBuffering: myContext.playerStatus.isBuffering,
+        muted: myContext.playerStatus.muted,
+        volume: myContext.playerStatus.volume,
+      });
+
       if (shouldPlayAtEndOfSeek) {
         await myContext.sound.playFromPositionAsync(seekPosition);
       } else {
