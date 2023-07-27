@@ -463,6 +463,29 @@ export default function AddAppointmentScreen(props: any) {
     return true;
   }
 
+  function recurrenceText() {
+    if (recurrence == recurrenceMenu['Yearly']) {
+      return 'Yearly on ' + (startDate.getMonth() + 1).toString() + '/' + startDate.getDate();
+    }
+    if (recurrence == recurrenceMenu['Monthly on the']) {
+      return recurrence + ' ' + startDate.getDate() + recurrenceSuffix(startDate.getDate());
+    }
+    return recurrence;
+  }
+
+  function recurrenceSuffix(input: number) {
+    if (input == 1 || input == 21 || input == 31) {
+      return 'st';
+    }
+    if (input == 2 || input == 22) {
+      return 'nd';
+    }
+    if (input == 3 || input == 23) {
+      return 'rd';
+    }
+    return 'th';
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
@@ -588,9 +611,7 @@ export default function AddAppointmentScreen(props: any) {
         <TouchableOpacity onPress={recurrenceMenuPressed}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
-              <Text style={styles.textInput}>
-                {recurrence == recurrenceMenu['Monthly on the'] ? recurrence + ' ' + startDate.getDate() : recurrence}
-              </Text>
+              <Text style={styles.textInput}>{recurrenceText()}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -637,19 +658,6 @@ export default function AddAppointmentScreen(props: any) {
               </Text>
             </View>
             <Text></Text>
-          </View>
-        )}
-
-        {recurrence == 'Yearly' && <Text style={styles.nameTitle}>On</Text>}
-        {recurrence == 'Yearly' && (
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={styles.textInput}>
-                {recurrence == recurrenceMenu['Yearly']
-                  ? startDate.getMonth() + 1 + '/' + startDate.getDate()
-                  : recurrence}
-              </Text>
-            </View>
           </View>
         )}
 
@@ -734,8 +742,6 @@ export default function AddAppointmentScreen(props: any) {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
                   })}
                 </Text>
               </View>
@@ -746,6 +752,7 @@ export default function AddAppointmentScreen(props: any) {
         <DateTimePickerModal
           isVisible={showUntilDate}
           mode="date"
+          date={untilDate}
           onConfirm={handleConfirmUntilDate}
           onCancel={hideUntilPicker}
         />

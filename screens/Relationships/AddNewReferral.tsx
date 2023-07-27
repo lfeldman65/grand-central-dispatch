@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     width: 300,
   },
   bottomContainer: {
-    marginTop: '58%',
+    marginTop: '52%',
   },
   saveButton: {
     marginTop: 5,

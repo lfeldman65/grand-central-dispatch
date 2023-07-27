@@ -161,7 +161,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function saveToDoComplete() {
-    setIsLoading(true);
+    setIsLoading(false);
     console.log('saveToDoComplete');
   }
 
@@ -461,7 +461,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     });
     console.log(dataDetails?.mobile);
     if (dataDetails?.mobile == null || dataDetails?.mobile.length < 7) {
-      Alert.alert('Please enter a valid phone number');
+      Alert.alert('Please enter a mobile number'); // 9722
       return;
     }
     setGoalID2('7');

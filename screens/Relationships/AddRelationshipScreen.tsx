@@ -27,6 +27,19 @@ export default function AddRelationshipScreen(props: any) {
     setModalRelVisible(true);
   }
 
+  function isDataValid() {
+    if (firstName == '' && lastName == '') {
+      return false;
+    }
+    if (bizChecked && company == '') {
+      return false;
+    }
+    if (referralChecked && referral == null) {
+      return false;
+    }
+    return true;
+  }
+
   function savePressed() {
     if (firstName == '' && lastName == '') {
       Alert.alert('Please enter a First Name and/or Last Name');
@@ -121,9 +134,8 @@ export default function AddRelationshipScreen(props: any) {
         </TouchableOpacity>
 
         <Text style={styles.nameLabel}>{title}</Text>
-
         <TouchableOpacity onPress={savePressed}>
-          <Text style={styles.saveButton}>Save</Text>
+          <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
       </View>
 
@@ -279,6 +291,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginRight: '10%',
+    opacity: 1.0,
+  },
+  saveButtonDim: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginRight: '10%',
+    opacity: 0.4,
   },
   inputView: {
     backgroundColor: '#002341',

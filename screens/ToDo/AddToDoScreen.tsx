@@ -260,6 +260,29 @@ export default function AddToDoScreen(props: any) {
     }
   }
 
+  function recurrenceText() {
+    if (recurrence == recurrenceMenu['Yearly']) {
+      return 'Yearly on ' + (date.getMonth() + 1).toString() + '/' + date.getDate();
+    }
+    if (recurrence == recurrenceMenu['Monthly on the']) {
+      return recurrence + ' ' + date.getDate() + recurrenceSuffix(date.getDate());
+    }
+    return recurrence;
+  }
+
+  function recurrenceSuffix(input: number) {
+    if (input == 1 || input == 21 || input == 31) {
+      return 'st';
+    }
+    if (input == 2 || input == 22) {
+      return 'nd';
+    }
+    if (input == 3 || input == 23) {
+      return 'rd';
+    }
+    return 'th';
+  }
+
   function savePressed() {
     ga4Analytics('To_Do_Save_New', {
       contentType: 'none',
@@ -500,9 +523,7 @@ export default function AddToDoScreen(props: any) {
         <TouchableOpacity onPress={recurrenceMenuPressed}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
-              <Text style={styles.textInput}>
-                {recurrence == recurrenceMenu['Monthly on the'] ? recurrence + ' ' + date.getDate() : recurrence}
-              </Text>
+              <Text style={styles.textInput}>{recurrenceText()}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -549,17 +570,6 @@ export default function AddToDoScreen(props: any) {
               </Text>
             </View>
             <Text></Text>
-          </View>
-        )}
-
-        {recurrence == 'Yearly' && <Text style={styles.nameTitle}>On</Text>}
-        {recurrence == 'Yearly' && (
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={styles.textInput}>
-                {recurrence == recurrenceMenu['Yearly'] ? date.getMonth() + 1 + '/' + date.getDate() : recurrence}
-              </Text>
-            </View>
           </View>
         )}
 

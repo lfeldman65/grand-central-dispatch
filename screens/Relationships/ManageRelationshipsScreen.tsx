@@ -62,7 +62,7 @@ export default function ManageRelationshipsScreen() {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#'; // branch
   const indexCharArray = letters.split('');
 
-  const ranking = 'ZABC';
+  const ranking = 'ZABCD';
   const rankingArray = ranking.split('');
 
   var sectionDataAZ: DataAZ[] = [];
@@ -245,9 +245,11 @@ export default function ManageRelationshipsScreen() {
 
   const listRefRanking = React.useRef<SectionList>(null);
   const _onPressLetterRanking = (letter: string) => {
-    if (letter == 'A+') letter = 'Z';
+    console.log('letter: ' + letter);
+    if (letter == 'Z') letter = 'A+';
     if (listRefRanking.current) {
       var index = sectionDataRanking.findIndex((e) => e.title == letter);
+      console.log('index: ' + index);
       if (index != -1) {
         listRefRanking.current.scrollToLocation({
           sectionIndex: index,

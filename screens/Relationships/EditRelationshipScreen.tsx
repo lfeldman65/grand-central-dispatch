@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, Text, View, TextInput, Image, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, ScrollView, Text, View, TextInput, Image, TouchableOpacity, Modal, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { isNullOrEmpty, prettyDate } from '../../utils/general';
@@ -119,11 +119,25 @@ export default function EditRelationshipScreen(props: any) {
   }
 
   function savePressed() {
-    // console.log('ref id: ' + referral.id);
-    // console.log('ref name: ' + referral.name);
-    // console.log('spouse id: ' + spouse.id);
-    // console.log('spouse name: ' + spouse.name);
+    if (relOrBiz == 'Rel' && firstName == '' && lastName == '') {
+      Alert.alert('Please enter a First Name and/or Last Name');
+      return;
+    }
+    if (relOrBiz == 'Biz' && company == '') {
+      Alert.alert('Please enter a Company Name');
+      return;
+    }
     updateContact();
+  }
+
+  function isDataValid() {
+    if (relOrBiz == 'Rel' && firstName == '' && lastName == '') {
+      return false;
+    }
+    if (relOrBiz == 'Biz' && company == '') {
+      return false;
+    }
+    return true;
   }
 
   function backPressed() {
@@ -200,7 +214,7 @@ export default function EditRelationshipScreen(props: any) {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={styles.saveButton} onPress={savePressed}>
-          <Text style={styles.saveText}>Save</Text>
+          <Text style={isDataValid() ? styles.saveButton : styles.saveButtonDim}>Save</Text>
         </TouchableOpacity>
       ),
       headerLeft: () => (
@@ -747,7 +761,18 @@ const styles = StyleSheet.create({
     height: 300,
   },
   saveButton: {
-    padding: 5,
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginRight: 10,
+    opacity: 1.0,
+  },
+  saveButtonDim: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginRight: 10,
+    opacity: 0.4,
   },
   saveText: {
     color: 'white',

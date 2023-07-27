@@ -212,8 +212,8 @@ export default function GroupMembersScreen(props: any) {
             >
               <SelRelScreen
                 title={'Select Relationship'}
-                setReferral={setMember}
-                setModalVisible={setRelModalVisible}
+                setSelectedRel={setMember}
+                setModalRelVisible={setRelModalVisible}
                 lightOrDark={lightOrDark}
               />
             </Modal>
