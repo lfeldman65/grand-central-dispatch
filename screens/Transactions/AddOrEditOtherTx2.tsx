@@ -1,5 +1,5 @@
-import { Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { Text, View, TouchableOpacity, ScrollView, Alert, TextInput } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useRef, useEffect, useState } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
@@ -89,7 +89,10 @@ export default function AddOrEditOtherTx2(props: any) {
   }
 
   function isDataValid() {
-    if (closingPrice == '') {
+    if (closingPrice == '' || closingPrice == null) {
+      return false;
+    }
+    if (closingDate == null) {
       return false;
     }
     return true;
@@ -104,6 +107,15 @@ export default function AddOrEditOtherTx2(props: any) {
   }
 
   function completePressed() {
+    if (closingPrice == '' || closingPrice == null) {
+      Alert.alert('Please enter a Projected Amount');
+      return;
+    }
+    if (closingDate == null) {
+      Alert.alert('Please enter a Projected Closing Data');
+      return false;
+    }
+    return true;
     addOrEditOtherTransaction(
       data == null ? 0 : data?.id,
       type,
@@ -229,7 +241,7 @@ export default function AddOrEditOtherTx2(props: any) {
           </View>
         </ActionSheet>
 
-        <Text style={styles.nameTitle}>{'Amount* (Projected)'}</Text>
+        <Text style={styles.nameTitle}>{'Projected Amount *'}</Text>
         <View style={styles.mainContent}>
           <View style={styles.dollarAndPercentRow}>
             <View style={styles.dollarView}>
@@ -250,7 +262,7 @@ export default function AddOrEditOtherTx2(props: any) {
           </View>
         </View>
 
-        <Text style={styles.nameTitle}>{'Closing Date (Projected)'}</Text>
+        <Text style={styles.nameTitle}>{'Projected Closing Date *'}</Text>
         <TouchableOpacity onPress={showDatePicker}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>

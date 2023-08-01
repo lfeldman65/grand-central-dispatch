@@ -824,6 +824,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   }
 
   function fetchRelDetails(isMounted: boolean, toEdit: boolean) {
+    console.log('fetchDetails: ' + contactId);
     setIsLoading(true);
     getRelDetails(contactId)
       .then((res) => {
@@ -833,6 +834,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
+          console.log(res.data.firstName);
           setDataDetails(res.data);
           //  data = res.data;
           setTheRank(res.data.ranking);
@@ -1024,17 +1026,19 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           </View>
         )}
 
-        <Text style={styles.subTitle}>Pop-By</Text>
-        <View style={styles.topAndBottomRows}>
-          <TouchableOpacity style={styles.pairRows} onPress={() => handleSavePopByPressed()}>
-            <Text style={isFavorite == 'False' ? styles.saveText : styles.savedText}>
-              {isFavorite == 'False' ? 'Save' : 'Saved'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.pairRows} onPress={() => handleUnsavePopByPressed()}>
-            <Text style={styles.removeText}>{isFavorite == 'True' ? 'Remove' : ''}</Text>
-          </TouchableOpacity>
-        </View>
+        {completeAddress() != '' && <Text style={styles.subTitle}>Pop-By</Text>}
+        {completeAddress() != '' && (
+          <View style={styles.topAndBottomRows}>
+            <TouchableOpacity style={styles.pairRows} onPress={() => handleSavePopByPressed()}>
+              <Text style={isFavorite == 'False' ? styles.saveText : styles.savedText}>
+                {isFavorite == 'False' ? 'Save' : 'Saved'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.pairRows} onPress={() => handleUnsavePopByPressed()}>
+              <Text style={styles.removeText}>{isFavorite == 'True' ? 'Remove' : ''}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {dataDetails?.contactTypeID == 'Biz' && <Text style={styles.subTitle}>Primary Contact</Text>}
         {dataDetails?.contactTypeID == 'Biz' && (
@@ -1823,7 +1827,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
           }}
         >
           <TrackActivity
-            title="Track Activity Goal"
+            title="Track Activity"
             guid={dataDetails?.id!}
             goalID={goalID2}
             goalName={goalName2}

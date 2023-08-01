@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
@@ -150,26 +150,35 @@ export default function AddOrEditLenderTx1(props: any) {
     if (borrower == null) {
       return false;
     }
+    if (street1 == '') {
+      return false;
+    }
     return true;
   }
 
   function nextPressed() {
-    if (isDataValid()) {
-      navigation.navigate('AddOrEditLenderTx2', {
-        status: status,
-        type: type,
-        leadSource: borrowerLeadSource,
-        borrower: borrower,
-        seller: seller,
-        street1: street1,
-        street2: street2,
-        city: city,
-        state: state,
-        zip: zip,
-        data: data,
-        source: person == null ? 'Transactions' : 'Relationships',
-      });
+    if (borrower == null) {
+      Alert.alert('Please enter a Borrower');
+      return;
     }
+    if (street1 == '') {
+      Alert.alert('Please enter a Street');
+      return false;
+    }
+    navigation.navigate('AddOrEditLenderTx2', {
+      status: status,
+      type: type,
+      leadSource: borrowerLeadSource,
+      borrower: borrower,
+      seller: seller,
+      street1: street1,
+      street2: street2,
+      city: city,
+      state: state,
+      zip: zip,
+      data: data,
+      source: person == null ? 'Transactions' : 'Relationships',
+    });
   }
 
   return (
@@ -281,7 +290,7 @@ export default function AddOrEditLenderTx1(props: any) {
         </View>
       </ActionSheet>
 
-      <Text style={styles.nameTitle}>Borrower*</Text>
+      <Text style={styles.nameTitle}>Borrower *</Text>
       <TouchableOpacity onPress={buyerPressed}>
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
@@ -336,7 +345,7 @@ export default function AddOrEditLenderTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Street</Text>
+      <Text style={styles.nameTitle}>Street *</Text>
 
       <View style={styles.mainContent}>
         <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>

@@ -121,6 +121,7 @@ export default function CalendarScreen() {
     var day = getDayNumber(startDate.toString());
     var month = getMonthNumber(startDate.toString());
     var year = getYear(startDate.toString());
+    console.log('day: ' + day);
     console.log('MONTH2112: ' + month);
     console.log('YEAR: ' + year);
     fetchAppointments(day, month, year, true); // '00' returns every day in month

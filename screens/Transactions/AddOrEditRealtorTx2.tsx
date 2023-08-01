@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';
 import React from 'react';
@@ -179,13 +179,10 @@ export default function AddOrEditRealtorTx2(props: any) {
   }
 
   function isDataValid() {
-    if (type.includes('Seller') && originalPrice == null) {
-      return false;
-    }
-    if (type.includes('Seller') && originalDate == null) {
-      return false;
-    }
     if (closingPrice == '' || closingPrice == null) {
+      return false;
+    }
+    if (closingDate == null) {
       return false;
     }
     return true;
@@ -243,42 +240,42 @@ export default function AddOrEditRealtorTx2(props: any) {
   }
 
   function nextPressed() {
-    if (isDataValid()) {
-      console.log('next seller comm: ' + sellerCommission);
-      console.log('next seller comm: ' + dollarOrPercentSellerComm);
-      console.log('next buyer comm: ' + buyerCommission);
-      console.log('next buyer comm: ' + dollarOrPercentBuyerComm);
-      console.log('closing date: ' + closingDate.toISOString());
-
-      navigation.navigate('AddOrEditRealtorTx3', {
-        status: status,
-        type: type,
-        buyerLeadSource: buyerLeadSource,
-        sellerLeadSource: sellerLeadSource,
-        buyer: buyer,
-        seller: seller,
-        street1: street1,
-        street2: street2,
-        city: city,
-        state: state,
-        zip: zip,
-        country: 'USA',
-        probability: probability,
-        originalPrice: originalPrice,
-        originalDate: originalDate.toISOString(),
-        closingPrice: closingPrice,
-        closingDate: closingDate.toISOString(),
-        buyerComm: buyerCommission,
-        sellerComm: sellerCommission,
-        dollarOrPercentBuyerComm: dollarOrPercentBuyerComm,
-        dollarOrPercentSellerComm: dollarOrPercentSellerComm,
-        additionalIncome: additionalIncome,
-        dollarOrPercentAddIncome: dollarOrPercentAddIncome,
-        grossComm: grossComm,
-        data: data,
-        source: source,
-      });
+    if (closingPrice == '' || closingPrice == null) {
+      Alert.alert('Please enter a Projected Closing Price');
+      return;
     }
+    if (closingDate == null) {
+      Alert.alert('Please enter a Projected Closing Date');
+      return false;
+    }
+    navigation.navigate('AddOrEditRealtorTx3', {
+      status: status,
+      type: type,
+      buyerLeadSource: buyerLeadSource,
+      sellerLeadSource: sellerLeadSource,
+      buyer: buyer,
+      seller: seller,
+      street1: street1,
+      street2: street2,
+      city: city,
+      state: state,
+      zip: zip,
+      country: 'USA',
+      probability: probability,
+      originalPrice: originalPrice,
+      originalDate: originalDate.toISOString(),
+      closingPrice: closingPrice,
+      closingDate: closingDate.toISOString(),
+      buyerComm: buyerCommission,
+      sellerComm: sellerCommission,
+      dollarOrPercentBuyerComm: dollarOrPercentBuyerComm,
+      dollarOrPercentSellerComm: dollarOrPercentSellerComm,
+      additionalIncome: additionalIncome,
+      dollarOrPercentAddIncome: dollarOrPercentAddIncome,
+      grossComm: grossComm,
+      data: data,
+      source: source,
+    });
   }
 
   function buyerCommDollarOrPercentPressed() {
@@ -436,7 +433,7 @@ export default function AddOrEditRealtorTx2(props: any) {
             onCancel={hideOriginalDatePicker}
           />
 
-          <Text style={styles.nameTitle}>{'Closing Price* (Projected)'}</Text>
+          <Text style={styles.nameTitle}>{'Projected Closing Price *'}</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
               <View style={styles.dollarView}>
@@ -457,7 +454,7 @@ export default function AddOrEditRealtorTx2(props: any) {
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>{'Closing Date* (Projected)'}</Text>
+          <Text style={styles.nameTitle}>{'Projected Closing Date *'}</Text>
           <TouchableOpacity onPress={showClosingDatePicker}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>

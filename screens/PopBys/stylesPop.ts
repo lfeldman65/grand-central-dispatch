@@ -178,6 +178,11 @@ export const stylesPop = StyleSheet.create({
     height: 43,
     opacity: 0.4,
   },
+  mapMarker: {
+    width: 30,
+    height: 43,
+    opacity: 1.0,
+  },
   actionButtonView: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',

@@ -42,7 +42,7 @@ export default function AddRelationshipScreen(props: any) {
 
   function savePressed() {
     if (firstName == '' && lastName == '') {
-      Alert.alert('Please enter a First Name and/or Last Name');
+      Alert.alert('Please enter a First Name or Last Name');
       return;
     }
     if (bizChecked && company == '') {

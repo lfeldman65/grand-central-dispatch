@@ -516,7 +516,7 @@ export default function PACDetailScreen(props: any) {
           }}
         >
           <TrackActivity
-            title="Track Activity Goal"
+            title="Track Activity"
             guid={data?.id!}
             goalID={goalID2}
             goalName={goalName2}

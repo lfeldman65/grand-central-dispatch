@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
@@ -241,27 +241,40 @@ export default function AddOrEditRealtorTx1(props: any) {
     if (type.includes('Seller') && seller == null) {
       return false;
     }
+    if (street1 == '') {
+      return false;
+    }
     return true;
   }
 
   function nextPressed() {
-    if (isDataValid()) {
-      navigation.navigate('AddOrEditRealtorTx2', {
-        status: status,
-        type: type,
-        buyerLeadSource: buyerLeadSource,
-        sellerLeadSource: sellerLeadSource,
-        buyer: buyer,
-        seller: seller,
-        street1: street1,
-        street2: street2,
-        city: city,
-        state: state,
-        zip: zip,
-        data: data,
-        source: person == null ? 'Transactions' : 'Relationships',
-      });
+    if (type.includes('Buyer') && buyer == null) {
+      Alert.alert('Please enter a Buyer');
+      return;
     }
+    if (type.includes('Seller') && seller == null) {
+      Alert.alert('Please enter a Seller');
+      return;
+    }
+    if (street1 == '') {
+      Alert.alert('Please enter a Street');
+      return;
+    }
+    navigation.navigate('AddOrEditRealtorTx2', {
+      status: status,
+      type: type,
+      buyerLeadSource: buyerLeadSource,
+      sellerLeadSource: sellerLeadSource,
+      buyer: buyer,
+      seller: seller,
+      street1: street1,
+      street2: street2,
+      city: city,
+      state: state,
+      zip: zip,
+      data: data,
+      source: person == null ? 'Transactions' : 'Relationships',
+    });
   }
 
   return (
@@ -373,7 +386,7 @@ export default function AddOrEditRealtorTx1(props: any) {
         </View>
       </ActionSheet>
 
-      {type.includes('Buyer') && <Text style={styles.nameTitle}>{'Buyer*'}</Text>}
+      {type.includes('Buyer') && <Text style={styles.nameTitle}>{'Buyer *'}</Text>}
       {type.includes('Buyer') && (
         <TouchableOpacity onPress={buyerPressed}>
           <View style={styles.mainContent}>
@@ -489,7 +502,7 @@ export default function AddOrEditRealtorTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Street</Text>
+      <Text style={styles.nameTitle}>Street *</Text>
       <View style={styles.mainContent}>
         <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
           <TextInput

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Text, Image, View, TouchableOpacity, ScrollView, Modal, TextInput } from 'react-native';
+import { Text, Image, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
@@ -189,28 +189,34 @@ export default function AddOrEditOtherTx1(props: any) {
     if (txTitle == '') {
       return false;
     }
-    if (whoInvolved == null) {
+    if (whoInvolved[0] == null) {
       return false;
     }
     return true;
   }
 
   function nextPressed() {
-    if (isDataValid()) {
-      navigation.navigate('AddOrEditOtherTx2', {
-        status: status,
-        title: txTitle,
-        type: type,
-        street1: street1,
-        street2: street2,
-        city: city,
-        state: state,
-        zip: zip,
-        whoInvolved: whoInvolved,
-        data: data,
-        source: person == null ? 'Transactions' : 'Relationships',
-      });
+    if (txTitle == '') {
+      Alert.alert('Please enter a Title');
+      return;
     }
+    if (whoInvolved[0] == null) {
+      Alert.alert('Please enter at least one Relationship');
+      return false;
+    }
+    navigation.navigate('AddOrEditOtherTx2', {
+      status: status,
+      title: txTitle,
+      type: type,
+      street1: street1,
+      street2: street2,
+      city: city,
+      state: state,
+      zip: zip,
+      whoInvolved: whoInvolved,
+      data: data,
+      source: person == null ? 'Transactions' : 'Relationships',
+    });
   }
 
   return (
@@ -296,7 +302,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Title*</Text>
+      <Text style={styles.nameTitle}>Title *</Text>
       <View style={styles.mainContent}>
         <TouchableOpacity style={styles.inputView} onPress={handleTitleFocus}>
           <TextInput
@@ -312,7 +318,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Relationships*</Text>
+      <Text style={styles.nameTitle}>Relationships *</Text>
 
       {whoInvolved.map((item, index) => (
         <View style={styles.mainContent}>
@@ -348,17 +354,10 @@ export default function AddOrEditOtherTx1(props: any) {
             lightOrDark={lightOrDark}
             // allowMultipleSelects={true}
           />
-
-          {/* <ChooseWho
-            title="Who's Involved"
-            setModalAttendeesVisible={setModalRelVisible}
-            setSelectedAttendees={setWhoInvolved}
-            lightOrDark={lightOrDark}
-          /> */}
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Street</Text>
+      <Text style={styles.nameTitle}>Street *</Text>
       <View style={styles.mainContent}>
         <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
           <TextInput

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Text, View, TouchableOpacity, ScrollView, Button, TextInput } from 'react-native';
+import { Modal, Text, View, TouchableOpacity, ScrollView, Alert, TextInput } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';
 import React from 'react';
@@ -171,6 +171,9 @@ export default function AddOrEditLenderTx2(props: any) {
       console.log('closing price:' + closingPrice);
       return false;
     }
+    if (closingDate == null) {
+      return false;
+    }
     return true;
   }
 
@@ -222,8 +225,14 @@ export default function AddOrEditLenderTx2(props: any) {
   }
 
   function nextPressed() {
-    console.log('add income next: ' + additionalIncome);
-    console.log('add income next: ' + dOrPAdditionalIncome);
+    if (closingPrice == '' || closingPrice == null) {
+      Alert.alert('Please enter a Closing Price');
+      return;
+    }
+    if (closingDate == null) {
+      Alert.alert('Please enter a Closing Date');
+      return;
+    }
 
     if (isDataValid()) {
       navigation.navigate('AddOrEditLenderTx3', {
@@ -396,7 +405,7 @@ export default function AddOrEditLenderTx2(props: any) {
             onCancel={hideApplicationDatePicker}
           />
 
-          <Text style={styles.nameTitle}>{'Closing Price* (Projected)'}</Text>
+          <Text style={styles.nameTitle}>{'Projected Closing Price *'}</Text>
           <View style={styles.mainContent}>
             <View style={styles.dollarAndPercentRow}>
               <View style={styles.dollarView}>
@@ -417,7 +426,7 @@ export default function AddOrEditLenderTx2(props: any) {
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>{'Closing Date (Projected)'}</Text>
+          <Text style={styles.nameTitle}>{'Projected Closing Date *'}</Text>
           <TouchableOpacity onPress={showClosingDateMode}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>

@@ -756,10 +756,10 @@ export default function ManageRelationshipsScreen() {
                       longitude: parseFloat(person.location.longitude),
                     }}
                     image={getRankPin(person.ranking)}
-                    style={stylesPop.pinFilterShow}
+                    style={stylesPop.mapMarker}
                     title={person.firstName + ' ' + person.lastName}
                     description={
-                      person.lastPopbyDate != null ? 'Last PopBy: ' + person.lastPopbyDate : 'Last PopBy: None'
+                      person.lastPopbyDate != null ? 'Last Pop-By: ' + person.lastPopbyDate : 'Last Pop-By: None'
                     }
                   />
                 ) : (

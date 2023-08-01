@@ -208,6 +208,12 @@ export default function PACPopRow(props: PACRowProps) {
     _swipeableRow = ref;
   }
 
+  function lastPopText(lastText: string) {
+    console.log('last text: ' + lastText);
+    if (lastText == 'No PopBy') return 'Last Pop-By: No Pop-By';
+    return 'Last Pop-By: ' + lastText;
+  }
+
   const renderRightActions = () => {
     return (
       <View style={styles.rightSwipeItem}>
@@ -278,7 +284,7 @@ export default function PACPopRow(props: PACRowProps) {
 
           <View style={styles.popbyRow}>
             <Text style={props.lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
-              {'Last Pop-By: ' + props.data.lastPopByDate}
+              {lastPopText(props.data.lastPopByDate)}
             </Text>
             {props.data.street1 && (
               <TouchableOpacity style={styles.popByButtons} onPress={() => handlePopPressed()}>

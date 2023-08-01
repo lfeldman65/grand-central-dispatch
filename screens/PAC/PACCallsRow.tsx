@@ -412,7 +412,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
               }}
             >
               <TrackActivity
-                title="Track Activity Goal"
+                title="Track Activity"
                 guid={localID}
                 goalID={goalID2}
                 goalName={goalName2}
