@@ -94,7 +94,7 @@ export default function QuickAdd(props: any) {
           }}
         >
           <AddToDo
-            title={'New To-Do'}
+            title={'New To Do'}
             lightOrDark={lightOrDark}
             onSave={saveComplete}
             setModalVisible={setShowAddToDoModal}

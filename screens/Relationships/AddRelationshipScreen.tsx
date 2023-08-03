@@ -8,6 +8,7 @@ import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 import { getGoalData } from '../Goals/api';
 import { GoalDataProps } from '../Goals/interfaces';
 import { useNavigation } from '@react-navigation/native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 let deviceWidth = Dimensions.get('window').width;
 
@@ -139,24 +140,40 @@ export default function AddRelationshipScreen(props: any) {
         </TouchableOpacity>
       </View>
 
-      <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-        size={25}
-        textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-        fillColor="#37C0FF"
-        unfillColor="#004F89"
-        iconStyle={{ borderColor: 'white' }}
-        text="This is a Business"
-        textContainerStyle={{ marginLeft: 10 }}
-        style={styles.checkBox}
-        onPress={(isChecked: boolean) => {
-          console.log(isChecked);
-          setBizCheck(!bizChecked);
-        }}
-      />
+      <ScrollView>
+        <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+          size={25}
+          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+          fillColor="#37C0FF"
+          unfillColor="#004F89"
+          iconStyle={{ borderColor: 'white' }}
+          text="This is a Business"
+          textContainerStyle={{ marginLeft: 10 }}
+          style={styles.checkBox}
+          onPress={(isChecked: boolean) => {
+            console.log(isChecked);
+            setBizCheck(!bizChecked);
+          }}
+        />
 
-      {bizChecked && <Text style={styles.nameTitle}>Company</Text>}
+        {bizChecked && <Text style={styles.nameTitle}>Company</Text>}
 
-      {bizChecked && (
+        {bizChecked && (
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                textAlign="left"
+                onChangeText={(text) => setCompany(text)}
+                defaultValue={company}
+              />
+            </View>
+          </View>
+        )}
+        <Text style={styles.nameTitle}>First Name</Text>
+
         <View style={styles.mainContent}>
           <View style={styles.inputView}>
             <TextInput
@@ -164,94 +181,81 @@ export default function AddRelationshipScreen(props: any) {
               placeholder="+ Add"
               placeholderTextColor="#AFB9C2"
               textAlign="left"
-              onChangeText={(text) => setCompany(text)}
-              defaultValue={company}
+              onChangeText={(text) => setFirstName(text)}
+              defaultValue={firstName}
             />
           </View>
         </View>
-      )}
-      <Text style={styles.nameTitle}>First Name</Text>
 
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="+ Add"
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setFirstName(text)}
-            defaultValue={firstName}
-          />
-        </View>
-      </View>
+        <Text style={styles.nameTitle}>Last Name</Text>
 
-      <Text style={styles.nameTitle}>Last Name</Text>
-
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <TextInput
-            placeholder="+ Add"
-            style={styles.textInput}
-            placeholderTextColor="#AFB9C2"
-            textAlign="left"
-            onChangeText={(text) => setLastName(text)}
-            defaultValue={lastName}
-          />
-        </View>
-      </View>
-
-      <View style={styles.container}>
-        <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-          size={25}
-          textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-          fillColor="#37C0FF"
-          unfillColor="#004F89"
-          iconStyle={{ borderColor: 'white' }}
-          text="This relationship is a referral"
-          textContainerStyle={{ marginLeft: 10 }}
-          style={styles.checkBox}
-          onPress={(isChecked: boolean) => {
-            console.log(isChecked);
-            setReferralChecked(!referralChecked);
-          }}
-        />
-
-        {referralChecked && <Text style={styles.nameTitle}>Referral</Text>}
-        {referralChecked && (
-          <View style={styles.mainContent}>
-            <TouchableOpacity onPress={referralPressed}>
-              <View style={styles.inputView}>
-                <TextInput
-                  editable={false}
-                  placeholder="Select one"
-                  placeholderTextColor="#AFB9C2"
-                  style={styles.nameLabel}
-                >
-                  {referral == null ? '' : referral.firstName + ' ' + referral.lastName}
-                </TextInput>
-              </View>
-            </TouchableOpacity>
+        <View style={styles.mainContent}>
+          <View style={styles.inputView}>
+            <TextInput
+              placeholder="+ Add"
+              style={styles.textInput}
+              placeholderTextColor="#AFB9C2"
+              textAlign="left"
+              onChangeText={(text) => setLastName(text)}
+              defaultValue={lastName}
+            />
           </View>
-        )}
+        </View>
 
-        {modalRelVisible && (
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalRelVisible}
-            onRequestClose={() => {
-              setModalRelVisible(!modalRelVisible);
+        <View style={styles.container}>
+          <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+            size={25}
+            textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+            fillColor="#37C0FF"
+            unfillColor="#004F89"
+            iconStyle={{ borderColor: 'white' }}
+            text="This relationship is a referral"
+            textContainerStyle={{ marginLeft: 10 }}
+            style={styles.checkBox}
+            onPress={(isChecked: boolean) => {
+              console.log(isChecked);
+              setReferralChecked(!referralChecked);
             }}
-          >
-            <ChooseRelationship
-              title={'Choose Relationship'}
-              setModalRelVisible={setModalRelVisible}
-              setSelectedRel={setReferral}
-              lightOrDark={lightOrDark}
-            />
-          </Modal>
-        )}
-      </View>
+          />
+
+          {referralChecked && <Text style={styles.nameTitle}>Referral</Text>}
+          {referralChecked && (
+            <View style={styles.mainContent}>
+              <TouchableOpacity onPress={referralPressed}>
+                <View style={styles.inputView}>
+                  <TextInput
+                    editable={false}
+                    placeholder="Select one"
+                    placeholderTextColor="#AFB9C2"
+                    style={styles.nameLabel}
+                  >
+                    {referral == null ? '' : referral.firstName + ' ' + referral.lastName}
+                  </TextInput>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {modalRelVisible && (
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalRelVisible}
+              onRequestClose={() => {
+                setModalRelVisible(!modalRelVisible);
+              }}
+            >
+              <ChooseRelationship
+                title={'Choose Relationship'}
+                setModalRelVisible={setModalRelVisible}
+                setSelectedRel={setReferral}
+                lightOrDark={lightOrDark}
+              />
+            </Modal>
+          )}
+        </View>
+      </ScrollView>
+      <View style={styles.footer}></View>
     </View>
   );
 }
@@ -263,6 +267,9 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     alignItems: 'center',
+  },
+  footer: {
+    height: 100,
   },
   topRow: {
     flexDirection: 'row',

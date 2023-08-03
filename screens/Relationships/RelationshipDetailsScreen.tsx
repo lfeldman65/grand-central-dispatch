@@ -163,6 +163,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   function saveToDoComplete() {
     setIsLoading(false);
     console.log('saveToDoComplete');
+    fetchToDos(true); // 10732
   }
 
   function trackActivityAPI(
@@ -197,12 +198,14 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
 
   function saveAppointmentComplete() {
     console.log('saveAppointmentComplete');
+    fetchToDos(true); // 10733
   }
 
   function trackSuccess() {
     setIsLoading(false);
     console.log('track success 1');
     fetchGoals();
+    fetchRelDetails(true, false);
   }
 
   function fetchGoals() {
@@ -448,7 +451,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (dataDetails?.officePhone != null && dataDetails?.officePhone.length > 6) {
       phoneArray.push('Office');
     }
-    console.log('phone array size: ' + phoneArray.length);
+    // console.log('phone array size: ' + phoneArray.length);
     return phoneArray;
   }
 
@@ -734,6 +737,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       setShowActivity(!showActivity);
     }
     if (sectionIndex == 2) {
+      fetchToDos(true);
       setShowToDos(!showToDos);
     }
     if (sectionIndex == 3) {
@@ -819,7 +823,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (dataDetails?.address.zip != null && dataDetails?.address.zip != '') {
       addressString = addressString + ' ' + dataDetails?.address.zip;
     }
-    console.log('address length: ' + addressString.length);
+    // console.log('address length: ' + addressString.length);
     return addressString;
   }
 

@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, Linking, Modal, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { useState, useRef } from 'react';
 import { styles } from './styles';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -30,7 +30,6 @@ interface PACCallsRowProps {
 }
 
 export default function PACCallsRow(props: PACCallsRowProps) {
-  // branch
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const actionSheetRef = useRef<ActionSheet>(null);
@@ -84,6 +83,7 @@ export default function PACCallsRow(props: PACCallsRowProps) {
   function trackSuccess() {
     setIsLoading(false);
     console.log('track success 1');
+    props.refresh();
     fetchGoals();
   }
 
