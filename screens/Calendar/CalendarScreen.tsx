@@ -22,6 +22,10 @@ const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 type MapLength = 'gone' | 'regular';
 
+var monthSave = '';
+var daySave = '00';
+var yearSave = '';
+
 export default function CalendarScreen() {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -64,13 +68,13 @@ export default function CalendarScreen() {
     setLightOrDark('');
     console.log('lightOrDark:' + lightOrDark);
     let isMounted = true;
-    var day = getDayNumber(startDate.toString());
-    var month = getMonthNumber(startDate.toString());
-    var year = getYear(startDate.toString());
-    console.log('day: ' + day);
-    console.log('MONTH2112: ' + month);
-    console.log('YEAR: ' + year);
-    fetchAppointments('00', month, year, isMounted); // day = '00' returns every day in month and year
+    //   daySave = getDayNumber(startDate.toString());
+    monthSave = getMonthNumber(startDate.toString());
+    yearSave = getYear(startDate.toString());
+    console.log('day: ' + daySave);
+    console.log('MONTH2112: ' + monthSave);
+    console.log('YEAR: ' + yearSave);
+    fetchAppointments('00', monthSave, yearSave, isMounted); // day = '00' returns every day in month and year
     return () => {
       isMounted = false;
     };
@@ -116,33 +120,34 @@ export default function CalendarScreen() {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function saveComplete() {
-    console.log('SAVECOMPLETE');
-    var day = getDayNumber(startDate.toString());
-    var month = getMonthNumber(startDate.toString());
-    var year = getYear(startDate.toString());
-    console.log('day: ' + day);
-    console.log('MONTH2112: ' + month);
-    console.log('YEAR: ' + year);
-    fetchAppointments(day, month, year, true); // '00' returns every day in month
+  function saveApptComplete() {
+    console.log('saveApptComplete');
+    //  var day = getDayNumber(startDate.toString());
+    //   var month = getMonthNumber(startDate.toString());
+    //   var year = getYear(startDate.toString());
+
+    console.log('day: ' + daySave);
+    console.log('MONTH2112: ' + monthSave);
+    console.log('YEAR: ' + yearSave);
+    fetchAppointments(daySave, monthSave, yearSave, true); // '00' returns every day in month
   }
 
   function onDateChange(date: Moment, type: 'START_DATE' | 'END_DATE') {
     console.log('calendar date: ' + date.toString());
     console.log('start date: ' + type);
-    let month = getMonthNumber(date.toString());
-    let year = getYear(date.toString());
-    let day = getDayNumber(date.toString());
-    fetchAppointments(day, month, year, true);
+    monthSave = getMonthNumber(date.toString());
+    yearSave = getYear(date.toString());
+    daySave = getDayNumber(date.toString());
+    fetchAppointments(daySave, monthSave, yearSave, true);
   }
 
   function handleMonthChange(date: Moment) {
     console.log('next or previous pressed: ' + date);
-    let month = getMonthNumber(date.toString());
-    let year = getYear(date.toString());
-    let day = getDayNumber(date.toString());
-    console.log(month + ' ' + day + ' ' + year);
-    fetchAppointments('00', month, year, true);
+    monthSave = getMonthNumber(date.toString());
+    yearSave = getYear(date.toString());
+    //   daySave = getDayNumber(date.toString());
+    console.log(monthSave + ' ' + daySave + ' ' + yearSave);
+    fetchAppointments('00', monthSave, yearSave, true);
   }
 
   function upPressed() {
@@ -249,7 +254,11 @@ export default function CalendarScreen() {
               setModalVisible(!modalVisible);
             }}
           >
-            <AddAppointmentScreen title={'New Appointment'} onSave={saveComplete} setModalVisible={setModalVisible} />
+            <AddAppointmentScreen
+              title={'New Appointment'}
+              onSave={saveApptComplete}
+              setModalVisible={setModalVisible}
+            />
           </Modal>
         )}
         {quickSearchVisible && (
