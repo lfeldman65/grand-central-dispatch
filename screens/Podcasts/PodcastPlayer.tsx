@@ -373,8 +373,9 @@ export default function PodcastPlayer(props: any) {
 
       {/* <Image source={{uri:podcastItem.imageUrl}} style={styles.logoImage} /> */}
       <Image source={logo} style={styles.logoImage} />
-
-      <Text style={styles.podcastName}>{prettyPodcastName(podcastItem.title)}</Text>
+      <View style={styles.podcastNameView}>
+        <Text style={styles.podcastName}>{prettyPodcastName(podcastItem.title)}</Text>
+      </View>
       <View style={styles.scrubber}>
         <Slider
           minimumTrackTintColor="#ffffff"
@@ -465,15 +466,19 @@ export const styles = StyleSheet.create({
     marginTop: 20, // alignment varies by device, so need a better way
     textAlign: 'center',
   },
+  podcastNameView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
   podcastName: {
     color: 'white',
     fontSize: 16,
-    margin: 10,
     textAlign: 'center',
     width: '90%',
   },
   blankButton: {
-    // Helps placement of arrow and title (there's probably a better way to do this)
+    // Helps placement of back and title (there's probably a better way to do this)
     width: 70,
   },
   logoImage: {
