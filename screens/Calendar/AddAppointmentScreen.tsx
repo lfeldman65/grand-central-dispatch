@@ -47,7 +47,7 @@ export default function AddAppointmentScreen(props: any) {
   const [order, setOrder] = useState('First');
   const [reminderType, setReminderType] = useState('Text');
   const [reminderUnit, setReminderUnit] = useState('None');
-  const [reminderTime, setReminderTime] = useState('10');
+  const [reminderTime, setReminderTime] = useState('0');
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
   const [sunday, setSunday] = useState(false);
@@ -300,28 +300,66 @@ export default function AddAppointmentScreen(props: any) {
     }
   }
 
-  function savePressed() {
-    //  analytics.event(new Event('Relationships', 'Save Button', 'Pressed', 0));
-    console.log(startDate.toDateString());
-    console.log(
-      startDate.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })
-    );
-    console.log(startDate.toISOString());
+  function isStringNumeric(input: string) {
+    return /^\d+$/.test(input);
+  }
 
-    console.log('times: ' + untilType);
+  function savePressed() {
+    if (apptTitle == '') {
+      Alert.alert('Please Enter a Title');
+      return;
+    }
+    if (startDate > endDate) {
+      Alert.alert('The Start Date and Time must be before the End Date and Time');
+      return;
+    }
     if (recurrence != 'Never' && untilType == 'Times') {
       if (untilVal == '0') {
         Alert.alert('The number of times must be greater than 0');
         return;
       }
     }
-    if (apptTitle == '') {
-      Alert.alert('Please enter a Title');
-      return;
+    if (reminderUnit != 'None') {
+      if (!isStringNumeric(reminderTime)) {
+        Alert.alert('"Reminder Time Before" must be a positive number');
+        return;
+      }
     }
-    if (startDate > endDate) {
-      Alert.alert('The Start Date and Time must be before the End Date and Time');
-      return false;
+    if (reminderUnit != 'None') {
+      if (reminderTime == '0') {
+        Alert.alert('"Reminder Time Before" must be greater than 0');
+        return;
+      }
+    }
+    if (reminderUnit != 'None') {
+      if (reminderTime == '') {
+        Alert.alert('"Reminder Time" must be a positive number');
+        return;
+      }
+    }
+    if (reminderUnit == 'Minutes') {
+      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 999) {
+        Alert.alert('"Reminder Time Before" must be 999 or less');
+        return;
+      }
+    }
+    if (reminderUnit == 'Hours') {
+      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 99) {
+        Alert.alert('"Reminder Time Before" must be 99 or less');
+        return false;
+      }
+    }
+    if (reminderUnit == 'Days') {
+      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 365) {
+        Alert.alert('"Reminder Time Before" must be 365 or less');
+        return false;
+      }
+    }
+    if (reminderUnit == 'Weeks') {
+      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 52) {
+        Alert.alert('"Reminder Time Before" must be 52 or less');
+        return false;
+      }
     }
 
     var newAttendees = new Array();
@@ -459,6 +497,47 @@ export default function AddAppointmentScreen(props: any) {
     }
     if (startDate > endDate) {
       return false;
+    }
+    console.log(startDate.toDateString());
+    console.log(
+      startDate.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })
+    );
+    console.log(startDate.toISOString());
+    console.log('times: ' + untilType);
+    if (recurrence != 'Never' && untilType == 'Times') {
+      if (untilVal == '0') {
+        return false;
+      }
+    }
+    if (reminderUnit != 'None') {
+      if (reminderTime == '') {
+        return false;
+      }
+    }
+    if (reminderUnit != 'None') {
+      if (!isStringNumeric(reminderTime)) {
+        return false;
+      }
+    }
+    if (reminderUnit == 'Minutes') {
+      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 999) {
+        return false;
+      }
+    }
+    if (reminderUnit == 'Hours') {
+      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 99) {
+        return false;
+      }
+    }
+    if (reminderUnit == 'Days') {
+      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 365) {
+        return false;
+      }
+    }
+    if (reminderUnit == 'Weeks') {
+      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 52) {
+        return false;
+      }
     }
     return true;
   }
@@ -1143,13 +1222,19 @@ export default function AddAppointmentScreen(props: any) {
 
         {reminderUnit != 'None' && <Text style={styles.nameTitle}>Reminder Time Before</Text>}
         {reminderUnit != 'None' && (
-          <TouchableOpacity onPress={reminderTimeMenuPressed}>
-            <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <Text style={styles.textInput}>{reminderTime}</Text>
-              </View>
+          <View style={styles.mainContent}>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.textInput}
+                placeholder="+ Add"
+                placeholderTextColor="#AFB9C2"
+                textAlign="left"
+                onChangeText={(text) => setReminderTime(text)}
+                defaultValue={reminderTime}
+                keyboardType="number-pad"
+              />
             </View>
-          </TouchableOpacity>
+          </View>
         )}
 
         {reminderUnit != 'None' && (

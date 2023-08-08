@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#ECF0F1',
+    backgroundColor: '#1A6295',
   },
   buttonsContainer: {
     padding: 10,
