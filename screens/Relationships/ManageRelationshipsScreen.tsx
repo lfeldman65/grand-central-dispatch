@@ -18,7 +18,7 @@ import AddRelScreen from './AddRelationshipScreen';
 import AtoZRow from './AtoZRow';
 import RankingRow from './RankingRow';
 import GroupsRow from './GroupsRow';
-import { getGroupsData, getRolodexData } from './api';
+import { getGroupsData, getRolodexData, deleteRelationship } from './api';
 import { GroupsDataProps, RolodexDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import React from 'react';
@@ -27,7 +27,7 @@ import { ga4Analytics } from '../../utils/general';
 import { styles } from './styles';
 import { storage } from '../../utils/storage';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo, { refresh } from '@react-native-community/netinfo';
 import sectionListGetItemLayout from 'react-native-section-list-get-item-layout';
 import { isFirstLetterAlpha } from './relationshipHelpers';
 
@@ -191,12 +191,34 @@ export default function ManageRelationshipsScreen() {
     //return data;
   }
 
+  function deleteContact(contactId: string) {
+    ga4Analytics('Relationships_Delete', {
+      contentType: 'none',
+      itemId: 'id0522',
+    });
+    console.log('contact to be deleted:' + contactId);
+    setIsLoadingForTab(tabSelected, true);
+    deleteRelationship(contactId)
+      .then((res) => {
+        if (res.status == 'error') {
+          console.error(res.error);
+        } else {
+          console.log('deleted');
+        }
+        setIsLoadingForTab(tabSelected, false);
+        fetchData(tabSelected, true);
+      })
+      .catch((error) => console.error('failure ' + error));
+  }
+
   const ItemAZ = ({ item }: { item: RolodexDataProps }) => (
     <AtoZRow
       relFromAbove={showFilterTitle()}
       data={item}
       onPress={() => handleRowPress(azRolodex.findIndex((e) => e.id == item.id))}
       lightOrDark={lightOrDark}
+      refresh={() => fetchData(tabSelected, true)}
+      deleteContact={() => deleteContact(item.id)}
     />
   );
 

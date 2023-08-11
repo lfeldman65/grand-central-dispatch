@@ -1,3 +1,5 @@
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+
 // AZ Contacts in Postman
 export interface RolodexDataProps {
   id: string;
@@ -11,6 +13,7 @@ export interface RolodexDataProps {
   homePhone: string;
   officePhone: string;
   address: RolodexAddressProps;
+  swipeRef: Swipeable | null;
 }
 
 export interface RolodexAddressProps {
