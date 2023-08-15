@@ -113,23 +113,12 @@ export default function IdeasNotesScreen(props: any) {
         )}
         {section2Selected && (
           <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>
-            Thank You Npte
+            Thank You Note
           </Text>
         )}
         {section2Selected && (
           <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
             Thank you for the great service today!
-          </Text>
-        )}
-        {section2Selected && (
-          <Text style={lightOrDark == 'dark' ? styles.sectionHeaderDark : styles.sectionHeaderLight}>
-            Thanks for a Referral
-          </Text>
-        )}
-        {section2Selected && (
-          <Text style={lightOrDark == 'dark' ? styles.contentTextDark : styles.contentTextLight}>
-            Thank you for your referral to [Bob and Linda]! I'll take excellent care of them. Your trust and support are
-            greatly appreciated...
           </Text>
         )}
 
