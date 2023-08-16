@@ -257,7 +257,7 @@ export default function TransactionDetailsLender(props: any) {
       {!isNullOrEmpty(data?.commissionPortion) && <Text style={styles.header}>{'My Portion of the Broker Split'}</Text>}
       {!isNullOrEmpty(data?.commissionPortion) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
-          {formatDollarOrPercent(data?.commissionPortion!, data?.commissionPortionType!)}
+          {formatDollarOrPercent(data?.commissionPortion!, 'percent')}
         </Text>
       )}
 

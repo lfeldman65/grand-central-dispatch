@@ -33,7 +33,7 @@ function CustomDrawerContent(props: any) {
 
   useEffect(() => {
     navigation.addListener('state', () => {
-      console.log('state change!!!!!!!--------------------');
+      //   console.log('state change!!!!!!!--------------------');
       setExpanded({ relationships: false, transactions: false });
     });
   }, []);
