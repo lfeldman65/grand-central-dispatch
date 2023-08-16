@@ -72,7 +72,7 @@ export default function SelectReferralScreen(props: any) {
 
   function fetchRolodexPressed(type: string, isMounted: boolean = true) {
     setIsLoading(true);
-    getRolodexData(type, '500')
+    getRolodexData(type, '50')
       .then((res) => {
         if (!isMounted) {
           return;
