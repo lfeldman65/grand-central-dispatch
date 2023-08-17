@@ -8,6 +8,7 @@ import { RolodexDataProps } from '../ToDo/interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, styles } from './transactionHelpers';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 import ChooseLeadSource from './ChooseLeadSource';
+import { shouldRunTests } from '../../utils/general';
 
 export default function AddOrEditRealtorTx1(props: any) {
   const { route } = props;
@@ -87,6 +88,22 @@ export default function AddOrEditRealtorTx1(props: any) {
     return () => {
       isMounted = false;
     };
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (shouldRunTests()) {
+      var txBuyer: RolodexDataProps = {
+        id: '340a4091-a74d-4f5a-aaaa-4c5f151692ce',
+        firstName: 'Abcdefghi',
+        lastName: '',
+        ranking: '',
+        contactTypeID: '',
+        employerName: '',
+        qualified: false,
+        selected: false,
+      };
+      setBuyer(txBuyer);
+    }
   }, [isFocused]);
 
   function handleStreet1Focus() {
