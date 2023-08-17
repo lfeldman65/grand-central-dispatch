@@ -115,7 +115,6 @@ export default function AddOrEditOtherTx2(props: any) {
       Alert.alert('Please enter a Projected Closing Data');
       return false;
     }
-    return true;
     addOrEditOtherTransaction(
       data == null ? 0 : data?.id,
       type,

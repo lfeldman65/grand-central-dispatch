@@ -190,12 +190,12 @@ export default function TransactionDetailsLender(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.listDate!)}</Text>
       )}
 
-      {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Loan Amount (Projected)'}</Text>}
+      {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Projected Loan Amount'}</Text>}
       {!isNullOrEmpty(data?.projectedAmount) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{'$' + data?.projectedAmount}</Text>
       )}
 
-      {!isNullOrEmpty(data?.closingDate) && <Text style={styles.header}>{'Closing Date (Projected)'}</Text>}
+      {!isNullOrEmpty(data?.closingDate) && <Text style={styles.header}>{'Projected Closing Date'}</Text>}
       {!isNullOrEmpty(data?.closingDate) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.closingDate!)}</Text>
       )}

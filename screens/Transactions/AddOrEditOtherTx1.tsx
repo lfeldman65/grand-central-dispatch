@@ -18,7 +18,7 @@ export default function AddOrEditOtherTx1(props: any) {
   const [type, setType] = useState('Lease');
   const [txTitle, setTxTitle] = useState('');
   const [whoInvolved, setWhoInvolved] = useState<RolodexDataProps[]>([]);
-  const [street1, setStreet1] = useState('TBD');
+  const [street1, setStreet1] = useState('');
   const [street2, setStreet2] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
@@ -189,9 +189,6 @@ export default function AddOrEditOtherTx1(props: any) {
     if (txTitle == '') {
       return false;
     }
-    if (whoInvolved[0] == null) {
-      return false;
-    }
     return true;
   }
 
@@ -199,10 +196,6 @@ export default function AddOrEditOtherTx1(props: any) {
     if (txTitle == '') {
       Alert.alert('Please enter a Title');
       return;
-    }
-    if (whoInvolved[0] == null) {
-      Alert.alert('Please enter at least one Relationship');
-      return false;
     }
     navigation.navigate('AddOrEditOtherTx2', {
       status: status,
@@ -318,7 +311,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Relationships *</Text>
+      <Text style={styles.nameTitle}>Relationships</Text>
 
       {whoInvolved.map((item, index) => (
         <View style={styles.mainContent}>
@@ -357,7 +350,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Street *</Text>
+      <Text style={styles.nameTitle}>Street</Text>
       <View style={styles.mainContent}>
         <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
           <TextInput

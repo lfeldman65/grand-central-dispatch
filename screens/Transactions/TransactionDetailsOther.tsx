@@ -108,9 +108,9 @@ export default function TransactionDetailsOther(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-             console.log(res);
-             
-             console.log('contacts' + JSON.stringify(res.data.contacts));
+          console.log(res);
+
+          console.log('contacts' + JSON.stringify(res.data.contacts));
         }
         setIsLoading(false);
       })
@@ -179,12 +179,12 @@ export default function TransactionDetailsOther(props: any) {
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{data?.probabilityToClose}</Text>
       )}
 
-      {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Closing Price (Projected)'}</Text>}
+      {!isNullOrEmpty(data?.projectedAmount) && <Text style={styles.header}>{'Projected Closing Price'}</Text>}
       {!isNullOrEmpty(data?.projectedAmount) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{'$' + data?.projectedAmount}</Text>
       )}
 
-      {!isNullOrEmpty(data?.closingDate) && <Text style={styles.header}>{'Closing Date (Projected)'}</Text>}
+      {!isNullOrEmpty(data?.closingDate) && <Text style={styles.header}>{'Projected Closing Date'}</Text>}
       {!isNullOrEmpty(data?.closingDate) && (
         <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{prettyDate(data?.closingDate!)}</Text>
       )}
