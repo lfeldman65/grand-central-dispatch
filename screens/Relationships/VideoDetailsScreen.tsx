@@ -24,10 +24,12 @@ export default function VideoDetailsScreen(props: any) {
       contentType: 'none',
       itemId: 'id0702',
     });
-    if (dataVid[0].contactGuid != null) {
+    console.log(dataVid[index].contactGuid);
+    console.log('name: ' + dataVid[index].fullName);
+    if (dataVid[index].contactGuid != null && dataVid[index].fullName != '') {
       navigation.navigate('RelDetails', {
-        contactId: dataVid[0].contactGuid,
-        firstName: dataVid[0].fullName,
+        contactId: dataVid[index].contactGuid,
+        firstName: dataVid[index].fullName,
         lastName: '',
         lightOrDark: lightOrDark,
       });

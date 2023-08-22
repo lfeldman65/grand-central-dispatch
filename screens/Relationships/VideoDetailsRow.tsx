@@ -31,7 +31,7 @@ export default function VideoDetailRows(props: VideoDetailsRowProps) {
           </Text>
         </View>
 
-        {props.data.fullName != null && (
+        {props.data.fullName != null && props.data.fullName != '' && (
           <View style={styles.chevronBox}>
             <Image source={chevron} style={styles.chevron} />
           </View>

@@ -10,6 +10,7 @@ import { roundToInt } from './transactionHelpers';
 import { ga4Analytics } from '../../utils/general';
 
 const chevron = require('../../images/chevron_blue_right.png');
+const fontSize = 16;
 
 export default function TransactionDetailsRE(props: any) {
   const { route } = props;
@@ -87,7 +88,7 @@ export default function TransactionDetailsRE(props: any) {
     console.log('delete Pressed');
     deleteTx(dealID)
       .then((res) => {
-        console.log(res);
+        //  console.log(res);
         if (res.status == 'error') {
           console.error(res.error);
         } else {
@@ -114,7 +115,7 @@ export default function TransactionDetailsRE(props: any) {
           console.error(res.error);
         } else {
           setData(res.data);
-          console.log(res);
+          //  console.log(res);
         }
         setIsLoading(false);
       })
@@ -133,8 +134,8 @@ export default function TransactionDetailsRE(props: any) {
       )}
       {data?.transactionType == 'Buyer' && (
         <TouchableOpacity onPress={() => handlePersonPressed(0)}>
-          <View style={styles.referralAndSpouseRow}>
-            <View style={styles.referralAndSpouseText}>
+          <View style={styles.buyerAndSellerRow}>
+            <View style={styles.buyerAndSellerText}>
               <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
                 {data?.contacts[0].contactName}
               </Text>
@@ -159,8 +160,8 @@ export default function TransactionDetailsRE(props: any) {
       )}
       {data?.transactionType == 'Seller' && (
         <TouchableOpacity onPress={() => handlePersonPressed(0)}>
-          <View style={styles.referralAndSpouseRow}>
-            <View style={styles.referralAndSpouseText}>
+          <View style={styles.buyerAndSellerRow}>
+            <View style={styles.buyerAndSellerText}>
               <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
                 {data?.contacts[0].contactName}
               </Text>
@@ -185,8 +186,8 @@ export default function TransactionDetailsRE(props: any) {
         !isNullOrEmpty(data?.contacts[1].userID) && <Text style={styles.header}>Buyer</Text>}
       {data?.transactionType == 'Buyer & Seller' && (
         <TouchableOpacity onPress={() => handlePersonPressed(1)}>
-          <View style={styles.referralAndSpouseRow}>
-            <View style={styles.referralAndSpouseText}>
+          <View style={styles.buyerAndSellerRow}>
+            <View style={styles.buyerAndSellerText}>
               <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
                 {data?.contacts[1].contactName}
               </Text>
@@ -211,8 +212,8 @@ export default function TransactionDetailsRE(props: any) {
       )}
       {data?.transactionType == 'Buyer & Seller' && (
         <TouchableOpacity onPress={() => handlePersonPressed(0)}>
-          <View style={styles.referralAndSpouseRow}>
-            <View style={styles.referralAndSpouseText}>
+          <View style={styles.buyerAndSellerRow}>
+            <View style={styles.buyerAndSellerText}>
               <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>
                 {data?.contacts[0].contactName}
               </Text>
@@ -313,7 +314,7 @@ export default function TransactionDetailsRE(props: any) {
 
       {!isNullOrEmpty(data?.grossCommision) && (
         <View style={styles.boxRow}>
-          <Text style={styles.largeHeader}>My Gross Commission</Text>
+          <Text style={styles.header}>My Gross Commission</Text>
           <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
             {formatDollarOrPercent(roundToInt(data?.grossCommision!), 'dollar')}
           </Text>
@@ -342,7 +343,7 @@ export default function TransactionDetailsRE(props: any) {
       )}
 
       <View style={styles.boxRow}>
-        <Text style={styles.largeHeader}>{"Income After Broker's Split and Fees"}</Text>
+        <Text style={styles.header}>{'Income After Split and Fees'}</Text>
         <Text style={lightOrDark == 'dark' ? styles.boxTextDark : styles.boxTextLight}>
           {formatDollarOrPercent(data?.incomeAfterSplitFees!, 'dollar')}
         </Text>
@@ -368,38 +369,32 @@ const styles = StyleSheet.create({
   header: {
     marginTop: 10,
     marginLeft: 20,
-    fontSize: 14,
-    color: 'gray',
-  },
-  largeHeader: {
-    marginTop: 10,
-    marginLeft: 20,
-    fontSize: 16,
+    fontSize: fontSize,
     color: 'gray',
   },
   textDark: {
     paddingTop: 5,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: fontSize,
     color: 'white',
   },
   textLight: {
     paddingTop: 5,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: fontSize,
     color: 'black',
   },
   boxTextDark: {
     paddingTop: 10,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: fontSize,
     color: 'white',
     paddingRight: 10,
   },
   boxTextLight: {
     paddingTop: 10,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: fontSize,
     color: 'black',
     paddingRight: 10,
   },
@@ -410,12 +405,10 @@ const styles = StyleSheet.create({
     height: 18,
     width: 10,
   },
-  referralAndSpouseRow: {
+  buyerAndSellerRow: {
     flexDirection: 'row',
-    height: 30,
   },
-  referralAndSpouseText: {
-    height: 25,
+  buyerAndSellerText: {
     width: '92%',
     textAlign: 'left',
   },

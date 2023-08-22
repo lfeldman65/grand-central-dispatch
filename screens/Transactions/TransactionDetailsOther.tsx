@@ -10,6 +10,7 @@ import { prettyDate } from '../../utils/general';
 import { ga4Analytics } from '../../utils/general';
 
 const chevron = require('../../images/chevron_blue_right.png');
+const fontSize = 16;
 
 export default function TransactionDetailsOther(props: any) {
   const { route } = props;
@@ -136,7 +137,7 @@ export default function TransactionDetailsOther(props: any) {
       {data?.contacts.map((item, index) => (
         <TouchableOpacity onPress={() => handlePersonPressed(index)}>
           <View style={styles.textAndChevronRow}>
-            <View style={styles.referralAndSpouseText}>
+            <View style={styles.whoInvolvedText}>
               <Text style={lightOrDark == 'dark' ? styles.textDark : styles.textLight}>{item.contactName}</Text>
             </View>
 
@@ -209,38 +210,32 @@ const styles = StyleSheet.create({
   header: {
     marginTop: 10,
     marginLeft: 20,
-    fontSize: 14,
-    color: 'gray',
-  },
-  largeHeader: {
-    marginTop: 10,
-    marginLeft: 20,
-    fontSize: 16,
+    fontSize: fontSize,
     color: 'gray',
   },
   textDark: {
     paddingTop: 5,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: fontSize,
     color: 'white',
   },
   textLight: {
     paddingTop: 5,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: fontSize,
     color: 'black',
   },
   boxTextDark: {
     paddingTop: 10,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: fontSize,
     color: 'white',
     paddingRight: 10,
   },
   boxTextLight: {
     paddingTop: 10,
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: fontSize,
     color: 'black',
     paddingRight: 10,
   },
@@ -253,10 +248,8 @@ const styles = StyleSheet.create({
   },
   referralAndSpouseRow: {
     flexDirection: 'row',
-    height: 30,
   },
-  referralAndSpouseText: {
-    height: 25,
+  whoInvolvedText: {
     width: '92%',
     textAlign: 'left',
   },
