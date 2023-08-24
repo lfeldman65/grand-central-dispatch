@@ -782,9 +782,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     deleteRelationship(contactId)
       .then((res) => {
         if (res.status == 'error') {
-          console.error(res.error);
+          console.log(res.error);
+          if (res.error == "Updated but you don't have permission to delete contact.") {
+            Alert.alert('You do not have permission to delete a relationship. Please contact your team leader.');
+          }
         } else {
-          //  console.log(res.data);
           navigation.goBack();
         }
         setIsLoading(false);
