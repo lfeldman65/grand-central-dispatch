@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Modal, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Modal, Text, View, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getToDoDetails, markCompleteToDo, deleteToDo } from './api';
 import { ToDoDetailsDataProps } from './interfaces';
@@ -216,89 +216,101 @@ export default function ToDoDetails(props: any) {
     navigation.goBack();
   }
 
-  return (
-    <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-      <View style={lightOrDark == 'dark' ? styles.topContainerDark : styles.topContainerLight}>
-        <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>{detailData?.title}</Text>
-        <View style={styles.dividingLine}></View>
-        <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
-          {'Due: ' + prettyDate(detailData?.dueDate!)}
-        </Text>
-        {detailData?.priority == 'True' && <Text style={styles.priorityText}>{'High Priority'}</Text>}
-        {goalIDToTitle() != 'None' && <Text style={styles.sectionHeader}>Activity</Text>}
-        {goalIDToTitle() != 'None' && (
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{goalIDToTitle()}</Text>
-        )}
+  if (isLoading) {
+    return (
+      <>
+        <View style={lightOrDark == 'dark' ? globalStyles.activityIndicatorDark : globalStyles.activityIndicatorLight}>
+          <ActivityIndicator size="large" color="#AAA" />
+        </View>
+      </>
+    );
+  } else {
+    return (
+      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
+        <View style={lightOrDark == 'dark' ? styles.topContainerDark : styles.topContainerLight}>
+          <Text style={lightOrDark == 'dark' ? styles.headerDark : styles.headerLight}>{detailData?.title}</Text>
+          <View style={styles.dividingLine}></View>
+          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+            {'Due: ' + prettyDate(detailData?.dueDate!)}
+          </Text>
+          {detailData?.priority == 'True' && <Text style={styles.priorityText}>{'High Priority'}</Text>}
+          {goalIDToTitle() != 'None' && <Text style={styles.sectionHeader}>Activity</Text>}
+          {goalIDToTitle() != 'None' && (
+            <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{goalIDToTitle()}</Text>
+          )}
 
-        {!isNullOrEmpty(detailData?.location) && (
-          <View style={styles.directionsRow}>
-            <Text style={styles.sectionHeader}>Location</Text>
-            <TouchableOpacity onPress={() => handleDirectionsPressed()}>
-              <Text style={styles.directionsText}>{'Directions'}</Text>
+          {!isNullOrEmpty(detailData?.location) && (
+            <View style={styles.directionsRow}>
+              <Text style={styles.sectionHeader}>Location</Text>
+              <TouchableOpacity onPress={() => handleDirectionsPressed()}>
+                <Text style={styles.directionsText}>{'Directions'}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {!isNullOrEmpty(detailData?.location) && (
+            <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>
+              {detailData?.location!}
+            </Text>
+          )}
+
+          {!isNullOrEmpty(detailData?.notes) && <Text style={styles.sectionHeader}>Notes</Text>}
+          {!isNullOrEmpty(detailData?.notes) && (
+            <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{detailData?.notes!}</Text>
+          )}
+
+          {!isNullOrEmpty(detailData?.attendees) && <Text style={styles.sectionHeader}>Relationships</Text>}
+
+          {!isNullOrEmpty(detailData?.attendees) &&
+            detailData?.attendees.map((item, index) => (
+              <TouchableOpacity key={index} onPress={() => handleAttendeePressed(item.id)}>
+                <Text style={styles.link}>{item.name}</Text>
+              </TouchableOpacity>
+            ))}
+        </View>
+
+        <View style={lightOrDark == 'dark' ? styles.bottomContainerDark : styles.bottomContainerLight}>
+          <Text style={styles.campaignText}>
+            {detailData?.isCampaign ? 'This To-Do is part of a marketing campaign' : ''}
+          </Text>
+          {detailData?.completedDate == null && (
+            <TouchableOpacity onPress={markComplete}>
+              <Text style={styles.completeText}>{detailData?.isCampaign ? 'Close' : 'Complete'}</Text>
             </TouchableOpacity>
-          </View>
-        )}
-
-        {!isNullOrEmpty(detailData?.location) && (
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{detailData?.location!}</Text>
-        )}
-
-        {!isNullOrEmpty(detailData?.notes) && <Text style={styles.sectionHeader}>Notes</Text>}
-        {!isNullOrEmpty(detailData?.notes) && (
-          <Text style={lightOrDark == 'dark' ? styles.regTextDark : styles.regTextLight}>{detailData?.notes!}</Text>
-        )}
-
-        {!isNullOrEmpty(detailData?.attendees) && <Text style={styles.sectionHeader}>Relationships</Text>}
-
-        {!isNullOrEmpty(detailData?.attendees) &&
-          detailData?.attendees.map((item, index) => (
-            <TouchableOpacity key={index} onPress={() => handleAttendeePressed(item.id)}>
-              <Text style={styles.link}>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
-      </View>
-
-      <View style={lightOrDark == 'dark' ? styles.bottomContainerDark : styles.bottomContainerLight}>
-        <Text style={styles.campaignText}>
-          {detailData?.isCampaign ? 'This To-Do is part of a marketing campaign' : ''}
-        </Text>
-        {detailData?.completedDate == null && (
-          <TouchableOpacity onPress={markComplete}>
-            <Text style={styles.completeText}>{detailData?.isCampaign ? 'Close' : 'Complete'}</Text>
+          )}
+          <TouchableOpacity onPress={deletePressed}>
+            <Text style={styles.deleteText}>Delete</Text>
           </TouchableOpacity>
+        </View>
+        {modalVisible && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <EditToDo
+              title={'Edit To-Do'}
+              todoID={detailData?.id}
+              activityTypeId={detailData?.activityTypeId}
+              activityTypeTitle={goalIDToTitle()}
+              titleFromParent={detailData?.title}
+              dateFromParent={detailData?.dueDate}
+              priorityFromParent={detailData?.priority}
+              locationFromParent={detailData?.location}
+              attendeeFromParent={detailData?.attendees ?? []}
+              notesFromParent={detailData?.notes}
+              onSave={saveComplete}
+              setModalVisible={setModalVisible}
+              lightOrDark={lightOrDark}
+            />
+          </Modal>
         )}
-        <TouchableOpacity onPress={deletePressed}>
-          <Text style={styles.deleteText}>Delete</Text>
-        </TouchableOpacity>
       </View>
-      {modalVisible && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <EditToDo
-            title={'Edit To-Do'}
-            todoID={detailData?.id}
-            activityTypeId={detailData?.activityTypeId}
-            activityTypeTitle={goalIDToTitle()}
-            titleFromParent={detailData?.title}
-            dateFromParent={detailData?.dueDate}
-            priorityFromParent={detailData?.priority}
-            locationFromParent={detailData?.location}
-            attendeeFromParent={detailData?.attendees ?? []}
-            notesFromParent={detailData?.notes}
-            onSave={saveComplete}
-            setModalVisible={setModalVisible}
-            lightOrDark={lightOrDark}
-          />
-        </Modal>
-      )}
-    </View>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({

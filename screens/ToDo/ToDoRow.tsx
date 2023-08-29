@@ -101,7 +101,7 @@ export default function ToDoRow(props: ToDoRowProps) {
   }
 
   function fetchGoalsConcise(isMounted: boolean) {
-    console.log('fetch goals');
+    //  console.log('fetch goals');
     getGoalDataConcise()
       .then((res) => {
         if (!isMounted) {

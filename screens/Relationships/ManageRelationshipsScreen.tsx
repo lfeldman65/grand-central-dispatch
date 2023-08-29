@@ -34,11 +34,6 @@ import { isFirstLetterAlpha } from './relationshipHelpers';
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 const cache_prefix = 'cache_relationship_';
-const rankAPlus = require('../Relationships/images/rankAPlus.png');
-const rankA = require('../Relationships/images/rankA.png');
-const rankB = require('../Relationships/images/rankB.png');
-const rankC = require('../Relationships/images/rankC.png');
-const rankD = require('../Relationships/images/rankD.png');
 
 type TabType = 'a-z' | 'ranking' | 'groups';
 var localDisplay = 'First Last';
@@ -127,6 +122,9 @@ export default function ManageRelationshipsScreen() {
       });
       // console.log("length before " + contacts.length);
       var contacts2 = contacts.filter((e) => e != null);
+      if (localDisplay == 'First Last') {
+        contacts2.sort((a, b) => a!.firstName.localeCompare(b!.firstName));
+      }
       //console.log("length after " + contacts2.length);
       const sectionData: DataAZ = { title: indexChar, data: contacts2 };
       return sectionData;
@@ -455,6 +453,7 @@ export default function ManageRelationshipsScreen() {
   }, [isFilterRel]);
 
   useEffect(() => {
+    // console.log('isFocused---------');
     fetchData(tabSelected, true);
   }, [isFocused]);
 
@@ -583,7 +582,7 @@ export default function ManageRelationshipsScreen() {
   async function readFromFile(param: TabType) {
     //the file is the source of truth for data, this should be only place where data is set
     const fileUri = FileSystem.documentDirectory + cache_prefix + param;
-    //console.log('read ' + fileUri);
+    console.log('read ' + fileUri);
     const fileExists = await checkFileExists(fileUri);
     console.log('file exists ' + fileExists); // Output: true or false
     if (fileExists) {
