@@ -64,14 +64,14 @@ export function addNewAppointment(
   type: string,
   attendees: AttendeesProps[]
 ): Promise<AddAppointmentDataResponse> {
-  console.log('API untilType: ' + untilType);
-  console.log('API untilDate: ' + untilDate);
-  console.log('API untilTimes: ' + untilTimes);
-  console.log('API frequencyType: ' + frequencyType);
-  console.log('tuesday: ' + weeklyTuesday);
-  console.log('API reminder time: ' + timeBefore);
-  console.log('API reminder unit: ' + beforeUnit);
-  console.log('API reminder type: ' + type);
+  // console.log('API untilType: ' + untilType);
+  // console.log('API untilDate: ' + untilDate);
+  // console.log('API untilTimes: ' + untilTimes);
+  // console.log('API frequencyType: ' + frequencyType);
+  // console.log('tuesday: ' + weeklyTuesday);
+  // console.log('API reminder time: ' + timeBefore);
+  // console.log('API reminder unit: ' + beforeUnit);
+  // console.log('API reminder type: ' + type);
   return http.post('calendarEvents', {
     body: {
       // no bracket since not an array

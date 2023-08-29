@@ -179,22 +179,6 @@ export default function AddAppointmentScreen(props: any) {
   }
 
   useEffect(() => {
-    console.log('USEEFFECT:' + tuesday);
-  }, [
-    navigation,
-    reminderTime,
-    reminderUnit,
-    reminderType,
-    monday,
-    tuesday,
-    wednesday,
-    thursday,
-    friday,
-    saturday,
-    sunday,
-  ]);
-
-  useEffect(() => {
     handleRecurrenceChange();
   }, [reminderType, reminderTime, reminderUnit, reminderType]);
 
@@ -371,15 +355,16 @@ export default function AddAppointmentScreen(props: any) {
       newAttendees.push(attendeeProps);
     });
 
-    //  new Date().toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
-    //  console.log(attendees[0].id);
-    console.log('reminderTime ' + reminderTime);
-    console.log('reminder type: ' + reminderType);
-    console.log('reminder before unit: ' + convertReminderUnit(reminderUnit));
-    console.log('tuesday: ' + tuesday);
+    console.log('recurrence: ' + recurrence);
+    console.log('recurrence converted: ' + convertRecurrence(recurrence));
+    console.log('untilDate.toISOString(): ' + untilDate.toISOString());
+    console.log('untilType: ' + untilType);
+    console.log('untilVal: ' + untilVal);
 
-    //   console.log('until val: ' + untilVal);
-    //   console.log('recurrence: ' + convertRecurrence(recurrence));
+    var newUntilDate = untilDate.toISOString();
+    if (untilType == 'Times') {
+      newUntilDate = '2052-11-19T00:00:00';
+    }
 
     addNewAppointment(
       apptTitle,
@@ -388,7 +373,7 @@ export default function AddAppointmentScreen(props: any) {
       location,
       notes,
       untilType,
-      untilDate.toISOString(),
+      newUntilDate,
       untilVal,
       convertRecurrence(recurrence),
       monday,
