@@ -157,35 +157,14 @@ export function convertReminderUnit(unit: string) {
 }
 
 export function convertReminderTime(timeString: string) {
-  console.log('days string: ' + timeString);
+  console.log('timeString: ' + timeString);
   if (timeString == null) {
     return 0;
   }
   if (timeString == '') {
     return 0;
   }
-  if (timeString == 'None') {
-    return 0;
-  }
-  if (timeString == '10') {
-    return 10;
-  }
-  if (timeString == '20') {
-    return 20;
-  }
-  if (timeString == '30') {
-    return 30;
-  }
-  if (timeString == '40') {
-    return 40;
-  }
-  if (timeString == '50') {
-    return 50;
-  }
-  if (timeString == '60') {
-    return 60;
-  }
-  return 0;
+  return parseInt(timeString);
 }
 
 export function convertOrder(element: string) {

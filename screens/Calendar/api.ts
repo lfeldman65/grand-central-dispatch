@@ -69,9 +69,45 @@ export function addNewAppointment(
   // console.log('API untilTimes: ' + untilTimes);
   // console.log('API frequencyType: ' + frequencyType);
   // console.log('tuesday: ' + weeklyTuesday);
-  // console.log('API reminder time: ' + timeBefore);
-  // console.log('API reminder unit: ' + beforeUnit);
-  // console.log('API reminder type: ' + type);
+  console.log('API reminder time: ' + timeBefore);
+  console.log('API reminder unit: ' + beforeUnit);
+  console.log('API reminder type: ' + type);
+  if (beforeUnit != 'None') {
+    return http.post('calendarEvents', {
+      body: {
+        // no bracket since not an array
+        title: title,
+        startTime: startTime,
+        endTime: endTime,
+        location: location,
+        notes: notes,
+        recurrence: {
+          untilType: untilType,
+          untilDate: untilDate,
+          untilTimes: untilTimes,
+          frequencyType: frequencyType,
+          weeklyMonday: weeklyMonday,
+          weeklyTuesday: weeklyTuesday,
+          weeklyWednesday: weeklyWednesday,
+          weeklyThursday: weeklyThursday,
+          weeklyFriday: weeklyFriday,
+          weeklySaturday: weeklySaturday,
+          weeklySunday: weeklySunday,
+          weeklyEveryNWeeks: weeklyEveryNWeeks,
+          monthlyEveryNMonths: monthlyEveryNMonths,
+          monthlyWeekNumber: monthlyWeekNumber,
+          yearlyWeekNumber: yearlyWeekNumber,
+          yearlyEveryNYears: yearlyEveryNYears,
+        },
+        reminder: {
+          timeBefore: timeBefore,
+          beforeUnit: beforeUnit,
+          type: type,
+        },
+        attendees: attendees,
+      },
+    });
+  }
   return http.post('calendarEvents', {
     body: {
       // no bracket since not an array
@@ -97,11 +133,6 @@ export function addNewAppointment(
         monthlyWeekNumber: monthlyWeekNumber,
         yearlyWeekNumber: yearlyWeekNumber,
         yearlyEveryNYears: yearlyEveryNYears,
-      },
-      reminder: {
-        timeBefore: timeBefore,
-        beforeUnit: beforeUnit,
-        type: type,
       },
       attendees: attendees,
     },

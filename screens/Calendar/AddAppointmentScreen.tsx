@@ -310,37 +310,31 @@ export default function AddAppointmentScreen(props: any) {
       }
     }
     if (reminderUnit != 'None') {
-      if (reminderTime == '0') {
-        Alert.alert('"Reminder Time Before" must be greater than 0');
-        return;
-      }
-    }
-    if (reminderUnit != 'None') {
       if (reminderTime == '') {
         Alert.alert('"Reminder Time" must be a positive number');
         return;
       }
     }
     if (reminderUnit == 'Minutes') {
-      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 999) {
+      if (parseFloat(reminderTime) < 0 || parseFloat(reminderTime) > 999) {
         Alert.alert('"Reminder Time Before" must be 999 or less');
         return;
       }
     }
     if (reminderUnit == 'Hours') {
-      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 99) {
+      if (parseFloat(reminderTime) < 0 || parseFloat(reminderTime) > 99) {
         Alert.alert('"Reminder Time Before" must be 99 or less');
         return false;
       }
     }
     if (reminderUnit == 'Days') {
-      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 365) {
+      if (parseFloat(reminderTime) < 0 || parseFloat(reminderTime) > 365) {
         Alert.alert('"Reminder Time Before" must be 365 or less');
         return false;
       }
     }
     if (reminderUnit == 'Weeks') {
-      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 52) {
+      if (parseFloat(reminderTime) < 0 || parseFloat(reminderTime) > 52) {
         Alert.alert('"Reminder Time Before" must be 52 or less');
         return false;
       }
@@ -489,11 +483,6 @@ export default function AddAppointmentScreen(props: any) {
     );
     console.log(startDate.toISOString());
     console.log('times: ' + untilType);
-    if (recurrence != 'Never' && untilType == 'Times') {
-      if (untilVal == '0') {
-        return false;
-      }
-    }
     if (reminderUnit != 'None') {
       if (reminderTime == '') {
         return false;
@@ -505,22 +494,22 @@ export default function AddAppointmentScreen(props: any) {
       }
     }
     if (reminderUnit == 'Minutes') {
-      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 999) {
+      if (parseFloat(reminderTime) < 0 || parseFloat(reminderTime) > 999) {
         return false;
       }
     }
     if (reminderUnit == 'Hours') {
-      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 99) {
+      if (parseFloat(reminderTime) < 0 || parseFloat(reminderTime) > 99) {
         return false;
       }
     }
     if (reminderUnit == 'Days') {
-      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 365) {
+      if (parseFloat(reminderTime) < 0 || parseFloat(reminderTime) > 365) {
         return false;
       }
     }
     if (reminderUnit == 'Weeks') {
-      if (parseFloat(reminderTime) < 1 || parseFloat(reminderTime) > 52) {
+      if (parseFloat(reminderTime) < 0 || parseFloat(reminderTime) > 52) {
         return false;
       }
     }
