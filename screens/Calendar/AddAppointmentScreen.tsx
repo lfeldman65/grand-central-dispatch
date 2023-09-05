@@ -356,7 +356,7 @@ export default function AddAppointmentScreen(props: any) {
     console.log('untilVal: ' + untilVal);
 
     var newUntilDate = untilDate.toISOString();
-    if (untilType == 'Times') {
+    if (untilType == 'Times' || untilType == 'Forever') {
       newUntilDate = '2052-11-19T00:00:00';
     }
 
