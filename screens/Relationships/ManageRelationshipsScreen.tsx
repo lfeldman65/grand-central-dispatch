@@ -102,16 +102,18 @@ export default function ManageRelationshipsScreen() {
               return null;
             }
             return null;
-          }
-          if (e.lastName.substring(0, 1).toUpperCase() == indexChar) {
-            return e;
-          }
-          if (indexChar == '#') {
-            if (!isFirstLetterAlpha(e.lastName.toUpperCase())) {
+          } else {
+            if (e.lastName.substring(0, 1).toUpperCase() == indexChar) {
               return e;
             }
-            return null;
+            if (indexChar == '#') {
+              if (!isFirstLetterAlpha(e.lastName.toUpperCase())) {
+                return e;
+              }
+              return null;
+            }
           }
+
           return null;
         } else {
           if (e.employerName.substring(0, 1).toUpperCase() == indexChar) {
@@ -453,8 +455,9 @@ export default function ManageRelationshipsScreen() {
   }, [isFilterRel]);
 
   useEffect(() => {
-    // console.log('isFocused---------');
-    fetchData(tabSelected, true);
+    getCurrentDisplayAZ(true).then(() => fetchData(tabSelected, true));
+    //fetchData(tabSelected, true);
+    console.log('isFocused---------');
   }, [isFocused]);
 
   useEffect(() => {
