@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button, TextInput, Alert } from 'react-native';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button, TextInput, Alert } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { getBizGoals, updateBizGoals } from './api';
-import { removeTrailingDecimal, removeLeadingDecimal } from './settingsHelpers';
+import { removeTrailingDecimal, decimalToPercent, percentToDecimal } from './settingsHelpers';
 
 export default function BizGoalsScreen1(props: any) {
   const [netIncome, setNetIncome] = useState('');
@@ -72,9 +72,7 @@ export default function BizGoalsScreen1(props: any) {
     aveComm?: string,
     commType?: string
   ) {
-    console.log('aveComm:' + aveComm);
-    console.log('commmtype:' + commType);
-
+    console.log('taxRate:' + taxRate);
     if (desSal == null || desSal == '') {
       setNetIncome('');
       setNetIncomeBU('');
@@ -86,8 +84,8 @@ export default function BizGoalsScreen1(props: any) {
       setTaxRatePercent('');
       setTaxRatePercentBU('');
     } else {
-      setTaxRatePercent(removeLeadingDecimal(taxRate));
-      setTaxRatePercentBU(removeLeadingDecimal(taxRate));
+      setTaxRatePercent(decimalToPercent(taxRate));
+      setTaxRatePercentBU(decimalToPercent(taxRate)); //
     }
     if (yearlyExp == null || yearlyExp == '') {
       setAnnualExpenses('');
@@ -100,8 +98,8 @@ export default function BizGoalsScreen1(props: any) {
       setAgentBrokerSplit('');
       setAgentBrokerSplitBU('');
     } else {
-      setAgentBrokerSplit(removeLeadingDecimal(commPercentage));
-      setAgentBrokerSplitBU(removeLeadingDecimal(commPercentage));
+      setAgentBrokerSplit(decimalToPercent(commPercentage)); //
+      setAgentBrokerSplitBU(decimalToPercent(commPercentage)); //
     }
     if (aveSalePrice == null || aveSalePrice == '') {
       setAveAmount('');
@@ -110,7 +108,6 @@ export default function BizGoalsScreen1(props: any) {
       setAveAmount(removeTrailingDecimal(aveSalePrice));
       setAveAmountBU(removeTrailingDecimal(aveSalePrice));
     }
-    console.log('commtypelf: ' + commType!);
     setDollarOrPercent(commType!);
     setDollarOrPercentBU(commType!);
     if (aveComm == null || aveComm == '') {
@@ -121,8 +118,8 @@ export default function BizGoalsScreen1(props: any) {
         setAveCommission(removeTrailingDecimal(aveComm!));
         setAveCommissionBU(removeTrailingDecimal(aveComm!));
       } else {
-        setAveCommission(removeLeadingDecimal(aveComm!));
-        setAveCommissionBU(removeLeadingDecimal(aveComm!));
+        setAveCommission(decimalToPercent(aveComm!)); //
+        setAveCommissionBU(decimalToPercent(aveComm!)); //
       }
     }
   }
@@ -132,19 +129,15 @@ export default function BizGoalsScreen1(props: any) {
   }
 
   function restoreFields() {
-    console.log('lf commission BU: ' + aveCommissionBU);
-    console.log('lf dollarOrPercent BU: ' + dollarOrPercentBU);
-
     var commission = aveCommissionBU;
     if (dollarOrPercentBU == 'percentage') {
-      commission = '.' + aveCommissionBU;
+      commission = percentToDecimal(aveCommissionBU);
     }
-    console.log('lf commission: ' + commission);
     updateBizGoals(
       netIncomeBU,
-      '.' + taxRatePercentBU,
+      percentToDecimal(taxRatePercentBU),
       annualExpensesBU,
-      '.' + agentBrokerSplitBU,
+      percentToDecimal(agentBrokerSplitBU),
       aveAmountBU,
       commission,
       dollarOrPercentBU
@@ -182,13 +175,13 @@ export default function BizGoalsScreen1(props: any) {
     }
     var aveComm2 = aveCommission;
     if (dollarOrPercent == 'percentage') {
-      aveComm2 = '.' + aveCommission;
+      aveComm2 = percentToDecimal(aveCommission);
     }
     updateBizGoals(
       netIncome,
-      '.' + taxRatePercent,
+      percentToDecimal(taxRatePercent),
       annualExpenses,
-      '.' + agentBrokerSplit,
+      percentToDecimal(agentBrokerSplit),
       aveAmount,
       aveComm2,
       dollarOrPercent

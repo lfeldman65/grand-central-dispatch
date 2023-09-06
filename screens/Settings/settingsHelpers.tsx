@@ -80,6 +80,26 @@ export function removeTrailingDecimal(value: string) {
   return value;
 }
 
+export function percentToDecimal(value: string) {
+  // ex: "30" -> ".3"
+  if (value == null || value == '') {
+    return '';
+  }
+  var valueNum = parseFloat(value); // 30
+  valueNum = valueNum / 100; // .30
+  return valueNum.toString(); // ".30"
+}
+
+export function decimalToPercent(value: string) {
+  // ex: ".30" -> "30"
+  if (value == null || value == '') {
+    return '';
+  }
+  var valueNum = parseFloat(value); // .30
+  valueNum = valueNum * 100; // 30
+  return valueNum.toString(); // "30"
+}
+
 export function removeLeadingDecimal(value: string) {
   // i.e. 3129.27 -> 27
   console.log('remove leading: ' + value);
