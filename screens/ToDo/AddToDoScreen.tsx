@@ -323,6 +323,12 @@ export default function AddToDoScreen(props: any) {
     console.log('until val: ' + untilVal);
     console.log('goal id: ' + goal?.id!);
 
+    var newEndDate = endDate.toISOString();
+    if (untilType == 'Times' || untilType == 'Forever') {
+      console.log('until type: ' + untilType);
+      newEndDate = '2052-11-19T00:00:00';
+    }
+
     addNewToDo(
       toDoTitle,
       goal?.id!,
@@ -332,8 +338,7 @@ export default function AddToDoScreen(props: any) {
       location,
       notes,
       untilType,
-      //endDate.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }),
-      endDate.toISOString(),
+      newEndDate,
       untilVal,
       convertRecurrence(recurrence),
       monday,

@@ -15,6 +15,8 @@ export default function SortScreen2(props: any) {
   const isFocused = useIsFocused();
   const [search, setSearch] = useState('');
   const [dataRolodex, setDataRolodex] = useState<RolodexImportDataProps[]>([]);
+  const [localContacts, setLocalContacts] = useState<RolodexImportDataProps[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
   const navigation = useNavigation<any>();
@@ -23,6 +25,11 @@ export default function SortScreen2(props: any) {
     console.log(rank + ' ' + index);
     dataRolodex[index].ranking = rank;
     dataRolodex[index].didChange = true;
+
+    var contact = localContacts.find((item) => item.id === dataRolodex[index].id);
+    contact!.ranking = rank;
+    contact!.didChange = true;
+
     var contactsToDisplay: RolodexImportDataProps[] = [];
     for (let i = 0; i < dataRolodex.length; i++) {
       contactsToDisplay.push(dataRolodex[i]);
@@ -33,10 +40,15 @@ export default function SortScreen2(props: any) {
   const handleQualChange = (index: number) => {
     console.log('onQualChanged');
     dataRolodex[index].didChange = true;
+    var contact = localContacts.find((item) => item.id === dataRolodex[index].id);
+    contact!.didChange = true;
+
     if (dataRolodex[index].qualified) {
       dataRolodex[index].qualified = false;
+      contact!.qualified = false;
     } else {
       dataRolodex[index].qualified = true;
+      contact!.qualified = true;
     }
     console.log('QUAL: ' + dataRolodex[index].qualified);
     var contactsToDisplay: RolodexImportDataProps[] = [];
@@ -68,8 +80,8 @@ export default function SortScreen2(props: any) {
   }
 
   async function donePressed() {
-    for (var i = 0; i < dataRolodex.length; i++)
-      if (dataRolodex[i].didChange) {
+    for (var i = 0; i < localContacts.length; i++)
+      if (localContacts[i].didChange) {
         console.log('Index to save: ' + i);
         await quickUpdateRankQual(i);
       }
@@ -78,9 +90,9 @@ export default function SortScreen2(props: any) {
 
   async function quickUpdateRankQual(index: number) {
     await changeRankAndQual(
-      dataRolodex[index].id,
-      dataRolodex[index].ranking,
-      dataRolodex[index].qualified ? 'True' : 'False'
+      localContacts[index].id,
+      localContacts[index].ranking,
+      localContacts[index].qualified ? 'True' : 'False'
     )
       .then((res) => {
         if (res.status == 'error') {
@@ -96,13 +108,33 @@ export default function SortScreen2(props: any) {
 
   function fetchRolodexSearch(type: string) {
     setIsLoading(true);
+
+    if (localContacts.length != 0 && type.length == 0) {
+      setDataRolodex(localContacts);
+      return;
+    }
+
     getRolodexSearch(type)
       .then((res) => {
         if (res.status == 'error') {
           console.error(res.error);
         } else {
-          setDataRolodex(res.data);
-          //   console.log(res.data);
+          //setDataRolodex(res.data);
+
+          //fill up our local storage
+          if (localContacts.length == 0) {
+            setDataRolodex(res.data);
+            setLocalContacts(res.data);
+          } else {
+            var contactsToDisplay: RolodexImportDataProps[] = [];
+            for (var i = 0; i < res.data.length; i++) {
+              var contact = localContacts.find((item) => item.id === res.data[i].id);
+              contactsToDisplay.push(contact?.didChange ? contact : res.data[i]);
+            }
+            setDataRolodex(contactsToDisplay);
+          }
+
+          //console.log(res.data);
         }
         setIsLoading(false);
       })
