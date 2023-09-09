@@ -148,56 +148,116 @@ export default function DashboardScreen() {
       console.log(typeof id);
       console.log('id:' + id);
       if (id == 'import-notification') {
+        ga4Analytics('Notification_Import', {
+          contentType: 'none',
+          itemId: 'id1600',
+        });
         navigation.navigate('SettingsScreenNav', {
           screen: 'ImportStackNavigator',
         });
       } else if (id == 'win-notification') {
+        ga4Analytics('Notification_Win', {
+          contentType: 'none',
+          itemId: 'id1601',
+        });
         navigation.navigate('goals');
       } else if (id == 'video-notification') {
+        ga4Analytics('Notification_Video', {
+          contentType: 'none',
+          itemId: 'id1602',
+        });
         navigation.navigate('VideoStack', {
           screen: 'VideoHistoryScreen',
         });
       } else if (id == 'popby-notification') {
+        ga4Analytics('Notification_Pop_By', {
+          contentType: 'none',
+          itemId: 'id1603',
+        });
         navigation.navigate('PopBysScreen');
       } else if (id == 'pac-notification-1') {
+        ga4Analytics('Notification_Pac', {
+          contentType: 'none',
+          itemId: 'id1604',
+        });
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
       } else if (id == 'pac-notification-2') {
+        ga4Analytics('Notification_Pac', {
+          contentType: 'none',
+          itemId: 'id1604',
+        });
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
       } else if (id == 'pac-notification-3') {
+        ga4Analytics('Notification_Pac', {
+          contentType: 'none',
+          itemId: 'id1604',
+        });
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
       } else if (id == 'pac-notification-4') {
+        ga4Analytics('Notification_Pac', {
+          contentType: 'none',
+          itemId: 'id1604',
+        });
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
       } else if (id == 'pac-notification-5') {
+        ga4Analytics('Notification_Pac', {
+          contentType: 'none',
+          itemId: 'id1604',
+        });
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
       } else if (id == 'pac-notification-6') {
+        ga4Analytics('Notification_Pac', {
+          contentType: 'none',
+          itemId: 'id1604',
+        });
         navigation.navigate('PAC', {
           screen: 'PAC1',
           params: { defaultTab: 'calls' },
         });
       } else if (id == 'todo-notification-2') {
+        ga4Analytics('Notification_To_Do', {
+          contentType: 'none',
+          itemId: 'id1605',
+        });
         navigation.navigate('To-Do');
       } else if (id == 'todo-notification-3') {
+        ga4Analytics('Notification_To_Do', {
+          contentType: 'none',
+          itemId: 'id1605',
+        });
         navigation.navigate('To-Do');
       } else if (id == 'todo-notification-4') {
+        ga4Analytics('Notification_To_Do', {
+          contentType: 'none',
+          itemId: 'id1605',
+        });
         navigation.navigate('To-Do');
       } else if (id == 'todo-notification-5') {
+        ga4Analytics('Notification_To_Do', {
+          contentType: 'none',
+          itemId: 'id1605',
+        });
         navigation.navigate('To-Do');
       } else if (id == 'todo-notification-6') {
+        ga4Analytics('Notification_To_Do', {
+          contentType: 'none',
+          itemId: 'id1605',
+        });
         navigation.navigate('To-Do');
       } else {
         console.log('other notif');

@@ -13,7 +13,8 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { getRolodexSearch } from '../ToDo/api';
 import { RolodexDataProps } from '../Relationships/interfaces';
 import AtoZRow from '../Relationships/AtoZRow';
-import globalStyles from '../../globalStyles'; // test.
+import globalStyles from '../../globalStyles';
+import { ga4Analytics } from '../../utils/general';
 
 const closeButton = require('../../images/button_close_white.png');
 const searchGlass = require('../../images/whiteSearch.png');
@@ -47,6 +48,10 @@ export default function QuickSearch(props: any) {
   }, [search]);
 
   useEffect(() => {
+    ga4Analytics('Quick_Search', {
+      contentType: 'none',
+      itemId: 'id1704',
+    });
     handleSearchFocus();
   }, [isFocused]);
 
