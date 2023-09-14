@@ -36,6 +36,7 @@ const goalsImage = require('../Dashboard/images/quickGoals.png');
 const transImage = require('../Dashboard/images/quickTrans.png');
 const todoImage = require('../Dashboard/images/quickToDo.png');
 const calendarImage = require('../Dashboard/images/quickCalendar.png');
+const testImage = require('../Dashboard/images/testing.png');
 
 var watchedTut = 'false';
 
@@ -616,7 +617,7 @@ export default function DashboardScreen() {
         {shouldRunTests() && (
           <View style={styles.pair}>
             <TouchableOpacity onPress={() => runAllComponentTests()}>
-              <Image source={calendarImage} style={styles.logo} />
+              <Image source={testImage} style={styles.logo} />
             </TouchableOpacity>
             {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Testing</Text>}
           </View>
