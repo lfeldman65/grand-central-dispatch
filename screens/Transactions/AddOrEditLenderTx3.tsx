@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Alert, TextInput } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { styles, roundToInt } from './transactionHelpers';
 import { addOrEditTransaction } from './api';
 import globalStyles from '../../globalStyles';
+import { shouldRunTests } from '../../utils/general';
 
 var incomeAfterCosts = 0;
 
@@ -42,9 +43,9 @@ export default function AddOrEditLenderTx3(props: any) {
   const isFocused = useIsFocused();
   const [dollarOrPercentB4, setDollarOrPercentB4] = useState('percent');
   const [dollarOrPercentAfter, setDollarOrPercentAfter] = useState('dollar');
-  const [miscBeforeFees, setMiscBeforeFees] = useState('11');
-  const [myPortion, setMyPortion] = useState('55');
-  const [miscAfterFees, setMiscAfterFees] = useState('255');
+  const [miscBeforeFees, setMiscBeforeFees] = useState('');
+  const [myPortion, setMyPortion] = useState('50');
+  const [miscAfterFees, setMiscAfterFees] = useState('');
   const [notes, setNotes] = useState('');
   const navigation = useNavigation<any>();
   const notesInputRef = useRef<TextInput>(null);
@@ -73,6 +74,14 @@ export default function AddOrEditLenderTx3(props: any) {
     };
   }, [isFocused]);
 
+  useEffect(() => {
+    if (shouldRunTests()) {
+      setMiscBeforeFees('11');
+      setMyPortion('55');
+      setMiscAfterFees('255');
+    }
+  }, [isFocused]);
+
   function populateDataIfEdit(isMounted: boolean) {
     if (!isMounted) {
       return;
@@ -98,6 +107,13 @@ export default function AddOrEditLenderTx3(props: any) {
   }
 
   function completePressed() {
+    if (shouldRunTests()) {
+      if (calculateIncome() == '$38954') {
+        Alert.alert('Test Passed');
+      } else {
+        Alert.alert('Test Failed');
+      }
+    }
     addOrEditTransaction(
       data == null ? 0 : data?.id,
       type,

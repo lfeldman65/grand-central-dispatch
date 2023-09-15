@@ -8,6 +8,7 @@ import { RolodexDataProps } from '../ToDo/interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, purchaseLoanTypeMenu, styles } from './transactionHelpers';
 import ChooseLeadSource from './ChooseBorrowerLeadSource';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
+import { shouldRunTests } from '../../utils/general';
 
 export default function AddOrEditLenderTx1(props: any) {
   const { route } = props;
@@ -58,6 +59,22 @@ export default function AddOrEditLenderTx1(props: any) {
     return () => {
       isMounted = false;
     };
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (shouldRunTests()) {
+      var borrower: RolodexDataProps = {
+        id: '340a4091-a74d-4f5a-aaaa-4c5f151692ce',
+        firstName: 'Abcdefghi',
+        lastName: '',
+        ranking: '',
+        contactTypeID: '',
+        employerName: '',
+        qualified: false,
+        selected: false,
+      };
+      setBorrower(borrower);
+    }
   }, [isFocused]);
 
   function handleStreet1Focus() {
