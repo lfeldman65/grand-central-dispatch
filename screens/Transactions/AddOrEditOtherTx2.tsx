@@ -8,6 +8,7 @@ import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactio
 import { storage } from '../../utils/storage';
 import { addOrEditOtherTransaction } from './api';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { shouldRunTests } from '../../utils/general';
 
 export default function AddOrEditOtherTx2(props: any) {
   const { route } = props;
@@ -63,6 +64,12 @@ export default function AddOrEditOtherTx2(props: any) {
     };
   }, [isFocused]);
 
+  useEffect(() => {
+    if (shouldRunTests()) {
+      setClosingPrice('450000');
+    }
+  }, [isFocused]);
+
   function handleNotesFocus() {
     if (notesInputRef != null && notesInputRef.current != null) {
       notesInputRef.current.focus();
@@ -114,6 +121,13 @@ export default function AddOrEditOtherTx2(props: any) {
     if (closingDate == null) {
       Alert.alert('Please enter a Projected Closing Data');
       return false;
+    }
+    if (shouldRunTests()) {
+      if (closingPrice == '450000') {
+        Alert.alert('Test Passed');
+      } else {
+        Alert.alert('Test Failed');
+      }
     }
     addOrEditOtherTransaction(
       data == null ? 0 : data?.id,

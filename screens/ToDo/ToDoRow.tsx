@@ -29,22 +29,18 @@ export default function ToDoRow(props: ToDoRowProps) {
   const isFocused = useIsFocused();
 
   const renderLeftActions = () => {
-    if (false) {
-      return null;
-    } else {
-      return (
-        <View style={styles.leftSwipeItem}>
-          <TouchableOpacity
-            style={styles.swipeButtonTouch}
-            onPress={() => {
-              deletePressed();
-            }}
-          >
-            <Text style={styles.leftButton}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
+    return (
+      <View style={styles.leftSwipeItem}>
+        <TouchableOpacity
+          style={styles.swipeButtonTouch}
+          onPress={() => {
+            deletePressed();
+          }}
+        >
+          <Text style={styles.leftButton}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   useEffect(() => {
@@ -301,7 +297,7 @@ const styles = StyleSheet.create({
   },
   regTextDark: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 12,
     textAlign: 'left',
     marginLeft: 1,
     marginBottom: 1,
@@ -309,7 +305,7 @@ const styles = StyleSheet.create({
   },
   regTextLight: {
     color: 'black',
-    fontSize: 14,
+    fontSize: 12,
     textAlign: 'left',
     marginLeft: 1,
     marginBottom: 1,
@@ -328,7 +324,7 @@ const styles = StyleSheet.create({
   priorityText: {
     marginTop: 5,
     color: '#F99055',
-    fontSize: 14,
+    fontSize: 12,
   },
   leftSwipeItem: {
     justifyContent: 'center',

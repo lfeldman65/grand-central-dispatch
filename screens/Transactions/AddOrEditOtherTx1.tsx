@@ -8,6 +8,7 @@ import { RolodexDataProps } from '../ToDo/interfaces';
 import { AddTxBuyerAndSellerSheets, statusMenu, styles } from './transactionHelpers';
 import ChooseOtherTxType from './ChooseOtherTxType';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
+import { shouldRunTests } from '../../utils/general';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -68,6 +69,12 @@ export default function AddOrEditOtherTx1(props: any) {
     const timeString = now.toLocaleTimeString();
     console.log('now:' + timeString.toString());
     //  setTxTitle(timeString.toString());
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (shouldRunTests()) {
+      setTxTitle('Test Title');
+    }
   }, [isFocused]);
 
   function handleTitleFocus() {
