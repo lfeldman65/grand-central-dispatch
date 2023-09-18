@@ -326,7 +326,7 @@ export default function PodcastPlayer(props: any) {
     myContext.sound?.setOnPlaybackStatusUpdate(null);
     await myContext.sound?.unloadAsync();
 
-    Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+    Audio.setAudioModeAsync({ playsInSilentModeIOS: true, staysActiveInBackground: true });
     const { sound } = await Audio.Sound.createAsync(source, initialStatus, onPlaybackStatusUpdate);
     myContext.setSound(sound);
 
