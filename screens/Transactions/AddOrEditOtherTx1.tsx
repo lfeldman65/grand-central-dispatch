@@ -5,7 +5,8 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { AddTxBuyerAndSellerSheets, statusMenu, styles } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, statusMenu } from './transactionHelpers';
+import { txStyles2 } from './styles';
 import ChooseOtherTxType from './ChooseOtherTxType';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 import { shouldRunTests } from '../../utils/general';
@@ -41,12 +42,12 @@ export default function AddOrEditOtherTx1(props: any) {
       title: 'Other Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
-          <Text style={styles.backAndNext}>Back</Text>
+          <Text style={txStyles2.backAndNext}>Back</Text>
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity onPress={nextPressed}>
-          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Next</Text>
+          <Text style={isDataValid() ? txStyles2.backAndNext : txStyles2.backAndNextDim}>Next</Text>
         </TouchableOpacity>
       ),
     });
@@ -220,12 +221,12 @@ export default function AddOrEditOtherTx1(props: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.nameTitle}>Status</Text>
+    <ScrollView style={txStyles2.container}>
+      <Text style={txStyles2.nameTitle}>Status</Text>
       <TouchableOpacity onPress={statusMenuPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{status}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.inputView}>
+            <Text style={txStyles2.textInput}>{status}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -275,11 +276,11 @@ export default function AddOrEditOtherTx1(props: any) {
         </View>
       </ActionSheet>
 
-      <Text style={styles.nameTitle}>Transaction Type</Text>
+      <Text style={txStyles2.nameTitle}>Transaction Type</Text>
       <TouchableOpacity onPress={typeMenuPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{type}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.inputView}>
+            <Text style={txStyles2.textInput}>{type}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -302,13 +303,13 @@ export default function AddOrEditOtherTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Title *</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleTitleFocus}>
+      <Text style={txStyles2.nameTitle}>Title *</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleTitleFocus}>
           <TextInput
             onPressIn={handleTitleFocus}
             ref={titleRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -318,21 +319,21 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Relationships</Text>
+      <Text style={txStyles2.nameTitle}>Relationships</Text>
 
       {whoInvolved.map((item, index) => (
-        <View style={styles.mainContent}>
-          <View style={styles.attendeeView}>
-            <Text style={styles.attendeeInput}>{item.firstName}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.attendeeView}>
+            <Text style={txStyles2.attendeeInput}>{item.firstName}</Text>
             <TouchableOpacity key={index} onPress={() => deleteWhoInvolved(index)}>
-              <Image source={closeButton} style={styles.deleteAttendeeX} />
+              <Image source={closeButton} style={txStyles2.deleteAttendeeX} />
             </TouchableOpacity>
           </View>
         </View>
       ))}
-      <View style={styles.mainContent}>
-        <View style={styles.inputView}>
-          <Text style={styles.addAttendee} onPress={handleWhoPressed}>
+      <View style={txStyles2.mainContent}>
+        <View style={txStyles2.inputView}>
+          <Text style={txStyles2.addAttendee} onPress={handleWhoPressed}>
             + Add
           </Text>
         </View>
@@ -357,13 +358,13 @@ export default function AddOrEditOtherTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Street</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
+      <Text style={txStyles2.nameTitle}>Street</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStreet1Focus}>
           <TextInput
             onPressIn={handleStreet1Focus}
             ref={street1Ref}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -373,13 +374,13 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Street 2</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStreet2Focus}>
+      <Text style={txStyles2.nameTitle}>Street 2</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStreet2Focus}>
           <TextInput
             onPressIn={handleStreet2Focus}
             ref={street2Ref}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -389,13 +390,13 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>City</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleCityFocus}>
+      <Text style={txStyles2.nameTitle}>City</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleCityFocus}>
           <TextInput
             onPressIn={handleCityFocus}
             ref={cityRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -405,13 +406,13 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>State / Province</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStateFocus}>
+      <Text style={txStyles2.nameTitle}>State / Province</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStateFocus}>
           <TextInput
             onPressIn={handleStateFocus}
             ref={stateRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -421,13 +422,13 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Zip / Postal Code</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleZipFocus}>
+      <Text style={txStyles2.nameTitle}>Zip / Postal Code</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleZipFocus}>
           <TextInput
             onPressIn={handleZipFocus}
             ref={zipRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -437,7 +438,7 @@ export default function AddOrEditOtherTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.bottom}></View>
+      <View style={txStyles2.bottom}></View>
     </ScrollView>
   );
 }

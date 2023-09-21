@@ -4,7 +4,8 @@ import { useRef, useEffect, useState } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { AddTxBuyerAndSellerSheets, probabilityMenu, styles } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, probabilityMenu } from './transactionHelpers';
+import { txStyles2 } from './styles';
 import { storage } from '../../utils/storage';
 import { addOrEditOtherTransaction } from './api';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -36,12 +37,12 @@ export default function AddOrEditOtherTx2(props: any) {
       title: 'Other Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
-          <Text style={styles.backAndNext}>Back</Text>
+          <Text style={txStyles2.backAndNext}>Back</Text>
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity onPress={completePressed}>
-          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Complete</Text>
+          <Text style={isDataValid() ? txStyles2.backAndNext : txStyles2.backAndNextDim}>Complete</Text>
         </TouchableOpacity>
       ),
     });
@@ -198,13 +199,13 @@ export default function AddOrEditOtherTx2(props: any) {
   }
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.topContainer}>
-        <Text style={styles.nameTitle}>Probability to Close</Text>
+    <View style={txStyles2.container}>
+      <ScrollView style={txStyles2.topContainer}>
+        <Text style={txStyles2.nameTitle}>Probability to Close</Text>
         <TouchableOpacity onPress={probabilityPressed}>
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={styles.textInput}>{probability}</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.inputView}>
+              <Text style={txStyles2.textInput}>{probability}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -254,15 +255,15 @@ export default function AddOrEditOtherTx2(props: any) {
           </View>
         </ActionSheet>
 
-        <Text style={styles.nameTitle}>{'Projected Amount *'}</Text>
-        <View style={styles.mainContent}>
-          <View style={styles.dollarAndPercentRow}>
-            <View style={styles.dollarView}>
-              <Text style={styles.dollarText}>$</Text>
+        <Text style={txStyles2.nameTitle}>{'Projected Amount *'}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.dollarAndPercentRow}>
+            <View style={txStyles2.dollarView}>
+              <Text style={txStyles2.dollarText}>$</Text>
             </View>
-            <View style={styles.dollarAndPercentView}>
+            <View style={txStyles2.dollarAndPercentView}>
               <TextInput
-                style={styles.textInput}
+                style={txStyles2.textInput}
                 placeholder="+ Add"
                 placeholderTextColor="#AFB9C2"
                 textAlign="left"
@@ -271,15 +272,15 @@ export default function AddOrEditOtherTx2(props: any) {
                 keyboardType="number-pad"
               />
             </View>
-            <View style={styles.percentView}></View>
+            <View style={txStyles2.percentView}></View>
           </View>
         </View>
 
-        <Text style={styles.nameTitle}>{'Projected Closing Date *'}</Text>
+        <Text style={txStyles2.nameTitle}>{'Projected Closing Date *'}</Text>
         <TouchableOpacity onPress={showDatePicker}>
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={styles.textInput}>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.inputView}>
+              <Text style={txStyles2.textInput}>
                 {closingDate.toLocaleDateString('en-us', {
                   year: 'numeric',
                   month: 'short',
@@ -293,8 +294,8 @@ export default function AddOrEditOtherTx2(props: any) {
 
         <DateTimePickerModal isVisible={showDate} mode="date" onConfirm={handleConfirm} onCancel={hideDatePicker} />
 
-        <Text style={styles.nameTitle}>Notes</Text>
-        <View style={styles.mainContent}>
+        <Text style={txStyles2.nameTitle}>Notes</Text>
+        <View style={txStyles2.mainContent}>
           <TouchableOpacity style={globalStyles.notesView} onPress={handleNotesFocus}>
             <TextInput
               onPressIn={handleNotesFocus}
@@ -310,12 +311,12 @@ export default function AddOrEditOtherTx2(props: any) {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.footer}></View>
+        <View style={txStyles2.footer}></View>
       </ScrollView>
 
-      <View style={styles.bottomContainer}>
-        <Text style={styles.summaryText}>Additional Income</Text>
-        <Text style={styles.summaryText}>{'$' + closingPrice}</Text>
+      <View style={txStyles2.bottomContainer}>
+        <Text style={txStyles2.summaryText}>Additional Income</Text>
+        <Text style={txStyles2.summaryText}>{'$' + closingPrice}</Text>
       </View>
     </View>
   );

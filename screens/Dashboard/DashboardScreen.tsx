@@ -614,14 +614,14 @@ export default function DashboardScreen() {
             </Modal>
           )}
         </View>
-        {shouldRunTests() && (
+        {/* {shouldRunTests() && (
           <View style={styles.pair}>
             <TouchableOpacity onPress={() => runAllComponentTests()}>
               <Image source={testImage} style={styles.logo} />
             </TouchableOpacity>
             {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Testing</Text>}
           </View>
-        )}
+        )} */}
       </View>
     </>
   );
