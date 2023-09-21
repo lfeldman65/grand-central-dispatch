@@ -1,14 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert, StyleSheet } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu, styles } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu } from './transactionHelpers';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 import ChooseLeadSource from './ChooseLeadSource';
 import { shouldRunTests } from '../../utils/general';
+import { txStyles2 } from './styles';
 
 export default function AddOrEditRealtorTx1(props: any) {
   const { route } = props;
@@ -42,12 +43,12 @@ export default function AddOrEditRealtorTx1(props: any) {
       title: 'Real Estate Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
-          <Text style={styles.backAndNext}>Back</Text>
+          <Text style={txStyles2.backAndNext}>Back</Text>
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity onPress={nextPressed}>
-          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Next</Text>
+          <Text style={isDataValid() ? txStyles2.backAndNext : txStyles2.backAndNextDim}>Next</Text>
         </TouchableOpacity>
       ),
     });
@@ -295,12 +296,12 @@ export default function AddOrEditRealtorTx1(props: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.nameTitle}>Transaction Type</Text>
+    <ScrollView style={txStyles2.container}>
+      <Text style={txStyles2.nameTitle}>Transaction Type</Text>
       <TouchableOpacity onPress={typeMenuPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{type}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.inputView}>
+            <Text style={txStyles2.textInput}>{type}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -349,11 +350,11 @@ export default function AddOrEditRealtorTx1(props: any) {
           </ScrollView>
         </View>
       </ActionSheet>
-      <Text style={styles.nameTitle}>Status</Text>
+      <Text style={txStyles2.nameTitle}>Status</Text>
       <TouchableOpacity onPress={statusMenuPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{status}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.inputView}>
+            <Text style={txStyles2.textInput}>{status}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -403,12 +404,12 @@ export default function AddOrEditRealtorTx1(props: any) {
         </View>
       </ActionSheet>
 
-      {type.includes('Buyer') && <Text style={styles.nameTitle}>{'Buyer *'}</Text>}
+      {type.includes('Buyer') && <Text style={txStyles2.nameTitle}>{'Buyer *'}</Text>}
       {type.includes('Buyer') && (
         <TouchableOpacity onPress={buyerPressed}>
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={buyer == null ? styles.placeholderText : styles.textInput}>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.inputView}>
+              <Text style={buyer == null ? txStyles2.placeholderText : txStyles2.textInput}>
                 {buyer == null ? '+ Add' : buyer?.firstName + ' ' + buyer?.lastName}
               </Text>
             </View>
@@ -433,12 +434,12 @@ export default function AddOrEditRealtorTx1(props: any) {
         </Modal>
       )}
 
-      {type.includes('Buyer') && <Text style={styles.nameTitle}>Buyer Lead Source</Text>}
+      {type.includes('Buyer') && <Text style={txStyles2.nameTitle}>Buyer Lead Source</Text>}
       {type.includes('Buyer') && (
         <TouchableOpacity onPress={buyerSourcePressed}>
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={styles.textInput}>{buyerLeadSource}</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.inputView}>
+              <Text style={txStyles2.textInput}>{buyerLeadSource}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -461,12 +462,12 @@ export default function AddOrEditRealtorTx1(props: any) {
         </Modal>
       )}
 
-      {type.includes('Seller') && <Text style={styles.nameTitle}>Seller*</Text>}
+      {type.includes('Seller') && <Text style={txStyles2.nameTitle}>Seller*</Text>}
       {type.includes('Seller') && (
         <TouchableOpacity onPress={sellerPressed}>
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={seller == null ? styles.placeholderText : styles.textInput}>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.inputView}>
+              <Text style={seller == null ? txStyles2.placeholderText : txStyles2.textInput}>
                 {seller == null ? '+ Add' : seller?.firstName + ' ' + seller?.lastName}
               </Text>
             </View>
@@ -491,12 +492,12 @@ export default function AddOrEditRealtorTx1(props: any) {
         </Modal>
       )}
 
-      {type.includes('Seller') && <Text style={styles.nameTitle}>Seller Lead Source</Text>}
+      {type.includes('Seller') && <Text style={txStyles2.nameTitle}>Seller Lead Source</Text>}
       {type.includes('Seller') && (
         <TouchableOpacity onPress={sellerSourcePressed}>
-          <View style={styles.mainContent}>
-            <View style={styles.inputView}>
-              <Text style={styles.textInput}>{sellerLeadSource}</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.inputView}>
+              <Text style={txStyles2.textInput}>{sellerLeadSource}</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -519,13 +520,13 @@ export default function AddOrEditRealtorTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Street *</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
+      <Text style={txStyles2.nameTitle}>Street *</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStreet1Focus}>
           <TextInput
             onPressIn={handleStreet1Focus}
             ref={street1Ref}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -535,13 +536,13 @@ export default function AddOrEditRealtorTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Street 2</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStreet2Focus}>
+      <Text style={txStyles2.nameTitle}>Street 2</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStreet2Focus}>
           <TextInput
             onPressIn={handleStreet2Focus}
             ref={street2Ref}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -551,14 +552,14 @@ export default function AddOrEditRealtorTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>City</Text>
+      <Text style={txStyles2.nameTitle}>City</Text>
 
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleCityFocus}>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleCityFocus}>
           <TextInput
             onPressIn={handleCityFocus}
             ref={cityRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -568,14 +569,14 @@ export default function AddOrEditRealtorTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>State / Province</Text>
+      <Text style={txStyles2.nameTitle}>State / Province</Text>
 
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStateFocus}>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStateFocus}>
           <TextInput
             onPressIn={handleStateFocus}
             ref={stateRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -585,14 +586,14 @@ export default function AddOrEditRealtorTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Zip / Postal Code</Text>
+      <Text style={txStyles2.nameTitle}>Zip / Postal Code</Text>
 
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleZipFocus}>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleZipFocus}>
           <TextInput
             onPressIn={handleZipFocus}
             ref={zipRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -602,7 +603,7 @@ export default function AddOrEditRealtorTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.bottom}></View>
+      <View style={txStyles2.bottom}></View>
     </ScrollView>
   );
 }

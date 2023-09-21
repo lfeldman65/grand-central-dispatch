@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, TextInput, Alert } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, TextInput, Alert, StyleSheet } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { AddTxBuyerAndSellerSheets, probabilityMenu, styles, roundToInt } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, probabilityMenu, roundToInt } from './transactionHelpers';
 import { shouldRunTests } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { txStyles2 } from './styles';
 
 var grossComm = 0;
 
@@ -50,12 +51,12 @@ export default function AddOrEditRealtorTx2(props: any) {
       title: 'Real Estate Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
-          <Text style={styles.backAndNext}>Back</Text>
+          <Text style={txStyles2.backAndNext}>Back</Text>
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity onPress={nextPressed}>
-          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Next</Text>
+          <Text style={isDataValid() ? txStyles2.backAndNext : txStyles2.backAndNextDim}>Next</Text>
         </TouchableOpacity>
       ),
     });
@@ -327,14 +328,14 @@ export default function AddOrEditRealtorTx2(props: any) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={txStyles2.container}>
       <ScrollView>
-        <View style={styles.topContainer}>
-          <Text style={styles.nameTitle}>Probability to Close</Text>
+        <View style={txStyles2.topContainer}>
+          <Text style={txStyles2.nameTitle}>Probability to Close</Text>
           <TouchableOpacity onPress={probabilityPressed}>
-            <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <Text style={styles.textInput}>{probability}</Text>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.inputView}>
+                <Text style={txStyles2.textInput}>{probability}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -384,16 +385,16 @@ export default function AddOrEditRealtorTx2(props: any) {
             </View>
           </ActionSheet>
 
-          {type.includes('Seller') && <Text style={styles.nameTitle}>{'Original List Price'}</Text>}
+          {type.includes('Seller') && <Text style={txStyles2.nameTitle}>{'Original List Price'}</Text>}
           {type.includes('Seller') && (
-            <View style={styles.mainContent}>
-              <View style={styles.dollarAndPercentRow}>
-                <View style={styles.dollarView}>
-                  <Text style={styles.dollarText}>$</Text>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.dollarAndPercentRow}>
+                <View style={txStyles2.dollarView}>
+                  <Text style={txStyles2.dollarText}>$</Text>
                 </View>
-                <View style={styles.dollarAndPercentView}>
+                <View style={txStyles2.dollarAndPercentView}>
                   <TextInput
-                    style={styles.textInput}
+                    style={txStyles2.textInput}
                     placeholder="+ Add"
                     placeholderTextColor="#AFB9C2"
                     textAlign="left"
@@ -402,17 +403,17 @@ export default function AddOrEditRealtorTx2(props: any) {
                     keyboardType="number-pad"
                   />
                 </View>
-                <View style={styles.percentView}></View>
+                <View style={txStyles2.percentView}></View>
               </View>
             </View>
           )}
 
-          {type.includes('Seller') && <Text style={styles.nameTitle}>{'Original List Date'}</Text>}
+          {type.includes('Seller') && <Text style={txStyles2.nameTitle}>{'Original List Date'}</Text>}
           {type.includes('Seller') && (
             <TouchableOpacity onPress={showOriginalDatePicker}>
-              <View style={styles.mainContent}>
-                <View style={styles.inputView}>
-                  <Text style={styles.textInput}>
+              <View style={txStyles2.mainContent}>
+                <View style={txStyles2.inputView}>
+                  <Text style={txStyles2.textInput}>
                     {originalDate.toLocaleDateString('en-us', {
                       year: 'numeric',
                       month: 'short',
@@ -433,15 +434,15 @@ export default function AddOrEditRealtorTx2(props: any) {
             onCancel={hideOriginalDatePicker}
           />
 
-          <Text style={styles.nameTitle}>{'Projected Closing Price *'}</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.dollarView}>
-                <Text style={styles.dollarText}>$</Text>
+          <Text style={txStyles2.nameTitle}>{'Projected Closing Price *'}</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.dollarAndPercentRow}>
+              <View style={txStyles2.dollarView}>
+                <Text style={txStyles2.dollarText}>$</Text>
               </View>
-              <View style={styles.dollarAndPercentView}>
+              <View style={txStyles2.dollarAndPercentView}>
                 <TextInput
-                  style={styles.textInput}
+                  style={txStyles2.textInput}
                   placeholder="+ Add"
                   placeholderTextColor="#AFB9C2"
                   textAlign="left"
@@ -450,15 +451,15 @@ export default function AddOrEditRealtorTx2(props: any) {
                   keyboardType="number-pad"
                 />
               </View>
-              <View style={styles.percentView}></View>
+              <View style={txStyles2.percentView}></View>
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>{'Projected Closing Date *'}</Text>
+          <Text style={txStyles2.nameTitle}>{'Projected Closing Date *'}</Text>
           <TouchableOpacity onPress={showClosingDatePicker}>
-            <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <Text style={styles.textInput}>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.inputView}>
+                <Text style={txStyles2.textInput}>
                   {closingDate.toLocaleDateString('en-us', {
                     year: 'numeric',
                     month: 'short',
@@ -478,21 +479,21 @@ export default function AddOrEditRealtorTx2(props: any) {
             onCancel={hideClosingDatePicker}
           />
 
-          {type.includes('Buyer') && <Text style={styles.nameTitle}>{"Buyer's Commission"}</Text>}
+          {type.includes('Buyer') && <Text style={txStyles2.nameTitle}>{"Buyer's Commission"}</Text>}
           {type.includes('Buyer') && (
-            <View style={styles.mainContent}>
-              <View style={styles.dollarAndPercentRow}>
-                <View style={styles.percentView}>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.dollarAndPercentRow}>
+                <View style={txStyles2.percentView}>
                   <Text
                     onPress={buyerCommDollarOrPercentPressed}
-                    style={dollarOrPercentBuyerComm == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                    style={dollarOrPercentBuyerComm == 'dollar' ? txStyles2.dollarText : txStyles2.dollarTextDim}
                   >
                     $
                   </Text>
                 </View>
-                <View style={styles.dollarAndPercentView}>
+                <View style={txStyles2.dollarAndPercentView}>
                   <TextInput
-                    style={styles.textInput}
+                    style={txStyles2.textInput}
                     placeholder="+ Add"
                     placeholderTextColor="#AFB9C2"
                     textAlign="left"
@@ -501,10 +502,10 @@ export default function AddOrEditRealtorTx2(props: any) {
                     keyboardType="number-pad"
                   />
                 </View>
-                <View style={styles.percentView}>
+                <View style={txStyles2.percentView}>
                   <Text
                     onPress={buyerCommDollarOrPercentPressed}
-                    style={dollarOrPercentBuyerComm == 'percent' ? styles.percentText : styles.percentTextDim}
+                    style={dollarOrPercentBuyerComm == 'percent' ? txStyles2.percentText : txStyles2.percentTextDim}
                   >
                     %
                   </Text>
@@ -513,21 +514,21 @@ export default function AddOrEditRealtorTx2(props: any) {
             </View>
           )}
 
-          {type.includes('Seller') && <Text style={styles.nameTitle}>{"Seller's Commission"}</Text>}
+          {type.includes('Seller') && <Text style={txStyles2.nameTitle}>{"Seller's Commission"}</Text>}
           {type.includes('Seller') && (
-            <View style={styles.mainContent}>
-              <View style={styles.dollarAndPercentRow}>
-                <View style={styles.dollarView}>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.dollarAndPercentRow}>
+                <View style={txStyles2.dollarView}>
                   <Text
                     onPress={sellerCommDollarOrPercentPressed}
-                    style={dollarOrPercentSellerComm == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                    style={dollarOrPercentSellerComm == 'dollar' ? txStyles2.dollarText : txStyles2.dollarTextDim}
                   >
                     $
                   </Text>
                 </View>
-                <View style={styles.dollarAndPercentView}>
+                <View style={txStyles2.dollarAndPercentView}>
                   <TextInput
-                    style={styles.textInput}
+                    style={txStyles2.textInput}
                     placeholder="+ Add"
                     placeholderTextColor="#AFB9C2"
                     textAlign="left"
@@ -536,10 +537,10 @@ export default function AddOrEditRealtorTx2(props: any) {
                     keyboardType="number-pad"
                   />
                 </View>
-                <View style={styles.percentView}>
+                <View style={txStyles2.percentView}>
                   <Text
                     onPress={sellerCommDollarOrPercentPressed}
-                    style={dollarOrPercentSellerComm == 'percent' ? styles.percentText : styles.percentTextDim}
+                    style={dollarOrPercentSellerComm == 'percent' ? txStyles2.percentText : txStyles2.percentTextDim}
                   >
                     %
                   </Text>
@@ -548,20 +549,20 @@ export default function AddOrEditRealtorTx2(props: any) {
             </View>
           )}
 
-          <Text style={styles.nameTitle}>Additional Income</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.dollarView}>
+          <Text style={txStyles2.nameTitle}>Additional Income</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.dollarAndPercentRow}>
+              <View style={txStyles2.dollarView}>
                 <Text
                   onPress={addIncomeDollarOrPercentPressed}
-                  style={dollarOrPercentAddIncome == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                  style={dollarOrPercentAddIncome == 'dollar' ? txStyles2.dollarText : txStyles2.dollarTextDim}
                 >
                   $
                 </Text>
               </View>
-              <View style={styles.dollarAndPercentView}>
+              <View style={txStyles2.dollarAndPercentView}>
                 <TextInput
-                  style={styles.textInput}
+                  style={txStyles2.textInput}
                   placeholder="+ Add"
                   placeholderTextColor="#AFB9C2"
                   textAlign="left"
@@ -570,10 +571,10 @@ export default function AddOrEditRealtorTx2(props: any) {
                   keyboardType="number-pad"
                 />
               </View>
-              <View style={styles.percentView}>
+              <View style={txStyles2.percentView}>
                 <Text
                   onPress={addIncomeDollarOrPercentPressed}
-                  style={dollarOrPercentAddIncome == 'percent' ? styles.percentText : styles.percentTextDim}
+                  style={dollarOrPercentAddIncome == 'percent' ? txStyles2.percentText : txStyles2.percentTextDim}
                 >
                   %
                 </Text>
@@ -581,11 +582,11 @@ export default function AddOrEditRealtorTx2(props: any) {
             </View>
           </View>
         </View>
-        <View style={styles.bottom}></View>
+        <View style={txStyles2.bottom}></View>
       </ScrollView>
-      <View style={styles.bottomContainer}>
-        <Text style={styles.summaryText}>My Gross Commission</Text>
-        <Text style={styles.summaryText}>{calculateGrossCommission()}</Text>
+      <View style={txStyles2.bottomContainer}>
+        <Text style={txStyles2.summaryText}>My Gross Commission</Text>
+        <Text style={txStyles2.summaryText}>{calculateGrossCommission()}</Text>
       </View>
     </View>
   );

@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { Modal, Text, View, TouchableOpacity, ScrollView, Alert, TextInput } from 'react-native';
+import { Modal, Text, View, TouchableOpacity, ScrollView, Alert, TextInput, StyleSheet } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { AddTxBuyerAndSellerSheets, probabilityMenu, loanTypeMenu, styles, roundToInt } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, probabilityMenu, loanTypeMenu, roundToInt } from './transactionHelpers';
 import ChooseLoanDescription from './ChooseLoanDescription';
 import { shouldRunTests } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { txStyles2 } from './styles';
 
 var grossComm1 = 0;
 
@@ -43,12 +44,12 @@ export default function AddOrEditLenderTx2(props: any) {
       title: 'Lender Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
-          <Text style={styles.backAndNext}>Back</Text>
+          <Text style={txStyles2.backAndNext}>Back</Text>
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity onPress={nextPressed}>
-          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Next</Text>
+          <Text style={isDataValid() ? txStyles2.backAndNext : txStyles2.backAndNextDim}>Next</Text>
         </TouchableOpacity>
       ),
     });
@@ -304,14 +305,14 @@ export default function AddOrEditLenderTx2(props: any) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={txStyles2.container}>
       <ScrollView>
-        <View style={styles.topContainer}>
-          <Text style={styles.nameTitle}>Probability to Close</Text>
+        <View style={txStyles2.topContainer}>
+          <Text style={txStyles2.nameTitle}>Probability to Close</Text>
           <TouchableOpacity onPress={probabilityPressed}>
-            <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <Text style={styles.textInput}>{probability}</Text>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.inputView}>
+                <Text style={txStyles2.textInput}>{probability}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -361,15 +362,15 @@ export default function AddOrEditLenderTx2(props: any) {
             </View>
           </ActionSheet>
 
-          <Text style={styles.nameTitle}>{'Original List Price'}</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.dollarView}>
-                <Text style={styles.dollarText}>$</Text>
+          <Text style={txStyles2.nameTitle}>{'Original List Price'}</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.dollarAndPercentRow}>
+              <View style={txStyles2.dollarView}>
+                <Text style={txStyles2.dollarText}>$</Text>
               </View>
-              <View style={styles.dollarAndPercentView}>
+              <View style={txStyles2.dollarAndPercentView}>
                 <TextInput
-                  style={styles.textInput}
+                  style={txStyles2.textInput}
                   placeholder="+ Add"
                   placeholderTextColor="#AFB9C2"
                   textAlign="left"
@@ -378,15 +379,15 @@ export default function AddOrEditLenderTx2(props: any) {
                   keyboardType="number-pad"
                 />
               </View>
-              <View style={styles.percentView}></View>
+              <View style={txStyles2.percentView}></View>
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>{'Loan Application Date'}</Text>
+          <Text style={txStyles2.nameTitle}>{'Loan Application Date'}</Text>
           <TouchableOpacity onPress={showApplicationDateMode}>
-            <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <Text style={styles.textInput}>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.inputView}>
+                <Text style={txStyles2.textInput}>
                   {applicationDate.toLocaleDateString('en-us', {
                     year: 'numeric',
                     month: 'short',
@@ -405,15 +406,15 @@ export default function AddOrEditLenderTx2(props: any) {
             onCancel={hideApplicationDatePicker}
           />
 
-          <Text style={styles.nameTitle}>{'Projected Closing Price *'}</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.dollarView}>
-                <Text style={styles.dollarText}>$</Text>
+          <Text style={txStyles2.nameTitle}>{'Projected Closing Price *'}</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.dollarAndPercentRow}>
+              <View style={txStyles2.dollarView}>
+                <Text style={txStyles2.dollarText}>$</Text>
               </View>
-              <View style={styles.dollarAndPercentView}>
+              <View style={txStyles2.dollarAndPercentView}>
                 <TextInput
-                  style={styles.textInput}
+                  style={txStyles2.textInput}
                   placeholder="+ Add"
                   placeholderTextColor="#AFB9C2"
                   textAlign="left"
@@ -422,15 +423,15 @@ export default function AddOrEditLenderTx2(props: any) {
                   keyboardType="number-pad"
                 />
               </View>
-              <View style={styles.percentView}></View>
+              <View style={txStyles2.percentView}></View>
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>{'Projected Closing Date *'}</Text>
+          <Text style={txStyles2.nameTitle}>{'Projected Closing Date *'}</Text>
           <TouchableOpacity onPress={showClosingDateMode}>
-            <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <Text style={styles.textInput}>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.inputView}>
+                <Text style={txStyles2.textInput}>
                   {closingDate.toLocaleDateString('en-us', {
                     year: 'numeric',
                     month: 'short',
@@ -449,12 +450,12 @@ export default function AddOrEditLenderTx2(props: any) {
             onCancel={hideClosingDatePicker}
           />
 
-          <Text style={styles.nameTitle}>Interest Rate</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.numberAndPercentView}>
+          <Text style={txStyles2.nameTitle}>Interest Rate</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.dollarAndPercentRow}>
+              <View style={txStyles2.numberAndPercentView}>
                 <TextInput
-                  style={styles.textInput}
+                  style={txStyles2.textInput}
                   placeholder="+ Add"
                   placeholderTextColor="#AFB9C2"
                   textAlign="left"
@@ -463,17 +464,17 @@ export default function AddOrEditLenderTx2(props: any) {
                   keyboardType="decimal-pad"
                 />
               </View>
-              <View style={styles.justPercentView}>
-                <Text style={styles.percentText}>%</Text>
+              <View style={txStyles2.justPercentView}>
+                <Text style={txStyles2.percentText}>%</Text>
               </View>
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>Loan Type</Text>
+          <Text style={txStyles2.nameTitle}>Loan Type</Text>
           <TouchableOpacity onPress={loanTypePressed}>
-            <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <Text style={styles.textInput}>{rateType}</Text>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.inputView}>
+                <Text style={txStyles2.textInput}>{rateType}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -524,11 +525,11 @@ export default function AddOrEditLenderTx2(props: any) {
           </ActionSheet>
 
           {/* In postman, the param is loanType */}
-          <Text style={styles.nameTitle}>Loan Description</Text>
+          <Text style={txStyles2.nameTitle}>Loan Description</Text>
           <TouchableOpacity onPress={loanDescriptionPressed}>
-            <View style={styles.mainContent}>
-              <View style={styles.inputView}>
-                <Text style={styles.textInput}>{rateTypeDesc}</Text>
+            <View style={txStyles2.mainContent}>
+              <View style={txStyles2.inputView}>
+                <Text style={txStyles2.textInput}>{rateTypeDesc}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -550,20 +551,20 @@ export default function AddOrEditLenderTx2(props: any) {
             </Modal>
           )}
 
-          <Text style={styles.nameTitle}>Origination Fees</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.percentView}>
+          <Text style={txStyles2.nameTitle}>Origination Fees</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.dollarAndPercentRow}>
+              <View style={txStyles2.percentView}>
                 <Text
                   onPress={originationFeesDollarOrPercentPressed}
-                  style={dOrPOriginationFees == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                  style={dOrPOriginationFees == 'dollar' ? txStyles2.dollarText : txStyles2.dollarTextDim}
                 >
                   $
                 </Text>
               </View>
-              <View style={styles.dollarAndPercentView}>
+              <View style={txStyles2.dollarAndPercentView}>
                 <TextInput
-                  style={styles.textInput}
+                  style={txStyles2.textInput}
                   placeholder="+ Add"
                   placeholderTextColor="#AFB9C2"
                   textAlign="left"
@@ -572,10 +573,10 @@ export default function AddOrEditLenderTx2(props: any) {
                   keyboardType="number-pad"
                 />
               </View>
-              <View style={styles.percentView}>
+              <View style={txStyles2.percentView}>
                 <Text
                   onPress={originationFeesDollarOrPercentPressed}
-                  style={dOrPOriginationFees == 'percent' ? styles.percentText : styles.percentTextDim}
+                  style={dOrPOriginationFees == 'percent' ? txStyles2.percentText : txStyles2.percentTextDim}
                 >
                   %
                 </Text>
@@ -583,20 +584,20 @@ export default function AddOrEditLenderTx2(props: any) {
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>{"Buyer's Commission"}</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.percentView}>
+          <Text style={txStyles2.nameTitle}>{"Buyer's Commission"}</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.dollarAndPercentRow}>
+              <View style={txStyles2.percentView}>
                 <Text
                   onPress={buyerCommDollarOrPercentPressed}
-                  style={dOrPBuyerCommission == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                  style={dOrPBuyerCommission == 'dollar' ? txStyles2.dollarText : txStyles2.dollarTextDim}
                 >
                   $
                 </Text>
               </View>
-              <View style={styles.dollarAndPercentView}>
+              <View style={txStyles2.dollarAndPercentView}>
                 <TextInput
-                  style={styles.textInput}
+                  style={txStyles2.textInput}
                   placeholder="+ Add"
                   placeholderTextColor="#AFB9C2"
                   textAlign="left"
@@ -605,10 +606,10 @@ export default function AddOrEditLenderTx2(props: any) {
                   keyboardType="number-pad"
                 />
               </View>
-              <View style={styles.percentView}>
+              <View style={txStyles2.percentView}>
                 <Text
                   onPress={buyerCommDollarOrPercentPressed}
-                  style={dOrPBuyerCommission == 'percent' ? styles.percentText : styles.percentTextDim}
+                  style={dOrPBuyerCommission == 'percent' ? txStyles2.percentText : txStyles2.percentTextDim}
                 >
                   %
                 </Text>
@@ -616,20 +617,20 @@ export default function AddOrEditLenderTx2(props: any) {
             </View>
           </View>
 
-          <Text style={styles.nameTitle}>Additional Income</Text>
-          <View style={styles.mainContent}>
-            <View style={styles.dollarAndPercentRow}>
-              <View style={styles.percentView}>
+          <Text style={txStyles2.nameTitle}>Additional Income</Text>
+          <View style={txStyles2.mainContent}>
+            <View style={txStyles2.dollarAndPercentRow}>
+              <View style={txStyles2.percentView}>
                 <Text
                   onPress={addIncomeDollarOrPercentPressed}
-                  style={dOrPAdditionalIncome == 'dollar' ? styles.dollarText : styles.dollarTextDim}
+                  style={dOrPAdditionalIncome == 'dollar' ? txStyles2.dollarText : txStyles2.dollarTextDim}
                 >
                   $
                 </Text>
               </View>
-              <View style={styles.dollarAndPercentView}>
+              <View style={txStyles2.dollarAndPercentView}>
                 <TextInput
-                  style={styles.textInput}
+                  style={txStyles2.textInput}
                   placeholder="+ Add"
                   placeholderTextColor="#AFB9C2"
                   textAlign="left"
@@ -638,10 +639,10 @@ export default function AddOrEditLenderTx2(props: any) {
                   keyboardType="number-pad"
                 />
               </View>
-              <View style={styles.percentView}>
+              <View style={txStyles2.percentView}>
                 <Text
                   onPress={addIncomeDollarOrPercentPressed}
-                  style={dOrPAdditionalIncome == 'percent' ? styles.percentText : styles.percentTextDim}
+                  style={dOrPAdditionalIncome == 'percent' ? txStyles2.percentText : txStyles2.percentTextDim}
                 >
                   %
                 </Text>
@@ -649,12 +650,12 @@ export default function AddOrEditLenderTx2(props: any) {
             </View>
           </View>
         </View>
-        <View style={styles.bottom}></View>
+        <View style={txStyles2.bottom}></View>
       </ScrollView>
 
-      <View style={styles.bottomContainer}>
-        <Text style={styles.summaryText}>My Gross Commission</Text>
-        <Text style={styles.summaryText}>{calculateGrossCommission()}</Text>
+      <View style={txStyles2.bottomContainer}>
+        <Text style={txStyles2.summaryText}>My Gross Commission</Text>
+        <Text style={txStyles2.summaryText}>{calculateGrossCommission()}</Text>
       </View>
     </View>
   );

@@ -131,3 +131,172 @@ export const styles = StyleSheet.create({
     marginRight: 10,
   },
 });
+
+export const txStyles2 = StyleSheet.create({
+  container: {
+    backgroundColor: '#1A6295',
+    height: '100%',
+    borderWidth: 0.5,
+    borderTopColor: 'white',
+    borderBottomColor: '#1A6295',
+  },
+  topContainer: {
+    height: '100%',
+  },
+  mainContent: {
+    alignItems: 'center',
+  },
+  backAndNext: {
+    color: 'white',
+    fontSize: 18,
+    opacity: 1.0,
+  },
+  backAndNextDim: {
+    color: 'white',
+    fontSize: 18,
+    opacity: 0.4,
+  },
+  textInput: {
+    fontSize: 18,
+    color: '#FFFFFF',
+  },
+  nameTitle: {
+    color: 'white',
+    marginLeft: 20,
+    marginBottom: 5,
+    textAlign: 'left',
+    marginTop: 10,
+  },
+  summaryText: {
+    color: 'white',
+    marginLeft: 10,
+    fontWeight: '500',
+    marginBottom: 5,
+    textAlign: 'left',
+    marginTop: 10,
+    fontSize: 16,
+  },
+  inputView: {
+    backgroundColor: '#002341',
+    width: '90%',
+    height: 50,
+    marginBottom: 10,
+    alignItems: 'baseline',
+    justifyContent: 'center',
+    paddingLeft: 10,
+    fontSize: 29,
+  },
+  bottomContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'black',
+    height: '7%',
+    justifyContent: 'space-between',
+    paddingRight: 20,
+    alignItems: 'center',
+  },
+  dollarAndPercentRow: {
+    flexDirection: 'row',
+  },
+  percentView: {
+    backgroundColor: '#002341',
+    height: 50,
+    width: '7%',
+  },
+  dollarView: {
+    backgroundColor: '#002341',
+    height: 50,
+    width: '7%',
+  },
+  dollarAndPercentView: {
+    backgroundColor: '#002341',
+    width: '75%',
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    paddingLeft: 5,
+    fontSize: 29,
+  },
+  numberAndPercentView: {
+    backgroundColor: '#002341',
+    width: '83%',
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    paddingLeft: 10,
+    fontSize: 29,
+  },
+  justPercentView: {
+    backgroundColor: '#002341',
+    height: 50,
+    width: '7%',
+  },
+  dollarText: {
+    fontSize: 20,
+    color: '#02ABF7',
+    marginTop: 12,
+    paddingLeft: 10,
+    opacity: 1.0,
+  },
+  dollarTextDim: {
+    fontSize: 20,
+    color: '#02ABF7',
+    marginTop: 12,
+    paddingLeft: 10,
+    opacity: 0.4,
+  },
+  percentText: {
+    fontSize: 20,
+    color: '#02ABF7',
+    marginTop: 12,
+    opacity: 1.0,
+  },
+  percentTextDim: {
+    fontSize: 20,
+    color: '#02ABF7',
+    marginTop: 12,
+    opacity: 0.4,
+  },
+  bottom: {
+    height: 500, // leave room for keyboard
+  },
+  placeholderText: {
+    fontSize: 18,
+    width: 300,
+    color: '#AFB9C2',
+  },
+  closePicker: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
+    marginRight: '10%',
+  },
+  attendeeView: {
+    backgroundColor: '#002341',
+    width: '90%',
+    height: 50,
+    alignItems: 'baseline',
+    justifyContent: 'flex-start',
+    fontSize: 29,
+    flexDirection: 'row',
+  },
+  attendeeInput: {
+    fontSize: 18,
+    color: 'white',
+    marginTop: 10,
+    paddingLeft: 10,
+    width: '92%',
+  },
+  addAttendee: {
+    fontSize: 18,
+    color: 'silver',
+    width: 300,
+  },
+  deleteAttendeeX: {
+    width: 10,
+    height: 10,
+  },
+  footer: {
+    // Can't scroll to bottom of Notes without this
+    height: 500,
+  },
+});

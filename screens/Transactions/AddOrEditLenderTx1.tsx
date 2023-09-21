@@ -1,14 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert, StyleSheet } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { AddTxBuyerAndSellerSheets, statusMenu, purchaseLoanTypeMenu, styles } from './transactionHelpers';
+import { AddTxBuyerAndSellerSheets, statusMenu, purchaseLoanTypeMenu } from './transactionHelpers';
 import ChooseLeadSource from './ChooseBorrowerLeadSource';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 import { shouldRunTests } from '../../utils/general';
+import { txStyles2 } from './styles';
 
 export default function AddOrEditLenderTx1(props: any) {
   const { route } = props;
@@ -39,12 +40,12 @@ export default function AddOrEditLenderTx1(props: any) {
       title: 'Lender Transaction',
       headerLeft: () => (
         <TouchableOpacity onPress={backPressed}>
-          <Text style={styles.backAndNext}>Back</Text>
+          <Text style={txStyles2.backAndNext}>Back</Text>
         </TouchableOpacity>
       ),
       headerRight: () => (
         <TouchableOpacity onPress={nextPressed}>
-          <Text style={isDataValid() ? styles.backAndNext : styles.backAndNextDim}>Next</Text>
+          <Text style={isDataValid() ? txStyles2.backAndNext : txStyles2.backAndNextDim}>Next</Text>
         </TouchableOpacity>
       ),
     });
@@ -199,12 +200,12 @@ export default function AddOrEditLenderTx1(props: any) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.nameTitle}>Transaction Type</Text>
+    <ScrollView style={txStyles2.container}>
+      <Text style={txStyles2.nameTitle}>Transaction Type</Text>
       <TouchableOpacity onPress={typeMenuPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{type}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.inputView}>
+            <Text style={txStyles2.textInput}>{type}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -253,11 +254,11 @@ export default function AddOrEditLenderTx1(props: any) {
           </ScrollView>
         </View>
       </ActionSheet>
-      <Text style={styles.nameTitle}>Status</Text>
+      <Text style={txStyles2.nameTitle}>Status</Text>
       <TouchableOpacity onPress={statusMenuPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{status}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.inputView}>
+            <Text style={txStyles2.textInput}>{status}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -307,11 +308,11 @@ export default function AddOrEditLenderTx1(props: any) {
         </View>
       </ActionSheet>
 
-      <Text style={styles.nameTitle}>Borrower *</Text>
+      <Text style={txStyles2.nameTitle}>Borrower *</Text>
       <TouchableOpacity onPress={buyerPressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={borrower == null ? styles.placeholderText : styles.textInput}>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.inputView}>
+            <Text style={borrower == null ? txStyles2.placeholderText : txStyles2.textInput}>
               {borrower == null ? '+ Add' : borrower?.firstName + ' ' + borrower?.lastName}
             </Text>
           </View>
@@ -335,11 +336,11 @@ export default function AddOrEditLenderTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Borrower Lead Source</Text>
+      <Text style={txStyles2.nameTitle}>Borrower Lead Source</Text>
       <TouchableOpacity onPress={borrowerSourcePressed}>
-        <View style={styles.mainContent}>
-          <View style={styles.inputView}>
-            <Text style={styles.textInput}>{borrowerLeadSource}</Text>
+        <View style={txStyles2.mainContent}>
+          <View style={txStyles2.inputView}>
+            <Text style={txStyles2.textInput}>{borrowerLeadSource}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -362,14 +363,14 @@ export default function AddOrEditLenderTx1(props: any) {
         </Modal>
       )}
 
-      <Text style={styles.nameTitle}>Street *</Text>
+      <Text style={txStyles2.nameTitle}>Street *</Text>
 
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStreet1Focus}>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStreet1Focus}>
           <TextInput
             onPressIn={handleStreet1Focus}
             ref={street1Ref}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -379,12 +380,12 @@ export default function AddOrEditLenderTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Street 2</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStreet2Focus}>
+      <Text style={txStyles2.nameTitle}>Street 2</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStreet2Focus}>
           <TextInput
             onPressIn={handleStreet2Focus}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             ref={street2Ref}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
@@ -395,11 +396,11 @@ export default function AddOrEditLenderTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>City</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleCityFocus}>
+      <Text style={txStyles2.nameTitle}>City</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleCityFocus}>
           <TextInput
-            style={styles.textInput}
+            style={txStyles2.textInput}
             onPressIn={handleCityFocus}
             ref={cityRef}
             placeholder="+ Add"
@@ -411,13 +412,13 @@ export default function AddOrEditLenderTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>State / Province</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleStateFocus}>
+      <Text style={txStyles2.nameTitle}>State / Province</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleStateFocus}>
           <TextInput
             onPressIn={handleStateFocus}
             ref={stateRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -427,13 +428,13 @@ export default function AddOrEditLenderTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.nameTitle}>Zip / Postal Code</Text>
-      <View style={styles.mainContent}>
-        <TouchableOpacity style={styles.inputView} onPress={handleZipFocus}>
+      <Text style={txStyles2.nameTitle}>Zip / Postal Code</Text>
+      <View style={txStyles2.mainContent}>
+        <TouchableOpacity style={txStyles2.inputView} onPress={handleZipFocus}>
           <TextInput
             onPressIn={handleZipFocus}
             ref={zipRef}
-            style={styles.textInput}
+            style={txStyles2.textInput}
             placeholder="+ Add"
             placeholderTextColor="#AFB9C2"
             textAlign="left"
@@ -443,7 +444,7 @@ export default function AddOrEditLenderTx1(props: any) {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.bottom}></View>
+      <View style={txStyles2.bottom}></View>
     </ScrollView>
   );
 }
