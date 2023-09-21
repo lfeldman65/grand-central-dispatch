@@ -204,7 +204,7 @@ export default function TrackActivityScreen(props: any) {
     );
   }
 
-  function cancelPressed() {
+  function backPressed() {
     setModalVisible(false);
   }
 
@@ -240,8 +240,8 @@ export default function TrackActivityScreen(props: any) {
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <TouchableOpacity onPress={cancelPressed}>
-          <Text style={styles.cancelButton}>Cancel</Text>
+        <TouchableOpacity onPress={backPressed}>
+          <Text style={styles.cancelButton}>Back</Text>
         </TouchableOpacity>
 
         <Text style={styles.pageTitle}>{title}</Text>

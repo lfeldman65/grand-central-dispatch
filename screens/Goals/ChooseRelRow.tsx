@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'rea
 import { RolodexDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { displayName } from './goalHelpers';
 
 const rankAPlus = require('../Relationships/images/rankAPlus.png');
 const rankA = require('../Relationships/images/rankA.png');
@@ -24,13 +25,6 @@ function chooseImage(rank: string) {
   return rankD;
 }
 
-function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
-  if (type == 'Rel') {
-    return first + ' ' + last;
-  }
-  return employer + ' (' + first + ')';
-}
-
 export default function ChooseRelRow(props: AtoZRowProps) {
   const isFocused = useIsFocused();
 
@@ -48,22 +42,23 @@ export default function ChooseRelRow(props: AtoZRowProps) {
           )}
         </Text>
 
-     
-       { props.allowMultipleSelects &&  <View style={styles.checkView}>
-          <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
-            size={25}
-            textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
-            fillColor="#37C0FF"
-            unfillColor="white"
-            iconStyle={{ borderColor: 'gray' }}
-            text=""
-            textContainerStyle={{ marginLeft: 10 }}
-            onPress={(isChecked: boolean) => {
-              console.log(isChecked);
-              props.data.selected = isChecked;
-            }}
-          />
-        </View>}
+        {props.allowMultipleSelects && (
+          <View style={styles.checkView}>
+            <BouncyCheckbox // https://github.com/WrathChaos/react-native-bouncy-checkbox
+              size={25}
+              textStyle={{ color: 'white', textDecorationLine: 'none', fontSize: 18 }}
+              fillColor="#37C0FF"
+              unfillColor="white"
+              iconStyle={{ borderColor: 'gray' }}
+              text=""
+              textContainerStyle={{ marginLeft: 10 }}
+              onPress={(isChecked: boolean) => {
+                console.log(isChecked);
+                props.data.selected = isChecked;
+              }}
+            />
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );

@@ -12,6 +12,7 @@ import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics, isNullOrEmpty } from '../../utils/general';
 import { testForNotificationTrack } from './handleWinNotifications';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import { titleFor } from './goalHelpers';
 
 const dayTrophy = require('../Goals/images/dailyTrophy.png');
 const weekTrophy = require('../Goals/images/weeklyTrophy.png');
@@ -160,23 +161,6 @@ export default function GoalsScreen() {
   function shouldDisplayGoal(goal: GoalObject) {
     if (goal == null) return false;
     else return goal.displayOnDashboard;
-  }
-
-  function titleFor(goal: GoalObject) {
-    if (isNullOrEmpty(goal)) {
-      return ' ';
-    }
-    var oldTitle = goal.title;
-    if (oldTitle == 'Pop-By Made') {
-      return 'Pop-Bys Delivered';
-    }
-    if (oldTitle == 'New Contacts') {
-      return 'Database Additions';
-    }
-    if (oldTitle == 'Notes Made') {
-      return 'Notes Written';
-    }
-    return oldTitle;
   }
 
   const handleLinkPress = (index: number) => {

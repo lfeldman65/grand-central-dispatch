@@ -62,7 +62,7 @@ export default function SelectReferralScreen(props: any) {
     setTabSelected('Add New');
   }
 
-  function cancelPressed() {
+  function backPressed() {
     setModalRelVisible(false);
   }
 
@@ -175,8 +175,8 @@ export default function SelectReferralScreen(props: any) {
   return (
     <View style={styles2.container}>
       <View style={styles2.topRow}>
-        <TouchableOpacity onPress={cancelPressed}>
-          <Text style={globalStyles.cancelButton}>Cancel</Text>
+        <TouchableOpacity onPress={backPressed}>
+          <Text style={globalStyles.cancelButton}>Back</Text>
         </TouchableOpacity>
         <Text style={styles2.nameLabel}>{title}</Text>
         <TouchableOpacity onPress={searchPressed}>
