@@ -23,7 +23,6 @@ import { testAddToDo } from '../ToDo/testAddToDo';
 import { testDeleteToDo } from '../ToDo/testDeleteToDo';
 import { testAddAppointment } from '../Calendar/testAddNewAppointment';
 import { testDeleteAppointment } from '../Calendar/testDeleteAppointment';
-import { runAllComponentTests } from '../Tests/ComponentTests';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
@@ -614,14 +613,6 @@ export default function DashboardScreen() {
             </Modal>
           )}
         </View>
-        {shouldRunTests() && (
-          <View style={styles.pair}>
-            <TouchableOpacity onPress={() => runAllComponentTests()}>
-              <Image source={testImage} style={styles.logo} />
-            </TouchableOpacity>
-            {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Testing</Text>}
-          </View>
-        )}
       </View>
     </>
   );
