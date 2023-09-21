@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'rea
 import { useIsFocused } from '@react-navigation/native';
 import { PodcastDataProps } from './interfaces';
 import { makeLongTxtPretty } from '../../utils/general';
+import { getLine1, getLine2, makeTimePretty } from './podcastHelpers';
 
 const logo = require('../Podcasts/images/podcastMini.png');
 
@@ -9,47 +10,6 @@ interface PodcastsRowProps {
   data: PodcastDataProps;
   onPress(): void;
   lightOrDark: string;
-}
-
-function getLine1(title: string) {
-  var titleParts = title.split(':');
-  return titleParts[0] + ':' + titleParts[1];
-}
-
-function getLine2(title: string) {
-  let deviceWidth = Dimensions.get('window').width;
-  //  console.log(deviceWidth);
-  var titleParts = title.split(':');
-  var charLimit = -0.66 * deviceWidth + 60;
-  //  console.log(charLimit);
-  return makeLongTxtPretty(titleParts[2].trim(), 80);
-}
-
-function makeTimePretty(duration: number) {
-  var hrs = 0;
-  var hrsFloor = 0;
-  var min = 0;
-  var minFloor = 0;
-  var sec = 0;
-
-  hrs = duration / 3600;
-  hrsFloor = Math.floor(hrs);
-  duration = duration - hrsFloor * 3600;
-  min = duration / 60;
-  minFloor = Math.floor(min);
-  duration = duration - minFloor * 60;
-  sec = duration;
-
-  return (
-    pad0IfNeeded(hrsFloor.toString()) + ':' + pad0IfNeeded(minFloor.toString()) + ':' + pad0IfNeeded(sec.toString())
-  );
-}
-
-function pad0IfNeeded(part: string) {
-  if (part.length < 2) {
-    return '0' + part;
-  }
-  return part;
 }
 
 export default function PodcastsRow(props: PodcastsRowProps) {
@@ -69,7 +29,7 @@ export default function PodcastsRow(props: PodcastsRowProps) {
             <Text style={styles.timeText}>{makeTimePretty(props.data.duration)}</Text>
           </View>
           <Text style={props.lightOrDark == 'dark' ? styles.title2TextDark : styles.title2TextLight}>
-            {getLine2(props.data.title)}
+            {makeLongTxtPretty(getLine2(props.data.title), 80)}
           </Text>
         </View>
       </View>
