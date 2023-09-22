@@ -1,8 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { RolodexImportDataProps } from './interfaces';
-import { useState, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { storage } from '../../utils/storage';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 interface ImportRowProps {

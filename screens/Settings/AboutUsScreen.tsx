@@ -1,7 +1,6 @@
-import { Fragment, useState } from 'react';
-import { StyleSheet, View, Dimensions, Modal, ScrollView, ActivityIndicator, Linking } from 'react-native';
-import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
+import { useState } from 'react';
+import { StyleSheet, View, ScrollView, ActivityIndicator, Linking } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { getMedia } from './api';
 import { AboutUsDataProps } from './interfaces';

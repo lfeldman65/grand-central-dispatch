@@ -1,4 +1,4 @@
-import { Fragment, useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -6,7 +6,7 @@ import React from 'react';
 import globalStyles from '../../globalStyles';
 import { getBizGoalsSummary } from './api';
 import { BizGoalsSummaryDataProps } from './interfaces';
-import { removeTrailingDecimal, roundToInt } from './settingsHelpers';
+import { removeTrailingDecimal, roundToInt } from '../Transactions/transactionHelpers';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 
 export default function BizGoalsReviewScreen(props: any) {

@@ -67,27 +67,14 @@ export function prettyText(uglyText: string) {
   }
 }
 
-export function removeTrailingDecimal(value: string) {
-  // i.e. 3129.27 -> 3129
-  if (value == null || value == '') {
-    return '';
-  }
-  //  console.log('value: ' + value);
-  if (value.includes('.')) {
-    let pieces = value.split('.');
-    return pieces[0];
-  }
-  return value;
-}
-
 export function percentToDecimal(value: string) {
-  // ex: "30" -> ".3"
+  // ex: "30" -> "0.3"
   if (value == null || value == '') {
     return '';
   }
   var valueNum = parseFloat(value); // 30
   valueNum = valueNum / 100; // .30
-  return valueNum.toString(); // ".30"
+  return valueNum.toString(); // "0.3"
 }
 
 export function decimalToPercent(value: string) {
@@ -98,29 +85,4 @@ export function decimalToPercent(value: string) {
   var valueNum = parseFloat(value); // .30
   valueNum = valueNum * 100; // 30
   return valueNum.toString(); // "30"
-}
-
-export function removeLeadingDecimal(value: string) {
-  // i.e. 3129.27 -> 27
-  console.log('remove leading: ' + value);
-  if (value == null || value == '') {
-    return '0';
-  }
-  if (value.includes('.')) {
-    let pieces = value.split('.');
-    return pieces[1];
-  }
-  return value;
-}
-
-export function roundToInt(value: string) {
-  if (value == null || value == '') {
-    return '0';
-  }
-  if (value.includes('.')) {
-    let raw = parseFloat(value);
-    let round = Math.round(raw);
-    return round.toString();
-  }
-  return value;
 }

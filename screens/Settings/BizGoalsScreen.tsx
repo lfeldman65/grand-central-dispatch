@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Button, TextInput
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
 import { getBizGoals, updateBizGoals } from './api';
-import { removeTrailingDecimal, decimalToPercent, percentToDecimal } from './settingsHelpers';
+import { removeTrailingDecimal } from '../Transactions/transactionHelpers';
+import { decimalToPercent, percentToDecimal } from './settingsHelpers';
 
 export default function BizGoalsScreen1(props: any) {
   const [netIncome, setNetIncome] = useState('');
