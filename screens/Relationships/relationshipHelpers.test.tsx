@@ -35,3 +35,10 @@ describe('is First Letter Alpha 2', () => {
     expect(result).toBe(false);
   });
 });
+
+describe('is First Letter Alpha 3', () => {
+  test('is First Letter Alpha 3', () => {
+    var result = isFirstLetterAlpha('');
+    expect(result).toBe(false);
+  });
+});
