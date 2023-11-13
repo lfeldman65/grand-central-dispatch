@@ -1773,6 +1773,11 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
               style={styles.scrollview}
             >
               <View>
+                {dataDetails?.hasBombBombPermission && (
+                  <View style={styles.videoMenuView}>
+                    <Text style={styles.bombBombText}>Powered by Bomb Bomb</Text>
+                  </View>
+                )}
                 {Object.entries(vidMenu).map(([index, value]) => (
                   <TouchableOpacity
                     key={index}
@@ -2098,5 +2103,12 @@ const styles = StyleSheet.create({
     color: 'black',
     width: 300,
     paddingLeft: 10,
+  },
+  videoMenuView: {
+    alignSelf: 'center',
+  },
+  bombBombText: {
+    fontSize: 20,
+    paddingBottom: 40,
   },
 });
