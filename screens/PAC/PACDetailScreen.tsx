@@ -23,9 +23,11 @@ import globalStyles from '../../globalStyles';
 import TrackActivity from '../Goals/TrackActivityScreen';
 import { getGoalData, trackAction } from '../Goals/api';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
-let deviceHeight = Dimensions.get('window').height;
 import { GoalDataProps } from '../Goals/interfaces';
+import { formatCityStateZip, completeAddress } from '../PAC/pacHelpers';
+
 var localGoalID = '0';
+let deviceHeight = Dimensions.get('window').height;
 
 export default function PACDetailScreen(props: any) {
   const { route } = props;
@@ -241,32 +243,8 @@ export default function PACDetailScreen(props: any) {
       contentType: 'Details',
       itemId: 'id0412',
     });
+    console.log(completeAddress(address));
     openMap({ query: completeAddress(address) });
-  }
-
-  function formatCityStateZip(address?: AddressProps) {
-    var cityStateZip = '';
-    if (!isNullOrEmpty(address?.city)) {
-      cityStateZip = address?.city!;
-    }
-    if (!isNullOrEmpty(address?.state)) {
-      cityStateZip = cityStateZip + ', ' + address?.state;
-    }
-    if (!isNullOrEmpty(address?.zip)) {
-      cityStateZip = cityStateZip + ' ' + address?.zip;
-    }
-    return cityStateZip;
-  }
-
-  function completeAddress(address?: AddressProps) {
-    var completeAddress = '';
-    if (!isNullOrEmpty(address?.street)) {
-      completeAddress = address?.street!;
-    }
-    if (!isNullOrEmpty(address?.street2)) {
-      completeAddress = completeAddress + ' ' + address?.street2!;
-    }
-    return completeAddress + formatCityStateZip(address);
   }
 
   function contactName() {

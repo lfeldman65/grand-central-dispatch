@@ -113,7 +113,7 @@ export function convertFrequency(timeString: string) {
     return 6;
   }
   if (timeString.includes('7')) {
-    return 6;
+    return 7;
   }
   if (timeString.includes('8')) {
     return 8;
