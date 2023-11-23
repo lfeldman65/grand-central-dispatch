@@ -1,4 +1,10 @@
-import { convertRecurrence } from './toDoHelpersAndMenus';
+import {
+  convertRecurrence,
+  convertFrequency,
+  convertReminder,
+  convertOrder,
+  convertYearlyWeekNumber,
+} from './toDoHelpers';
 import { describe, expect, test } from '@jest/globals';
 
 describe('to-do recurrence 1', () => {
@@ -61,5 +67,12 @@ describe('to-do recurrence 9', () => {
   test('to-do recurrence 9', () => {
     var result = convertRecurrence('198$3');
     expect(result).toBe('never');
+  });
+});
+
+describe('to-do frequency 1', () => {
+  test('to-do frequency 1', () => {
+    var result = convertFrequency('');
+    expect(result).toBe(0);
   });
 });
