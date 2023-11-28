@@ -6,7 +6,7 @@ export const recurrenceMenu = {
   'Monthly on the': 'Monthly on the',
   'Every _ week of the month': 'Every _ week of the month',
   Yearly: 'Yearly',
-}; // branch
+};
 
 export const untilTypeMenu = {
   Times: 'Times',
@@ -119,7 +119,7 @@ export function convertFrequency(timeString: string) {
     return 6;
   }
   if (timeString.includes('7')) {
-    return 6;
+    return 7;
   }
   if (timeString.includes('8')) {
     return 8;

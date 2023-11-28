@@ -167,7 +167,6 @@ export function convertOrder(element: string) {
     return 1;
   }
   if (element == 'Second') {
-    console.log('daniel');
     return 2;
   }
   if (element == 'Third') {
