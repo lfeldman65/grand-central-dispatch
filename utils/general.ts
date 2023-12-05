@@ -7,7 +7,6 @@ import * as Analytics from 'expo-firebase-analytics';
 import * as SMS from 'expo-sms';
 
 export function shouldRunTests() {
-  // test
   return false;
 }
 
