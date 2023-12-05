@@ -1,55 +1,63 @@
 import { useState } from 'react';
-import { View, Modal, ScrollView, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
+import { View, Modal, Image, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { getPodcastData } from './api';
-import { PodcastDataProps } from './interfaces';
 import React from 'react';
-import PodcastsRow from './PodcastsRow';
-import PodcastPlayer from './PodcastPlayer';
 import globalStyles from '../../globalStyles';
-import { getSeasonAndEpisode } from './PodcastPlayer';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
-import { useContext } from 'react';
-import AppContext from './../../components/AppContext';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
+const appleImage = require('../Podcasts/images/applePodcast.png');
+const amazonImage = require('../Podcasts/images/amazonPodcast.png');
+const spotifyImage = require('../Podcasts/images/spotifyPodcast.png');
+const stitcherImage = require('../Podcasts/images/stitcherPodcast.png');
+
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
-  const [data, setData] = useState<PodcastDataProps[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
-  const [modalPlayerVisible, setModalPlayerVisible] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
 
-  const myContext = useContext(AppContext);
+  //  Linking.openURL('https://www.itsagoodlife.com/'); // Top level of all players
 
-  const handleRowPress = (index: number) => {
-    ga4Analytics('Podcast_Row', {
-      contentType: getSeasonAndEpisode(data[index].title),
+  function applePressed() {
+    ga4Analytics('Podcast Player Pressed', {
+      contentType: 'apple',
       itemId: 'id1401',
     });
-    myContext.setPodcastId(-1);
-    myContext.setPlayerStatus({
-      playbackInstancePosition: null,
-      playbackInstanceDuration: null,
-      shouldPlay: true,
-      isPlaying: false,
-      isBuffering: true,
-      muted: false,
-      //isLoading: true,
-      //isSeeking: false
+    Linking.openURL('https://podcasts.apple.com/us/podcast/its-a-good-life/id1089027054');
+  }
+
+  function amazonPressed() {
+    ga4Analytics('Podcast Player Pressed', {
+      contentType: 'amazon',
+      itemId: 'id1401',
     });
-    setSelectedIndex(index);
-    setModalPlayerVisible(!modalPlayerVisible);
-  };
+    Linking.openURL("https://music.amazon.com/podcasts/ce6952cd-7c2b-4953-96fa-648e076e301f/it's-a-good-life");
+  }
+
+  function spotifyPressed() {
+    ga4Analytics('Podcast Player Pressed', {
+      contentType: 'spotify',
+      itemId: 'id1401',
+    });
+    Linking.openURL(
+      'https://open.spotify.com/show/5t4rlBQz31cXiYeyirtMJC?si=ca802c6e46e74f9e&nd=1&dlsi=0127ee107d2e4572'
+    );
+  }
+
+  function stitchPressed() {
+    ga4Analytics('Podcast Player Pressed', {
+      contentType: 'stitcher',
+      itemId: 'id1401',
+    });
+    Linking.openURL('https://www.pandora.com/podcast/its-a-good-life/PC:32075?source=stitcher-sunset');
+  }
 
   useEffect(() => {
     navigation.setOptions({
@@ -69,7 +77,6 @@ export default function PodcastsScreen() {
 
   useEffect(() => {
     let isMounted = true;
-    getPodcastList(isMounted);
     return () => {
       isMounted = false;
     };
@@ -87,82 +94,44 @@ export default function PodcastsScreen() {
       source: 'Transactions',
       lightOrDark: lightOrDark,
     });
-  }
-
-  function getPodcastList(isMounted: boolean) {
-    setIsLoading(true);
-    console.log('yep');
-    getPodcastData()
-      .then((res) => {
-        if (!isMounted) {
-          return;
-        }
-        if (res.status == 'error') {
-          console.error(res.error);
-        } else {
-          //console.log(res.data)
-
-          if (myContext.podcastId != -1) {
-            //there is an audio already playing
-            for (var i = 0; i < res.data.length; i++) {
-              if (myContext.podcastId == res.data[i].id) {
-                const timer2 = setInterval(() => {
-                  clearInterval(timer2);
-                  setSelectedIndex(i);
-                  setModalPlayerVisible(!modalPlayerVisible);
-                }, 500);
-
-                break;
-              }
-            }
-          }
-          setData(res.data);
-        }
-        setIsLoading(false);
-      })
-      .catch((error) => console.error('failure ' + error));
-  }
+  } // command /
 
   return (
     <>
       <DarkOrLightScreen setLightOrDark={setLightOrDark}></DarkOrLightScreen>
-      <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}>
-        {isLoading ? (
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="large" color="#AAA" />
+      {/* <View style={lightOrDark == 'dark' ? globalStyles.containerDark : globalStyles.containerLight}> */}
+      <View style={styles.container}>
+        <View style={styles.row}>
+          <View style={styles.pair}>
+            <TouchableOpacity onPress={applePressed}>
+              <Image source={appleImage} style={styles.logo} />
+            </TouchableOpacity>
           </View>
-        ) : (
-          <React.Fragment>
-            <ScrollView>
-              <View>
-                {data.map((item, index) => (
-                  <PodcastsRow
-                    key={index}
-                    data={item}
-                    lightOrDark={lightOrDark}
-                    onPress={() => handleRowPress(index)}
-                  />
-                ))}
-              </View>
-            </ScrollView>
-          </React.Fragment>
-        )}
-        {modalPlayerVisible && (
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalPlayerVisible}
-            onRequestClose={() => {
-              setModalPlayerVisible(!modalPlayerVisible);
-            }}
-          >
-            <PodcastPlayer
-              selectedIndex={selectedIndex}
-              dataList={data}
-              setModalPlayerVisible={setModalPlayerVisible}
-            />
-          </Modal>
-        )}
+        </View>
+
+        <View style={styles.row}>
+          <View style={styles.pair}>
+            <TouchableOpacity onPress={amazonPressed}>
+              <Image source={amazonImage} style={styles.logo} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={styles.pair}>
+            <TouchableOpacity onPress={spotifyPressed}>
+              <Image source={spotifyImage} style={styles.logo} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={styles.pair}>
+            <TouchableOpacity onPress={stitchPressed}>
+              <Image source={stitcherImage} style={styles.logo} />
+            </TouchableOpacity>
+          </View>
+        </View>
         {quickSearchVisible && (
           <Modal
             animationType="slide"
@@ -179,3 +148,31 @@ export default function PodcastsScreen() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#1A6295',
+    borderWidth: 0.5,
+    borderTopColor: 'white',
+    borderBottomColor: '#1A6295',
+  },
+  row: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    marginTop: 30,
+  },
+  pair: {
+    flex: 1,
+    marginTop: 20,
+    padding: 8,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 200,
+    height: 54,
+    marginBottom: 5,
+  },
+});
