@@ -167,12 +167,12 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
   },
   rolodexAZ: {
-    height: '63%',
+    height: '70%',
   },
   rolodexRanking: {
-    height: '74%',
+    height: '75%',
   },
   rolodexGroups: {
-    height: '69%',
+    height: '75%',
   },
 });
