@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { PodcastDataProps } from './interfaces';
-import { makeLongTxtPretty } from '../../utils/general';
+import { makeLongTxtPretty } from '../Calendar/calendarHelpers';
 import { getLine1, getLine2, makeTimePretty } from './podcastHelpers';
 
 const logo = require('../Podcasts/images/podcastMini.png');

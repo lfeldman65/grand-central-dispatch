@@ -251,6 +251,15 @@ export function getYear(prettyDate: string) {
   return datePieces[3];
 }
 
+export function makeLongTxtPretty(longText: string, maxChar: number) {
+  console.log(longText);
+  console.log(longText.length);
+  if (longText.length <= maxChar) {
+    return longText;
+  }
+  return longText.substring(0, maxChar) + ' . . .';
+}
+
 export const apptStartDateLabel = 'Start Date';
 export const apptStartTimeLabel = 'Start Time';
 export const apptEndDateLabel = 'End Date';

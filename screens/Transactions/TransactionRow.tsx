@@ -3,7 +3,7 @@ import { styles } from './styles';
 import { TransactionDataProps, TxChangeStatusProps } from './interfaces';
 import { useEffect } from 'react';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { prettyDate } from '../../utils/general';
+import { prettyDate } from '../Relationships/relationshipHelpers';
 
 interface TransactionRowProps {
   data: TransactionDataProps;

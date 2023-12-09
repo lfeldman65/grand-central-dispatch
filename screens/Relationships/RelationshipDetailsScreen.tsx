@@ -14,11 +14,10 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState, useRef } from 'react';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
-import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual, editContact } from './api';
+import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual } from './api';
 import { RelDetailsProps, ToDoAndApptProps, RolodexDataProps } from './interfaces';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
-  formatDate,
   handleTextPressed,
   handlePhonePressed,
   handleEmailPressed2,
@@ -32,7 +31,15 @@ import IdeasPop from '../PAC/IdeasPopScreen';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { GoalDataProps } from '../Goals/interfaces';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
-import { ideasMenu, vidMenu, mobileTypeMenu, homeTypeMenu, officeTypeMenu, relSheets } from './relationshipHelpers';
+import {
+  ideasMenu,
+  vidMenu,
+  mobileTypeMenu,
+  homeTypeMenu,
+  officeTypeMenu,
+  relSheets,
+  prettyDate,
+} from './relationshipHelpers';
 import { getGoalData, trackAction } from '../Goals/api';
 import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
 import * as SMS from 'expo-sms';
@@ -1164,7 +1171,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.birthday) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {formatDate(dataDetails?.personalAndFamily.birthday)}
+            {prettyDate(dataDetails?.personalAndFamily.birthday)}
           </Text>
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary) && (
@@ -1172,7 +1179,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.weddingAnniversary) && (
           <Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>
-            {formatDate(dataDetails?.personalAndFamily.weddingAnniversary)}
+            {prettyDate(dataDetails?.personalAndFamily.weddingAnniversary)}
           </Text>
         )}
         {showPersonal && !isNullOrEmpty(dataDetails?.personalAndFamily.childrensNames) && (

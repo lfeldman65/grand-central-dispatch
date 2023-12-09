@@ -7,6 +7,7 @@ import {
   convertOrder,
   convertReminderTime,
   getMonthNumber,
+  makeLongTxtPretty,
 } from './calendarHelpers';
 import { describe, expect, test } from '@jest/globals';
 
@@ -392,5 +393,19 @@ describe('get month number 12', () => {
   test('get month number 12', () => {
     var result = getMonthNumber('Mon Decxyz 14 2022 12:00:00 GMT-0800');
     expect(result).toBe('12');
+  });
+});
+
+describe('make long text pretty 1', () => {
+  test('make long text pretty 1', () => {
+    var result = makeLongTxtPretty('abcd', 3);
+    expect(result).toBe('abc . . .');
+  });
+});
+
+describe('make long text pretty 2', () => {
+  test('make long text pretty 2', () => {
+    var result = makeLongTxtPretty('abcd', 4);
+    expect(result).toBe('abcd');
   });
 });

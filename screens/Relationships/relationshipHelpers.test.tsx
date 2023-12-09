@@ -1,4 +1,4 @@
-import { displayName, isFirstLetterAlpha } from './relationshipHelpers';
+import { displayName, isFirstLetterAlpha, prettyDate } from './relationshipHelpers';
 import { describe, expect, test } from '@jest/globals';
 
 describe('display name 1', () => {
@@ -40,5 +40,19 @@ describe('is First Letter Alpha 3', () => {
   test('is First Letter Alpha 3', () => {
     var result = isFirstLetterAlpha('');
     expect(result).toBe(false);
+  });
+});
+
+describe('format date 1', () => {
+  test('format date 1', () => {
+    var result = prettyDate('2023-12-03T00:00:00');
+    expect(result).toBe('12/03/2023');
+  });
+});
+
+describe('format date 1', () => {
+  test('format date 1', () => {
+    var result = prettyDate('2023-12-03T00:00:00');
+    expect(result).toBe('12/03/2023');
   });
 });

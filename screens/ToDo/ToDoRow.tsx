@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Modal } from 'react-native';
 import { ToDoDataProps } from './interfaces';
 import * as React from 'react';
-import { prettyDate } from '../../utils/general';
+import { prettyDate } from '../Relationships/relationshipHelpers';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteToDo, markCompleteToDo } from './api';
 import { useState, useEffect } from 'react';

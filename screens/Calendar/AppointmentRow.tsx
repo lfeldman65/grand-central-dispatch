@@ -1,6 +1,6 @@
 import { Text, View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { AppointmentDataProps } from './interfaces';
-import { prettyDate, makeLongTxtPretty } from '../../utils/general';
+import { prettyDate } from '../Relationships/relationshipHelpers';
 
 interface ApptRowProps {
   data: AppointmentDataProps;

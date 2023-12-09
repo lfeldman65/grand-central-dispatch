@@ -7,15 +7,7 @@ import * as Analytics from 'expo-firebase-analytics';
 import * as SMS from 'expo-sms';
 
 export function shouldRunTests() {
-  return false;
-}
-
-export function makeLongTxtPretty(longText: string, maxChar: number) {
-  // console.log(longText);
-  if (longText.length < maxChar) {
-    return longText;
-  }
-  return longText.substring(0, maxChar) + ' . . .';
+  return true;
 }
 
 export function isNullOrEmpty(value: any) {
@@ -24,41 +16,7 @@ export function isNullOrEmpty(value: any) {
   return false;
 }
 
-export function formatDate(datetime?: string) {
-  if (datetime == null) return;
-  const date = new Date(datetime);
-  const year = date.getFullYear();
-  const month = (1 + date.getMonth()).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return month + '/' + day + '/' + year;
-}
-
-export function formatDateTime(datetime?: string) {
-  if (datetime == null) return;
-  const date = new Date(datetime);
-  const year = date.getFullYear();
-  const month = (1 + date.getMonth()).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const time = date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-  return `${month}/${day}/${year} ${time}`;
-}
-
-export function prettyDate(uglyDate: string) {
-  // example: 2019-05-22T00:00:00"
-  // console.log('ugly: ' + uglyDate);
-  if (uglyDate == null) return '';
-  if (uglyDate == '') return '';
-  var dateOnly = uglyDate.substring(0, 10);
-  var dateParts = dateOnly.split('-');
-  var year = dateParts[0].substring(0, 4);
-  // example: 05/22/2019
-  return dateParts[1] + '/' + dateParts[2] + '/' + year;
-}
-
-export function prettyTime(uglyTime: string) {
+export function prettyTime(uglyTime?: string) {
   if (uglyTime == null) return ' ';
   if (uglyTime == '') return ' ';
   var timeOnly = uglyTime.substring(11, 16);

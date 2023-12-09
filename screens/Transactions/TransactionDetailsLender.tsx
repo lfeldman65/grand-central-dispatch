@@ -4,9 +4,9 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import globalStyles from '../../globalStyles';
 import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
-import { prettyDate, isNullOrEmpty } from '../../utils/general';
+import { isNullOrEmpty, ga4Analytics } from '../../utils/general';
+import { prettyDate } from '../Relationships/relationshipHelpers';
 import { roundToInt } from './transactionHelpers';
-import { ga4Analytics } from '../../utils/general';
 
 const chevron = require('../../images/chevron_blue_right.png');
 const fontSize = 16;

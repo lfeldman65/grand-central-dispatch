@@ -1,8 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { VideoDetailsDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
-import { prettyDate } from '../../utils/general';
-
+import { prettyDate } from '../Relationships/relationshipHelpers';
 const chevron = require('../../images/chevron_blue_right.png');
 
 interface VideoDetailsRowProps {

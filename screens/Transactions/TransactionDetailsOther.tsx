@@ -6,8 +6,8 @@ import globalStyles from '../../globalStyles';
 import { TransactionDetailsProps } from './interfaces';
 import { getTransactionDetails, deleteTx } from './api';
 import { isNullOrEmpty } from '../../utils/general';
-import { prettyDate } from '../../utils/general';
 import { ga4Analytics } from '../../utils/general';
+import { prettyDate } from '../Relationships/relationshipHelpers';
 
 const chevron = require('../../images/chevron_blue_right.png');
 const fontSize = 16;

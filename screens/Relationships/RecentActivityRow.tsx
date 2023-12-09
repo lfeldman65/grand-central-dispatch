@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { RecentActivityDataProps } from './interfaces';
 import { useIsFocused } from '@react-navigation/native';
-import { makeLongTxtPretty } from '../../utils/general';
+import { makeLongTxtPretty } from '../Calendar/calendarHelpers';
 
 const callImage = require('../Relationships/images/recentCall.png');
 const noteImage = require('../Relationships/images/recentNote.png');
