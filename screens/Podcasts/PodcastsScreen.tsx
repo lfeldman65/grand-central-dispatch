@@ -16,6 +16,7 @@ const appleImage = require('../Podcasts/images/applePodcast.png');
 const amazonImage = require('../Podcasts/images/amazonPodcast.png');
 const spotifyImage = require('../Podcasts/images/spotifyPodcast.png');
 const stitcherImage = require('../Podcasts/images/stitcherPodcast.png');
+const pandoraImage = require('../Podcasts/images/pandoraPodcast.png');
 
 export default function PodcastsScreen() {
   const navigation = useNavigation<any>();
@@ -51,7 +52,7 @@ export default function PodcastsScreen() {
     );
   }
 
-  function stitchPressed() {
+  function pandoraPressed() {
     ga4Analytics('Podcast Player Pressed', {
       contentType: 'stitcher',
       itemId: 'id1401',
@@ -127,8 +128,8 @@ export default function PodcastsScreen() {
 
         <View style={styles.row}>
           <View style={styles.pair}>
-            <TouchableOpacity onPress={stitchPressed}>
-              <Image source={stitcherImage} style={styles.logo} />
+            <TouchableOpacity onPress={pandoraPressed}>
+              <Image source={pandoraImage} style={styles.logo} />
             </TouchableOpacity>
           </View>
         </View>
