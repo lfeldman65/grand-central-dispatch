@@ -22,7 +22,7 @@ import { testAddTransaction } from '../Transactions/testAddTransaction';
 import { testAddToDo } from '../ToDo/testAddToDo';
 import { testDeleteToDo } from '../ToDo/testDeleteToDo';
 import { testAddAppointment } from '../Calendar/testAddNewAppointment';
-import { testDeleteAppointment } from '../Calendar/testDeleteAppointment';
+import { testDeleteAppointment } from '../Calendar/testDeleteAppointment'; // test
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
