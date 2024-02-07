@@ -22,7 +22,7 @@ import { testAddTransaction } from '../Transactions/testAddTransaction';
 import { testAddToDo } from '../ToDo/testAddToDo';
 import { testDeleteToDo } from '../ToDo/testDeleteToDo';
 import { testAddAppointment } from '../Calendar/testAddNewAppointment';
-import { testDeleteAppointment } from '../Calendar/testDeleteAppointment'; // test
+import { testDeleteAppointment } from '../Calendar/testDeleteAppointment';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
@@ -35,7 +35,6 @@ const goalsImage = require('../Dashboard/images/quickGoals.png');
 const transImage = require('../Dashboard/images/quickTrans.png');
 const todoImage = require('../Dashboard/images/quickToDo.png');
 const calendarImage = require('../Dashboard/images/quickCalendar.png');
-const testImage = require('../Dashboard/images/testing.png');
 
 var watchedTut = 'false';
 
@@ -175,6 +174,9 @@ export default function DashboardScreen() {
           contentType: 'none',
           itemId: 'id1603',
         });
+        storage.setItem('pacLat', '0');
+        storage.setItem('pacLong', '0');
+        storage.setItem('pacName', '');
         navigation.navigate('PopBysScreen');
       } else if (id == 'pac-notification-1') {
         ga4Analytics('Notification_Pac', {
@@ -421,13 +423,17 @@ export default function DashboardScreen() {
 
   const handleNavigation = (props: DashboardNavigationProps) => {
     // SentryTest();
-    //   console.log('parent screen1: ' + props.parentScreen);
+    console.log('navigation ------');
     var newLabel = props.label;
     if (props.label == 'To-Do') {
       newLabel = 'To_Do';
     }
     if (props.label == 'Pop-Bys') {
       newLabel = 'Pop_Bys';
+      console.log('transition--------------');
+      storage.setItem('pacLat', '0');
+      storage.setItem('pacLong', '0');
+      storage.setItem('pacName', '');
     }
     const mainEvent = 'Dashboard_' + newLabel;
     //   console.log('MAINEVENT: ' + mainEvent);
@@ -435,6 +441,7 @@ export default function DashboardScreen() {
       contentType: 'none',
       itemId: props.itemID,
     });
+
     if (props.parentScreen) {
       navigation.navigate(props.parentScreen, {
         screen: props.screen,
@@ -599,7 +606,6 @@ export default function DashboardScreen() {
             </TouchableOpacity>
             {<Text style={lightOrDark == 'dark' ? styles.namesDark : styles.namesLight}>Calendar</Text>}
           </View>
-
           {quickSearchVisible && (
             <Modal
               animationType="slide"

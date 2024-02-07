@@ -12,6 +12,7 @@ import { handleTextPressed, ga4Analytics } from '../../utils/general';
 import globalStyles from '../../globalStyles';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { mobileTypeMenu, relSheets } from '../Relationships/relationshipHelpers';
+import { storage } from '../../utils/storage';
 
 interface PACRowProps {
   key: number;
@@ -28,6 +29,7 @@ export default function PACPopRow(props: PACRowProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const actionSheetRef = useRef<ActionSheet>(null);
+  const [relLat, setRelLat] = useState('33.17');
   var _swipeableRow: Swipeable;
 
   async function completePressed() {
@@ -93,6 +95,8 @@ export default function PACPopRow(props: PACRowProps) {
     });
     Linking.openURL(`tel:${props.data.officePhone}`);
   }
+
+  useEffect(() => {}, [navigation, relLat]);
 
   useEffect(() => {
     titleForSaveButton();
@@ -171,12 +175,19 @@ export default function PACPopRow(props: PACRowProps) {
     };
   }
 
+  function delayedAction() {
+    navigation.navigate('PopBysScreen');
+  }
+
   function handlePopPressed() {
     ga4Analytics('PAC_Pop_By_Map', {
       contentType: 'none',
       itemId: 'id0414',
     });
-    navigation.navigate('PopBysScreen');
+    storage.setItem('pacLat', '33.221241');
+    storage.setItem('pacLong', '-117.255745');
+    storage.setItem('pacName', props.data.contactName);
+    setTimeout(delayedAction, 1000);
   }
 
   function saveAsFavoriteAPI() {
@@ -209,7 +220,7 @@ export default function PACPopRow(props: PACRowProps) {
   }
 
   function lastPopText(lastText: string) {
-    console.log('last text: ' + lastText);
+    // console.log('last text: ' + lastText);
     if (lastText == 'No PopBy') return 'Last Pop-By: No Pop-By';
     return 'Last Pop-By: ' + lastText;
   }

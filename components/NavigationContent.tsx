@@ -102,9 +102,21 @@ function CustomDrawerContent(props: any) {
     });
   };
 
+  function delayedAction() {
+    navigation.navigate('PopBysScreen');
+  }
+
   //****** there are 2 ways to create a function
   //pressed and pressed2
   const pressed = (screenName: string) => {
+    console.log('pressed 888888: ' + screenName);
+    if (screenName == 'PopBysScreen') {
+      storage.setItem('pacLat', '0');
+      storage.setItem('pacLong', '0');
+      storage.setItem('pacName', '');
+      setTimeout(delayedAction, 1500);
+    }
+
     navigation.navigate(screenName);
     trackPressed(screenName);
     handleVideoNotifications();

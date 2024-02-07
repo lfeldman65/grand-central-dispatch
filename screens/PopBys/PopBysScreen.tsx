@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -12,7 +11,7 @@ import {
   Modal,
 } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useEffect } from 'react';
 import PopByRow from './PopByRow';
 import PopByRowSaved from './PopByRowSaved';
@@ -33,7 +32,6 @@ import { stylesPop } from './stylesPop';
 
 var northEast: LatLng | null = null;
 var southWest: LatLng | null = null;
-
 var newRoute: PopByRadiusDataProps[] = [];
 var locationCallBack: { remove: any };
 
@@ -57,9 +55,9 @@ const chevronDown = require('../../images/chevron_blue_down.png');
 type TabType = 'Near Me' | 'Priority' | 'Saved'; // nearby, priority and favorites in API
 type MapLength = 'short' | 'medium' | 'long';
 
-export default function ManageRelationshipsScreen() {
-  const [tabSelected, setTabSelected] = useState<TabType>('Near Me');
+export default function PopBysScreen(props: any) {
   const navigation = useNavigation();
+  const [tabSelected, setTabSelected] = useState<TabType>('Near Me');
   const isFocused = useIsFocused();
   const [popByData, setPopByData] = useState<PopByRadiusDataProps[]>([]);
   const [infoText, setInfoText] = useState('Closest to Farthest');
@@ -77,8 +75,61 @@ export default function ManageRelationshipsScreen() {
   const [needToZoomMap, setNeedToZoomMap] = useState(true);
   const popByDataRef = useRef(popByData);
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
+  const [pacLat, setPacLat] = useState('0');
+  const [pacLong, setPacLong] = useState('0');
 
   popByDataRef.current = popByData;
+
+  useEffect(() => {
+    //console.log('is focused');
+    checkInitLocation();
+    //console.log('my lat: ' + pacLat);
+    //console.log('my long: ' + pacLong);
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (pacLat != '0' && pacLong != '0') {
+      console.log('paclat or paclong changed');
+      mapRef?.animateToRegion({
+        latitude: parseFloat(pacLat),
+        longitude: parseFloat(pacLong),
+        latitudeDelta: 0.25,
+        longitudeDelta: 0.25,
+      });
+    }
+
+    console.log('my lat: ' + pacLat);
+    console.log('my long: ' + pacLong);
+  }, [pacLat, pacLong]);
+
+  async function checkInitLocation() {
+    const initLatFromStorage = await storage.getItem('pacLat');
+    var fromPac = false;
+    if (initLatFromStorage != null && initLatFromStorage != '0') {
+      setPacLat(initLatFromStorage);
+      fromPac = true;
+    }
+    const initLongFromStorage = await storage.getItem('pacLong');
+    if (initLongFromStorage != null && initLongFromStorage != '0') {
+      setPacLong(initLongFromStorage);
+    }
+    const initNameFromStorage = await storage.getItem('pacName');
+    if (initNameFromStorage != null && initNameFromStorage != '') {
+      setSearch(initNameFromStorage);
+    }
+    if (fromPac && mapRef) {
+      console.log('from PAC');
+    }
+  }
+
+  function fromPop() {
+    if (pacLat != '0' && pacLong != '0') {
+      console.log('from pop true');
+      return true;
+    }
+    console.log('from pop false');
+    return false;
+  }
 
   const requestPermissions = async () => {
     console.log('-----------------------------------');
@@ -91,7 +142,7 @@ export default function ManageRelationshipsScreen() {
           timeInterval: 30000, // must wait 30 seconds before receiving updates
         },
         (newLocation) => {
-          console.log('new location ' + newLocation.coords.latitude);
+          //   console.log('new location ' + newLocation.coords.latitude);
           setLocation(newLocation);
           calculateAndNotify(newLocation, popByDataRef.current, true);
         }
@@ -116,7 +167,7 @@ export default function ManageRelationshipsScreen() {
   async function calculateAndNotify(loc: Location.LocationObject, data: PopByRadiusDataProps[], notify: boolean) {
     var notifOn = await getNotificationStatus('notifPopBys');
     var alreadyScheduled = false;
-    console.log('calculateAndNotify: ' + loc.coords.latitude);
+    // console.log('calculateAndNotify: ' + loc.coords.latitude);
     var tempArray: PopByRadiusDataProps[] = [];
 
     for (var i = 0; i < data.length; i++) {
@@ -129,8 +180,8 @@ export default function ManageRelationshipsScreen() {
         var mb = milesBetween(lon, lat, loc.coords.longitude, loc.coords.latitude);
 
         t.distance = mb.toFixed(1);
-        console.log('calculating ' + mb.toFixed(1));
-        console.log('already scheduled ' + alreadyScheduled);
+        //  console.log('calculating ' + mb.toFixed(1));
+        //   console.log('already scheduled ' + alreadyScheduled);
         if (
           mb <= 5 &&
           !alreadyScheduled &&
@@ -174,7 +225,7 @@ export default function ManageRelationshipsScreen() {
 
   async function enoughTimePassedRel(guid: string, daysBetween: number) {
     // same relationship must have at least x days between notifications
-    console.log('enough time passed rel');
+    // console.log('enough time passed rel');
     var now = Date.now();
     const lastNotifForRel = await storage.getItem(guid + 'pop');
     if (lastNotifForRel == null) {
@@ -286,15 +337,25 @@ export default function ManageRelationshipsScreen() {
   }, []);
 
   useEffect(() => {
-    console.log(location);
+    console.log('location');
     if (needToZoomMap && location) {
       if (mapRef) {
-        mapRef.animateToRegion({
-          latitude: location!.coords.latitude,
-          longitude: location!.coords.longitude,
-          latitudeDelta: 0.25,
-          longitudeDelta: 0.25,
-        });
+        if (fromPop()) {
+          console.log('from Pop1');
+          mapRef.animateToRegion({
+            latitude: parseFloat(pacLat),
+            longitude: parseFloat(pacLong),
+            latitudeDelta: 0.25,
+            longitudeDelta: 0.25,
+          });
+        } else {
+          mapRef.animateToRegion({
+            latitude: location!.coords.latitude,
+            longitude: location!.coords.longitude,
+            latitudeDelta: 0.25,
+            longitudeDelta: 0.25,
+          });
+        }
         setNeedToZoomMap(false);
       }
     }
@@ -310,6 +371,13 @@ export default function ManageRelationshipsScreen() {
           latitudeDelta: 0.25,
           longitudeDelta: 0.25,
         });
+        // if (mapRef) {
+        //   mapRef.animateToRegion({
+        //     latitude: parseFloat(popLat),
+        //     longitude: parseFloat(popLong),
+        //     latitudeDelta: 0.25,
+        //     longitudeDelta: 0.25,
+        //   });
         setNeedToZoomMap(false);
       }
     }
@@ -631,7 +699,7 @@ export default function ManageRelationshipsScreen() {
           console.error(res.error);
         } else {
           setPopByData(res.data);
-          //console.log('RESDATA:' + res.data.length);
+          console.log('RESDATA:' + res.data.length);
           if (location == null) {
             let loc = await Location.getCurrentPositionAsync({})
               .then((l) => {
