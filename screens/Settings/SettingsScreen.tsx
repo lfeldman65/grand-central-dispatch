@@ -12,6 +12,7 @@ import { ga4Analytics } from '../../utils/general';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import globalStyles from '../../globalStyles';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import packageJson from '../../app.json';
 
 const chevron = require('../../images/chevron_white_right.png');
 const person = require('../Settings/images/user.png');
@@ -238,6 +239,7 @@ export default function SettingsScreen() {
   }, [isFocused]);
 
   useEffect(() => {
+    console.log(packageJson.expo.version);
     let isMounted = true;
     fetchProfile(isMounted);
     return () => {
@@ -419,7 +421,7 @@ export default function SettingsScreen() {
               <Text style={styles.signOutText}>{'Log out'}</Text>
             </View>
           </TouchableOpacity>
-          <Text style={styles.versionText}>{'Version ' + Constants.manifest?.version} </Text>
+          <Text style={styles.versionText}>{'Version ' + packageJson.expo.version} </Text>
           <Text style={styles.copyrightText}>
             {'@ ' +
               date.toLocaleDateString('en-us', {
