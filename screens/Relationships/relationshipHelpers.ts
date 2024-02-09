@@ -58,3 +58,5 @@ export function prettyDate(uglyDate?: string) {
   // example: 05/22/2019
   return dateParts[1] + '/' + dateParts[2] + '/' + year;
 }
+
+export const recentActivityFilters = ['All', 'Calls', 'Notes', 'Pop-Bys', 'Referral', 'Other', 'Cancel'];

@@ -1,31 +1,23 @@
 import { useState } from 'react';
 import { StyleSheet, Text, Image, View, Modal, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
-import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { useEffect, useRef } from 'react';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useEffect } from 'react';
 import { getRecentActivityData } from './api';
 import { RecentActivityDataProps } from './interfaces';
 import React from 'react';
 import RecentActivityRow from './RecentActivityRow';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { recentActivityFilters } from './relationshipHelpers';
 
 const quickAdd = require('../../images/addWhite.png');
 const searchGlass = require('../../images/whiteSearch.png');
 
 export default function RecentActivityScreenScreen() {
-  const filters = {
-    All: 'all',
-    Calls: 'calls',
-    Notes: 'notes',
-    'Pop-Bys': 'popbys',
-    Referrals: 'referrals',
-    Other: 'other',
-  };
-
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
   const [filterSetting, setFilterSetting] = useState('all');
@@ -33,8 +25,7 @@ export default function RecentActivityScreenScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
-
-  const actionSheetRef = useRef<ActionSheet>(null);
+  const { showActionSheetWithOptions } = useActionSheet();
 
   const Sheets = {
     filterSheet: 'filter_sheet_id',
@@ -91,36 +82,52 @@ export default function RecentActivityScreenScreen() {
     fetchData();
   }, [isFocused]);
 
-  function filterPressed() {
+  const filterPressed = () => {
     ga4Analytics('Recent_Activity_Filter_Open', {
       contentType: 'none',
       itemId: 'id0601',
     });
-    SheetManager.show(Sheets.filterSheet);
-  }
+    const options = recentActivityFilters;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
-  function prettyFilter(uglyFilter: string) {
-    if (uglyFilter == 'all') {
-      return 'All';
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setFilterSetting(options[selectedIndex!]);
+        }
+      }
+    );
+  };
+
+  function filterToParam(filter: string) {
+    console.log(filter);
+    if (filter == 'All') {
+      return 'all';
     }
-    if (uglyFilter == 'calls') {
-      return 'Calls';
+    if (filter == 'Calls') {
+      return 'calls';
     }
-    if (uglyFilter == 'notes') {
-      return 'Notes';
+    if (filter == 'Notes') {
+      return 'notes';
     }
-    if (uglyFilter == 'popbys') {
-      return 'Pop-Bys';
+    if (filter == 'Pop-Bys') {
+      return 'popbys';
     }
-    if (uglyFilter == 'referrals') {
-      return 'Referrals';
+    if (filter == 'Referral') {
+      return 'referrals';
     }
-    return 'Other';
+    return 'other';
   }
 
   function fetchData() {
     setIsLoading(true);
-    getRecentActivityData(filterSetting)
+    getRecentActivityData(filterToParam(filterSetting))
       .then((res) => {
         if (res.status == 'error') {
           console.error(res.error);
@@ -149,7 +156,7 @@ export default function RecentActivityScreenScreen() {
           <React.Fragment>
             <TouchableOpacity onPress={filterPressed}>
               <View style={globalStyles.filterRow}>
-                <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
+                <Text style={globalStyles.filterText}>{filterSetting}</Text>
               </View>
             </TouchableOpacity>
 
@@ -166,56 +173,6 @@ export default function RecentActivityScreenScreen() {
                 ))}
               </View>
             </ScrollView>
-            <ActionSheet
-              initialOffsetFromBottom={10}
-              onBeforeShow={(data) => console.log('action sheet')}
-              id={Sheets.filterSheet}
-              ref={actionSheetRef}
-              statusBarTranslucent
-              bounceOnOpen={true}
-              drawUnderStatusBar={true}
-              bounciness={4}
-              gestureEnabled={true}
-              bottomOffset={40}
-              defaultOverlayOpacity={0.3}
-            >
-              <View
-                style={{
-                  paddingHorizontal: 12,
-                }}
-              >
-                <ScrollView
-                  nestedScrollEnabled
-                  onMomentumScrollEnd={() => {
-                    actionSheetRef.current?.handleChildScrollEnd();
-                  }}
-                  style={styles.scrollview}
-                >
-                  <View>
-                    {Object.entries(filters).map(([key, value]) => (
-                      <TouchableOpacity
-                        key={key}
-                        onPress={() => {
-                          SheetManager.hide(Sheets.filterSheet, null);
-                          setFilterSetting(value);
-                          ga4Analytics('Recent_Activity_Filter_Choice', {
-                            contentType: value,
-                            itemId: 'id0602',
-                          });
-                        }}
-                        style={globalStyles.listItemCell}
-                      >
-                        {/*  you can style the text in listItem */}
-                        <Text style={globalStyles.listItem}>{key}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-
-                  {/*  Add a Small Footer at Bottom */}
-                  <View style={styles.footer} />
-                </ScrollView>
-              </View>
-            </ActionSheet>
           </React.Fragment>
         </View>
         {quickSearchVisible && (

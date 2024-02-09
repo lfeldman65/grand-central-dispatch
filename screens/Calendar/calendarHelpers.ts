@@ -252,8 +252,7 @@ export function getYear(prettyDate: string) {
 }
 
 export function makeLongTxtPretty(longText: string, maxChar: number) {
-  console.log(longText);
-  console.log(longText.length);
+  //console.log(longText.length);
   if (longText.length <= maxChar) {
     return longText;
   }
