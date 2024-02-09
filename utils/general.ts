@@ -125,7 +125,7 @@ export function determineDeviceType() {
 
 export function ga4Analytics(mainEvent: string, other: any) {
   //  console.log('MAINEVENT:' + mainEvent);
-  Analytics.logEvent(mainEvent + '_' + determineDeviceType(), other);
+  // Analytics.logEvent(mainEvent + '_' + determineDeviceType(), other);
 }
 
 export async function handleTextPressed(number: string, cb?: () => void) {

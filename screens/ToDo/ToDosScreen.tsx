@@ -9,38 +9,24 @@ import React from 'react';
 import ToDoRow from './ToDoRow';
 import globalStyles from '../../globalStyles';
 import AddToDo from './AddToDoScreen';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
-
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { toDoFilters } from './toDoHelpers';
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
 export default function ToDosScreen() {
-  const filters = {
-    All: 'all',
-    Today: '0',
-    Week: '7',
-    Month: '30',
-    Overdue: 'overdue',
-    Completed: 'completed',
-  };
-
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
-  const [filterSetting, setFilterSetting] = useState('all');
+  const [filterSetting, setFilterSetting] = useState('All');
   const [dataActivity, setdataActivity] = useState<ToDoDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
-
-  const actionSheetRef = useRef<ActionSheet>(null);
-
-  const Sheets = {
-    filterSheet: 'filter_sheet_id',
-  };
+  const { showActionSheetWithOptions } = useActionSheet();
 
   const handleRowPress = (index: number) => {
     ga4Analytics('To_Do_Row', {
@@ -103,32 +89,47 @@ export default function ToDosScreen() {
     setModalVisible(true);
   }
 
-  function filterPressed() {
+  const filterPressed = () => {
     ga4Analytics('To_Do_Filter_Open', {
       contentType: 'none',
       itemId: 'id1201',
     });
-    SheetManager.show(Sheets.filterSheet);
-  }
+    const options = toDoFilters;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
-  function prettyFilter(uglyFilter: string) {
-    if (uglyFilter == 'all') {
-      return 'All';
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setFilterSetting(options[selectedIndex!]);
+        }
+      }
+    );
+  };
+
+  function convertToParam(prettyFilter: string) {
+    if (prettyFilter == 'All') {
+      return 'all';
     }
-    if (uglyFilter == '0') {
-      return 'Today';
+    if (prettyFilter == 'Today') {
+      return '0';
     }
-    if (uglyFilter == '7') {
-      return 'Week';
+    if (prettyFilter == 'Week') {
+      return '7';
     }
-    if (uglyFilter == '30') {
-      return 'Month';
+    if (prettyFilter == 'Month') {
+      return '30';
     }
-    if (uglyFilter == 'overdue') {
-      return 'Overdue';
+    if (prettyFilter == 'Overdue') {
+      return 'overdue';
     }
-    if (uglyFilter == 'completed') {
-      return 'Completed';
+    if (prettyFilter == 'Completed') {
+      return 'completed';
     }
     return 'Error';
   }
@@ -140,7 +141,7 @@ export default function ToDosScreen() {
   function fetchData(isMounted: boolean) {
     console.log('FETCHDATA');
     setIsLoading(true);
-    getToDoData(filterSetting)
+    getToDoData(convertToParam(filterSetting))
       .then((res) => {
         if (!isMounted) {
           return;
@@ -173,7 +174,7 @@ export default function ToDosScreen() {
           <React.Fragment>
             <TouchableOpacity onPress={filterPressed}>
               <View style={globalStyles.filterRow}>
-                <Text style={globalStyles.filterText}>{prettyFilter(filterSetting)}</Text>
+                <Text style={globalStyles.filterText}>{filterSetting}</Text>
               </View>
             </TouchableOpacity>
 
@@ -220,54 +221,7 @@ export default function ToDosScreen() {
                 />
               </Modal>
             )}
-            <ActionSheet
-              initialOffsetFromBottom={10}
-              onBeforeShow={(data) => console.log('action sheet')}
-              id={Sheets.filterSheet}
-              ref={actionSheetRef}
-              statusBarTranslucent
-              bounceOnOpen={true}
-              drawUnderStatusBar={true}
-              bounciness={4}
-              gestureEnabled={true}
-              bottomOffset={40}
-              defaultOverlayOpacity={0.3}
-            >
-              <View
-                style={{
-                  paddingHorizontal: 12,
-                }}
-              >
-                <ScrollView
-                  nestedScrollEnabled
-                  onMomentumScrollEnd={() => {
-                    actionSheetRef.current?.handleChildScrollEnd();
-                  }}
-                  style={styles.scrollview}
-                >
-                  <View>
-                    {Object.entries(filters).map(([index, value]) => (
-                      <TouchableOpacity
-                        key={index}
-                        onPress={() => {
-                          SheetManager.hide(Sheets.filterSheet, null);
-                          setFilterSetting(value);
-                          ga4Analytics('To_Do_Filter_Choice', {
-                            contentType: prettyFilter(value),
-                            itemId: 'id1202',
-                          });
-                        }}
-                        style={globalStyles.listItemCell}
-                      >
-                        <Text style={globalStyles.listItem}>{index}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
 
-                  {/*  Add a Small Footer at Bottom */}
-                </ScrollView>
-              </View>
-            </ActionSheet>
             {quickSearchVisible && (
               <Modal
                 animationType="slide"

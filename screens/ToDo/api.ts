@@ -10,7 +10,7 @@ import {
 } from './interfaces';
 
 export function getToDoData(type: string): Promise<ToDoDataResponse> {
-  return http.get(`todos?filter=${type}&batchSize=100&lastItem=0`);
+  return http.get(`todos?filter=${type}&batchSize=50&lastItem=0`);
 }
 
 export function getToDoDetails(toDoID: string): Promise<ToDoDetailsDataResponse> {

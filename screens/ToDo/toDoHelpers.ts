@@ -1,64 +1,58 @@
-export const recurrenceMenu = {
-  Never: 'Never',
-  Daily: 'Daily',
-  'Everyday M-F': 'Everyday M-F',
-  'Weekly on': 'Weekly on',
-  'Monthly on the': 'Monthly on the',
-  'Every _ week of the month': 'Every _ week of the month',
-  Yearly: 'Yearly',
-};
+export const recurrenceMenu = [
+  'Never',
+  'Daily',
+  'Everyday M-F',
+  'Weekly on',
+  'Monthly on the',
+  'Every _ week of the month',
+  'Yearly',
+  'Cancel',
+];
 
-export const untilTypeMenu = {
-  Times: 'Times',
-  Forever: 'Forever',
-  Until: 'Until',
-};
+export const untilTypeMenu = ['Times', 'Forever', 'Until', 'Cancel'];
 
-export const reminderMenu = {
-  None: 'None',
-  '1 day before': '1 day before',
-  '2 days before': '2 days before',
-  '3 days before': '3 days before',
-  '4 days before': '4 days before',
-  '5 days before': '5 days before',
-  '6 days before': '6 days before',
-  '7 days before': '7 days before',
-};
+export const reminderMenu = [
+  'None',
+  '1 day before',
+  '2 days before',
+  '3 days before',
+  '4 days before',
+  '5 days before',
+  '6 days before',
+  '7 days before',
+];
 
-export const frequencyWeekMenu = {
-  'Every Week': 'Every Week',
-  'Every 2 Weeks': 'Every 2 Weeks',
-  'Every 3 Weeks': 'Every 3 Weeks',
-  'Every 4 Weeks': 'Every 4 Weeks',
-  'Every 8 Weeks': 'Every 8 Weeks',
-  'Every 12 Weeks': 'Every 12 Weeks',
-};
+export const frequencyWeekMenu = [
+  'Every Week',
+  'Every 2 Weeks',
+  'Every 3 Weeks',
+  'Every 4 Weeks',
+  'Every 8 Weeks',
+  'Every 12 Weeks',
+  'Cancel',
+];
 
-export const frequencyMonthMenu = {
-  'Every Month': 'Every Month',
-  'Every 2 Months': 'Every 2 Months',
-  'Every 3 Months': 'Every 3 Months',
-  'Every 4 Months': 'Every 4 Months',
-  'Every 5 Months': 'Every 5 Months',
-  'Every 6 Months': 'Every 6 Months',
-};
+export const frequencyMonthMenu = [
+  'Every Month',
+  'Every 2 Months',
+  'Every 3 Months',
+  'Every 4 Months',
+  'Every 5 Months',
+  'Every 6 Months',
+  'Cancel',
+];
 
-export const frequencyYearMenu = {
-  'Every Year': 'Every Year',
-  'Every 2 Years': 'Every 2 Years',
-  'Every 3 Years': 'Every 3 Years',
-  'Every 4 Years': 'Every 4 Years',
-  'Every 5 Years': 'Every 5 Years',
-  'Every 6 Years': 'Every 6 Years',
-};
+export const frequencyYearMenu = [
+  'Every Year',
+  'Every 2 Years',
+  'Every 3 Years',
+  'Every 4 Years',
+  'Every 5 Years',
+  'Every 6 Years',
+  'Cancel',
+];
 
-export const orderMenu = {
-  First: 'First',
-  Second: 'Second',
-  Third: 'Third',
-  Fourth: 'Fourth',
-  Last: 'Last',
-};
+export const orderMenu = ['First', 'Second', 'Third', 'Fourth', 'Last', 'Cancel'];
 
 export function convertRecurrence(rec: string) {
   if (rec == 'Never') return 'never';
@@ -190,3 +184,7 @@ export function convertYearlyWeekNumber(element: string) {
   }
   return 2;
 }
+
+export const toDoFilters = ['All', 'Today', 'Week', 'Month', 'Overdue', 'Completed', 'Cancel'];
+
+export const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

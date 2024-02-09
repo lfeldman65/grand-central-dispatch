@@ -1,9 +1,3 @@
-export const bizTypeMenuOld = {
-  Realtor: 'Realtor',
-  Lender: 'Lender',
-  Both: 'Both',
-};
-
 export const bizTypeMenu = ['Agent', 'Lender', 'Both Agent and Lender', 'Cancel'];
 
 export const timeZoneMenu = [

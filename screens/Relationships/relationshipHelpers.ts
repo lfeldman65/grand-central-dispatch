@@ -57,7 +57,6 @@ export function isFirstLetterAlpha(someWord: string) {
 
 export function prettyDate(uglyDate?: string) {
   // example: 2019-05-22T00:00:00"
-  console.log('ugly: ' + uglyDate);
   if (uglyDate == null) return '';
   if (uglyDate == '') return '';
   var dateOnly = uglyDate.substring(0, 10);
