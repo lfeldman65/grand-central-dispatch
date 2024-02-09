@@ -4,19 +4,16 @@ export const bizTypeMenuOld = {
   Both: 'Both',
 };
 
-export const bizTypeMenu = {
-  Agent: 'Agent',
-  Lender: 'Lender',
-  'Both Agent and Lender': 'Both Agent and Lender',
-};
+export const bizTypeMenu = ['Agent', 'Lender', 'Both Agent and Lender', 'Cancel'];
 
-export const timeZoneMenu = {
-  'Atlantic Standard Time': 'Atlantic Standard Time',
-  'Eastern Standard Time': 'Eastern Standard Time',
-  'Central Standard Time': 'Central Standard Time',
-  'Mountain Standard Time': 'Mountain Standard Time',
-  'Pacific Standard Time': 'Pacific Standard Time',
-};
+export const timeZoneMenu = [
+  'Atlantic Standard Time',
+  'Eastern Standard Time',
+  'Central Standard Time',
+  'Mountain Standard Time',
+  'Pacific Standard Time',
+  'Cancel',
+];
 
 export const landingPages = [
   'Dashboard',

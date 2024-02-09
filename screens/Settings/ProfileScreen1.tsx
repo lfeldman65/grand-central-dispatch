@@ -2,18 +2,11 @@ import { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
-import globalStyles from '../../globalStyles';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { getProfileData } from './api';
 import { bizTypeMenu, timeZoneMenu } from './settingsHelpers';
 import { storage } from '../../utils/storage';
-
+import { useActionSheet } from '@expo/react-native-action-sheet';
 const rmLogo = require('../../images/logoWide.png');
-
-const Sheets = {
-  bizTypeSheet: 'filter_sheet_bizType',
-  timeZoneSheet: 'filter_sheet_timeZone',
-};
 
 export default function ProfileScreen1(props: any) {
   const [email, setEmail] = useState('');
@@ -21,8 +14,8 @@ export default function ProfileScreen1(props: any) {
   const [timeZone, setTimeZone] = useState('');
   const [mobilePhone, setMobilePhone] = useState('');
   const isFocused = useIsFocused();
-  const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
+  const { showActionSheetWithOptions } = useActionSheet();
 
   useEffect(() => {
     navigation.setOptions({
@@ -48,18 +41,43 @@ export default function ProfileScreen1(props: any) {
     };
   }, [isFocused]);
 
-  function convertToParamOld(pretty: string) {
-    if (pretty == 'Both') {
-      return 'realtorAndLender';
-    }
-    if (pretty == 'Realtor') {
-      return 'realtor';
-    }
-    if (pretty == 'Lender') {
-      return 'lender';
-    }
-    return pretty;
-  }
+  const timeZonePressed = () => {
+    const options = timeZoneMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setTimeZone(options[selectedIndex!]);
+        }
+      }
+    );
+  };
+
+  const businessTypePressed = () => {
+    const options = bizTypeMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setBizType(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
   function convertToParam(pretty: string) {
     if (pretty == 'Both Agent and Lender') {
@@ -102,16 +120,6 @@ export default function ProfileScreen1(props: any) {
     } else {
       setMobilePhone(mobile);
     }
-  }
-
-  function businessTypePressed() {
-    console.log('business type pressed');
-    SheetManager.show(Sheets.bizTypeSheet);
-  }
-
-  function timeZonePressed() {
-    console.log('time zone pressed');
-    SheetManager.show(Sheets.timeZoneSheet);
   }
 
   function backPressed() {
@@ -182,50 +190,6 @@ export default function ProfileScreen1(props: any) {
         </View>
       </TouchableOpacity>
 
-      <ActionSheet // Biz Type
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('bizType')}
-        id={Sheets.bizTypeSheet}
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={true}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.3}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={styles.filterView}
-          >
-            <View>
-              {Object.entries(bizTypeMenu).map(([key, value]) => (
-                <TouchableOpacity
-                  key={key}
-                  onPress={() => {
-                    SheetManager.hide(Sheets.bizTypeSheet, null);
-                    console.log('biz type: ' + value);
-                    setBizType(value);
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{key}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
-
       <Text style={styles.nameTitle}>Time Zone</Text>
       <TouchableOpacity onPress={timeZonePressed}>
         <View style={styles.mainContent}>
@@ -234,50 +198,6 @@ export default function ProfileScreen1(props: any) {
           </View>
         </View>
       </TouchableOpacity>
-
-      <ActionSheet // Time Zone
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('timeZone')}
-        id={Sheets.timeZoneSheet}
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={true}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.3}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={styles.filterView}
-          >
-            <View>
-              {Object.entries(timeZoneMenu).map(([key, value]) => (
-                <TouchableOpacity
-                  key={key}
-                  onPress={() => {
-                    SheetManager.hide(Sheets.timeZoneSheet, null);
-                    console.log('time zone: ' + value);
-                    setTimeZone(value);
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{key}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
 
       <Text style={styles.nameTitle}>Mobile Number</Text>
       <View style={styles.mainContent}>

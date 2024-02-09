@@ -11,6 +11,8 @@ import React, { useState } from 'react';
 import AppContext, { GlobalStuff } from './components/AppContext';
 import { Audio } from 'expo-av';
 import { PlayerStatus } from './screens/Podcasts/interfaces';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -55,14 +57,16 @@ function App() {
     setPlayerStatus: setPlayerStatus,
   };
   return (
-    <AppContext.Provider value={globalObjects}>
-      <SafeAreaView style={styles.container}>
-        <StatusBar />
-        <NavigationContainer>
-          <MainStackNavigator />
-        </NavigationContainer>
-      </SafeAreaView>
-    </AppContext.Provider>
+    <ActionSheetProvider>
+      <AppContext.Provider value={globalObjects}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar />
+          <NavigationContainer>
+            <MainStackNavigator />
+          </NavigationContainer>
+        </SafeAreaView>
+      </AppContext.Provider>
+    </ActionSheetProvider>
   );
 }
 export default App;
