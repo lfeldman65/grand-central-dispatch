@@ -1,18 +1,11 @@
-export const ideasMenu = {
-  Calls: 'Calls',
-  Notes: 'Notes',
-  'Pop-Bys': 'Pop-Bys',
-};
+export const ideasMenu = ['Calls', 'Notes', 'Pop-Bys', 'Cancel'];
 
 export const vidMenu = {
   'Use Video Album': 'Use Video Album',
   'Use Video Camera': 'Use Video Camera',
 };
 
-export const mobileTypeMenu = {
-  Call: 'Call',
-  Message: 'Message',
-};
+export const mobileTypeMenu = ['Call', 'Message', 'Cancel'];
 
 export const homeTypeMenu = {
   Call: 'Call',

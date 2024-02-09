@@ -6,13 +6,14 @@ import { PACDataProps } from './interfaces';
 import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
 import { relSheets, mobileTypeMenu } from '../Relationships/relationshipHelpers';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import { ga4Analytics, handlePhonePressed, handleTextPressed } from '../../utils/general';
 import TrackActivity from '../Goals/TrackActivityScreen';
 import { getGoalData, trackAction } from '../Goals/api';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 import { GoalDataProps } from '../Goals/interfaces';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+
 var localGoalID = '0';
 var localName = '';
 var localID = '';
@@ -32,13 +33,13 @@ interface PACCallsRowProps {
 export default function PACCallsRow(props: PACCallsRowProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const actionSheetRef = useRef<ActionSheet>(null);
   const [trackActivityVisible, setTrackActivityVisible] = useState(false);
   const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
   const [goalID2, setGoalID2] = useState('1');
   const [goalName2, setGoalName2] = useState('Calls Made');
   const [subject2, setSubject2] = useState('');
   var _swipeableRow: Swipeable;
+  const { showActionSheetWithOptions } = useActionSheet();
 
   async function completePressed() {
     ga4Analytics('PAC_Swipe_Complete', {
@@ -192,15 +193,48 @@ export default function PACCallsRow(props: PACCallsRowProps) {
     console.log('complete failure');
   }
 
-  function handleMobilePressed() {
+  const handleMobilePressed = () => {
     localID = props.data.contactId;
     localName = props.data.contactName;
     localMobile = props.data.mobilePhone;
     console.log('number1: ' + localMobile);
     console.log('name1: ' + localName);
     console.log('id1: ' + localID);
-    SheetManager.show(relSheets.mobileSheet);
-  }
+    const options = mobileTypeMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          if (selectedIndex == 0) {
+            ga4Analytics('PAC_Mobile_Call', {
+              contentTyype: 'Calls_Tab',
+              itemId: 'id0408',
+            });
+            setGoalID2('1');
+            setGoalName2('Calls Made');
+            setSubject2('Mobile Call');
+            handlePhonePressed(localMobile, () => setTrackActivityVisible(true));
+          } else {
+            ga4Analytics('PAC_Mobile_Text', {
+              contentTyype: 'Calls_Tab',
+              itemId: 'id0408',
+            });
+            setGoalID2('7');
+            setGoalName2('Other');
+            setSubject2('Text Message');
+            handleTextPressed(localMobile, () => setTrackActivityVisible(true));
+          }
+        }
+      }
+    );
+  };
 
   function handleHomePressed() {
     localID = props.data.contactId;
@@ -319,71 +353,6 @@ export default function PACCallsRow(props: PACCallsRowProps) {
               <Text style={styles.phoneNumber}>{'Home: ' + props.data.homePhone}</Text>
             </TouchableOpacity>
           )}
-
-          <ActionSheet
-            initialOffsetFromBottom={10}
-            //   onBeforeShow={(data) => console.log('mobile call type sheet')}
-            id={relSheets.mobileSheet}
-            ref={actionSheetRef}
-            statusBarTranslucent
-            bounceOnOpen={true}
-            drawUnderStatusBar={true}
-            bounciness={4}
-            gestureEnabled={true}
-            bottomOffset={40}
-            defaultOverlayOpacity={0.3}
-          >
-            <View
-              style={{
-                paddingHorizontal: 12,
-              }}
-            >
-              <ScrollView
-                nestedScrollEnabled
-                onMomentumScrollEnd={() => {
-                  actionSheetRef.current?.handleChildScrollEnd();
-                }}
-                style={styles.scrollview}
-              >
-                <View>
-                  {Object.entries(mobileTypeMenu).map(([index, value]) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        SheetManager.hide(relSheets.mobileSheet, null).then(() => {
-                          console.log('number: ' + localMobile);
-                          console.log('name: ' + localName);
-                          console.log('ID: ' + localID);
-                          if (value == 'Call') {
-                            ga4Analytics('PAC_Mobile_Call', {
-                              contentType: 'Calls_Tab',
-                              itemId: 'id0408',
-                            });
-                            setGoalID2('1');
-                            setGoalName2('Calls Made');
-                            setSubject2('Mobile Call');
-                            handlePhonePressed(localMobile, () => setTrackActivityVisible(true));
-                          } else {
-                            ga4Analytics('PAC_Mobile_Text', {
-                              contentType: 'Calls_Tab',
-                              itemId: 'id0409',
-                            });
-                            setGoalID2('7');
-                            setGoalName2('Other');
-                            setSubject2('Text Message');
-                            handleTextPressed(localMobile, () => setTrackActivityVisible(true));
-                          }
-                        });
-                      }}
-                      style={globalStyles.listItemCell}
-                    >
-                      <Text style={globalStyles.listItem}>{index}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </ScrollView>
-            </View>
-          </ActionSheet>
 
           {modalVisible && (
             <Modal

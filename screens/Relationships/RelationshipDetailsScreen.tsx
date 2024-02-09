@@ -45,6 +45,7 @@ import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
 import * as SMS from 'expo-sms';
 import Dialog from 'react-native-dialog';
 import { ga4Analytics } from '../../utils/general';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const chevron = require('../../images/chevron_blue_right.png');
 import TrackActivity from '../Goals/TrackActivityScreen';
@@ -121,6 +122,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [goalID2, setGoalID2] = useState('1');
   const [goalName2, setGoalName2] = useState('Calls Made');
   const [subject2, setSubject2] = useState('');
+  const { showActionSheetWithOptions } = useActionSheet();
 
   async function getVidTutWatched() {
     const vidTutWatched = await storage.getItem('videoTutorialWatched');
@@ -582,10 +584,46 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     setAddAppointmentVisible(!addAppointmentVisible);
   }
 
-  function handleIdeasPressed() {
+  function handleIdeasPressedOld() {
     console.log('ideas pressed');
     SheetManager.show(relSheets.ideaSheet);
+    ga4Analytics('Relationships_Ideas_Bottom', {
+      contentType: value,
+      itemId: 'id0519',
+    });
+    if (value == 'Calls') {
+      setModalCallsVisible(true);
+    } else if (value == 'Notes') {
+      setModalNotesVisible(true);
+    } else {
+      setModalPopVisible(true);
+    }
   }
+
+  const handleIdeasPressed = () => {
+    const options = ideasMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          if (selectedIndex == 0) {
+            setModalCallsVisible(true);
+          } else if (selectedIndex == 1) {
+            setModalNotesVisible(true);
+          } else {
+            setModalPopVisible(true);
+          }
+        }
+      }
+    );
+  };
 
   // End of bottom row
 
