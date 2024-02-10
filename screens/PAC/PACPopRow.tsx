@@ -10,9 +10,9 @@ import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
 import { handleTextPressed, ga4Analytics } from '../../utils/general';
 import globalStyles from '../../globalStyles';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { mobileTypeMenu, relSheets } from '../Relationships/relationshipHelpers';
 import { storage } from '../../utils/storage';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 interface PACRowProps {
   key: number;
@@ -28,9 +28,9 @@ export default function PACPopRow(props: PACRowProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-  const actionSheetRef = useRef<ActionSheet>(null);
   const [relLat, setRelLat] = useState('33.17');
   var _swipeableRow: Swipeable;
+  const { showActionSheetWithOptions } = useActionSheet();
 
   async function completePressed() {
     ga4Analytics('PAC_Swipe_Complete', {
@@ -75,10 +75,36 @@ export default function PACPopRow(props: PACRowProps) {
     console.log('complete failure');
   }
 
-  function handleMobilePressed() {
-    console.log('mobile pressed here');
-    SheetManager.show(relSheets.mobileSheet);
-  }
+  const handleMobilePressed = () => {
+    const options = mobileTypeMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          if (selectedIndex == 0) {
+            ga4Analytics('PAC_Mobile_Call', {
+              contentType: 'Pop_By_Tab',
+              itemId: 'id0408',
+            });
+            Linking.openURL(`tel:${props.data.mobilePhone}`);
+          } else {
+            ga4Analytics('PAC_Mobile_Text', {
+              contentType: 'Pop_By_Tab',
+              itemId: 'id0409',
+            });
+            handleTextPressed(props.data.mobilePhone);
+          }
+        }
+      }
+    );
+  };
 
   function handleHomePressed() {
     ga4Analytics('PAC_Home_Call', {
@@ -297,7 +323,7 @@ export default function PACPopRow(props: PACRowProps) {
             <Text style={props.lightOrDark == 'dark' ? styles.otherTextDark : styles.otherTextLight}>
               {lastPopText(props.data.lastPopByDate)}
             </Text>
-            {props.data.street1 && (
+            {props.data.longitude != null && (
               <TouchableOpacity style={styles.popByButtons} onPress={() => handlePopPressed()}>
                 <Text style={styles.popByButtons}>{'Pop-By Map'}</Text>
               </TouchableOpacity>
@@ -336,63 +362,6 @@ export default function PACPopRow(props: PACRowProps) {
               <Text style={styles.phoneNumber}>{'Home: ' + props.data.homePhone}</Text>
             </TouchableOpacity>
           )}
-
-          <ActionSheet
-            initialOffsetFromBottom={10}
-            onBeforeShow={(data) => console.log('mobile call type sheet')}
-            id={relSheets.mobileSheet}
-            ref={actionSheetRef}
-            statusBarTranslucent
-            bounceOnOpen={true}
-            drawUnderStatusBar={true}
-            bounciness={4}
-            gestureEnabled={true}
-            bottomOffset={40}
-            defaultOverlayOpacity={0.3}
-          >
-            <View
-              style={{
-                paddingHorizontal: 12,
-              }}
-            >
-              <ScrollView
-                nestedScrollEnabled
-                onMomentumScrollEnd={() => {
-                  actionSheetRef.current?.handleChildScrollEnd();
-                }}
-                style={styles.scrollview}
-              >
-                <View>
-                  {Object.entries(mobileTypeMenu).map(([index, value]) => (
-                    <TouchableOpacity
-                      key={index}
-                      onPress={() => {
-                        SheetManager.hide(relSheets.mobileSheet, null).then(() => {
-                          console.log('CALLTYPE1: ' + props.data.mobilePhone);
-                          if (value == 'Call') {
-                            ga4Analytics('PAC_Mobile_Call', {
-                              contentType: 'Pop_By_Tab',
-                              itemId: 'id0408',
-                            });
-                            Linking.openURL(`tel:${props.data.mobilePhone}`);
-                          } else {
-                            ga4Analytics('PAC_Mobile_Text', {
-                              contentType: 'Pop_By_Tab',
-                              itemId: 'id0409',
-                            });
-                            handleTextPressed(props.data.mobilePhone);
-                          }
-                        });
-                      }}
-                      style={globalStyles.listItemCell}
-                    >
-                      <Text style={globalStyles.listItem}>{index}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </ScrollView>
-            </View>
-          </ActionSheet>
 
           {modalVisible && (
             <Modal

@@ -19,6 +19,8 @@ export interface PACDataProps {
   city: string;
   state: string;
   zip: string;
+  longitude: string;
+  latitude: string;
   swipeRef: Swipeable | null;
 }
 
