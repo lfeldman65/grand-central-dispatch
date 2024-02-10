@@ -1,14 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  Dimensions,
-  Modal,
-  ScrollView,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Modal } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import PacComplete from './PACCompleteScreen';
 import { getPACDetails } from './api';
@@ -19,12 +10,13 @@ import { AddressProps, ContactDetailDataProps } from './interfaces';
 import { completeAction, postponeAction } from './postponeAndComplete';
 import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { mobileTypeMenu, relSheets } from '../Relationships/relationshipHelpers';
-import globalStyles from '../../globalStyles';
 import TrackActivity from '../Goals/TrackActivityScreen';
 import { getGoalData, trackAction } from '../Goals/api';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
 import { GoalDataProps } from '../Goals/interfaces';
 import { formatCityStateZip, completeAddress } from '../PAC/pacHelpers';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import globalStyles from '../../globalStyles';
 
 var localGoalID = '0';
 let deviceHeight = Dimensions.get('window').height;
@@ -43,6 +35,7 @@ export default function PACDetailScreen(props: any) {
   const [goalID2, setGoalID2] = useState('1');
   const [goalName2, setGoalName2] = useState('Calls Made');
   const [subject2, setSubject2] = useState('');
+  const { showActionSheetWithOptions } = useActionSheet();
 
   function trackActivityComplete( // see "savePressed" in TrackActivityScreen
     guid: string,
@@ -121,6 +114,43 @@ export default function PACDetailScreen(props: any) {
     }
   }
 
+  const handleMobilePressed = () => {
+    const options = mobileTypeMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          if (selectedIndex == 0) {
+            ga4Analytics('PAC_Mobile_Call', {
+              contentTyype: 'Details',
+              itemId: 'id0408',
+            });
+            setGoalID2('1');
+            setGoalName2('Calls Made');
+            setSubject2('Mobile Call');
+            handlePhonePressed(data?.mobile!, () => setTrackActivityVisible(true));
+          } else {
+            ga4Analytics('PAC_Mobile_Text', {
+              contentTyype: 'Details',
+              itemId: 'id0409',
+            });
+            setGoalID2('7');
+            setGoalName2('Other');
+            setSubject2('Text Message');
+            handleTextPressed(data?.mobile!, () => setTrackActivityVisible(true));
+          }
+        }
+      }
+    );
+  };
+
   function trackActivityAPI(
     contactId: string,
     goalId: string,
@@ -159,7 +189,7 @@ export default function PACDetailScreen(props: any) {
     postponeEvent(contactId, type);
   }
 
-  function handleMobilePressed() {
+  function handleMobilePressedOld() {
     console.log('mobile pressed here');
     SheetManager.show(relSheets.mobileSheet);
   }
@@ -401,70 +431,6 @@ export default function PACDetailScreen(props: any) {
           <Text style={stylesDetail.postponeText}>Postpone</Text>
         </TouchableOpacity>
       </View>
-
-      <ActionSheet
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('mobile call type sheet')}
-        id={relSheets.mobileSheet}
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={true}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.3}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={styles.scrollview}
-          >
-            <View>
-              {Object.entries(mobileTypeMenu).map(([index, value]) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    SheetManager.hide(relSheets.mobileSheet, null).then(() => {
-                      console.log('value: ' + value);
-                      if (value == 'Call') {
-                        ga4Analytics('PAC_Mobile_Call', {
-                          contentType: 'Details',
-                          itemId: 'id0408',
-                        });
-                        setGoalID2('1');
-                        setGoalName2('Calls Made');
-                        setSubject2('Mobile Call');
-                        handlePhonePressed(data?.mobile!, () => setTrackActivityVisible(true));
-                      } else {
-                        console.log('TEXT 470');
-                        ga4Analytics('PAC_Mobile_Text', {
-                          contentType: 'Details',
-                          itemId: 'id0409',
-                        });
-                        setGoalID2('7');
-                        setGoalName2('Other');
-                        setSubject2('Text Message');
-                        handleTextPressed(data?.mobile!, () => setTrackActivityVisible(true));
-                      }
-                    });
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{index}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
 
       {modalVisible && (
         <Modal
