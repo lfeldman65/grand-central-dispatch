@@ -19,7 +19,7 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.referralmaker.referralmaker",
-      "buildNumber": "22",
+      "buildNumber": "23",
       "accessesContactNotes": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses your location to show relationships that are near you.",
