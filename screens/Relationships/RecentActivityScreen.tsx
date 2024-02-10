@@ -20,7 +20,7 @@ const searchGlass = require('../../images/whiteSearch.png');
 export default function RecentActivityScreenScreen() {
   const navigation = useNavigation<any>();
   const isFocused = useIsFocused();
-  const [filterSetting, setFilterSetting] = useState('all');
+  const [filterSetting, setFilterSetting] = useState('All');
   const [dataActivity, setdataActivity] = useState<RecentActivityDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lightOrDark, setLightOrDark] = useState('');

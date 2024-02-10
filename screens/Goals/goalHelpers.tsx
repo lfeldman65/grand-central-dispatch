@@ -1,6 +1,4 @@
 import { GoalObject } from './interfaces';
-// import { isNullOrEmpty } from '../../utils/general';
-
 export function displayName(first: string, last: string, type: string, employer: string, isAZ: boolean) {
   if (type == 'Rel') {
     return first + ' ' + last;
@@ -27,3 +25,10 @@ export function titleFor(goal: GoalObject) {
   }
   return oldTitle;
 }
+
+export const referralMenu = [
+  'Client gave me referral',
+  'Client was referred to me',
+  'I gave client a referral',
+  'Cancel',
+];

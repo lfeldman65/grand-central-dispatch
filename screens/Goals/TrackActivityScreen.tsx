@@ -8,10 +8,9 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import globalStyles from '../../globalStyles';
 import { ga4Analytics } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-const refMenuChoice1 = 'Client gave me referral';
-const refMenuChoice2 = 'Client was referred to me';
-const refMenuChoice3 = 'I gave client a referral';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { referralMenu } from './goalHelpers';
 
 export default function TrackActivityScreen(props: any) {
   const { setModalVisible, title, onSave, guid, firstName, lastName, goalID, goalName, subjectP, lightOrDark } = props;
@@ -31,16 +30,7 @@ export default function TrackActivityScreen(props: any) {
   const actionSheetRef = useRef<ActionSheet>(null);
   const isFocused = useIsFocused();
   const notesInputRef = useRef<TextInput>(null);
-
-  const filters = {
-    'Client gave me referral': 'Client gave me referral',
-    'Client was referred to me': 'Client was referred to me',
-    'I gave client a referral': 'I gave client a referral',
-  };
-
-  const Sheets = {
-    filterSheet: 'filter_sheet_id',
-  };
+  const { showActionSheetWithOptions } = useActionSheet();
 
   const handleConfirm = (selectedDate: any) => {
     const currentDate = selectedDate;
@@ -86,15 +76,15 @@ export default function TrackActivityScreen(props: any) {
     }
   }
 
-  function convertToString(filterItem: string) {
+  function convertToNum(filterItem: string) {
     console.log(filterItem);
-    if (filterItem == refMenuChoice1) {
+    if (filterItem == referralMenu[0]) {
       return '1';
     }
-    if (filterItem == refMenuChoice2) {
+    if (filterItem == referralMenu[1]) {
       return '2';
     }
-    if (filterItem == refMenuChoice3) {
+    if (filterItem == referralMenu[2]) {
       return '3';
     }
     return '4';
@@ -131,10 +121,6 @@ export default function TrackActivityScreen(props: any) {
 
   function addReferralPressed() {
     setModalRefVisible(!modalRefVisible);
-  }
-
-  function referralTypePressed() {
-    SheetManager.show(Sheets.filterSheet);
   }
 
   function handleGoalPressed() {
@@ -220,6 +206,25 @@ export default function TrackActivityScreen(props: any) {
     }
     return true;
   }
+
+  const referralTypePressed = () => {
+    const options = referralMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setRefType(convertToNum(options[selectedIndex!]));
+        }
+      }
+    );
+  };
 
   function formatTitle(ugly: string) {
     if (goal == null) {
@@ -452,49 +457,7 @@ export default function TrackActivityScreen(props: any) {
             />
           </Modal>
         )}
-        <ActionSheet
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('action sheet')}
-          id={Sheets.filterSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.scrollview}
-            >
-              <View>
-                {Object.entries(filters).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.filterSheet, null);
-                      setRefType(convertToString(value));
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
+
         {modalGoalVisible && (
           <Modal
             animationType="slide"
