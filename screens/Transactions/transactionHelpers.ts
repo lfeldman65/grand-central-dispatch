@@ -20,6 +20,8 @@ export const statusMenu = {
   'Not Converted': 'Not Converted',
 };
 
+export const statusMenuNew = ['Potential', 'Active', 'Pending', 'Closed', 'Not Converted', 'Cancel'];
+
 export const typeMenu = {
   Buyer: 'Buyer',
   Seller: 'Seller',

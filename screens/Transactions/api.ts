@@ -9,7 +9,7 @@ import {
   AddOrEditTransactionDataResponse,
   TransactionContacts,
   TransactionAddress,
-  TxContactProps
+  TxContactProps,
 } from './interfaces';
 import { AttendeesProps } from '../ToDo/interfaces';
 
@@ -22,8 +22,8 @@ export function getTransactionDetails(dealID: string): Promise<TransactionDetail
 } // back tick (`) only necessary for string interpolation
 
 export function changeTxStatus(idDeal: number, newStatus: string): Promise<TxChangeStatusResponse> {
-  console.log(idDeal);
-  console.log(newStatus);
+  console.log('api dealId:' + idDeal);
+  console.log('api new newStatus:' + newStatus);
   var paramStatus = newStatus.toLocaleLowerCase();
   if (paramStatus == 'not converted') {
     paramStatus = 'Not Converted';
@@ -79,16 +79,16 @@ export function addOrEditOtherTransaction(
 
   var newContacts = new Array();
   contacts.forEach((item, index) => {
-      var contactProps: TxContactProps = {
-        userID: item.id,
-        contactName: item.firstName + ' ' + item.lastName,
-        typeOfContact :'related',
-        leadSource : ""
-      };
-      newContacts.push(contactProps);
-    }); 
+    var contactProps: TxContactProps = {
+      userID: item.id,
+      contactName: item.firstName + ' ' + item.lastName,
+      typeOfContact: 'related',
+      leadSource: '',
+    };
+    newContacts.push(contactProps);
+  });
 
-    console.log('contacts' + JSON.stringify(newContacts));
+  console.log('contacts' + JSON.stringify(newContacts));
   return http.post('deal', {
     body: {
       id: id,
