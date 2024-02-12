@@ -8,12 +8,12 @@ import { getTransactionData } from './api';
 import { TransactionDataProps } from './interfaces';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { changeTxStatus } from './api';
 import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
-
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { statusMenuNew } from './transactionHelpers';
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 type TabType = 'potential' | 'active' | 'pending' | 'closed';
@@ -41,10 +41,10 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
   const [lightOrDark, setLightOrDark] = useState('');
   const [data, setData] = useState<TransactionDataProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const actionSheetRef = useRef<ActionSheet>(null);
   const [statusChoice, setStatusChoice] = useState('potential');
   const [currentId, setCurrentId] = useState(0);
   const [quickSearchVisible, setQuickSearchVisible] = useState(false);
+  const { showActionSheetWithOptions } = useActionSheet();
 
   const handleRowPress = (index: number) => {
     ga4Analytics('Other_Transactions_Row', {
@@ -138,11 +138,30 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
     fetchData(tabSelected, 'Other');
   }, [isFocused]);
 
-  function changeStatusPressed(dealId: number) {
-    //console.log('filter press');
-    setCurrentId(dealId);
-    SheetManager.show(Sheets.filterSheet);
-  }
+  const changeStatusPressed = (dealId: number) => {
+    const options = statusMenuNew;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('selected:' + options[selectedIndex!]);
+          setStatusChoice(options[selectedIndex!]);
+          continueTxChangeStatus(dealId, options[selectedIndex!], changeStatusSuccess, changeStatusFailure);
+          ga4Analytics('Other_Transactions_Swipe', {
+            contentType: options[selectedIndex!],
+            itemId: 'id1006',
+          });
+        }
+      }
+    );
+  };
 
   function continueTxChangeStatus(dealId: number, type: string, onSuccess: any, onFailure: any) {
     console.log('Type: ' + type);
@@ -235,57 +254,6 @@ export default function OtherTransactionsScreen(props: TransactionScreenProps) {
                 <Text style={styles.addText}>{'Add Transaction'}</Text>
               </View>
             </TouchableOpacity>
-            <ActionSheet
-              initialOffsetFromBottom={10}
-              onBeforeShow={(data) => console.log('action sheet')}
-              id={Sheets.filterSheet}
-              ref={actionSheetRef}
-              statusBarTranslucent
-              bounceOnOpen={true}
-              drawUnderStatusBar={true}
-              bounciness={4}
-              gestureEnabled={true}
-              bottomOffset={10}
-              defaultOverlayOpacity={0.3}
-            >
-              <View
-                style={{
-                  paddingHorizontal: 12,
-                }}
-              >
-                <ScrollView
-                  nestedScrollEnabled
-                  onMomentumScrollEnd={() => {
-                    actionSheetRef.current?.handleChildScrollEnd();
-                  }}
-                  style={styles2.scrollview}
-                >
-                  <View>
-                    {Object.entries(filters).map(([key, value]) => (
-                      <TouchableOpacity
-                        key={key}
-                        onPress={() => {
-                          SheetManager.hide(Sheets.filterSheet, null);
-                          setStatusChoice(value);
-                          continueTxChangeStatus(currentId, value, changeStatusSuccess, changeStatusFailure);
-                          ga4Analytics('Other_Transactions_Swipe', {
-                            contentType: value,
-                            itemId: 'id1006',
-                          });
-                        }}
-                        style={globalStyles.listItemCell}
-                      >
-                        {/*  you can style the text in listItem */}
-                        <Text style={globalStyles.listItem}>{key}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-
-                  {/*  Add a Small Footer at Bottom */}
-                  <View style={styles2.footer} />
-                </ScrollView>
-              </View>
-            </ActionSheet>
             {quickSearchVisible && (
               <Modal
                 animationType="slide"

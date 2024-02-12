@@ -1,6 +1,6 @@
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { styles } from './styles';
-import { TransactionDataProps, TxChangeStatusProps } from './interfaces';
+import { TransactionDataProps } from './interfaces';
 import { useEffect } from 'react';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { prettyDate } from '../Relationships/relationshipHelpers';
