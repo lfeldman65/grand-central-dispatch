@@ -13,7 +13,7 @@ import DarkOrLightScreen from '../../utils/DarkOrLightScreen';
 import { ga4Analytics } from '../../utils/general';
 import QuickSearch from '../QuickAddAndSearch/QuickSearch';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { statusMenuNew } from './transactionHelpers';
+import { statusMenu } from './transactionHelpers';
 
 const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
@@ -138,7 +138,7 @@ export default function RealEstateTransactionsScreen(props: TransactionScreenPro
   }, [navigation, lightOrDark]);
 
   const changeStatusPressed = (dealId: number) => {
-    const options = statusMenuNew;
+    const options = statusMenu;
     const destructiveButtonIndex = -1;
     const cancelButtonIndex = options.length - 1;
 

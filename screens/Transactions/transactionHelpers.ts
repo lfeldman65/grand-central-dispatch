@@ -12,21 +12,17 @@ export const AddTxBuyerAndSellerSheets = {
   leaseOrRefFeeSheet: 'filter_sheet_lease_ref_fee',
 };
 
-export const statusMenu = {
-  Potential: 'Potential',
-  Active: 'Active',
-  Pending: 'Pending',
-  Closed: 'Closed',
-  'Not Converted': 'Not Converted',
-};
-
-export const statusMenuNew = ['Potential', 'Active', 'Pending', 'Closed', 'Not Converted', 'Cancel'];
+export const statusMenu = ['Potential', 'Active', 'Pending', 'Closed', 'Not Converted', 'Cancel'];
 
 export const typeMenu = {
   Buyer: 'Buyer',
   Seller: 'Seller',
   'Buyer & Seller': 'Buyer & Seller',
 };
+
+export const realtorTypeMenu = ['Buyer', 'Seller', 'Buyer & Seller', 'Cancel'];
+export const lenderTypeMenu = ['Purchase Loan', 'Refinance', 'Cancel'];
+export const otherTypeMenu = ['Lease', 'Referral Fee', 'Cancel'];
 
 export const purchaseLoanTypeMenu = {
   'Purchase Loan': 'Purchase Loan',
@@ -38,36 +34,13 @@ export const leaseOrRefFeeMenu = {
   'Referral Fee': 'Referral Fee',
 };
 
+export const loanTypeMenuNew = ['Fixed', 'ARM', 'Interest Only', 'Other', 'Cancel'];
+
 export const loanTypeMenu = {
   Fixed: 'Fixed',
   ARM: 'ARM',
   'Interest Only': 'Interest Only',
   Other: 'Other',
-};
-
-// export const loanTypeDescriptionMenu = {
-//   '1st': '1st',
-//   '2nd': '2nd',
-//   '3rd': '3rd',
-//   Equity: 'Equity', // not done
-// };
-
-export const buyerLeadSourceMenu = {
-  // not done, maybe api
-  Advertising: 'Advertising',
-  'Cold Calling': 'Cold Calling',
-};
-
-export const sellerLeadSourceMenu = {
-  // not done, maybe api
-  Advertising: 'Advertising',
-  'Cold Calling': 'Cold Calling',
-};
-
-export const borrowerLeadSourceMenu = {
-  // not done, maybe api
-  Advertising: 'Advertising',
-  'Cold Calling': 'Cold Calling',
 };
 
 export const propertyAddressMenu = {
@@ -82,6 +55,8 @@ export const probabilityMenu = {
   'Very Likely': 'Very Likely',
   Certain: 'Certain',
 };
+
+export const probabilityMenuNew = ['Uncertain', 'Maybe', 'Likely', 'Very Likely', 'Certain', 'Cancel'];
 
 export function removeTrailingDecimal(value: string) {
   // i.e. 3129.27 -> 3129

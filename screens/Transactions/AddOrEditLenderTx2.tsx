@@ -3,13 +3,12 @@ import { Modal, Text, View, TouchableOpacity, ScrollView, Alert, TextInput, Styl
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
 import { useRef, useEffect } from 'react';
 import React from 'react';
-import globalStyles from '../../globalStyles';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { AddTxBuyerAndSellerSheets, probabilityMenu, loanTypeMenu, roundToInt } from './transactionHelpers';
+import { probabilityMenuNew, lenderTypeMenu, roundToInt, loanTypeMenuNew, loanTypeMenu } from './transactionHelpers';
 import ChooseLoanDescription from './ChooseLoanDescription';
 import { shouldRunTests } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { txStyles2 } from './styles';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 var grossComm1 = 0;
 
@@ -26,17 +25,16 @@ export default function AddOrEditLenderTx2(props: any) {
   const [interestRate, setInterestRate] = useState('');
   const [rateType, setRateType] = useState('Fixed'); // Loan Type in app
   const [rateTypeDesc, setRateTypeDesc] = useState('1st'); //
-  const [originationFees, setOriginationFees] = useState('90'); // sellerCommission in Postman
-  const [buyerCommission, setBuyerCommission] = useState('10');
-  const [additionalIncome, setAdditionalIncome] = useState('200');
+  const [originationFees, setOriginationFees] = useState('0'); // sellerCommission in Postman
+  const [buyerCommission, setBuyerCommission] = useState('0');
+  const [additionalIncome, setAdditionalIncome] = useState('0');
   const [showApplicationDate, setShowApplicationDate] = useState(false);
   const [showClosingDate, setShowClosingDate] = useState(false);
-  const actionSheetRef = useRef<ActionSheet>(null);
   const [dOrPOriginationFees, setDOrPOriginationFees] = useState('dollar'); // change to percent
   const [dOrPBuyerCommission, setDOrPBuyerCommission] = useState('percent');
   const [dOrPAdditionalIncome, setDOrPAdditionalIncome] = useState('dollar');
   const [modalLoanDescVisible, setModalLoanDescVisible] = useState(false);
-
+  const { showActionSheetWithOptions } = useActionSheet();
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -296,13 +294,45 @@ export default function AddOrEditLenderTx2(props: any) {
     setModalLoanDescVisible(!modalLoanDescVisible);
   }
 
-  function loanTypePressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.loanTypeSourceSheet);
-  }
+  const loanTypePressed = () => {
+    const options = loanTypeMenuNew;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
-  function probabilityPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.probabilitySheet);
-  }
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('selected:' + options[selectedIndex!]);
+          setRateType(options[selectedIndex!]);
+        }
+      }
+    );
+  };
+
+  const probabilityPressed = () => {
+    const options = probabilityMenuNew;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('selected:' + options[selectedIndex!]);
+          setProbability(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
   return (
     <View style={txStyles2.container}>
@@ -316,51 +346,6 @@ export default function AddOrEditLenderTx2(props: any) {
               </View>
             </View>
           </TouchableOpacity>
-
-          <ActionSheet // Probability
-            initialOffsetFromBottom={10}
-            onBeforeShow={(data) => console.log('probability sheet')} // here
-            id={AddTxBuyerAndSellerSheets.probabilitySheet} // here
-            ref={actionSheetRef}
-            statusBarTranslucent
-            bounceOnOpen={true}
-            drawUnderStatusBar={false}
-            bounciness={4}
-            gestureEnabled={true}
-            bottomOffset={40}
-            defaultOverlayOpacity={0.4}
-          >
-            <View
-              style={{
-                paddingHorizontal: 12,
-              }}
-            >
-              <ScrollView
-                nestedScrollEnabled
-                onMomentumScrollEnd={() => {
-                  actionSheetRef.current?.handleChildScrollEnd();
-                }}
-                style={globalStyles.filterView}
-              >
-                <View>
-                  {Object.entries(probabilityMenu).map(([index, value]) => (
-                    <TouchableOpacity // line above
-                      key={index}
-                      onPress={() => {
-                        SheetManager.hide(AddTxBuyerAndSellerSheets.probabilitySheet, null); // here
-                        console.log('filter: ' + value);
-                        setProbability(value); // here
-                        // fetchData();
-                      }}
-                      style={globalStyles.listItemCell}
-                    >
-                      <Text style={globalStyles.listItem}>{index}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </ScrollView>
-            </View>
-          </ActionSheet>
 
           <Text style={txStyles2.nameTitle}>{'Original List Price'}</Text>
           <View style={txStyles2.mainContent}>
@@ -478,51 +463,6 @@ export default function AddOrEditLenderTx2(props: any) {
               </View>
             </View>
           </TouchableOpacity>
-
-          <ActionSheet // Loan type
-            initialOffsetFromBottom={10}
-            onBeforeShow={(data) => console.log('loan type sheet')} // here
-            id={AddTxBuyerAndSellerSheets.loanTypeSourceSheet} // here
-            ref={actionSheetRef}
-            statusBarTranslucent
-            bounceOnOpen={true}
-            drawUnderStatusBar={false}
-            bounciness={4}
-            gestureEnabled={true}
-            bottomOffset={40}
-            defaultOverlayOpacity={0.4}
-          >
-            <View
-              style={{
-                paddingHorizontal: 12,
-              }}
-            >
-              <ScrollView
-                nestedScrollEnabled
-                onMomentumScrollEnd={() => {
-                  actionSheetRef.current?.handleChildScrollEnd();
-                }}
-                style={globalStyles.filterView}
-              >
-                <View>
-                  {Object.entries(loanTypeMenu).map(([index, value]) => (
-                    <TouchableOpacity // line above
-                      key={index}
-                      onPress={() => {
-                        SheetManager.hide(AddTxBuyerAndSellerSheets.loanTypeSourceSheet, null); // here
-                        console.log('filter: ' + value);
-                        setRateType(value); // here
-                        // fetchData();
-                      }}
-                      style={globalStyles.listItemCell}
-                    >
-                      <Text style={globalStyles.listItem}>{index}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </ScrollView>
-            </View>
-          </ActionSheet>
 
           {/* In postman, the param is loanType */}
           <Text style={txStyles2.nameTitle}>Loan Description</Text>
