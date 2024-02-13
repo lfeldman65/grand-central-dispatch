@@ -9,26 +9,28 @@ import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import Attendees from '../ToDo/AttendeesScreen';
 import { RolodexDataProps, AttendeesProps } from '../ToDo/interfaces';
 import {
-  convertFrequency,
   convertReminderTime,
   convertReminderUnit,
-  recurrenceMenu,
-  convertOrder,
-  convertYearlyWeekNumber,
-  convertRecurrence,
-  frequencyMonthMenu,
-  orderMenu,
-  frequencyWeekMenu,
-  frequencyYearMenu,
-  untilTypeMenu,
-  reminderUnitBeforeMenu,
-  reminderTimeBeforeMenu,
   apptStartDateLabel,
   apptStartTimeLabel,
   apptEndDateLabel,
   apptEndTimeLabel,
 } from '../Calendar/calendarHelpers';
+import {
+  days,
+  recurrenceMenu,
+  untilTypeMenu,
+  orderMenu,
+  frequencyMonthMenu,
+  frequencyWeekMenu,
+  frequencyYearMenu,
+  convertFrequency,
+  convertRecurrence,
+  convertOrder,
+  convertYearlyWeekNumber,
+} from '../ToDo/toDoHelpers';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 const closeButton = require('../../images/button_close_white.png');
 
 export default function AddAppointmentScreen(props: any) {
@@ -68,8 +70,7 @@ export default function AddAppointmentScreen(props: any) {
   const navigation = useNavigation();
   const [attendees, setAttendees] = useState<RolodexDataProps[]>([]);
   const notesInputRef = useRef<TextInput>(null);
-
-  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const { showActionSheetWithOptions } = useActionSheet();
 
   const Sheets = {
     recurrenceSheet: 'filter_sheet_rec',
@@ -209,11 +210,11 @@ export default function AddAppointmentScreen(props: any) {
 
   useEffect(() => {
     if (recurrence == 'Weekly on') {
-      setWeeklyFrequency(frequencyWeekMenu['Every Week']);
-    } else if (recurrence == 'Month on the') {
-      setMonthlyFrequency(frequencyMonthMenu['Every Month']);
+      setWeeklyFrequency('Every Week');
+    } else if (recurrence == 'Monthly on the') {
+      setMonthlyFrequency('Every Month');
     } else {
-      setYearlyFrequency(frequencyYearMenu['Every Year']);
+      setYearlyFrequency('Every Year');
     }
   }, [recurrence]);
 
@@ -401,41 +402,138 @@ export default function AddAppointmentScreen(props: any) {
       .catch((error) => console.error('failure ' + error));
   }
 
-  function frequencyWeekMenuPressed() {
-    console.log('frequency week pressed');
-    SheetManager.show(Sheets.frequencyWeekSheet);
-  }
+  const recurrencePressed = () => {
+    const options = recurrenceMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
-  function frequencyMonthMenuPressed() {
-    console.log('frequency month pressed');
-    SheetManager.show(Sheets.frequencyMonthSheet);
-  }
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setRecurrence(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
-  function frequencYearMenuPressed() {
-    console.log('frequency year pressed');
-    SheetManager.show(Sheets.frequencyYearSheet);
-  }
+  const frequencyWeekMenuPressed = () => {
+    const options = frequencyWeekMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
-  function endMenuPressed() {
-    console.log('untiltype pressed');
-    SheetManager.show(Sheets.untilSheet);
-  }
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setWeeklyFrequency(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
-  function orderMenuPressed() {
-    SheetManager.show(Sheets.orderMenu);
-  }
+  const frequencyMonthMenuPressed = () => {
+    const options = frequencyMonthMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
-  function recurrenceMenuPressed() {
-    SheetManager.show(Sheets.recurrenceSheet);
-  }
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setMonthlyFrequency(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
-  function reminderUnitMenuPressed() {
-    SheetManager.show(Sheets.reminderUnitSheet);
-  }
+  const frequencyYearMenuPressed = () => {
+    const options = frequencyYearMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
-  function reminderTimeMenuPressed() {
-    SheetManager.show(Sheets.reminderTimeSheet);
-  }
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setYearlyFrequency(options[selectedIndex!]);
+        }
+      }
+    );
+  };
+
+  const endMenuPressed = () => {
+    const options = untilTypeMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setUntilType(options[selectedIndex!]);
+        }
+      }
+    );
+  };
+
+  const reminderUnitMenuPressed = () => {
+    const options = untilTypeMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setReminderUnit(options[selectedIndex!]);
+        }
+      }
+    );
+  };
+
+  const orderMenuPressed = () => {
+    const options = orderMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          setOrder(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
   function sundayPressed() {
     setSunday(!sunday);
@@ -517,10 +615,10 @@ export default function AddAppointmentScreen(props: any) {
   }
 
   function recurrenceText() {
-    if (recurrence == recurrenceMenu['Yearly']) {
+    if (recurrence == 'Yearly') {
       return 'Yearly on ' + (startDate.getMonth() + 1).toString() + '/' + startDate.getDate();
     }
-    if (recurrence == recurrenceMenu['Monthly on the']) {
+    if (recurrence == 'Monthly on the') {
       return recurrence + ' ' + startDate.getDate() + recurrenceSuffix(startDate.getDate());
     }
     return recurrence;
@@ -661,7 +759,7 @@ export default function AddAppointmentScreen(props: any) {
         />
 
         <Text style={styles.nameTitle}>Recurrence</Text>
-        <TouchableOpacity onPress={recurrenceMenuPressed}>
+        <TouchableOpacity onPress={recurrencePressed}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
               <Text style={styles.textInput}>{recurrenceText()}</Text>
@@ -669,15 +767,13 @@ export default function AddAppointmentScreen(props: any) {
           </View>
         </TouchableOpacity>
 
-        {recurrence == recurrenceMenu['Every _ week of the month'] && <Text style={styles.nameTitle}>Order</Text>}
-        {recurrence == recurrenceMenu['Every _ week of the month'] && (
+        {recurrence == 'Every _ week of the month' && <Text style={styles.nameTitle}>Order</Text>}
+        {recurrence == 'Every _ week of the month' && (
           <TouchableOpacity onPress={orderMenuPressed}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>
-                  {recurrence == recurrenceMenu['Every _ week of the month']
-                    ? order + ' ' + days[startDate.getDay()]
-                    : order}
+                  {recurrence == 'Every _ week of the month' ? order + ' ' + days[startDate.getDay()] : order}
                 </Text>
               </View>
             </View>
@@ -738,7 +834,7 @@ export default function AddAppointmentScreen(props: any) {
 
         {recurrence == 'Yearly' && <Text style={styles.nameTitle}>Frequency</Text>}
         {recurrence == 'Yearly' && (
-          <TouchableOpacity onPress={frequencYearMenuPressed}>
+          <TouchableOpacity onPress={frequencyYearMenuPressed}>
             <View style={styles.mainContent}>
               <View style={styles.inputView}>
                 <Text style={styles.textInput}>{yearlyFrequency}</Text>
@@ -809,381 +905,6 @@ export default function AddAppointmentScreen(props: any) {
           onConfirm={handleConfirmUntilDate}
           onCancel={hideUntilPicker}
         />
-
-        <ActionSheet // recurrence
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('recurrence sheet')}
-          id={Sheets.recurrenceSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.filterView}
-            >
-              <View>
-                {Object.entries(recurrenceMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.recurrenceSheet, null);
-                      console.log('filter: ' + value);
-                      setRecurrence(value); // frequencyType
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-              {/*  Add a Small Footer at Bottom */}
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet // until type
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('until type')}
-          id={Sheets.untilSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.filterView}
-            >
-              <View>
-                {Object.entries(untilTypeMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.untilSheet, null);
-                      console.log('filter: ' + value);
-                      setUntilType(value);
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/*  Add a Small Footer at Bottom */}
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet // reminder unit
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('reminder unit')}
-          id={Sheets.reminderUnitSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.filterView}
-            >
-              <View>
-                {Object.entries(reminderUnitBeforeMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.reminderUnitSheet, null);
-                      console.log('reminder: ' + value);
-                      setReminderUnit(value);
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/*  Add a Small Footer at Bottom */}
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet // reminder time
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('reminder time')}
-          id={Sheets.reminderTimeSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.filterView}
-            >
-              <View>
-                {Object.entries(reminderTimeBeforeMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.reminderTimeSheet, null);
-                      console.log('reminder: ' + value);
-                      setReminderTime(value);
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/*  Add a Small Footer at Bottom */}
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet // monthly
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('frequency month')}
-          id={Sheets.frequencyMonthSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.filterView}
-            >
-              <View>
-                {Object.entries(frequencyMonthMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.frequencyMonthSheet, null);
-                      console.log('frequency Month: ' + value);
-                      setMonthlyFrequency(value);
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/*  Add a Small Footer at Bottom */}
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet // weekly
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('frequency week')}
-          id={Sheets.frequencyWeekSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.filterView}
-            >
-              <View>
-                {Object.entries(frequencyWeekMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.frequencyWeekSheet, null);
-                      console.log('frequency Week: ' + value);
-                      setWeeklyFrequency(value);
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/*  Add a Small Footer at Bottom */}
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet // order
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('order')}
-          id={Sheets.orderMenu}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.filterView}
-            >
-              <View>
-                {Object.entries(orderMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.orderMenu, null);
-                      console.log('order: ' + value);
-                      setOrder(value);
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/*  Add a Small Footer at Bottom */}
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet // yearly
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('frequency yearly')}
-          id={Sheets.frequencyYearSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.filterView}
-            >
-              <View>
-                {Object.entries(frequencyYearMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(Sheets.frequencyYearSheet, null);
-                      console.log('frequency monthly: ' + value);
-                      setYearlyFrequency(value);
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              {/*  Add a Small Footer at Bottom */}
-            </ScrollView>
-          </View>
-        </ActionSheet>
 
         <Text style={styles.nameTitle}>Reminder Unit</Text>
         <TouchableOpacity onPress={reminderUnitMenuPressed}>

@@ -36,9 +36,9 @@ export default function AddToDoScreen(props: any) {
   const [endDate, setEndDate] = useState(new Date());
   const [priority, setPriority] = useState('False');
   const [recurrence, setRecurrence] = useState('Never');
-  const [weeklyFrequency, setWeeklyFrequency] = useState('Every Week');
-  const [monthlyFrequency, setMonthlyFrequency] = useState('Every Month');
-  const [yearlyFrequency, setYearlyFrequency] = useState('Every Year');
+  const [weeklyFrequency, setWeeklyFrequency] = useState('0');
+  const [monthlyFrequency, setMonthlyFrequency] = useState('0');
+  const [yearlyFrequency, setYearlyFrequency] = useState('0');
   const [untilType, setUntilType] = useState('Until');
   const [untilVal, setUntilVal] = useState('0');
   const [order, setOrder] = useState('First');
@@ -166,9 +166,15 @@ export default function AddToDoScreen(props: any) {
     console.log('recurrence:' + recurrence);
     if (recurrence == 'Weekly on') {
       setWeeklyFrequency('Every Week');
-    } else if (recurrence == 'Month on the') {
+      setMonthlyFrequency('');
+      setYearlyFrequency('');
+    } else if (recurrence == 'Monthly on the') {
+      setWeeklyFrequency('');
       setMonthlyFrequency('Every Month');
+      setYearlyFrequency('');
     } else {
+      setWeeklyFrequency('');
+      setMonthlyFrequency('');
       setYearlyFrequency('Every Year');
     }
   }, [recurrence]);
@@ -215,7 +221,7 @@ export default function AddToDoScreen(props: any) {
       return;
     }
     var today = date.getDay();
-    console.log(today);
+    console.log('today:' + today);
     switch (today) {
       case 0:
         setSunday(true);
@@ -277,11 +283,11 @@ export default function AddToDoScreen(props: any) {
       contentType: 'none',
       itemId: 'id1205',
     });
-    console.log(date.toDateString());
-    console.log(date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }));
-    console.log(date.toISOString());
+    //   console.log(date.toDateString());
+    //   console.log(date.toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }));
+    //   console.log(date.toISOString());
 
-    console.log('times: ' + untilType);
+    //   console.log('times: ' + untilType);
     if (toDoTitle == '') {
       Alert.alert('Please enter a Title');
       return;
@@ -306,11 +312,12 @@ export default function AddToDoScreen(props: any) {
 
     //  new Date().toLocaleDateString('en-us', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
     //  console.log(attendees[0].id);
-    console.log(' i am here ' + convertReminder(reminder));
-    console.log('order: ' + order);
-    console.log('until type: ' + untilType);
-    console.log('until val: ' + untilVal);
-    console.log('goal id: ' + goal?.id!);
+    // console.log(' i am here ' + convertReminder(reminder));
+    // console.log('order: ' + order);
+    // console.log('until type: ' + untilType);
+    // console.log('until val: ' + untilVal);
+    // console.log('goal id: ' + goal?.id!);
+    // console.log('weeklyTuesday: ' + tuesday);
 
     var newEndDate = endDate.toISOString();
     if (untilType == 'Times' || untilType == 'Forever') {
@@ -455,7 +462,7 @@ export default function AddToDoScreen(props: any) {
     );
   };
 
-  const recurrenceMenuPressed = () => {
+  const recurrencePressed = () => {
     const options = recurrenceMenu;
     const destructiveButtonIndex = -1;
     const cancelButtonIndex = options.length - 1;
@@ -615,7 +622,7 @@ export default function AddToDoScreen(props: any) {
         />
 
         <Text style={styles.nameTitle}>Recurrence</Text>
-        <TouchableOpacity onPress={recurrenceMenuPressed}>
+        <TouchableOpacity onPress={recurrencePressed}>
           <View style={styles.mainContent}>
             <View style={styles.inputView}>
               <Text style={styles.textInput}>{recurrenceText()}</Text>

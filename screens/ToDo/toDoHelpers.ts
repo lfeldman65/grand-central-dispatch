@@ -20,6 +20,7 @@ export const reminderMenu = [
   '5 days before',
   '6 days before',
   '7 days before',
+  'Cancel',
 ];
 
 export const frequencyWeekMenu = [

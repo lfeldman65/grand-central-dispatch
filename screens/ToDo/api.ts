@@ -37,7 +37,7 @@ export function addNewToDo(
   untilTimes: string,
   frequencyType: string,
   weeklyMonday: boolean,
-  weeklyTueday: boolean,
+  weeklyTuesday: boolean,
   weeklyWednesday: boolean,
   weeklyThursday: boolean,
   weeklyFriday: boolean,
@@ -52,6 +52,10 @@ export function addNewToDo(
   type: string,
   attendees: AttendeesProps[]
 ): Promise<AddToDoDataResponse> {
+  console.log('monthlyEveryNMonths:' + monthlyEveryNMonths);
+  console.log('weeklyEveryNWeeks' + weeklyEveryNWeeks);
+  console.log('frequencyType' + frequencyType);
+
   return http.post('todosActivity', {
     body: {
       // no bracket since not an array
@@ -67,7 +71,7 @@ export function addNewToDo(
         untilTimes: untilTimes,
         frequencyType: frequencyType,
         weeklyMonday: weeklyMonday,
-        weeklyTueday: weeklyTueday,
+        weeklyTuesday: weeklyTuesday,
         weeklyWednesday: weeklyWednesday,
         weeklyThursday: weeklyThursday,
         weeklyFriday: weeklyFriday,
