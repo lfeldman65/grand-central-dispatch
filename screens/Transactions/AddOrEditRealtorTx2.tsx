@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, TextInput, Alert, StyleSheet } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import React from 'react';
-import globalStyles from '../../globalStyles';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { AddTxBuyerAndSellerSheets, probabilityMenu, roundToInt } from './transactionHelpers';
+import { probabilityMenu, roundToInt } from './transactionHelpers';
 import { shouldRunTests } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { txStyles2 } from './styles';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 var grossComm = 0;
 
@@ -40,11 +39,11 @@ export default function AddOrEditRealtorTx2(props: any) {
   const [additionalIncome, setAdditionalIncome] = useState('');
   const [showOriginalDate, setShowOriginalDate] = useState(false);
   const [showClosingDate, setShowClosingDate] = useState(false);
-  const actionSheetRef = useRef<ActionSheet>(null);
   const [dollarOrPercentBuyerComm, setDollarOrPercentBuyerComm] = useState('percent');
   const [dollarOrPercentSellerComm, setDollarOrPercentSellerComm] = useState('percent');
   const [dollarOrPercentAddIncome, setDollarOrPercentAddIncome] = useState('percent');
   const navigation = useNavigation<any>();
+  const { showActionSheetWithOptions } = useActionSheet();
 
   useEffect(() => {
     navigation.setOptions({
@@ -303,9 +302,25 @@ export default function AddOrEditRealtorTx2(props: any) {
     }
   }
 
-  function probabilityPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.probabilitySheet);
-  }
+  const probabilityPressed = () => {
+    const options = probabilityMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('selected:' + options[selectedIndex!]);
+          setProbability(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
   const showOriginalDateMode = (currentMode: any) => {
     console.log(currentMode);
@@ -339,51 +354,6 @@ export default function AddOrEditRealtorTx2(props: any) {
               </View>
             </View>
           </TouchableOpacity>
-
-          <ActionSheet // Status
-            initialOffsetFromBottom={10}
-            onBeforeShow={(data) => console.log('probability sheet')} // here
-            id={AddTxBuyerAndSellerSheets.probabilitySheet} // here
-            ref={actionSheetRef}
-            statusBarTranslucent
-            bounceOnOpen={true}
-            drawUnderStatusBar={false}
-            bounciness={4}
-            gestureEnabled={true}
-            bottomOffset={40}
-            defaultOverlayOpacity={0.4}
-          >
-            <View
-              style={{
-                paddingHorizontal: 12,
-              }}
-            >
-              <ScrollView
-                nestedScrollEnabled
-                onMomentumScrollEnd={() => {
-                  actionSheetRef.current?.handleChildScrollEnd();
-                }}
-                style={globalStyles.filterView}
-              >
-                <View>
-                  {Object.entries(probabilityMenu).map(([index, value]) => (
-                    <TouchableOpacity // line above
-                      key={index}
-                      onPress={() => {
-                        SheetManager.hide(AddTxBuyerAndSellerSheets.probabilitySheet, null); // here
-                        console.log('filter: ' + value);
-                        setProbability(value); // here
-                        // fetchData();
-                      }}
-                      style={globalStyles.listItemCell}
-                    >
-                      <Text style={globalStyles.listItem}>{index}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </ScrollView>
-            </View>
-          </ActionSheet>
 
           {type.includes('Seller') && <Text style={txStyles2.nameTitle}>{'Original List Price'}</Text>}
           {type.includes('Seller') && (

@@ -2,14 +2,13 @@ import { useEffect, useState, useRef } from 'react';
 import { Text, Image, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert, StyleSheet } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
-import globalStyles from '../../globalStyles';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { AddTxBuyerAndSellerSheets, statusMenu } from './transactionHelpers';
+import { statusMenu } from './transactionHelpers';
 import ChooseOtherTxType from './ChooseOtherTxType';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 import { shouldRunTests } from '../../utils/general';
 import { txStyles2 } from './styles';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const closeButton = require('../../images/button_close_white.png');
 
@@ -28,7 +27,6 @@ export default function AddOrEditOtherTx1(props: any) {
   const [modalRelVisible, setModalRelVisible] = useState(false);
   const [modalTypeVisible, setModalTypeVisible] = useState(false);
   const isFocused = useIsFocused();
-  const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
   const titleRef = useRef<TextInput>(null);
   const street1Ref = useRef<TextInput>(null);
@@ -36,6 +34,7 @@ export default function AddOrEditOtherTx1(props: any) {
   const cityRef = useRef<TextInput>(null);
   const stateRef = useRef<TextInput>(null);
   const zipRef = useRef<TextInput>(null);
+  const { showActionSheetWithOptions } = useActionSheet();
 
   useEffect(() => {
     navigation.setOptions({
@@ -181,10 +180,25 @@ export default function AddOrEditOtherTx1(props: any) {
     }
   }
 
-  function statusMenuPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.statusSheet);
-  }
+  const statusMenuPressed = () => {
+    const options = statusMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('selected:' + options[selectedIndex!]);
+          setStatus(options[selectedIndex!]);
+        }
+      }
+    );
+  };
   function typeMenuPressed() {
     setModalTypeVisible(!modalTypeVisible);
   }
@@ -230,51 +244,6 @@ export default function AddOrEditOtherTx1(props: any) {
           </View>
         </View>
       </TouchableOpacity>
-
-      <ActionSheet // Status
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('status sheet')} // here
-        id={AddTxBuyerAndSellerSheets.statusSheet} // here
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={false}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.4}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={globalStyles.filterView}
-          >
-            <View>
-              {Object.entries(statusMenu).map(([index, value]) => (
-                <TouchableOpacity // line above
-                  key={index}
-                  onPress={() => {
-                    SheetManager.hide(AddTxBuyerAndSellerSheets.statusSheet, null); // here
-                    console.log('filter: ' + value);
-                    setStatus(value); // here
-                    // fetchData();
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{index}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
 
       <Text style={txStyles2.nameTitle}>Transaction Type</Text>
       <TouchableOpacity onPress={typeMenuPressed}>

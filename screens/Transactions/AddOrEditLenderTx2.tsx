@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Modal, Text, View, TouchableOpacity, ScrollView, Alert, TextInput, StyleSheet } from 'react-native';
 import { useNavigation, useIsFocused, RouteProp } from '@react-navigation/native';
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import React from 'react';
-import { probabilityMenuNew, lenderTypeMenu, roundToInt, loanTypeMenuNew, loanTypeMenu } from './transactionHelpers';
+import { probabilityMenu, roundToInt, loanTypeMenu } from './transactionHelpers';
 import ChooseLoanDescription from './ChooseLoanDescription';
 import { shouldRunTests } from '../../utils/general';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -295,7 +295,7 @@ export default function AddOrEditLenderTx2(props: any) {
   }
 
   const loanTypePressed = () => {
-    const options = loanTypeMenuNew;
+    const options = loanTypeMenu;
     const destructiveButtonIndex = -1;
     const cancelButtonIndex = options.length - 1;
 
@@ -315,7 +315,7 @@ export default function AddOrEditLenderTx2(props: any) {
   };
 
   const probabilityPressed = () => {
-    const options = probabilityMenuNew;
+    const options = probabilityMenu;
     const destructiveButtonIndex = -1;
     const cancelButtonIndex = options.length - 1;
 

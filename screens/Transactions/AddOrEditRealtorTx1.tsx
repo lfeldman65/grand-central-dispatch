@@ -2,14 +2,13 @@ import { useEffect, useState, useRef } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, Modal, TextInput, Alert, StyleSheet } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import React from 'react';
-import globalStyles from '../../globalStyles';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { RolodexDataProps } from '../ToDo/interfaces';
-import { AddTxBuyerAndSellerSheets, statusMenu, typeMenu } from './transactionHelpers';
+import { statusMenu, realtorTypeMenu } from './transactionHelpers';
 import ChooseRelationship from '../Relationships/SelectRelationshipScreen';
 import ChooseLeadSource from './ChooseLeadSource';
 import { shouldRunTests } from '../../utils/general';
 import { txStyles2 } from './styles';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 export default function AddOrEditRealtorTx1(props: any) {
   const { route } = props;
@@ -30,13 +29,13 @@ export default function AddOrEditRealtorTx1(props: any) {
   const [modalSellerVisible, setModalSellerVisible] = useState(false);
   const [modalSellerSourceVisible, setModalSellerSourceVisible] = useState(false);
   const isFocused = useIsFocused();
-  const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
   const street1Ref = useRef<TextInput>(null);
   const street2Ref = useRef<TextInput>(null);
   const cityRef = useRef<TextInput>(null);
   const stateRef = useRef<TextInput>(null);
   const zipRef = useRef<TextInput>(null);
+  const { showActionSheetWithOptions } = useActionSheet();
 
   useEffect(() => {
     navigation.setOptions({
@@ -94,8 +93,8 @@ export default function AddOrEditRealtorTx1(props: any) {
   useEffect(() => {
     if (shouldRunTests()) {
       var txBuyer: RolodexDataProps = {
-        id: '340a4091-a74d-4f5a-aaaa-4c5f151692ce',
-        firstName: 'Abcdefghi',
+        id: '2003853e-0ae0-4144-bcc5-537c5b7c704c',
+        firstName: 'Abe',
         lastName: '',
         ranking: '',
         contactTypeID: '',
@@ -222,13 +221,45 @@ export default function AddOrEditRealtorTx1(props: any) {
     }
   }
 
-  function statusMenuPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.statusSheet);
-  }
+  const typeMenuPressed = () => {
+    const options = realtorTypeMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
 
-  function typeMenuPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.typeSheet);
-  }
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('selected:' + options[selectedIndex!]);
+          setType(options[selectedIndex!]);
+        }
+      }
+    );
+  };
+
+  const statusMenuPressed = () => {
+    const options = statusMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('selected:' + options[selectedIndex!]);
+          setStatus(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
   function buyerSourcePressed() {
     setModalBuyerSourceVisible(!modalBuyerSourceVisible);
@@ -306,50 +337,6 @@ export default function AddOrEditRealtorTx1(props: any) {
         </View>
       </TouchableOpacity>
 
-      <ActionSheet // Type
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('type sheet')} // here
-        id={AddTxBuyerAndSellerSheets.typeSheet} // here
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={false}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.4}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={globalStyles.filterView}
-          >
-            <View>
-              {Object.entries(typeMenu).map(([index, value]) => (
-                <TouchableOpacity // line above
-                  key={index}
-                  onPress={() => {
-                    SheetManager.hide(AddTxBuyerAndSellerSheets.typeSheet, null); // here
-                    console.log('type: ' + value);
-                    setType(value); // here
-                    // fetchData();
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{index}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
       <Text style={txStyles2.nameTitle}>Status</Text>
       <TouchableOpacity onPress={statusMenuPressed}>
         <View style={txStyles2.mainContent}>
@@ -358,51 +345,6 @@ export default function AddOrEditRealtorTx1(props: any) {
           </View>
         </View>
       </TouchableOpacity>
-
-      <ActionSheet // Status
-        initialOffsetFromBottom={10}
-        onBeforeShow={(data) => console.log('status sheet')} // here
-        id={AddTxBuyerAndSellerSheets.statusSheet} // here
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={false}
-        bounciness={4}
-        gestureEnabled={true}
-        bottomOffset={40}
-        defaultOverlayOpacity={0.4}
-      >
-        <View
-          style={{
-            paddingHorizontal: 12,
-          }}
-        >
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={globalStyles.filterView}
-          >
-            <View>
-              {Object.entries(statusMenu).map(([index, value]) => (
-                <TouchableOpacity // line above
-                  key={index}
-                  onPress={() => {
-                    SheetManager.hide(AddTxBuyerAndSellerSheets.statusSheet, null); // here
-                    console.log('filter: ' + value);
-                    setStatus(value); // here
-                    // fetchData();
-                  }}
-                  style={globalStyles.listItemCell}
-                >
-                  <Text style={globalStyles.listItem}>{index}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ActionSheet>
 
       {type.includes('Buyer') && <Text style={txStyles2.nameTitle}>{'Buyer *'}</Text>}
       {type.includes('Buyer') && (

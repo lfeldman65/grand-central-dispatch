@@ -3,13 +3,13 @@ import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useRef, useEffect, useState } from 'react';
 import React from 'react';
 import globalStyles from '../../globalStyles';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { AddTxBuyerAndSellerSheets, probabilityMenu } from './transactionHelpers';
+import { probabilityMenu } from './transactionHelpers';
 import { storage } from '../../utils/storage';
 import { addOrEditOtherTransaction } from './api';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { shouldRunTests } from '../../utils/general';
 import { txStyles2 } from './styles';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 export default function AddOrEditOtherTx2(props: any) {
   const { route } = props;
@@ -21,9 +21,9 @@ export default function AddOrEditOtherTx2(props: any) {
   const [closingDate, setClosingDate] = useState(new Date());
   const [notes, setNotes] = useState('');
   const [showDate, setShowDate] = useState(false);
-  const actionSheetRef = useRef<ActionSheet>(null);
   const navigation = useNavigation<any>();
   const notesInputRef = useRef<TextInput>(null);
+  const { showActionSheetWithOptions } = useActionSheet();
 
   useEffect(() => {
     var now = new Date();
@@ -178,9 +178,25 @@ export default function AddOrEditOtherTx2(props: any) {
     }
   }
 
-  function probabilityPressed() {
-    SheetManager.show(AddTxBuyerAndSellerSheets.probabilitySheet);
-  }
+  const probabilityPressed = () => {
+    const options = probabilityMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('selected:' + options[selectedIndex!]);
+          setProbability(options[selectedIndex!]);
+        }
+      }
+    );
+  };
 
   const handleConfirm = (selectedDate: any) => {
     const currentDate = selectedDate;
@@ -209,51 +225,6 @@ export default function AddOrEditOtherTx2(props: any) {
             </View>
           </View>
         </TouchableOpacity>
-
-        <ActionSheet // Status
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('probability sheet')} // here
-          id={AddTxBuyerAndSellerSheets.probabilitySheet} // here
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={false}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.4}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={globalStyles.filterView}
-            >
-              <View>
-                {Object.entries(probabilityMenu).map(([index, value]) => (
-                  <TouchableOpacity // line above
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(AddTxBuyerAndSellerSheets.probabilitySheet, null); // here
-                      console.log('filter: ' + value);
-                      setProbability(value); // here
-                      // fetchData();
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
 
         <Text style={txStyles2.nameTitle}>{'Projected Amount *'}</Text>
         <View style={txStyles2.mainContent}>
