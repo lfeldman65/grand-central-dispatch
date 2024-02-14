@@ -9,8 +9,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import PacComplete from './PACCompleteScreen';
 import { postponeAction, completeAction } from './postponeAndComplete';
 import { handleTextPressed, ga4Analytics } from '../../utils/general';
-import globalStyles from '../../globalStyles';
-import { mobileTypeMenu, relSheets } from '../Relationships/relationshipHelpers';
+import { mobileTypeMenu } from '../Relationships/relationshipHelpers';
 import { storage } from '../../utils/storage';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 

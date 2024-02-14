@@ -1,30 +1,8 @@
 export const ideasMenu = ['Calls', 'Notes', 'Pop-Bys', 'Cancel'];
 
-export const vidMenu = {
-  'Use Video Album': 'Use Video Album',
-  'Use Video Camera': 'Use Video Camera',
-};
+export const vidMenu = ['Use Video Album', 'Use Video Camera', 'Cancel'];
 
 export const mobileTypeMenu = ['Call', 'Message', 'Cancel'];
-
-export const homeTypeMenu = {
-  Call: 'Call',
-  Message: 'Message',
-};
-
-export const officeTypeMenu = {
-  Call: 'Call',
-  Message: 'Message',
-};
-
-export const relSheets = {
-  callSheet: 'call_sheet_id',
-  ideaSheet: 'idea_sheet_id',
-  vidSheet: 'vid_sheet_id',
-  mobileSheet: 'mobile_sheet_id',
-  homeSheet: 'home_sheet_id',
-  officeSheet: 'office_sheet_id',
-};
 
 export function displayName(first: string, last: string, type: string, employer: string, displayOrder: string) {
   if (type == 'Rel') {

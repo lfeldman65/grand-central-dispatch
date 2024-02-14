@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import globalStyles from '../../globalStyles';
 import { storage } from '../../utils/storage';
 import { getRelDetails, getToDos, deleteRelationship, changeRankAndQual } from './api';
@@ -28,31 +28,21 @@ import openMap from 'react-native-open-maps';
 import IdeasCalls from '../PAC/IdeasCallsScreen';
 import IdeasNotes from '../PAC/IdeasNotesScreen';
 import IdeasPop from '../PAC/IdeasPopScreen';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
 import { GoalDataProps } from '../Goals/interfaces';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
-import {
-  ideasMenu,
-  vidMenu,
-  mobileTypeMenu,
-  homeTypeMenu,
-  officeTypeMenu,
-  relSheets,
-  prettyDate,
-} from './relationshipHelpers';
+import { ideasMenu, vidMenu, mobileTypeMenu, prettyDate } from './relationshipHelpers';
 import { getGoalData, trackAction } from '../Goals/api';
 import { handleVideoFromAlbum, handleVideoFromCamera } from './videoHelpers';
 import * as SMS from 'expo-sms';
 import Dialog from 'react-native-dialog';
 import { ga4Analytics } from '../../utils/general';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-
-const chevron = require('../../images/chevron_blue_right.png');
 import TrackActivity from '../Goals/TrackActivityScreen';
 import AddToDo from '../ToDo/AddToDoScreen';
 import AddAppointment from '../Calendar/AddAppointmentScreen';
 import { savePop, removePop } from '../PopBys/api';
 
+const chevron = require('../../images/chevron_blue_right.png');
 const aPlusSel = require('../Relationships/images/aPlusSel.png');
 const aPlusReg = require('../Relationships/images/aPlusReg.png');
 const aSel = require('../Relationships/images/aSel.png');
@@ -63,10 +53,8 @@ const cSel = require('../Relationships/images/cSel.png');
 const cReg = require('../Relationships/images/cReg.png');
 const dSel = require('../Relationships/images/dSel.png');
 const dReg = require('../Relationships/images/dReg.png');
-
 const qualChecked = require('../Relationships/images/qualChecked.png');
 const qualUnchecked = require('../Relationships/images/qualUnchecked.png');
-
 const messageImg = require('../Relationships/images/relMessage.png');
 const callImg = require('../Relationships/images/relCall.png');
 const videoImg = require('../Relationships/images/relVid.png');
@@ -106,8 +94,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   const [showGroups, setShowGroups] = useState(false);
   const [showInterests, setShowInterests] = useState(false);
   const [showBiz, setShowBiz] = useState(false);
-  const actionSheetRef = useRef<ActionSheet>(null);
-  const [ideaType, setIdeaType] = useState('Calls');
   const [vidSource, setVidSource] = useState('');
   const [modalCallsVisible, setModalCallsVisible] = useState(false);
   const [modalNotesVisible, setModalNotesVisible] = useState(false);
@@ -298,7 +284,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       ),
     });
     navigation.setOptions({ title: fullName() });
-  }, [navigation, dataDetails, theRank, isQual, ideaType]);
+  }, [navigation, dataDetails, theRank, isQual]);
 
   useEffect(() => {
     let isMounted = true;
@@ -379,9 +365,43 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     }, 2000); // wait for dialog to close
   }
 
-  function handleMobilePressed() {
-    SheetManager.show(relSheets.mobileSheet);
-  }
+  const handleMobilePressed = () => {
+    const options = mobileTypeMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          console.log('CALLTYPE: ' + mobileTypeMenu[selectedIndex!]);
+          if (mobileTypeMenu[selectedIndex!] == 'Call') {
+            ga4Analytics('Relationships_Phone_Call', {
+              contentType: 'Mobile',
+              itemId: 'id0520',
+            });
+            setGoalID2('1');
+            setGoalName2('Calls Made');
+            setSubject2('Mobile Call');
+            handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
+          } else {
+            ga4Analytics('Relationships_Mobile_Text', {
+              contentType: 'Mobile',
+              itemId: 'id0521',
+            });
+            setGoalID2('7');
+            setGoalName2('Other');
+            setSubject2('Text Message');
+            handleTextPressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
+          }
+        }
+      }
+    );
+  };
 
   function handleHomePressed() {
     ga4Analytics('Relationships_Phone_Call', {
@@ -405,32 +425,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
   }
 
-  function handleCallPressed() {
-    console.log('call pressed');
-    if (filterPhoneNumbers().length == 0) {
-      Alert.alert('Please enter at least one phone number');
-    } else if (filterPhoneNumbers().length == 1) {
-      if (filterPhoneNumbers().includes('Mobile')) {
-        setGoalID2('1');
-        setGoalName2('Calls Made');
-        setSubject2('Mobile Call');
-        handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
-      } else if (filterPhoneNumbers().includes('Home')) {
-        setGoalID2('1');
-        setGoalName2('Calls Made');
-        setSubject2('Mobile Call');
-        handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
-      } else {
-        setGoalID2('1');
-        setGoalName2('Calls Made');
-        setSubject2('Mobile Call');
-        handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
-      }
-    } else {
-      SheetManager.show(relSheets.callSheet);
-    }
-  }
-
   function handleWebsitePressed() {
     try {
       console.log('NEWWEB');
@@ -451,7 +445,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
   function filterPhoneNumbers() {
     phoneArray = [];
     if (dataDetails?.mobile != null && dataDetails?.mobile.length > 6) {
-      console.log('added mobile phone');
       phoneArray.push('Mobile');
     }
     if (dataDetails?.homePhone != null && dataDetails?.homePhone.length > 6) {
@@ -460,7 +453,8 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     if (dataDetails?.officePhone != null && dataDetails?.officePhone.length > 6) {
       phoneArray.push('Office');
     }
-    // console.log('phone array size: ' + phoneArray.length);
+    phoneArray.push('Cancel');
+    console.log('phone array size: ' + phoneArray.length);
     return phoneArray;
   }
 
@@ -485,6 +479,77 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
     }
   }
 
+  function handleTopCallPressed() {
+    console.log('call pressed');
+    if (filterPhoneNumbers().length == 1) {
+      Alert.alert('Please enter at least one phone number');
+    } else if (filterPhoneNumbers().length == 2) {
+      if (filterPhoneNumbers().includes('Mobile')) {
+        setGoalID2('1');
+        setGoalName2('Calls Made');
+        setSubject2('Mobile Call');
+        handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
+      } else if (filterPhoneNumbers().includes('Home')) {
+        setGoalID2('1');
+        setGoalName2('Calls Made');
+        setSubject2('Mobile Call');
+        handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
+      } else {
+        setGoalID2('1');
+        setGoalName2('Calls Made');
+        setSubject2('Mobile Call');
+        handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
+      }
+    } else {
+      handleCallPressed2();
+    }
+  }
+
+  async function handleCallPressed2() {
+    console.log('phone numbers: ' + filterPhoneNumbers());
+    const options = filterPhoneNumbers();
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex != cancelButtonIndex) {
+          ga4Analytics('Relationships_Call_Top', {
+            contentType: options[selectedIndex!],
+            itemId: 'id0510',
+          });
+          setGoalID2('1');
+          setGoalName2('Calls Made');
+          setSubject2('Mobile Call');
+          if (options[selectedIndex!] == 'Mobile') {
+            if (dataDetails?.mobile == '') {
+              Alert.alert('Please enter a Mobile number');
+            } else {
+              handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
+            }
+          } else if (options[selectedIndex!] == 'Home') {
+            if (dataDetails?.homePhone == '') {
+              Alert.alert('Please enter a Home number');
+            } else {
+              handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
+            }
+          } else {
+            if (dataDetails?.officePhone == '') {
+              Alert.alert('Please enter an Office number');
+            } else {
+              handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
+            }
+          }
+        }
+      }
+    );
+  }
+
   async function handleVideoPressed() {
     var watched = await getVidTutWatched();
     console.log('WATCHED: ' + watched);
@@ -499,7 +564,76 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       );
       storage.setItem('videoTutorialWatched', 'True');
     }
-    SheetManager.show(relSheets.vidSheet);
+    const options = vidMenu;
+    const destructiveButtonIndex = -1;
+    const cancelButtonIndex = options.length - 1;
+    if (dataDetails?.hasBombBombPermission!) {
+      const title = 'Powered By Bomb Bomb';
+      showActionSheetWithOptions(
+        {
+          options,
+          cancelButtonIndex,
+          destructiveButtonIndex,
+          title,
+        },
+        (selectedIndex) => {
+          if (selectedIndex != cancelButtonIndex) {
+            vidSheetGuts(options[selectedIndex!]);
+          }
+        }
+      );
+    } else {
+      showActionSheetWithOptions(
+        {
+          options,
+          cancelButtonIndex,
+          destructiveButtonIndex,
+        },
+        (selectedIndex) => {
+          if (selectedIndex != cancelButtonIndex) {
+            vidSheetGuts(options[selectedIndex!]);
+          }
+        }
+      );
+    }
+  }
+
+  function vidSheetGuts(value: string) {
+    console.log('value: ' + value);
+    setVidSource(value);
+    const timer = setInterval(() => {
+      clearInterval(timer);
+      if (dataDetails?.hasBombBombPermission!) {
+        showDialog(value);
+      } else {
+        setGoalID2('7');
+        setGoalName2('Other');
+        setSubject2('Text Video');
+        setIsLoading(true);
+        if (value == 'Use Video Album') {
+          handleVideoFromAlbum(
+            'none',
+            dataDetails,
+            () => setIsLoading(false),
+            () => {
+              setTrackActivityVisible(true);
+              setIsLoading(false);
+            }
+          );
+        } else {
+          handleVideoFromCamera(
+            'none',
+            dataDetails,
+            () => setIsLoading(false),
+            () => {
+              setTrackActivityVisible(true);
+              setIsLoading(false);
+            }
+          );
+        }
+      }
+      //setIsLoading(false);
+    }, 250);
   }
 
   function handleEmailPressed() {
@@ -582,22 +716,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
       itemId: 'id0518',
     });
     setAddAppointmentVisible(!addAppointmentVisible);
-  }
-
-  function handleIdeasPressedOld() {
-    console.log('ideas pressed');
-    SheetManager.show(relSheets.ideaSheet);
-    ga4Analytics('Relationships_Ideas_Bottom', {
-      contentType: value,
-      itemId: 'id0519',
-    });
-    if (value == 'Calls') {
-      setModalCallsVisible(true);
-    } else if (value == 'Notes') {
-      setModalNotesVisible(true);
-    } else {
-      setModalPopVisible(true);
-    }
   }
 
   const handleIdeasPressed = () => {
@@ -1007,7 +1125,7 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
         </View>
 
         <View style={styles.pair}>
-          <TouchableOpacity onPress={() => handleCallPressed()}>
+          <TouchableOpacity onPress={() => handleTopCallPressed()}>
             <Image source={callImg} style={styles.logo} />
           </TouchableOpacity>
           {<Text style={lightOrDark == 'dark' ? styles.topButtonTextDark : styles.topButtonTextLight}>Call</Text>}
@@ -1493,385 +1611,6 @@ export default function RelationshipDetailsScreen(props: RelDetailsLocalProps) {
             </Text>
           }
         </View>
-
-        <ActionSheet
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('call top row sheet')}
-          id={relSheets.callSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.scrollview}
-            >
-              <View>
-                {filterPhoneNumbers().map((value) => (
-                  <TouchableOpacity
-                    key={value}
-                    onPress={() => {
-                      console.log(value);
-                      SheetManager.hide(relSheets.callSheet, null).then(() => {
-                        ga4Analytics('Relationships_Call_Top', {
-                          contentType: value,
-                          itemId: 'id0510',
-                        });
-                        setGoalID2('1');
-                        setGoalName2('Calls Made');
-                        setSubject2('Mobile Call');
-                        if (value == 'Mobile') {
-                          if (dataDetails?.mobile == '') {
-                            Alert.alert('Please enter a Mobile number');
-                          } else {
-                            handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
-                          }
-                        } else if (value == 'Home') {
-                          if (dataDetails?.homePhone == '') {
-                            Alert.alert('Please enter a Home number');
-                          } else {
-                            handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
-                          }
-                        } else {
-                          if (dataDetails?.officePhone == '') {
-                            Alert.alert('Please enter an Office number');
-                          } else {
-                            handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
-                          }
-                        }
-                      });
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{value}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('mobile call type sheet')}
-          id={relSheets.mobileSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.scrollview}
-            >
-              <View>
-                {Object.entries(mobileTypeMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(relSheets.mobileSheet, null).then(() => {
-                        console.log('CALLTYPE: ' + value);
-                        if (value == 'Call') {
-                          ga4Analytics('Relationships_Phone_Call', {
-                            contentType: 'Mobile',
-                            itemId: 'id0520',
-                          });
-                          setGoalID2('1');
-                          setGoalName2('Calls Made');
-                          setSubject2('Mobile Call');
-                          handlePhonePressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
-                        } else {
-                          ga4Analytics('Relationships_Mobile_Text', {
-                            contentType: 'Mobile',
-                            itemId: 'id0521',
-                          });
-                          setGoalID2('7');
-                          setGoalName2('Other');
-                          setSubject2('Text Message');
-                          handleTextPressed(dataDetails?.mobile!, () => setTrackActivityVisible(true));
-                        }
-                      });
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('home call type sheet')}
-          id={relSheets.homeSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.scrollview}
-            >
-              <View>
-                {Object.entries(homeTypeMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(relSheets.homeSheet, null).then(() => {
-                        console.log('CALLTYPE: ' + value);
-                        if (value == 'Call') {
-                          setGoalID2('1');
-                          setGoalName2('Calls Made');
-                          setSubject2('Mobile Call');
-                          handlePhonePressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
-                        } else {
-                          setGoalID2('7');
-                          setGoalName2('Other');
-                          setSubject2('Text Message');
-                          handleTextPressed(dataDetails?.homePhone!, () => setTrackActivityVisible(true));
-                        }
-                      });
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('work call sheet')}
-          id={relSheets.officeSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.scrollview}
-            >
-              <View>
-                {Object.entries(officeTypeMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(relSheets.officeSheet, null).then(() => {
-                        console.log('CALLTYPE: ' + value);
-                        if (value == 'Call') {
-                          setGoalID2('1');
-                          setGoalName2('Calls Made');
-                          setSubject2('Mobile Call');
-                          handlePhonePressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
-                        } else {
-                          setGoalID2('7');
-                          setGoalName2('Other');
-                          setSubject2('Text Message');
-                          handleTextPressed(dataDetails?.officePhone!, () => setTrackActivityVisible(true));
-                        }
-                      });
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('idea sheet')}
-          id={relSheets.ideaSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.scrollview}
-            >
-              <View>
-                {Object.entries(ideasMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      console.log(value);
-                      SheetManager.hide(relSheets.ideaSheet, null).then(() => {
-                        ga4Analytics('Relationships_Ideas_Bottom', {
-                          contentType: value,
-                          itemId: 'id0519',
-                        });
-                        if (value == 'Calls') {
-                          setModalCallsVisible(true);
-                        } else if (value == 'Notes') {
-                          setModalNotesVisible(true);
-                        } else {
-                          setModalPopVisible(true);
-                        }
-                      });
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
-
-        <ActionSheet
-          initialOffsetFromBottom={10}
-          onBeforeShow={(data) => console.log('vid sheet')}
-          id={relSheets.vidSheet}
-          ref={actionSheetRef}
-          statusBarTranslucent
-          bounceOnOpen={true}
-          drawUnderStatusBar={true}
-          bounciness={4}
-          gestureEnabled={true}
-          bottomOffset={40}
-          defaultOverlayOpacity={0.3}
-        >
-          <View
-            style={{
-              paddingHorizontal: 12,
-            }}
-          >
-            <ScrollView
-              nestedScrollEnabled
-              onMomentumScrollEnd={() => {
-                actionSheetRef.current?.handleChildScrollEnd();
-              }}
-              style={styles.scrollview}
-            >
-              <View>
-                {dataDetails?.hasBombBombPermission && (
-                  <View style={styles.videoMenuView}>
-                    <Text style={styles.bombBombText}>Powered by Bomb Bomb</Text>
-                  </View>
-                )}
-                {Object.entries(vidMenu).map(([index, value]) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      SheetManager.hide(relSheets.vidSheet, null);
-                      setVidSource(value);
-                      const timer = setInterval(() => {
-                        clearInterval(timer);
-                        if (dataDetails?.hasBombBombPermission!) {
-                          showDialog(value);
-                        } else {
-                          setGoalID2('7');
-                          setGoalName2('Other');
-                          setSubject2('Text Video');
-                          setIsLoading(true);
-                          if (value == 'Use Video Album') {
-                            handleVideoFromAlbum(
-                              'none',
-                              dataDetails,
-                              () => setIsLoading(false),
-                              () => {
-                                setTrackActivityVisible(true);
-                                setIsLoading(false);
-                              }
-                            );
-                          } else {
-                            handleVideoFromCamera(
-                              'none',
-                              dataDetails,
-                              () => setIsLoading(false),
-                              () => {
-                                setTrackActivityVisible(true);
-                                setIsLoading(false);
-                              }
-                            );
-                          }
-                        }
-                        //setIsLoading(false);
-                      }, 250);
-                    }}
-                    style={globalStyles.listItemCell}
-                  >
-                    <Text style={globalStyles.listItem}>{index}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-        </ActionSheet>
       </View>
       {trackActivityVisible && (
         <Modal

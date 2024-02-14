@@ -8,8 +8,7 @@ import { styles } from './styles';
 import { isNullOrEmpty, ga4Analytics, handlePhonePressed, handleTextPressed } from '../../utils/general';
 import { AddressProps, ContactDetailDataProps } from './interfaces';
 import { completeAction, postponeAction } from './postponeAndComplete';
-import ActionSheet, { SheetManager } from 'react-native-actions-sheet';
-import { mobileTypeMenu, relSheets } from '../Relationships/relationshipHelpers';
+import { mobileTypeMenu } from '../Relationships/relationshipHelpers';
 import TrackActivity from '../Goals/TrackActivityScreen';
 import { getGoalData, trackAction } from '../Goals/api';
 import { testForNotificationTrack } from '../Goals/handleWinNotifications';
@@ -29,7 +28,6 @@ export default function PACDetailScreen(props: any) {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const isFocused = useIsFocused();
-  const actionSheetRef = useRef<ActionSheet>(null);
   const [trackActivityVisible, setTrackActivityVisible] = useState(false);
   const [goalList, setGoalList] = useState<GoalDataProps[]>([]);
   const [goalID2, setGoalID2] = useState('1');
@@ -187,11 +185,6 @@ export default function PACDetailScreen(props: any) {
       itemId: 'id0419',
     });
     postponeEvent(contactId, type);
-  }
-
-  function handleMobilePressedOld() {
-    console.log('mobile pressed here');
-    SheetManager.show(relSheets.mobileSheet);
   }
 
   function handleHomePressed() {
