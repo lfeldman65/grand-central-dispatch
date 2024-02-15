@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { storage } from './storage';
 import { Appearance } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native'; // test.
 var lightOrDarkLocal = 'automatic';
 let eventEmitterSubscription: any;
 export default function DarkOrLightScreen(props: any) {
