@@ -41,7 +41,7 @@
     "moment": "^2.29.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.72.6",
+    "react-native": "0.72.10",
     "react-native-actions-sheet": "^0.6.1",
     "react-native-animated-pagination-dots": "^0.1.73",
     "react-native-bouncy-checkbox": "^2.1.10",
