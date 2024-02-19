@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator, Modal } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  Modal,
+  Dimensions,
+} from 'react-native';
 import MenuIcon from '../../components/MenuIcon';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useEffect } from 'react';
@@ -21,6 +31,7 @@ const searchGlass = require('../../images/whiteSearch.png');
 const quickAdd = require('../../images/addWhite.png');
 
 var goalIDForReferralType = '0'; // given or received
+var barColor = '';
 
 export default function GoalsScreen() {
   const navigation = useNavigation<any>();
@@ -75,13 +86,16 @@ export default function GoalsScreen() {
 
   function styleForProgress(goalData: GoalDataProps) {
     var barColor = '#1398f5';
-    var barWidth = 75 * barPercentage(goalData) + '%';
+    let deviceWidth = Dimensions.get('window').width;
+    console.log('width: ' + deviceWidth);
+    var barWidthNum = 0.71 * deviceWidth * barPercentage(goalData);
+    console.log('barwidth:' + barWidthNum);
     if (winTheDaySelected) {
       barColor = '#55bf43';
     }
     return {
       height: 25,
-      width: barWidth,
+      width: barWidthNum,
       backgroundColor: barColor,
       marginRight: 10,
       borderRadius: 5,

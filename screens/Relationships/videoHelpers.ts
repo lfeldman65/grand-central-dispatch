@@ -34,7 +34,7 @@ export async function handleVideoFromAlbum(
 
   console.log(result);
 
-  if (!result.cancelled) {
+  if (!result.canceled) {
     composeSMS(vidTitle, relationship, result, cb);
   } else {
     if (typeof cancelCallback !== 'undefined') {
@@ -76,7 +76,7 @@ export async function handleVideoFromCamera(
   // Explore the result
   console.log(result);
 
-  if (!result.cancelled) {
+  if (!result.canceled) {
     saveImage(result.uri);
     composeSMS(vidTitle, relationship, result, cb);
   } else {
