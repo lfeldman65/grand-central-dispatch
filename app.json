@@ -19,7 +19,7 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.referralmaker.referralmaker",
-      "buildNumber": "25",
+      "buildNumber": "22",
       "accessesContactNotes": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses your location to show relationships that are near you.",
@@ -28,6 +28,7 @@
     },
     "android": {
       "googleServicesFile": "./google-services.json",
+      "package": "com.referralmaker.referralmaker",
       "adaptiveIcon": {
         "foregroundImage": "./images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -44,6 +45,7 @@
     },
     "plugins": [
       "sentry-expo",
+      "@react-native-firebase/app",
       [
         "expo-build-properties",
         {

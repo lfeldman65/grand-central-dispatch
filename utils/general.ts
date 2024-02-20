@@ -3,11 +3,11 @@ import openMap from 'react-native-open-maps';
 import * as Notifications from 'expo-notifications';
 import { storage } from './storage';
 import { Platform } from 'react-native';
-import * as Analytics from 'expo-firebase-analytics';
+import analytics from "@react-native-firebase/analytics";
 import * as SMS from 'expo-sms';
 
 export function shouldRunTests() {
-  return false;
+  return true;
 }
 
 export function isNullOrEmpty(value: any) {
@@ -125,7 +125,12 @@ export function determineDeviceType() {
 
 export function ga4Analytics(mainEvent: string, other: any) {
   //  console.log('MAINEVENT:' + mainEvent);
-  Analytics.logEvent(mainEvent + '_' + determineDeviceType(), other);
+  //Analytics.logEvent(mainEvent + '_' + determineDeviceType(), other);
+  
+  analytics().logEvent(mainEvent + '_' + determineDeviceType(), {
+    additionaParam: other,
+    });
+
 }
 
 export async function handleTextPressed(number: string, cb?: () => void) {
